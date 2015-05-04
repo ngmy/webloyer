@@ -1,8 +1,14 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
+	"name": "ngmy/webloyer",
+	"description": "Webloyer is a Web UI for managing Deployer deployments",
+	"keywords": ["deployer", "deploy", "deployment"],
 	"license": "MIT",
+	"authors": [
+		{
+			"name": "Yuta Nagamiya",
+			"email": "y.nagamiya@gmail.com"
+		}
+	],
 	"type": "project",
 	"require": {
 		"laravel/framework": "5.0.*",
