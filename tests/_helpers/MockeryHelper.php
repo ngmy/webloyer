@@ -20,4 +20,13 @@ trait MockeryHelper {
 		return $mock;
 	}
 
+	protected function mockPartial($class)
+	{
+		$mock = m::mock($class)->makePartial();
+
+		$this->app->instance($class, $mock);
+
+		return $mock;
+	}
+
 }
