@@ -25,7 +25,7 @@ class DeployTest extends TestCase {
 		$this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
 		$this->mockDeploymentRepository = $this->mock('App\Repositories\Deployment\DeploymentInterface');
 		$this->mockProcessBuilder = $this->mock('Symfony\Component\Process\ProcessBuilder');
-		$this->mockProcess = $this->mock('Symfony\Component\Process\Process');
+		$this->mockProcess = $this->mockPartial('Symfony\Component\Process\Process');
 	}
 
 	public function test_Should_Work_When_StageArgumentIsNotSpecifiedAndDeployerIsNormalEnd()
