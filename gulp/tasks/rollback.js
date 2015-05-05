@@ -18,9 +18,9 @@ function readJSON(path, callback) {
 }
 
 elixir.extend('rollback', function () {
-  gulp.task('rollback', function () {
-    var rollbackFile = '../storage/app/rollback.json';
+  var rollbackFile = '../storage/app/rollback.json';
 
+  gulp.task('rollback', function () {
     readJSON(rollbackFile, function (err, result) {
       if (err) {
         return console.log(err);
@@ -33,7 +33,13 @@ elixir.extend('rollback', function () {
     });
   });
 
-  this.registerWatcher('rollback', '../storage/app/rollback.json');
+  // If file does not exist, then create an empty file
+  if (!fs.existsSync(rollbackFile)) {
+    fs.closeSync(fs.openSync(rollbackFile, 'w'));
+    fs.chmodSync(rollbackFile, 0777);
+  }
+
+  this.registerWatcher('rollback', rollbackFile);
 
   return this.queueTask('rollback');
 });

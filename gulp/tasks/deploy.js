@@ -18,9 +18,9 @@ function readJSON(path, callback) {
 }
 
 elixir.extend('deploy', function () {
-  gulp.task('deploy', function () {
-    var deployFile = '../storage/app/deploy.json';
+  var deployFile = '../storage/app/deploy.json';
 
+  gulp.task('deploy', function () {
     readJSON(deployFile, function (err, result) {
       if (err) {
         return console.log(err);
@@ -33,7 +33,13 @@ elixir.extend('deploy', function () {
     });
   });
 
-  this.registerWatcher('deploy', '../storage/app/deploy.json');
+  // If file does not exist, then create an empty file
+  if (!fs.existsSync(deployFile)) {
+    fs.closeSync(fs.openSync(deployFile, 'w'));
+    fs.chmodSync(deployFile, 0777);
+  }
+
+  this.registerWatcher('deploy', deployFile);
 
   return this.queueTask('deploy');
 });
