@@ -37,7 +37,7 @@ First you must install [Node.js](https://nodejs.org/) and [Gulp](http://gulpjs.c
 1. Download the application source code by using the Composer `create-project` command:
 
  ```
- composer create-project ngmy/webloyer dev-master
+ composer create-project ngmy/webloyer
  ```
 
 2. Give write permission to the `storage` directory for your web-server user by running the following command:
