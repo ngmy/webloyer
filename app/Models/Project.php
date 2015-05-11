@@ -1,11 +1,14 @@
 <?php namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Project extends Model {
+class Project extends BaseModel {
 
 	protected $table = 'projects';
 
 	protected $fillable = ['name', 'recipe_path', 'stage'];
+
+	public function setStageAttribute($value)
+	{
+		$this->attributes['stage'] = $this->nullIfBlank($value);
+	}
 
 }
