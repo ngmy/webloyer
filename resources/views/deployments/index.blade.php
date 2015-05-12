@@ -20,9 +20,9 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
+						<th><div align="center"></div></th>
 						<th><div align="center">#</div></th>
 						<th><div align="center">Task</div></th>
-						<th><div align="center">Status</div></th>
 						<th><div align="center">Started At</div></th>
 						<th><div align="center">Finished At</div></th>
 						<th><div align="center">Executed By</div></th>
@@ -32,9 +32,9 @@
 				<tbody>
 					@foreach ($deployments as $deployment)
 						<tr>
+							<td>{!! $deployment->status() !!}</td>
 							<td>{{ $deployment->number }}</td>
 							<td>{{ $deployment->task }}</td>
-							<td>{{ $deployment->status }}</td>
 							<td>{{ $deployment->created_at }}</td>
 							<td>{{ $deployment->updated_at }}</td>
 							<td>{{ $deployment->user->email }}</td>

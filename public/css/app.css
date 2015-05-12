@@ -6242,6 +6242,12 @@ button.close {
 .margin-bottom-lg {
   margin-bottom: 30px !important;
 }
+.green {
+  color: #5cb85c;
+}
+.red {
+  color: #d9534f;
+}
 body,
 label,
 .checkbox label {
