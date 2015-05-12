@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a5d708436ed495d3d20b373bd0f313e3",
+    "hash": "b1fe322f1d80c10b803c72ba6ad662ad",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1030,6 +1030,57 @@
                 "shell"
             ],
             "time": "2015-02-25 20:35:54"
+        },
+        {
+            "name": "robclancy/presenter",
+            "version": "1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robclancy/presenter.git",
+                "reference": "ab8a18d69c452688a184a0f8b044d53b0cdc5f2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/robclancy/presenter/zipball/ab8a18d69c452688a184a0f8b044d53b0cdc5f2e",
+                "reference": "ab8a18d69c452688a184a0f8b044d53b0cdc5f2e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "illuminate/view": "4.2.*",
+                "mockery/mockery": "0.7.2",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Robbo\\Presenter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "DBAD"
+            ],
+            "authors": [
+                {
+                    "name": "Robbo",
+                    "email": "mail@robertclancy.net"
+                }
+            ],
+            "description": "This is a simple library to help make a Presenter for your objects.",
+            "keywords": [
+                "decorator",
+                "laravel",
+                "presenter"
+            ],
+            "time": "2015-03-14 08:14:37"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2433,7 +2484,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/5311940484f2c117d32f835637f5c71a49618d8c",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/bb6cae83269152127f01dbf8eb3d11d2b12a99f0",
                 "reference": "5311940484f2c117d32f835637f5c71a49618d8c",
                 "shasum": ""
             },

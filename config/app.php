@@ -149,6 +149,7 @@ return [
 
 		'Collective\Html\HtmlServiceProvider',
 		'DaveJamesMiller\Breadcrumbs\ServiceProvider',
+		'Robbo\Presenter\PresenterServiceProvider',
 
 	],
 
