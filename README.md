@@ -106,7 +106,7 @@ First you must install [Node.js](https://nodejs.org/) and [Gulp](http://gulpjs.c
 
 ### Step 4: Managing deployments
 
-1. Go to Deployments page by click the "Deployments" button.
+1. Go to the Deployments page by click the "Deployments" button.
 
 2. Run the `deploy` task by click the "Deploy" button. Or run the `rollback` task by click the "Rollback" button.
 
