@@ -73,9 +73,17 @@ class Deploy extends Command {
 		}
 
 		// Run the command
+		$tmp['id']      = $deploymentId;
+		$tmp['message'] = '';
+
 		$process = $this->processBuilder->getProcess();
 
-		$process->run();
+		$process->run(function ($type, $buffer) use (&$tmp)
+		{
+			$tmp['message'] .= $buffer;
+
+			$this->deployment->update($tmp);
+		});
 
 		// Store the result
 		if ($process->isSuccessful()) {
