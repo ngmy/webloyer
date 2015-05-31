@@ -6,9 +6,17 @@ class Deployment extends BaseModel implements PresentableInterface {
 
 	protected $table = 'deployments';
 
-	protected $fillable = ['project_id', 'task', 'status', 'message', 'user_id'];
+	protected $fillable = [
+		'project_id',
+		'number',
+		'task',
+		'status',
+		'message',
+		'user_id',
+	];
 
 	protected $casts = [
+		'number' => 'integer',
 		'status' => 'integer',
 	];
 

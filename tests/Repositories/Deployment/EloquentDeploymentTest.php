@@ -81,11 +81,11 @@ class EloquentDeploymentTest extends TestCase {
 			'stage'       => 'staging',
 		]);
 		Factory::createList('App\Models\Deployment', [
-			['project_id' => $arrangedProject->id, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
-			['project_id' => $arrangedProject->id, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
-			['project_id' => $arrangedProject->id, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
-			['project_id' => $arrangedProject->id, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
-			['project_id' => $arrangedProject->id, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
+			['project_id' => $arrangedProject->id, 'number' => 1, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
+			['project_id' => $arrangedProject->id, 'number' => 2, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
+			['project_id' => $arrangedProject->id, 'number' => 3, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
+			['project_id' => $arrangedProject->id, 'number' => 4, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
+			['project_id' => $arrangedProject->id, 'number' => 5, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
 		]);
 
 		$deploymentRepository = new EloquentDeployment(new App\Models\Deployment);
@@ -105,6 +105,9 @@ class EloquentDeploymentTest extends TestCase {
 			'name'        => 'Project 1',
 			'recipe_path' => 'deploy.php',
 			'stage'       => 'staging',
+		]);
+		$arrangedMaxDeployment = Factory::create('App\Models\MaxDeployment', [
+			'project_id' => 1,
 		]);
 
 		$deploymentRepository = new EloquentDeployment(new App\Models\Deployment);

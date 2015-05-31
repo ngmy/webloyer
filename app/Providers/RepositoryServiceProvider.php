@@ -2,6 +2,7 @@
 
 use App\Models\Project;
 use App\Models\Deployment;
+use App\Models\MaxDeployment;
 use App\Repositories\Project\EloquentProject;
 use App\Repositories\Deployment\EloquentDeployment;
 
@@ -28,7 +29,10 @@ class RepositoryServiceProvider extends ServiceProvider {
 	{
 		$this->app->bind('App\Repositories\Project\ProjectInterface', function ($app)
 		{
-			return new EloquentProject(new Project);
+			return new EloquentProject(
+				new Project,
+				new MaxDeployment
+			);
 		});
 
 		$this->app->bind('App\Repositories\Deployment\DeploymentInterface', function ($app)

@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use DB;
+
 class EloquentDeployment implements DeploymentInterface {
 
 	protected $deployment;
@@ -71,7 +73,23 @@ class EloquentDeployment implements DeploymentInterface {
 	 */
 	public function create(array $data)
 	{
-		$deployment = $this->deployment->create($data);
+		$deployment = DB::transaction(function () use ($data)
+		{
+			$maxDeployment = DB::table('max_deployments')
+				->where('project_id', $data['project_id'])
+				->lockForUpdate()
+				->first();
+
+			$data['number'] = $maxDeployment->number + 1;
+
+			$deployment = $this->deployment->create($data);
+
+			DB::table('max_deployments')
+				->where('project_id', $data['project_id'])
+				->update(['number' => $data['number']]);
+
+			return $deployment;
+		});
 
 		return $deployment;
 	}

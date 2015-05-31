@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDeploymentsTable extends Migration {
+class CreateMaxDeploymentsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,15 +12,11 @@ class CreateDeploymentsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('deployments', function(Blueprint $table)
+		Schema::create('max_deployments', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->integer('project_id')->unsigned();
-			$table->integer('number')->unsigned;
-			$table->string('task');
-			$table->tinyInteger('status')->unsigned()->nullable();
-			$table->text('message')->nullable();
-			$table->integer('user_id')->unsigned();
+			$table->integer('number')->unsigned()->default(0);
 			$table->timestamps();
 
 			$table->foreign('project_id')
@@ -28,7 +24,7 @@ class CreateDeploymentsTable extends Migration {
 				->on('projects')
 				->onDelete('cascade');
 
-			$table->unique(['project_id', 'number']);
+			$table->unique('project_id');
 		});
 	}
 
@@ -39,7 +35,7 @@ class CreateDeploymentsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('deployments');
+		Schema::drop('max_deployments');
 	}
 
 }
