@@ -2,19 +2,25 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use DB;
+
 class EloquentProject implements ProjectInterface {
 
 	protected $project;
+
+	protected $maxDeployment;
 
 	/**
 	 * Create a new repository instance.
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model $project
+	 * @param \Illuminate\Database\Eloquent\Model $maxDeployment
 	 * @return void
 	 */
-	public function __construct(Model $project)
+	public function __construct(Model $project, Model $maxDeployment)
 	{
 		$this->project = $project;
+		$this->maxDeployment = $maxDeployment;
 	}
 
 	/**
@@ -53,7 +59,15 @@ class EloquentProject implements ProjectInterface {
 	 */
 	public function create(array $data)
 	{
-		$project = $this->project->create($data);
+		$project = DB::transaction(function () use ($data)
+		{
+			$project = $this->project->create($data);
+
+			$this->maxDeployment->project_id = $project->id;
+			$this->maxDeployment->save();
+
+			return $project;
+		});
 
 		return $project;
 	}

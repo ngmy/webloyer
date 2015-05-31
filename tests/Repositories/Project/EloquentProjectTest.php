@@ -16,7 +16,10 @@ class EloquentProjectTest extends TestCase {
 			'stage'       => 'staging',
 		]);
 
-		$projectRepository = new EloquentProject(new App\Models\Project);
+		$projectRepository = new EloquentProject(
+			new App\Models\Project,
+			new App\Models\MaxDeployment
+		);
 
 		$foundProject = $projectRepository->byId($arrangedProject->id);
 
@@ -35,7 +38,10 @@ class EloquentProjectTest extends TestCase {
 			['name' => 'Project 5', 'recipe_path' => 'deploy.php', 'stage' => 'staging'],
 		]);
 
-		$projectRepository = new EloquentProject(new App\Models\Project);
+		$projectRepository = new EloquentProject(
+			new App\Models\Project,
+			new App\Models\MaxDeployment
+		);
 
 		$foundProjects = $projectRepository->byPage();
 
@@ -44,7 +50,10 @@ class EloquentProjectTest extends TestCase {
 
 	public function test_Should_CreateNewProject()
 	{
-		$projectRepository = new EloquentProject(new App\Models\Project);
+		$projectRepository = new EloquentProject(
+			new App\Models\Project,
+			new App\Models\MaxDeployment
+		);
 
 		$returnedProject = $projectRepository->create([
 			'name'        => 'Project 1',
@@ -68,7 +77,10 @@ class EloquentProjectTest extends TestCase {
 			'stage'       => 'staging',
 		]);
 
-		$projectRepository = new EloquentProject(new App\Models\Project);
+		$projectRepository = new EloquentProject(
+			new App\Models\Project,
+			new App\Models\MaxDeployment
+		);
 		$projectRepository->update([
 			'id'          => $arrangedProject->id,
 			'name'        => 'Project 2',
@@ -92,7 +104,10 @@ class EloquentProjectTest extends TestCase {
 			'stage'       => 'staging',
 		]);
 
-		$projectRepository = new EloquentProject(new App\Models\Project);
+		$projectRepository = new EloquentProject(
+			new App\Models\Project,
+			new App\Models\MaxDeployment
+		);
 		$projectRepository->delete($arrangedProject->id);
 
 		$project = new App\Models\Project;
