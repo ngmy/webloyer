@@ -28,12 +28,6 @@ Webloyer has the following requirements:
 
 ## Installation
 
-### Install Node.js and Gulp
-
-First you must install [Node.js](https://nodejs.org/) and [Gulp](http://gulpjs.com/) if they are not already installed.
-
-### Install Webloyer
-
 1. Download the application source code by using the Composer `create-project` command:
 
  ```
@@ -62,16 +56,10 @@ First you must install [Node.js](https://nodejs.org/) and [Gulp](http://gulpjs.c
 
 5. Open the `config/mail.php` file and set your mail server details.
 
-6. Install Laravel Elixir by using the NPM `install` command:
+6. Start the queue listener as a background process by using the Artisan `queue:listen` command:
 
  ```
- npm install
- ```
-
-7. Start the Elixir watch task for Webloyer as a background process by running the following command:
-
- ```
- nohup gulp watch --gulpfile=gulp/webloyer-gulpfile.js &
+ nohup php artisan queue:listen --timeout=0 &
  ```
 
  **Note:** You must be running this command as your deployment-user.
