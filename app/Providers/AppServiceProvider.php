@@ -2,7 +2,7 @@
 
 use App\Console\Commands\Deploy;
 use App\Console\Commands\Rollback;
-use App\Services\Deployment\StorageDeployCommander;
+use App\Services\Deployment\QueueDeployCommander;
 use App\Services\Form\Project\ProjectForm;
 use App\Services\Form\Project\ProjectFormLaravelValidator;
 use App\Services\Form\Deployment\DeploymentForm;
@@ -41,7 +41,9 @@ class AppServiceProvider extends ServiceProvider {
 
 		$this->app->bind('App\Services\Deployment\DeployCommanderInterface', function ($app)
 		{
-			return new StorageDeployCommander;
+			return new QueueDeployCommander(
+				$app->make('Illuminate\Contracts\Bus\Dispatcher')
+			);
 		});
 
 		$this->app->bind('App\Services\Form\Project\ProjectForm', function ($app)
@@ -64,7 +66,6 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->bind('App\Console\Commands\Deploy', function ($app)
 		{
 			$processBuilder = new ProcessBuilder;
-			$processBuilder->setTimeout(300);
 
 			return new Deploy(
 				$app->make('App\Repositories\Project\ProjectInterface'),
@@ -76,7 +77,6 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->bind('App\Console\Commands\Rollback', function ($app)
 		{
 			$processBuilder = new ProcessBuilder;
-			$processBuilder->setTimeout(300);
 
 			return new Rollback(
 				$app->make('App\Repositories\Project\ProjectInterface'),
