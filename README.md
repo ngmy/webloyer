@@ -14,11 +14,11 @@ Webloyer is a Web UI for managing [Deployer](https://github.com/deployphp/deploy
 
 Webloyer has the following requirements:
 
-* PHP >= 5.4
-
-* Mcrypt PHP Extension
+* PHP >= 5.5.9
 
 * OpenSSL PHP Extension
+
+* PDO PHP Extension
 
 * Mbstring PHP Extension
 

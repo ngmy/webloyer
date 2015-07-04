@@ -1,12 +1,10 @@
-<?php namespace Tests\Commands;
+<?php namespace Tests\Jobs;
 
-use App\Commands\Deploy;
+use App\Jobs\Deploy;
 
 use Tests\Helpers\Factory;
 
 class DeployTest extends \TestCase {
-
-	use \Tests\Helpers\ConsoleCommandTestHelper;
 
 	use \Tests\Helpers\MockeryHelper;
 
@@ -90,9 +88,9 @@ class DeployTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Deploy($deployment);
+		$job = new Deploy($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder
@@ -161,9 +159,9 @@ class DeployTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Deploy($deployment);
+		$job = new Deploy($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder
@@ -233,9 +231,9 @@ class DeployTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Deploy($deployment);
+		$job = new Deploy($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder
@@ -305,9 +303,9 @@ class DeployTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Deploy($deployment);
+		$job = new Deploy($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder

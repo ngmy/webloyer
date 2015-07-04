@@ -1,7 +1,7 @@
 <?php namespace App\Services\Deployment;
 
-use App\Commands\Deploy;
-use App\Commands\Rollback;
+use App\Jobs\Deploy;
+use App\Jobs\Rollback;
 
 use Illuminate\Contracts\Bus\Dispatcher;
 
