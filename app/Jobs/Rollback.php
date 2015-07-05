@@ -51,6 +51,7 @@ class Rollback extends Job implements SelfHandling, ShouldQueue {
 		$processBuilder
 			->add('dep')
 			->add("-f=$recipeFile")
+			->add('-n')
 			->add('-vv')
 			->add('rollback');
 
