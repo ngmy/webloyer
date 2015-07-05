@@ -1,25 +1,25 @@
-<?php namespace App\Commands;
+<?php namespace App\Jobs;
 
-use App\Commands\Command;
+use App\Jobs\Job;
 use App\Repositories\Deployment\DeploymentInterface;
 use App\Repositories\Project\ProjectInterface;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Contracts\Queue\ShouldBeQueued;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 
 use Symfony\Component\Process\ProcessBuilder;
 
-class Deploy extends Command implements SelfHandling, ShouldBeQueued {
+class Rollback extends Job implements SelfHandling, ShouldQueue {
 
 	use InteractsWithQueue, SerializesModels;
 
 	protected $deployment;
 
 	/**
-	 * Create a new command instance.
+	 * Create a new job instance.
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model $deployment
 	 * @return void
@@ -30,7 +30,7 @@ class Deploy extends Command implements SelfHandling, ShouldBeQueued {
 	}
 
 	/**
-	 * Execute the command.
+	 * Execute the job.
 	 *
 	 * @param \App\Repositories\Deployment\DeployCommanderInterface $deploymentRepository
 	 * @param \App\Repositories\Project\ProjectInterface            $projectRepository
@@ -52,7 +52,7 @@ class Deploy extends Command implements SelfHandling, ShouldBeQueued {
 			->add('dep')
 			->add("-f=$recipeFile")
 			->add('-vv')
-			->add('deploy');
+			->add('rollback');
 
 		if (isset($stage)) {
 			$processBuilder->add($stage);

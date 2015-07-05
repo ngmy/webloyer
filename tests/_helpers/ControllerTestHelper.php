@@ -4,6 +4,33 @@ use Session;
 
 trait ControllerTestHelper {
 
+	public function post($uri, array $data = [], array $headers = [])
+	{
+		$data = array_merge($data, ['_token' => Session::token()]);
+
+		parent::post($uri, $data, $headers);
+
+		return $this;
+	}
+
+	public function put($uri, array $data = [], array $headers = [])
+	{
+		$data = array_merge($data, ['_token' => Session::token()]);
+
+		parent::put($uri, $data, $headers);
+
+		return $this;
+	}
+
+	public function delete($uri, array $data = [], array $headers = [])
+	{
+		$data = array_merge($data, ['_token' => Session::token()]);
+
+		parent::delete($uri, $data, $headers);
+
+		return $this;
+	}
+
 	protected function auth($class = 'App\Models\User', $data = [])
 	{
 		$user = new $class;
@@ -13,32 +40,6 @@ trait ControllerTestHelper {
 		}
 
 		$this->be($user);
-	}
-
-	protected function get($uri, $params = [])
-	{
-		$this->call('GET', $uri, $params);
-	}
-
-	protected function post($uri, $params = [])
-	{
-		$params = array_merge($params, ['_token' => Session::token()]);
-
-		$this->call('POST', $uri, $params);
-	}
-
-	protected function put($uri, $params = [])
-	{
-		$params = array_merge($params, ['_token' => Session::token()]);
-
-		$this->call('PUT', $uri, $params);
-	}
-
-	protected function delete($uri, $params = [])
-	{
-		$params = array_merge($params, ['_token' => Session::token()]);
-
-		$this->call('DELETE', $uri, $params);
 	}
 
 }

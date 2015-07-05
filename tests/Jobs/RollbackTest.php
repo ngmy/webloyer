@@ -1,12 +1,10 @@
-<?php namespace Tests\Commands;
+<?php namespace Tests\Jobs;
 
-use App\Commands\Rollback;
+use App\Jobs\Rollback;
 
 use Tests\Helpers\Factory;
 
 class RollbackTest extends \TestCase {
-
-	use \Tests\Helpers\ConsoleCommandTestHelper;
 
 	use \Tests\Helpers\MockeryHelper;
 
@@ -91,9 +89,9 @@ class RollbackTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Rollback($deployment);
+		$job = new Rollback($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder
@@ -162,9 +160,9 @@ class RollbackTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Rollback($deployment);
+		$job = new Rollback($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder
@@ -234,9 +232,9 @@ class RollbackTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Rollback($deployment);
+		$job = new Rollback($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder
@@ -306,9 +304,9 @@ class RollbackTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
-		$command = new Rollback($deployment);
+		$job = new Rollback($deployment);
 
-		$command->handle(
+		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder

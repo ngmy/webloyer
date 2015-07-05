@@ -11,8 +11,9 @@
 	],
 	"type": "project",
 	"require": {
-		"laravel/framework": "5.0.*",
-		"laravelcollective/html": "~5.0",
+		"php": ">=5.5.9",
+		"laravel/framework": "5.1.*",
+		"laravelcollective/html": "5.1.*",
 		"davejamesmiller/laravel-breadcrumbs": "3.0.*",
 		"robclancy/presenter": "1.3.*"
 	},
