@@ -24,8 +24,6 @@ Webloyer has the following requirements:
 
 * Tokenizer PHP Extension
 
-* Deployer >= 3.0
-
 ## Installation
 
 1. Download the application source code by using the Composer `create-project` command:

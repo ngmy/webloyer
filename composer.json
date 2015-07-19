@@ -39,6 +39,9 @@
 	},
 	"scripts": {
 		"post-install-cmd": [
+			"curl -L http://deployer.org/deployer.phar -o deployer.phar",
+			"mv deployer.phar vendor/bin/dep",
+			"chmod +x vendor/bin/dep",
 			"php artisan clear-compiled",
 			"php artisan optimize"
 		],

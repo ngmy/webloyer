@@ -18,6 +18,8 @@ class Deploy extends Job implements SelfHandling, ShouldQueue {
 
 	protected $deployment;
 
+	protected $executable;
+
 	/**
 	 * Create a new job instance.
 	 *
@@ -27,6 +29,7 @@ class Deploy extends Job implements SelfHandling, ShouldQueue {
 	public function __construct(Model $deployment)
 	{
 		$this->deployment = $deployment;
+		$this->executable = base_path('vendor/bin/dep');
 	}
 
 	/**
@@ -49,7 +52,7 @@ class Deploy extends Job implements SelfHandling, ShouldQueue {
 
 		// Create a command
 		$processBuilder
-			->add('dep')
+			->add($this->executable)
 			->add("-f=$recipeFile")
 			->add('-n')
 			->add('-vv')
