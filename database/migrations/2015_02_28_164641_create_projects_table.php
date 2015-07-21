@@ -18,6 +18,8 @@ class CreateProjectsTable extends Migration {
 			$table->string('name');
 			$table->string('recipe_path');
 			$table->string('stage')->nullable();
+			$table->string('servers');
+			$table->string('repository');
 			$table->timestamps();
 		});
 	}

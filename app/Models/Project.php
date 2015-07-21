@@ -4,7 +4,13 @@ class Project extends BaseModel {
 
 	protected $table = 'projects';
 
-	protected $fillable = ['name', 'recipe_path', 'stage'];
+	protected $fillable = [
+		'name',
+		'recipe_path',
+		'stage',
+		'repository',
+		'servers',
+	];
 
 	public function setStageAttribute($value)
 	{

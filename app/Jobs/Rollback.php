@@ -3,6 +3,7 @@
 use App\Jobs\Job;
 use App\Repositories\Deployment\DeploymentInterface;
 use App\Repositories\Project\ProjectInterface;
+use App\Services\Deployment\DeployerDeploymentFileBuilder;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,32 +36,36 @@ class Rollback extends Job implements SelfHandling, ShouldQueue {
 	/**
 	 * Execute the job.
 	 *
-	 * @param \App\Repositories\Deployment\DeployCommanderInterface $deploymentRepository
-	 * @param \App\Repositories\Project\ProjectInterface            $projectRepository
-	 * @param \Symfony\Component\Process\ProcessBuilder             $processBuilder
+	 * @param \App\Repositories\Deployment\DeployCommanderInterface  $deploymentRepository
+	 * @param \App\Repositories\Project\ProjectInterface             $projectRepository
+	 * @param \Symfony\Component\Process\ProcessBuilder              $processBuilder
+	 * @param \App\Services\Deployment\DeployerDeploymentFileBuilder $deploymentFileBuilder
 	 * @return void
 	 */
-	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ProcessBuilder $processBuilder)
+	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ProcessBuilder $processBuilder, DeployerDeploymentFileBuilder $deploymentFileBuilder)
 	{
 		$deploymentId = $this->deployment->id;
 
 		$deployment = $deploymentRepository->byId($deploymentId);
 		$project    = $projectRepository->byId($deployment->project_id);
 
-		$recipeFile = $project->recipe_path;
-		$stage      = $project->stage;
+		$stage = $project->stage;
+
+		// Create a deployment file
+		$deploymentFile = $deploymentFileBuilder
+			->setDeployment($deployment)
+			->setProject($project)
+			->build()
+			->getFilePath();
 
 		// Create a command
 		$processBuilder
 			->add($this->executable)
-			->add("-f=$recipeFile")
+			->add("-f=$deploymentFile")
 			->add('-n')
 			->add('-vv')
-			->add('rollback');
-
-		if (isset($stage)) {
-			$processBuilder->add($stage);
-		}
+			->add('rollback')
+			->add($stage);
 
 		// Run the command
 		$tmp['id']      = $deploymentId;

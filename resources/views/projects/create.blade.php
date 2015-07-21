@@ -31,8 +31,20 @@
 								{!! Form::text('recipe_path', null, ['class' => 'form-control', 'id' => 'recipe-path']) !!}
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="recipe-path" class="col-md-4 control-label">Stage</label>
+						<div class="form-group required">
+							<label for="servers" class="col-md-4 control-label">Server List File Path</label>
+							<div class="col-md-6">
+								{!! Form::text('servers', null, ['class' => 'form-control', 'id' => 'servers']) !!}
+							</div>
+						</div>
+						<div class="form-group required">
+							<label for="repository" class="col-md-4 control-label">Repository URL</label>
+							<div class="col-md-6">
+								{!! Form::text('repository', null, ['class' => 'form-control', 'id' => 'repository']) !!}
+							</div>
+						</div>
+						<div class="form-group required">
+							<label for="stage" class="col-md-4 control-label">Stage</label>
 							<div class="col-md-6">
 								{!! Form::text('stage', null, ['class' => 'form-control', 'id' => 'stage']) !!}
 							</div>
