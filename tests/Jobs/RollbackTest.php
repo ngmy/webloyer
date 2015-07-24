@@ -43,12 +43,12 @@ class RollbackTest extends \TestCase {
 		]);
 
 		$project = Factory::build('App\Models\Project', [
-			'id'          => 1,
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
-			'created_at'  => new \Carbon\Carbon,
-			'updated_at'  => new \Carbon\Carbon,
+			'id'         => 1,
+			'name'       => 'Project 1',
+			'recipe_id'  => 1,
+			'stage'      => 'staging',
+			'created_at' => new \Carbon\Carbon,
+			'updated_at' => new \Carbon\Carbon,
 		]);
 
 		$this->mockDeploymentRepository
@@ -135,12 +135,12 @@ class RollbackTest extends \TestCase {
 		]);
 
 		$project = Factory::build('App\Models\Project', [
-			'id'          => 1,
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
-			'created_at'  => new \Carbon\Carbon,
-			'updated_at'  => new \Carbon\Carbon,
+			'id'         => 1,
+			'name'       => 'Project 1',
+			'recipe_id'  => 1,
+			'stage'      => 'staging',
+			'created_at' => new \Carbon\Carbon,
+			'updated_at' => new \Carbon\Carbon,
 		]);
 
 		$this->mockDeploymentRepository

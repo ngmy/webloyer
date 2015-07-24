@@ -40,10 +40,16 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 	public function test_Should_FailToValidate_When_TaskFieldIsMissing()
 	{
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 
 		$input = [
@@ -61,10 +67,16 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 	public function test_Should_FailToValidate_When_TaskFieldIsInvalid()
 	{
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 
 		$input = [
@@ -83,10 +95,16 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 	public function test_Should_PassToValidate_When_ProjectIdFieldAndTaskFieldAreValid()
 	{
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 
 		$input = [

@@ -1,7 +1,6 @@
 <?php namespace App\Services\Deployment;
 
-use App\Repositories\Deployment\DeploymentInterface;
-use App\Repositories\Project\ProjectInterface;
+use App\Repositories\Recipe\RecipeInterface;
 
 use Storage;
 
@@ -9,9 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class DeployerDeploymentFileBuilder {
 
+	protected $recipeRepository;
+
 	protected $deployment;
 
 	protected $project;
+
+	public function __construct(RecipeInterface $recipeRepository)
+	{
+		$this->recipeRepository = $recipeRepository;
+	}
 
 	public function __destruct()
 	{
@@ -65,14 +71,14 @@ class DeployerDeploymentFileBuilder {
 	 */
 	public function build()
 	{
-		$contents = <<<EOF
-<?php
-require '{$this->project->recipe_path}';
+		$recipe = $this->recipeRepository->byId($this->project->recipe_id);
 
-serverList('{$this->project->servers}');
+		$contents   = $recipe->body;
+		$repository = $this->project->repository;
+		$servers    = $this->project->servers;
 
-set('repository', '{$this->project->repository}');
-EOF;
+		$contents = preg_replace('/\{\{\s*repository\s*\}\}/', $repository, $contents);
+		$contents = preg_replace('/\{\{\s*servers\s*\}\}/', $servers, $contents);
 
 		$file = $this->getFilename();
 

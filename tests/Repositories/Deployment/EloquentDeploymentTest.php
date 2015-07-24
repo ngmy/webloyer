@@ -15,10 +15,15 @@ class EloquentDeploymentTest extends TestCase {
 			'email'    => 'user1@example.com',
 			'password' => 'password',
 		]);
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 		$arrangedDeployment = Factory::create('App\Models\Deployment', [
 			'project_id' => $arrangedProject->id,
@@ -45,10 +50,15 @@ class EloquentDeploymentTest extends TestCase {
 			'email'    => 'user1@example.com',
 			'password' => 'password',
 		]);
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 		$arrangedDeployment = Factory::create('App\Models\Deployment', [
 			'project_id' => $arrangedProject->id,
@@ -75,10 +85,15 @@ class EloquentDeploymentTest extends TestCase {
 			'email'    => 'user1@example.com',
 			'password' => 'password',
 		]);
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 		Factory::createList('App\Models\Deployment', [
 			['project_id' => $arrangedProject->id, 'number' => 1, 'task' => 'deploy', 'user_id' => $arrangedUser->id],
@@ -101,10 +116,15 @@ class EloquentDeploymentTest extends TestCase {
 			'email'    => 'user1@example.com',
 			'password' => 'password',
 		]);
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 		$arrangedMaxDeployment = Factory::create('App\Models\MaxDeployment', [
 			'project_id' => 1,
@@ -137,10 +157,15 @@ class EloquentDeploymentTest extends TestCase {
 			'email'    => 'user1@example.com',
 			'password' => 'password',
 		]);
+		$arrangedRecipe = Factory::create('App\Models\Recipe', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'stage'       => 'staging',
+			'name'      => 'Project 1',
+			'recipe_id' => $arrangedRecipe->id,
+			'stage'     => 'staging',
 		]);
 		$arrangedDeployment = Factory::create('App\Models\Deployment', [
 			'project_id' => $arrangedProject->id,

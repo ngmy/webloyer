@@ -54,6 +54,19 @@ class RouteServiceProvider extends ServiceProvider {
 
 			return $deployment;
 		});
+
+		$router->bind('recipes', function ($id)
+		{
+			$recipeRepository = $this->app->make('App\Repositories\Recipe\RecipeInterface');
+
+			$recipe = $recipeRepository->byId($id);
+
+			if (is_null($recipe)) {
+				throw new NotFoundHttpException;
+			}
+
+			return $recipe;
+		});
 	}
 
 	/**

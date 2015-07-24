@@ -1,11 +1,21 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1c83c54f77534afb1ed5b6c9863600f6",
+    "hash": "1d9a25f42dbaae7f1e048468b2db953d",
     "packages": [
+        {
+            "name": "ajaxorg/ace-builds",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ajaxorg/ace-builds.git",
+                "reference": "v1.2.0"
+            },
+            "type": "library"
+        },
         {
             "name": "classpreloader/classpreloader",
             "version": "2.0.0",
@@ -2052,7 +2062,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/491d4f3c1792273d73aa851a1330f9050a8257a0",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/971dcdfdc2239b3d516672139f4368c19f6c2060",
                 "reference": "491d4f3c1792273d73aa851a1330f9050a8257a0",
                 "shasum": ""
             },
