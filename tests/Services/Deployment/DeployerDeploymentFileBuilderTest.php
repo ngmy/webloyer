@@ -6,15 +6,26 @@ use Tests\Helpers\Factory;
 
 class DeployerDeploymentFileBuilderTest extends TestCase {
 
+	use \Tests\Helpers\MockeryHelper;
+
+	protected $mockRecipeRepository;
+
+	public function setUp()
+	{
+		parent::setUp();
+
+		$this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
+	}
+
 	public function test_Should_BuildDeployerDeploymentFile()
 	{
 		$project = Factory::build('App\Models\Project', [
-			'id'          => 1,
-			'name'        => 'Project 1',
-			'recipe_path' => 'deploy.php',
-			'servers'     => 'servers.yml',
-			'repository'  => 'http://example.com',
-			'stage'       => 'staging',
+			'id'         => 1,
+			'name'       => 'Project 1',
+			'recipe_id ' => 1,
+			'servers'    => 'servers.yml',
+			'repository' => 'http://example.com',
+			'stage'      => 'staging',
 		]);
 		$deployment = Factory::build('App\Models\Deployment', [
 			'id'         => 1,
@@ -26,6 +37,12 @@ class DeployerDeploymentFileBuilderTest extends TestCase {
 			'updated_at' => new Carbon\Carbon,
 			'user'       => new App\Models\User,
 		]);
+		$recipe = Factory::build('App\Models\Recipe', [
+			'id'         => 1,
+			'name'       => '',
+			'desctipton' => '',
+			'body'       => '',
+		]);
 
 		Storage::shouldReceive('delete')
 			->once()
@@ -35,7 +52,14 @@ class DeployerDeploymentFileBuilderTest extends TestCase {
 			->once()
 			->andReturn(1);
 
-		$deploymentFileBuilder = new DeployerDeploymentFileBuilder;
+		$this->mockRecipeRepository
+			->shouldReceive('byId')
+			->once()
+			->andReturn($recipe);
+
+		$deploymentFileBuilder = new DeployerDeploymentFileBuilder(
+			$this->mockRecipeRepository
+		);
 		$result = $deploymentFileBuilder
 			->setDeployment($deployment)
 			->setProject($project)

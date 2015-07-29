@@ -12,6 +12,8 @@ class ProjectsControllerTest extends TestCase {
 
 	protected $mockProjectForm;
 
+	protected $mockRecipeRepository;
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -22,6 +24,7 @@ class ProjectsControllerTest extends TestCase {
 
 		$this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
 		$this->mockProjectForm = $this->mock('App\Services\Form\Project\ProjectForm');
+		$this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
 	}
 
 	public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
@@ -47,6 +50,11 @@ class ProjectsControllerTest extends TestCase {
 
 	public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
 	{
+		$this->mockRecipeRepository
+			->shouldReceive('all')
+			->once()
+			->andReturn(new Illuminate\Database\Eloquent\Collection);
+
 		$this->get('projects/create');
 
 		$this->assertResponseOk();
@@ -126,6 +134,11 @@ class ProjectsControllerTest extends TestCase {
 			->shouldReceive('byId')
 			->once()
 			->andReturn($project);
+
+		$this->mockRecipeRepository
+			->shouldReceive('all')
+			->once()
+			->andReturn(new Illuminate\Database\Eloquent\Collection);
 
 		$this->get('projects/1/edit');
 

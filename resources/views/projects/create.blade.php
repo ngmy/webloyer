@@ -26,9 +26,9 @@
 							</div>
 						</div>
 						<div class="form-group required">
-							<label for="recipe-path" class="col-md-4 control-label">Recipe File Path</label>
+							<label for="recipe_id" class="col-md-4 control-label">Recipe</label>
 							<div class="col-md-6">
-								{!! Form::text('recipe_path', null, ['class' => 'form-control', 'id' => 'recipe-path']) !!}
+								{!! Form::select('recipe_id', $recipes, null, ['class' => 'form-control', 'id' => 'recipe_id']) !!}
 							</div>
 						</div>
 						<div class="form-group required">

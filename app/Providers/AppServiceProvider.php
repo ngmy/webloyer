@@ -7,6 +7,9 @@ use App\Services\Form\Project\ProjectForm;
 use App\Services\Form\Project\ProjectFormLaravelValidator;
 use App\Services\Form\Deployment\DeploymentForm;
 use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
+use App\Services\Form\Recipe\RecipeForm;
+use App\Services\Form\Recipe\RecipeFormLaravelValidator;
+use App\Services\Deployment\DeployerDeploymentFileBuilder;
 
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Process\ProcessBuilder;
@@ -63,6 +66,14 @@ class AppServiceProvider extends ServiceProvider {
 			);
 		});
 
+		$this->app->bind('App\Services\Form\Recipe\RecipeForm', function ($app)
+		{
+			return new RecipeForm(
+				new RecipeFormLaravelValidator($app['validator']),
+				$app->make('App\Repositories\Recipe\RecipeInterface')
+			);
+		});
+
 		$this->app->bind('App\Console\Commands\Deploy', function ($app)
 		{
 			$processBuilder = new ProcessBuilder;
@@ -83,6 +94,14 @@ class AppServiceProvider extends ServiceProvider {
 				$app->make('App\Repositories\Deployment\DeploymentInterface'),
 				$processBuilder
 			);
+		});
+
+		$this->app->bind('App\Services\Deployment\DeployerDeploymentFileBuilder', function ($app)
+		{
+			return new DeployerDeploymentFileBuilder(
+				$app->make('App\Repositories\Recipe\RecipeInterface')
+			);
+		
 		});
 	}
 

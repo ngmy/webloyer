@@ -10,12 +10,27 @@
 		}
 	],
 	"type": "project",
+	"repositories": [
+		{
+			"type": "package",
+			"package": {
+				"name": "ajaxorg/ace-builds",
+				"version": "1.2.0",
+				"source": {
+					"url": "https://github.com/ajaxorg/ace-builds.git",
+					"type": "git",
+					"reference": "v1.2.0"
+				}
+			}
+		}
+	],
 	"require": {
 		"php": ">=5.5.9",
 		"laravel/framework": "5.1.*",
 		"laravelcollective/html": "5.1.*",
 		"davejamesmiller/laravel-breadcrumbs": "3.0.*",
-		"robclancy/presenter": "1.3.*"
+		"robclancy/presenter": "1.3.*",
+		"ajaxorg/ace-builds": "1.2.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
@@ -42,10 +57,14 @@
 			"curl -L http://deployer.org/deployer.phar -o deployer.phar",
 			"mv deployer.phar vendor/bin/dep",
 			"chmod +x vendor/bin/dep",
+			"mkdir -p public/js/vendor/ajaxorg",
+			"ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
 			"php artisan clear-compiled",
 			"php artisan optimize"
 		],
 		"post-update-cmd": [
+			"mkdir -p public/js/vendor/ajaxorg",
+			"ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
 			"php artisan clear-compiled",
 			"php artisan optimize"
 		],

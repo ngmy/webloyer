@@ -34,3 +34,27 @@ Breadcrumbs::register('projects.deployments.show', function ($breadcrumbs, App\M
 	$breadcrumbs->parent('projects.deployments.index', $project);
 	$breadcrumbs->push($deployment->number, route('projects.deployments.show', $project, $deployment));
 });
+
+Breadcrumbs::register('recipes.index', function ($breadcrumbs)
+{
+	$breadcrumbs->push('Recipes', route('recipes.index'));
+});
+
+Breadcrumbs::register('recipes.create', function ($breadcrumbs)
+{
+	$breadcrumbs->parent('recipes.index');
+	$breadcrumbs->push('Create', route('recipes.create'));
+});
+
+Breadcrumbs::register('recipes.show', function ($breadcrumbs, App\Models\Recipe $recipe)
+{
+	$breadcrumbs->parent('recipes.index');
+	$breadcrumbs->push($recipe->name, route('recipes.show', $recipe));
+});
+
+Breadcrumbs::register('recipes.edit', function ($breadcrumbs, App\Models\Recipe $recipe)
+{
+	$breadcrumbs->parent('recipes.show', $recipe);
+	$breadcrumbs->push('Edit', route('recipes.edit', $recipe));
+});
+

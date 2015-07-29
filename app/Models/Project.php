@@ -6,7 +6,7 @@ class Project extends BaseModel {
 
 	protected $fillable = [
 		'name',
-		'recipe_path',
+		'recipe_id',
 		'stage',
 		'repository',
 		'servers',

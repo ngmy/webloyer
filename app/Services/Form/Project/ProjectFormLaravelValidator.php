@@ -6,7 +6,7 @@ class ProjectFormLaravelValidator extends AbstractLaravelValidator {
 
 	protected $rules = [
 		'name'        => 'required',
-		'recipe_path' => 'required',
+		'recipe_id'   => 'required|exists:recipes,id',
 		'stage'       => 'required',
 		'servers'     => 'required',
 		'repository'  => 'required|url',

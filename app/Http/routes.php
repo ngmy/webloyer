@@ -27,3 +27,5 @@ Route::resource('projects', 'ProjectsController');
 Route::resource('projects.deployments', 'DeploymentsController', [
 	'expect' => ['index', 'store', 'show']
 ]);
+
+Route::resource('recipes', 'RecipesController');

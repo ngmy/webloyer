@@ -34,6 +34,7 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/projects') }}">Projects</a></li>
+					<li><a href="{{ url('/recipes') }}">Recipes</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
@@ -72,6 +73,38 @@
 	<!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script src="/js/vendor/ajaxorg/ace/ace.js"></script>
+	<script>
+		// Hook up ACE editor to all textareas with data-editor attribute
+		$(function () {
+			$('textarea[data-editor]').each(function () {
+				var textarea = $(this);
+
+				var mode = textarea.data('editor');
+
+				var editDiv = $('<div>', {
+					position: 'absolute',
+					width: textarea.closest('div').width(),
+					height: textarea.closest('div').height(),
+					'class': textarea.attr('class')
+				}).insertBefore(textarea);
+
+				textarea.css('display', 'none');
+
+				var editor = ace.edit(editDiv[0]);
+				editor.renderer.setShowGutter(false);
+				editor.getSession().setValue(textarea.val());
+				editor.getSession().setMode('ace/mode/' + mode);
+				editor.setTheme('ace/theme/github');
+
+				// copy back to textarea on form submit...
+				textarea.closest('form').submit(function () {
+					textarea.val(editor.getSession().getValue());
+				})
+
+			});
+		});
+	</script>
 	<script>
 		$(function () {
 			$('form').submit(function () {

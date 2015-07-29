@@ -16,7 +16,7 @@ class CreateDeploymentsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('project_id')->unsigned();
-			$table->integer('number')->unsigned;
+			$table->integer('number')->unsigned();
 			$table->string('task');
 			$table->tinyInteger('status')->unsigned()->nullable();
 			$table->text('message')->nullable();

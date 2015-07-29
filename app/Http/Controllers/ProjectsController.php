@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\Project\ProjectInterface;
+use App\Repositories\Recipe\RecipeInterface;
 use App\Services\Form\Project\ProjectForm;
 use App\Models\Project;
 
@@ -14,19 +15,23 @@ class ProjectsController extends Controller {
 
 	protected $projectForm;
 
+	protected $recipe;
+
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @param \App\Repositories\Project\ProjectInterface $project
 	 * @param \App\Services\Form\Project\ProjectForm     $projectForm
+	 * @param \App\Repositories\Recipe\RecipeInterface   $recipe
 	 * @return void
 	 */
-	public function __construct(ProjectInterface $project, ProjectForm $projectForm)
+	public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe)
 	{
 		$this->middleware('auth');
 
 		$this->project     = $project;
 		$this->projectForm = $projectForm;
+		$this->recipe      = $recipe;
 	}
 
 	/**
@@ -53,7 +58,11 @@ class ProjectsController extends Controller {
 	 */
 	public function create()
 	{
-		return view('projects.create');
+		$recipes = $this->recipe->all()->toArray();
+
+		$recipes = array_column($recipes, 'name', 'id');
+
+		return view('projects.create')->with('recipes', $recipes);
 	}
 
 	/**
@@ -94,7 +103,13 @@ class ProjectsController extends Controller {
 	 */
 	public function edit(Project $project)
 	{
-		return view('projects.edit')->with('project', $project);
+		$recipes = $this->recipe->all()->toArray();
+
+		$recipes = array_column($recipes, 'name', 'id');
+
+		return view('projects.edit')
+			->with('project', $project)
+			->with('recipes', $recipes);
 	}
 
 	/**
