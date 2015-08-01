@@ -58,3 +58,25 @@ Breadcrumbs::register('recipes.edit', function ($breadcrumbs, App\Models\Recipe 
 	$breadcrumbs->push('Edit', route('recipes.edit', $recipe));
 });
 
+Breadcrumbs::register('servers.index', function ($breadcrumbs)
+{
+	$breadcrumbs->push('Servers', route('servers.index'));
+});
+
+Breadcrumbs::register('servers.create', function ($breadcrumbs)
+{
+	$breadcrumbs->parent('servers.index');
+	$breadcrumbs->push('Create', route('servers.create'));
+});
+
+Breadcrumbs::register('servers.show', function ($breadcrumbs, App\Models\Server $server)
+{
+	$breadcrumbs->parent('servers.index');
+	$breadcrumbs->push($server->name, route('servers.show', $server));
+});
+
+Breadcrumbs::register('servers.edit', function ($breadcrumbs, App\Models\Server $server)
+{
+	$breadcrumbs->parent('servers.show', $server);
+	$breadcrumbs->push('Edit', route('servers.edit', $server));
+});

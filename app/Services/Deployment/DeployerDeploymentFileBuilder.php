@@ -14,6 +14,8 @@ class DeployerDeploymentFileBuilder {
 
 	protected $project;
 
+	protected $serverListFile;
+
 	public function __construct(RecipeInterface $recipeRepository)
 	{
 		$this->recipeRepository = $recipeRepository;
@@ -65,6 +67,19 @@ class DeployerDeploymentFileBuilder {
 	}
 
 	/**
+	 * Set a server list file path.
+	 *
+	 * @param string $serverListFile
+	 * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+	 */
+	public function setServerListFile($serverListFile)
+	{
+		$this->serverListFile = $serverListFile;
+
+		return $this;
+	}
+
+	/**
 	 * Build a deployment file.
 	 *
 	 * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
@@ -75,7 +90,7 @@ class DeployerDeploymentFileBuilder {
 
 		$contents   = $recipe->body;
 		$repository = $this->project->repository;
-		$servers    = $this->project->servers;
+		$servers    = $this->serverListFile;
 
 		$contents = preg_replace('/\{\{\s*repository\s*\}\}/', $repository, $contents);
 		$contents = preg_replace('/\{\{\s*servers\s*\}\}/', $servers, $contents);

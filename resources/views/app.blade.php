@@ -35,6 +35,7 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/projects') }}">Projects</a></li>
 					<li><a href="{{ url('/recipes') }}">Recipes</a></li>
+					<li><a href="{{ url('/servers') }}">Servers</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">

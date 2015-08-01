@@ -29,3 +29,5 @@ Route::resource('projects.deployments', 'DeploymentsController', [
 ]);
 
 Route::resource('recipes', 'RecipesController');
+
+Route::resource('servers', 'ServersController');

@@ -32,9 +32,9 @@
 							</div>
 						</div>
 						<div class="form-group required">
-							<label for="servers" class="col-md-4 control-label">Server List File Path</label>
+							<label for="server_id" class="col-md-4 control-label">Server</label>
 							<div class="col-md-6">
-								{!! Form::text('servers', $project->servers, ['class' => 'form-control', 'id' => 'servers']) !!}
+								{!! Form::select('server_id', $servers, $project->server_id, ['class' => 'form-control', 'id' => 'server_id']) !!}
 							</div>
 						</div>
 						<div class="form-group required">

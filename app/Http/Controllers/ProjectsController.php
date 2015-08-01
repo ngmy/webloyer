@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Recipe\RecipeInterface;
+use App\Repositories\Server\ServerInterface;
 use App\Services\Form\Project\ProjectForm;
 use App\Models\Project;
 
@@ -17,21 +18,25 @@ class ProjectsController extends Controller {
 
 	protected $recipe;
 
+	protected $server;
+
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @param \App\Repositories\Project\ProjectInterface $project
 	 * @param \App\Services\Form\Project\ProjectForm     $projectForm
 	 * @param \App\Repositories\Recipe\RecipeInterface   $recipe
+	 * @param \App\Repositories\Server\ServerInterface   $server
 	 * @return void
 	 */
-	public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe)
+	public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server)
 	{
 		$this->middleware('auth');
 
 		$this->project     = $project;
 		$this->projectForm = $projectForm;
 		$this->recipe      = $recipe;
+		$this->server      = $server;
 	}
 
 	/**
@@ -59,10 +64,14 @@ class ProjectsController extends Controller {
 	public function create()
 	{
 		$recipes = $this->recipe->all()->toArray();
-
 		$recipes = array_column($recipes, 'name', 'id');
 
-		return view('projects.create')->with('recipes', $recipes);
+		$servers = $this->server->all()->toArray();
+		$servers = array_column($servers, 'name', 'id');
+
+		return view('projects.create')
+			->with('recipes', $recipes)
+			->with('servers', $servers);
 	}
 
 	/**
@@ -104,12 +113,15 @@ class ProjectsController extends Controller {
 	public function edit(Project $project)
 	{
 		$recipes = $this->recipe->all()->toArray();
-
 		$recipes = array_column($recipes, 'name', 'id');
+
+		$servers = $this->server->all()->toArray();
+		$servers = array_column($servers, 'name', 'id');
 
 		return view('projects.edit')
 			->with('project', $project)
-			->with('recipes', $recipes);
+			->with('recipes', $recipes)
+			->with('servers', $servers);
 	}
 
 	/**
