@@ -4,6 +4,7 @@ use App\Jobs\Job;
 use App\Repositories\Deployment\DeploymentInterface;
 use App\Repositories\Project\ProjectInterface;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
+use App\Services\Deployment\DeployerServerListFileBuilder;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,9 +41,10 @@ class Deploy extends Job implements SelfHandling, ShouldQueue {
 	 * @param \App\Repositories\Project\ProjectInterface             $projectRepository
 	 * @param \Symfony\Component\Process\ProcessBuilder              $processBuilder
 	 * @param \App\Services\Deployment\DeployerDeploymentFileBuilder $deploymentFileBuilder
+	 * @param \App\Services\ServerList\DeployerServerListFileBuilder $serverListFileBuilder
 	 * @return void
 	 */
-	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ProcessBuilder $processBuilder, DeployerDeploymentFileBuilder $deploymentFileBuilder)
+	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ProcessBuilder $processBuilder, DeployerDeploymentFileBuilder $deploymentFileBuilder, DeployerServerListFileBuilder $serverListFileBuilder)
 	{
 		$deploymentId = $this->deployment->id;
 
@@ -51,10 +53,18 @@ class Deploy extends Job implements SelfHandling, ShouldQueue {
 
 		$stage = $project->stage;
 
+		// Create a server list file
+		$serverListFile = $serverListFileBuilder
+			->setDeployment($deployment)
+			->setProject($project)
+			->build()
+			->getFilePath();
+
 		// Create a deployment file
 		$deploymentFile = $deploymentFileBuilder
 			->setDeployment($deployment)
 			->setProject($project)
+			->setServerListFile($serverListFile)
 			->build()
 			->getFilePath();
 

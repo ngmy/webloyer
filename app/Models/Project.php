@@ -9,7 +9,7 @@ class Project extends BaseModel {
 		'recipe_id',
 		'stage',
 		'repository',
-		'servers',
+		'server_id',
 	];
 
 	public function setStageAttribute($value)

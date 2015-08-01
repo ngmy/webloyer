@@ -10,9 +10,15 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 
 	public function test_Should_FailToValidate_When_RecipeIdFieldIsMissing()
 	{
+		Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		$input = [
 			'name'       => 'Project 1',
-			'servers'    => 'servers.yml',
+			'server_id'  => 1,
 			'repository' => 'http://example.com',
 			'stage'      => 'staging',
 		];
@@ -33,9 +39,15 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 			'body'        => '',
 		]);
 
+		Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		$input = [
 			'recipe_id'  => 1,
-			'servers'    => 'servers.yml',
+			'server_id'  => 1,
 			'repository' => 'http://example.com',
 			'stage'      => 'staging',
 		];
@@ -49,7 +61,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 		$this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
 	}
 
-	public function test_Should_FailToValidate_When_ServersFieldIsMissing()
+	public function test_Should_FailToValidate_When_ServerIdFieldIsMissing()
 	{
 		Factory::create('App\Models\Recipe', [
 			'name'        => 'Recipe 1',
@@ -81,10 +93,16 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 			'body'        => '',
 		]);
 
+		Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		$input = [
 			'name'      => 'Project 1',
 			'recipe_id' => 1,
-			'servers'   => 'servers.yml',
+			'server_id' => 1,
 			'stage'     => 'staging',
 		];
 
@@ -105,10 +123,16 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 			'body'        => '',
 		]);
 
+		Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		$input = [
 			'name'       => 'Project 1',
 			'recipe_id'  => 1,
-			'servers'    => 'servers.yml',
+			'server_id'  => 1,
 			'repository' => 'invalid_url',
 			'stage'      => 'staging',
 		];
@@ -130,10 +154,16 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 			'body'        => '',
 		]);
 
+		Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		$input = [
 			'name'       => 'Project 1',
 			'recipe_id'  => 1,
-			'servers'    => 'servers.yml',
+			'server_id'  => 1,
 			'repository' => 'http://example.com',
 		];
 
@@ -146,7 +176,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 		$this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
 	}
 
-	public function test_Should_PassToValidate_When_NameFieldAndRecipeIdFieldAndServersFieldAndRepositoryFieldAndStageFieldAreValid()
+	public function test_Should_PassToValidate_When_NameFieldAndRecipeIdFieldAndServerIdFieldAndRepositoryFieldAndStageFieldAreValid()
 	{
 		Factory::create('App\Models\Recipe', [
 			'name'        => 'Recipe 1',
@@ -154,10 +184,16 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 			'body'        => '',
 		]);
 
+		Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
+
 		$input = [
 			'name'       => 'Project 1',
 			'recipe_id'  => 1,
-			'servers'    => 'servers.yml',
+			'server_id'  => 1,
 			'repository' => 'http://example.com',
 			'stage'      => 'staging',
 		];

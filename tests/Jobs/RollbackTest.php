@@ -18,6 +18,8 @@ class RollbackTest extends \TestCase {
 
 	protected $mockDeploymentFileBuilder;
 
+	protected $mockServerListFileBuilder;
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -27,6 +29,7 @@ class RollbackTest extends \TestCase {
 		$this->mockProcessBuilder = $this->mock('Symfony\Component\Process\ProcessBuilder');
 		$this->mockProcess = $this->mockPartial('Symfony\Component\Process\Process');
 		$this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
+		$this->mockServerListFileBuilder = $this->mock('App\Services\Deployment\DeployerServerListFileBuilder');
 	}
 
 	public function test_Should_Work_When_DeployerIsNormalEnd()
@@ -65,6 +68,25 @@ class RollbackTest extends \TestCase {
 			->shouldReceive('update')
 			->once();
 
+		$this->mockServerListFileBuilder
+			->shouldReceive('setDeployment')
+			->andReturn($this->mockServerListFileBuilder)
+			->once();
+
+		$this->mockServerListFileBuilder
+			->shouldReceive('setProject')
+			->andReturn($this->mockServerListFileBuilder)
+			->once();
+
+		$this->mockServerListFileBuilder
+			->shouldReceive('build')
+			->andReturn($this->mockServerListFileBuilder)
+			->once();
+
+		$this->mockServerListFileBuilder
+			->shouldReceive('getFilePath')
+			->once();
+
 		$this->mockDeploymentFileBuilder
 			->shouldReceive('setDeployment')
 			->andReturn($this->mockDeploymentFileBuilder)
@@ -72,6 +94,11 @@ class RollbackTest extends \TestCase {
 
 		$this->mockDeploymentFileBuilder
 			->shouldReceive('setProject')
+			->andReturn($this->mockDeploymentFileBuilder)
+			->once();
+
+		$this->mockDeploymentFileBuilder
+			->shouldReceive('setServerListFile')
 			->andReturn($this->mockDeploymentFileBuilder)
 			->once();
 
@@ -117,7 +144,8 @@ class RollbackTest extends \TestCase {
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder,
-			$this->mockDeploymentFileBuilder
+			$this->mockDeploymentFileBuilder,
+			$this->mockServerListFileBuilder
 		);
 	}
 
@@ -157,6 +185,25 @@ class RollbackTest extends \TestCase {
 			->shouldReceive('update')
 			->once();
 
+		$this->mockServerListFileBuilder
+			->shouldReceive('setDeployment')
+			->andReturn($this->mockServerListFileBuilder)
+			->once();
+
+		$this->mockServerListFileBuilder
+			->shouldReceive('setProject')
+			->andReturn($this->mockServerListFileBuilder)
+			->once();
+
+		$this->mockServerListFileBuilder
+			->shouldReceive('build')
+			->andReturn($this->mockServerListFileBuilder)
+			->once();
+
+		$this->mockServerListFileBuilder
+			->shouldReceive('getFilePath')
+			->once();
+
 		$this->mockDeploymentFileBuilder
 			->shouldReceive('setDeployment')
 			->andReturn($this->mockDeploymentFileBuilder)
@@ -164,6 +211,11 @@ class RollbackTest extends \TestCase {
 
 		$this->mockDeploymentFileBuilder
 			->shouldReceive('setProject')
+			->andReturn($this->mockDeploymentFileBuilder)
+			->once();
+
+		$this->mockDeploymentFileBuilder
+			->shouldReceive('setServerListFile')
 			->andReturn($this->mockDeploymentFileBuilder)
 			->once();
 
@@ -209,7 +261,8 @@ class RollbackTest extends \TestCase {
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockProcessBuilder,
-			$this->mockDeploymentFileBuilder
+			$this->mockDeploymentFileBuilder,
+			$this->mockServerListFileBuilder
 		);
 	}
 

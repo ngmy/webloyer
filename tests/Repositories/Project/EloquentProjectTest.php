@@ -15,9 +15,15 @@ class EloquentProjectTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 
@@ -29,7 +35,8 @@ class EloquentProjectTest extends TestCase {
 		$foundProject = $projectRepository->byId($arrangedProject->id);
 
 		$this->assertEquals('Project 1', $foundProject->name);
-		$this->assertEquals($arrangedProject->id, $foundProject->recipe_id);
+		$this->assertEquals($arrangedProject->recipe_id, $foundProject->recipe_id);
+		$this->assertEquals($arrangedProject->server_id, $foundProject->server_id);
 		$this->assertEquals('staging', $foundProject->stage);
 	}
 
@@ -40,12 +47,17 @@ class EloquentProjectTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		Factory::createList('App\Models\Project', [
-			['name' => 'Project 1', 'recipe_id' => $arrangedRecipe->id, 'stage' => 'staging'],
-			['name' => 'Project 2', 'recipe_id' => $arrangedRecipe->id, 'stage' => 'staging'],
-			['name' => 'Project 3', 'recipe_id' => $arrangedRecipe->id, 'stage' => 'staging'],
-			['name' => 'Project 4', 'recipe_id' => $arrangedRecipe->id, 'stage' => 'staging'],
-			['name' => 'Project 5', 'recipe_id' => $arrangedRecipe->id, 'stage' => 'staging'],
+			['name' => 'Project 1', 'recipe_id' => $arrangedRecipe->id, 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
+			['name' => 'Project 2', 'recipe_id' => $arrangedRecipe->id, 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
+			['name' => 'Project 3', 'recipe_id' => $arrangedRecipe->id, 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
+			['name' => 'Project 4', 'recipe_id' => $arrangedRecipe->id, 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
+			['name' => 'Project 5', 'recipe_id' => $arrangedRecipe->id, 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
 		]);
 
 		$projectRepository = new EloquentProject(
@@ -70,9 +82,15 @@ class EloquentProjectTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$returnedProject = $projectRepository->create([
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 
@@ -81,6 +99,7 @@ class EloquentProjectTest extends TestCase {
 
 		$this->assertEquals('Project 1', $createdProject->name);
 		$this->assertEquals($arrangedRecipe->id, $createdProject->recipe_id);
+		$this->assertEquals($arrangedServer->id, $createdProject->server_id);
 		$this->assertEquals('staging', $createdProject->stage);
 	}
 
@@ -91,9 +110,15 @@ class EloquentProjectTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 
@@ -102,15 +127,21 @@ class EloquentProjectTest extends TestCase {
 			new App\Models\MaxDeployment
 		);
 		$arrangedRecipe2 = Factory::create('App\Models\Recipe', [
-			'name'        => 'Recipe 1',
+			'name'        => 'Recipe 2',
+			'description' => '',
+			'body'        => '',
+		]);
+		$arrangedServer2 = Factory::create('App\Models\Server', [
+			'name'        => 'Server 2 ',
 			'description' => '',
 			'body'        => '',
 		]);
 		$projectRepository->update([
-			'id'          => $arrangedProject->id,
-			'name'        => 'Project 2',
-			'recipe_id'   => $arrangedRecipe2->id,
-			'stage'       => 'production',
+			'id'        => $arrangedProject->id,
+			'name'      => 'Project 2',
+			'recipe_id' => $arrangedRecipe2->id,
+			'server_id' => $arrangedServer2->id,
+			'stage'     => 'production',
 		]);
 
 		$project = new App\Models\Project;
@@ -118,6 +149,7 @@ class EloquentProjectTest extends TestCase {
 
 		$this->assertEquals('Project 2', $updatedProject->name);
 		$this->assertEquals($arrangedRecipe2->id, $updatedProject->recipe_id);
+		$this->assertEquals($arrangedServer2->id, $updatedProject->server_id);
 		$this->assertEquals('production', $updatedProject->stage);
 	}
 
@@ -128,9 +160,15 @@ class EloquentProjectTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Recipe 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 

@@ -1,23 +1,23 @@
 <?php
 
-use App\Services\Deployment\DeployerDeploymentFileBuilder;
+use App\Services\Deployment\DeployerServerListFileBuilder;
 
 use Tests\Helpers\Factory;
 
-class DeployerDeploymentFileBuilderTest extends TestCase {
+class DeployerServerListFileBuilderTest extends TestCase {
 
 	use \Tests\Helpers\MockeryHelper;
 
-	protected $mockRecipeRepository;
+	protected $mockServerRepository;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		$this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
+		$this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
 	}
 
-	public function test_Should_BuildDeployerDeploymentFile()
+	public function test_Should_BuildDeployerServerListFile()
 	{
 		$project = Factory::build('App\Models\Project', [
 			'id'         => 1,
@@ -37,7 +37,7 @@ class DeployerDeploymentFileBuilderTest extends TestCase {
 			'updated_at' => new Carbon\Carbon,
 			'user'       => new App\Models\User,
 		]);
-		$recipe = Factory::build('App\Models\Recipe', [
+		$server = Factory::build('App\Models\Server', [
 			'id'         => 1,
 			'name'       => '',
 			'desctipton' => '',
@@ -52,13 +52,13 @@ class DeployerDeploymentFileBuilderTest extends TestCase {
 			->once()
 			->andReturn(1);
 
-		$this->mockRecipeRepository
+		$this->mockServerRepository
 			->shouldReceive('byId')
 			->once()
-			->andReturn($recipe);
+			->andReturn($server);
 
-		$deploymentFileBuilder = new DeployerDeploymentFileBuilder(
-			$this->mockRecipeRepository
+		$deploymentFileBuilder = new DeployerServerListFileBuilder(
+			$this->mockServerRepository
 		);
 		$result = $deploymentFileBuilder
 			->setDeployment($deployment)
@@ -66,7 +66,7 @@ class DeployerDeploymentFileBuilderTest extends TestCase {
 			->build()
 			->getFilePath();
 
-		$this->assertEquals(storage_path('app/deploy_1_10.php'), $result);
+		$this->assertEquals(storage_path('app/servers_1_10.yml'), $result);
 	}
 
 }

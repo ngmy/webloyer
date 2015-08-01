@@ -20,9 +20,15 @@ class EloquentDeploymentTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 		$arrangedDeployment = Factory::create('App\Models\Deployment', [
@@ -55,9 +61,15 @@ class EloquentDeploymentTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 		$arrangedDeployment = Factory::create('App\Models\Deployment', [
@@ -90,9 +102,15 @@ class EloquentDeploymentTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 		Factory::createList('App\Models\Deployment', [
@@ -121,9 +139,15 @@ class EloquentDeploymentTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 		$arrangedMaxDeployment = Factory::create('App\Models\MaxDeployment', [
@@ -162,9 +186,15 @@ class EloquentDeploymentTest extends TestCase {
 			'description' => '',
 			'body'        => '',
 		]);
+		$arrangedServer = Factory::create('App\Models\Server', [
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
 			'recipe_id' => $arrangedRecipe->id,
+			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
 		$arrangedDeployment = Factory::create('App\Models\Deployment', [
