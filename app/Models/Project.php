@@ -17,4 +17,9 @@ class Project extends BaseModel {
 		$this->attributes['stage'] = $this->nullIfBlank($value);
 	}
 
+	public function deployments()
+	{
+		return $this->hasMany('App\Models\Deployment');
+	}
+
 }
