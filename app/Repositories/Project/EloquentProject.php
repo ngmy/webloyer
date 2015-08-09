@@ -48,6 +48,12 @@ class EloquentProject implements ProjectInterface {
 			->take($limit)
 			->paginate($limit);
 
+		foreach ($projects as $i => $project) {
+			$lastDeployment = $project->deployments()->orderBy('number', 'desc')->first();
+
+			$projects[$i]['last_deployment'] = $lastDeployment;
+		}
+
 		return $projects;
 	}
 

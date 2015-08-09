@@ -13,7 +13,9 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
+						<th><div align="center"></div></th>
 						<th><div align="center">Name</div></th>
+						<th><div align="center">Last Deployment</div></th>
 						<th><div align="center">Created At</div></th>
 						<th><div align="center">Updated At</div></th>
 						<th></th>
@@ -22,7 +24,18 @@
 				<tbody>
 					@foreach ($projects as $project)
 						<tr>
+							<td>
+								@if (isset($project->last_deployment))
+									{!! $project->last_deployment->getPresenter()->status() !!}
+								@endif
+							</td>
 							<td>{{ $project->name }}</td>
+							<td>
+								@if (isset($project->last_deployment))
+									{{ $project->last_deployment->updated_at }}
+									({!! link_to_route('projects.deployments.show', "#{$project->last_deployment->number}", [$project->id,  $project->last_deployment->number]) !!})
+								@endif
+							</td>
 							<td>{{ $project->created_at }}</td>
 							<td>{{ $project->updated_at }}</td>
 							<td>
