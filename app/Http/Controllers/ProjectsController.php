@@ -118,10 +118,14 @@ class ProjectsController extends Controller {
 		$servers = $this->server->all()->toArray();
 		$servers = array_column($servers, 'name', 'id');
 
+		$projectRecipe = $project->getRecipes()->toArray();
+		$projectRecipe = array_column($projectRecipe, 'id');
+
 		return view('projects.edit')
 			->with('project', $project)
 			->with('recipes', $recipes)
-			->with('servers', $servers);
+			->with('servers', $servers)
+			->with('projectRecipe', $projectRecipe);
 	}
 
 	/**

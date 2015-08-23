@@ -34,8 +34,12 @@ class ProjectFormTest extends TestCase {
 			->once()
 			->andReturn(true);
 
+		$input = [
+			'recipe_id_order' => '3,1,2',
+		];
+
 		$form = new ProjectForm($this->mockValidator, $this->mockProjectRepository);
-		$result = $form->save([]);
+		$result = $form->save($input);
 
 		$this->assertTrue($result, 'Expected save to succeed.');
 	}
@@ -51,8 +55,12 @@ class ProjectFormTest extends TestCase {
 			->once()
 			->andReturn(false);
 
+		$input = [
+			'recipe_id_order' => '3,1,2',
+		];
+
 		$form = new ProjectForm($this->mockValidator, $this->mockProjectRepository);
-		$result = $form->save([]);
+		$result = $form->save($input);
 
 		$this->assertFalse($result, 'Expected save to fail.');
 	}
@@ -73,8 +81,12 @@ class ProjectFormTest extends TestCase {
 			->once()
 			->andReturn(true);
 
+		$input = [
+			'recipe_id_order' => '3,1,2',
+		];
+
 		$form = new ProjectForm($this->mockValidator, $this->mockProjectRepository);
-		$result = $form->update([]);
+		$result = $form->update($input);
 
 		$this->assertTrue($result, 'Expected update to succeed.');
 	}
@@ -90,8 +102,12 @@ class ProjectFormTest extends TestCase {
 			->once()
 			->andReturn(false);
 
+		$input = [
+			'recipe_id_order' => '3,1,2',
+		];
+
 		$form = new ProjectForm($this->mockValidator, $this->mockProjectRepository);
-		$result = $form->update([]);
+		$result = $form->update($input);
 
 		$this->assertFalse($result, 'Expected update to fail.');
 	}

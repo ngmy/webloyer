@@ -4,16 +4,16 @@ use Storage;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeployerServerListFileBuilder implements DeployerFileBuilderInterface {
+class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface {
 
 	protected $deployerFile;
 
-	protected $server;
+	protected $recipe;
 
-	public function __construct(Model $server)
+	public function __construct(Model $recipe)
 	{
 		$this->deployerFile = new DeployerFile;
-		$this->server = $server;
+		$this->recipe = $recipe;
 	}
 
 	public function __destruct()
@@ -22,15 +22,15 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface {
 	}
 
 	/**
-	 * Set a server list file path info.
+	 * Set a recipe file path info.
 	 *
-	 * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
+	 * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
 	 */
 	public function pathInfo()
 	{
 		$id = md5(uniqid(rand(), true));
 
-		$baseName = "server_$id.yml";
+		$baseName = "recipe_$id.php";
 		$fullPath = storage_path("app/$baseName");
 
 		$this->deployerFile->setBaseName($baseName);
@@ -40,14 +40,14 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface {
 	}
 
 	/**
-	 * Put a server list file.
+	 * Put a recipe file.
 	 *
-	 * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
+	 * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
 	 */
 	public function put()
 	{
 		$baseName = $this->deployerFile->getBaseName();
-		$contents = $this->server->body;
+		$contents = $this->recipe->body;
 
 		Storage::put($baseName, $contents);
 
@@ -55,7 +55,7 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface {
 	}
 
 	/**
-	 * Get a server list file instance.
+	 * Get a recipe file instance.
 	 *
 	 * @return \App\Services\Deployment\DeployerFile
 	 */

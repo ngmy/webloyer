@@ -11,8 +11,6 @@ use App\Services\Form\Recipe\RecipeForm;
 use App\Services\Form\Recipe\RecipeFormLaravelValidator;
 use App\Services\Form\Server\ServerForm;
 use App\Services\Form\Server\ServerFormLaravelValidator;
-use App\Services\Deployment\DeployerDeploymentFileBuilder;
-use App\Services\Deployment\DeployerServerListFileBuilder;
 
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Process\ProcessBuilder;
@@ -104,20 +102,6 @@ class AppServiceProvider extends ServiceProvider {
 				$app->make('App\Repositories\Project\ProjectInterface'),
 				$app->make('App\Repositories\Deployment\DeploymentInterface'),
 				$processBuilder
-			);
-		});
-
-		$this->app->bind('App\Services\Deployment\DeployerDeploymentFileBuilder', function ($app)
-		{
-			return new DeployerDeploymentFileBuilder(
-				$app->make('App\Repositories\Recipe\RecipeInterface')
-			);
-		});
-
-		$this->app->bind('App\Services\Deployment\DeployerServerListFileBuilder', function ($app)
-		{
-			return new DeployerServerListFileBuilder(
-				$app->make('App\Repositories\Server\ServerInterface')
 			);
 		});
 	}

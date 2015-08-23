@@ -16,6 +16,8 @@ class ProjectsControllerTest extends TestCase {
 
 	protected $mockServerRepository;
 
+	protected $mockProjectModel;
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -28,15 +30,20 @@ class ProjectsControllerTest extends TestCase {
 		$this->mockProjectForm = $this->mock('App\Services\Form\Project\ProjectForm');
 		$this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
 		$this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
+		$this->mockProjectModel = $this->mockPartial('App\Models\Project');
 	}
 
 	public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
 	{
-		$projects = Factory::buildList('App\Models\Project', [
-			['id' => 1, 'name' => 'Project 1', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-			['id' => 2, 'name' => 'Project 2', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-			['id' => 3, 'name' => 'Project 3', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-		]);
+		$project = $this->mockProjectModel
+			->shouldReceive('getLastDeployment')
+			->times(2)
+			->andReturn([])
+			->mock();
+
+		$projects = [
+			$project,
+		];
 
 		$perPage = 10;
 
@@ -131,12 +138,11 @@ class ProjectsControllerTest extends TestCase {
 
 	public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
 	{
-		$project = Factory::build('App\Models\Project', [
-			'id'         => 1,
-			'name'       => 'Project 1',
-			'created_at' => new Carbon\Carbon,
-			'updated_at' => new Carbon\Carbon,
-		]);
+		$project = $this->mockProjectModel
+			->shouldReceive('getRecipes')
+			->once()
+			->andReturn(new Illuminate\Database\Eloquent\Collection)
+			->mock();
 
 		$this->mockProjectRepository
 			->shouldReceive('byId')

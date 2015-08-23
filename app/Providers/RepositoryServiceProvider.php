@@ -1,6 +1,7 @@
 <?php namespace App\Providers;
 
 use App\Models\Project;
+use App\Models\ProjectRecipe;
 use App\Models\Deployment;
 use App\Models\MaxDeployment;
 use App\Models\Recipe;
@@ -35,7 +36,8 @@ class RepositoryServiceProvider extends ServiceProvider {
 		{
 			return new EloquentProject(
 				new Project,
-				new MaxDeployment
+				new MaxDeployment,
+				new ProjectRecipe
 			);
 		});
 

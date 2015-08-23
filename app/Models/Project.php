@@ -6,7 +6,6 @@ class Project extends BaseModel {
 
 	protected $fillable = [
 		'name',
-		'recipe_id',
 		'stage',
 		'repository',
 		'server_id',
@@ -20,6 +19,21 @@ class Project extends BaseModel {
 	public function deployments()
 	{
 		return $this->hasMany('App\Models\Deployment');
+	}
+
+	public function recipes()
+	{
+		return $this->belongsToMany('App\Models\Recipe');
+	}
+
+	public function getLastDeployment()
+	{
+		return $this->deployments->first();
+	}
+
+	public function getRecipes()
+	{
+		return $this->recipes()->orderBy('recipe_order')->get();
 	}
 
 }

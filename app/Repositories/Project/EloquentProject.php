@@ -10,17 +10,21 @@ class EloquentProject implements ProjectInterface {
 
 	protected $maxDeployment;
 
+	protected $projectRecipe;
+
 	/**
 	 * Create a new repository instance.
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model $project
 	 * @param \Illuminate\Database\Eloquent\Model $maxDeployment
+	 * @param \Illuminate\Database\Eloquent\Model $projectRecipe
 	 * @return void
 	 */
-	public function __construct(Model $project, Model $maxDeployment)
+	public function __construct(Model $project, Model $maxDeployment, Model $projectRecipe)
 	{
 		$this->project = $project;
 		$this->maxDeployment = $maxDeployment;
+		$this->projectRecipe = $projectRecipe;
 	}
 
 	/**
@@ -43,16 +47,13 @@ class EloquentProject implements ProjectInterface {
 	 */
 	public function byPage($page = 1, $limit = 10)
 	{
-		$projects = $this->project->orderBy('name')
+		$projects = $this->project->with(['deployments' => function ($query)
+		{
+			$query->orderBy('number', 'desc');
+		}])->orderBy('name')
 			->skip($limit * ($page - 1))
 			->take($limit)
 			->paginate($limit);
-
-		foreach ($projects as $i => $project) {
-			$lastDeployment = $project->deployments()->orderBy('number', 'desc')->first();
-
-			$projects[$i]['last_deployment'] = $lastDeployment;
-		}
 
 		return $projects;
 	}
@@ -67,10 +68,21 @@ class EloquentProject implements ProjectInterface {
 	{
 		$project = DB::transaction(function () use ($data)
 		{
+			// Insert data to `project` table
 			$project = $this->project->create($data);
 
+			// Insert data to `max_deployment` table
 			$this->maxDeployment->project_id = $project->id;
 			$this->maxDeployment->save();
+
+			// Insert data to `project_recipe` table
+			foreach ($data['recipe_id'] as $i => $recipeId) {
+				$this->projectRecipe->create([
+					'project_id'   => $project->id,
+					'recipe_id'    => $recipeId,
+					'recipe_order' => $i + 1,
+				]);
+			}
 
 			return $project;
 		});
@@ -86,9 +98,24 @@ class EloquentProject implements ProjectInterface {
 	 */
 	public function update(array $data)
 	{
-		$project = $this->project->find($data['id']);
+		$project = DB::transaction(function () use ($data)
+		{
+			// Update data in `project` table
+			$project = $this->project->find($data['id']);
 
-		$project->update($data);
+			$project->update($data);
+
+			// Replace data in `project_recipe` table
+			$this->projectRecipe->where('project_id', $project->id)->delete();
+
+			foreach ($data['recipe_id'] as $i => $recipeId) {
+				$this->projectRecipe->create([
+					'project_id'   => $project->id,
+					'recipe_id'    => $recipeId,
+					'recipe_order' => $i + 1,
+				]);
+			}
+		});
 
 		return true;
 	}

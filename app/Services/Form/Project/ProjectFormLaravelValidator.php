@@ -6,10 +6,23 @@ class ProjectFormLaravelValidator extends AbstractLaravelValidator {
 
 	protected $rules = [
 		'name'       => 'required',
-		'recipe_id'  => 'required|exists:recipes,id',
 		'stage'      => 'required',
+		'recipe_id'  => 'required',
 		'server_id'  => 'required|exists:servers,id',
 		'repository' => 'required|url',
 	];
+
+	protected function rules()
+	{
+		$rules = [];
+
+		if (isset($this->data['recipe_id'])) {
+			foreach ($this->data['recipe_id'] as $key => $val) {
+				$rules["recipe_id.$key"] = 'required|exists:recipes,id';
+			}
+		}
+
+		return $rules;
+	}
 
 }
