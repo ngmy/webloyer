@@ -3,8 +3,7 @@
 use App\Jobs\Job;
 use App\Repositories\Deployment\DeploymentInterface;
 use App\Repositories\Project\ProjectInterface;
-use App\Services\Deployment\DeployerDeploymentFileBuilder;
-use App\Services\Deployment\DeployerServerListFileBuilder;
+use App\Repositories\Server\ServerInterface;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -37,48 +36,45 @@ class Rollback extends Job implements SelfHandling, ShouldQueue {
 	/**
 	 * Execute the job.
 	 *
-	 * @param \App\Repositories\Deployment\DeployCommanderInterface  $deploymentRepository
-	 * @param \App\Repositories\Project\ProjectInterface             $projectRepository
-	 * @param \Symfony\Component\Process\ProcessBuilder              $processBuilder
-	 * @param \App\Services\Deployment\DeployerDeploymentFileBuilder $deploymentFileBuilder
-	 * @param \App\Services\ServerList\DeployerServerListFileBuilder $serverListFileBuilder
+	 * @param \App\Repositories\Deployment\DeployCommanderInterface $deploymentRepository
+	 * @param \App\Repositories\Project\ProjectInterface            $projectRepository
+	 * @param \App\Repositories\Server\ServerInterface              $serverRepository
+	 * @param \Symfony\Component\Process\ProcessBuilder             $processBuilder
 	 * @return void
 	 */
-	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ProcessBuilder $processBuilder, DeployerDeploymentFileBuilder $deploymentFileBuilder, DeployerServerListFileBuilder $serverListFileBuilder)
+	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder)
 	{
-		$deploymentId = $this->deployment->id;
-
-		$deployment = $deploymentRepository->byId($deploymentId);
+		$deployment = $this->deployment;
 		$project    = $projectRepository->byId($deployment->project_id);
+		$server     = $serverRepository->byId($project->server_id);
 
-		$stage = $project->stage;
+		$app = app();
 
 		// Create a server list file
-		$serverListFile = $serverListFileBuilder
-			->setDeployment($deployment)
-			->setProject($project)
-			->build()
-			->getFilePath();
+		$serverListFileBuilder = $app->make('App\Services\Deployment\DeployerServerListFileBuilder', [$server]);
+		$serverListFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$serverListFileBuilder])->construct();
+
+		// Create recipe files
+		foreach ($project->recipes as $i => $recipe) {
+			$recipeFileBuilders[] = $app->make('App\Services\Deployment\DeployerRecipeFileBuilder', [$recipe]);
+			$recipeFiles[] = $app->make('App\Services\Deployment\DeployerFileDirector', [$recipeFileBuilders[$i]])->construct();
+		}
 
 		// Create a deployment file
-		$deploymentFile = $deploymentFileBuilder
-			->setDeployment($deployment)
-			->setProject($project)
-			->setServerListFile($serverListFile)
-			->build()
-			->getFilePath();
+		$deploymentFileBuilder = $app->make('App\Services\Deployment\DeployerDeploymentFileBuilder', [$project, $serverListFile, $recipeFiles]);
+		$deploymentFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$deploymentFileBuilder])->construct();
 
 		// Create a command
 		$processBuilder
 			->add($this->executable)
-			->add("-f=$deploymentFile")
+			->add("-f={$deploymentFile->getFullPath()}")
 			->add('-n')
 			->add('-vv')
 			->add('rollback')
-			->add($stage);
+			->add($project->stage);
 
 		// Run the command
-		$tmp['id']      = $deploymentId;
+		$tmp['id']      = $deployment->id;
 		$tmp['message'] = '';
 
 		$process = $processBuilder->getProcess();
@@ -97,7 +93,7 @@ class Rollback extends Job implements SelfHandling, ShouldQueue {
 			$message = $process->getErrorOutput();
 		}
 
-		$data['id']      = $deploymentId;
+		$data['id']      = $deployment->id;
 		$data['message'] = $message;
 		$data['status']  = $process->getExitCode();
 

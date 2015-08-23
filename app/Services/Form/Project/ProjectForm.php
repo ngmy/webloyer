@@ -30,6 +30,8 @@ class ProjectForm {
 	 */
 	public function save(array $input)
 	{
+		$input['recipe_id'] = explode(',', $input['recipe_id_order']);
+
 		if (!$this->valid($input)) {
 			return false;
 		}
@@ -45,6 +47,8 @@ class ProjectForm {
 	 */
 	public function update(array $input)
 	{
+		$input['recipe_id'] = explode(',', $input['recipe_id_order']);
+
 		if (!$this->valid($input)) {
 			return false;
 		}

@@ -16,15 +16,11 @@ class CreateProjectsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name');
-			$table->integer('recipe_id')->unsigned();
 			$table->string('stage')->nullable();
 			$table->integer('server_id')->unsigned();
 			$table->string('repository');
 			$table->timestamps();
 
-			$table->foreign('recipe_id')
-				->references('id')
-				->on('recipes');
 			$table->foreign('server_id')
 				->references('id')
 				->on('servers');

@@ -40,12 +40,6 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 	public function test_Should_FailToValidate_When_TaskFieldIsMissing()
 	{
-		$arrangedRecipe = Factory::create('App\Models\Recipe', [
-			'name'        => 'Recipe 1',
-			'description' => '',
-			'body'        => '',
-		]);
-
 		$arrangedServer = Factory::create('App\Models\Server', [
 			'name'        => 'Server 1',
 			'description' => '',
@@ -54,7 +48,6 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 		Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
@@ -74,12 +67,6 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 	public function test_Should_FailToValidate_When_TaskFieldIsInvalid()
 	{
-		$arrangedRecipe = Factory::create('App\Models\Recipe', [
-			'name'        => 'Recipe 1',
-			'description' => '',
-			'body'        => '',
-		]);
-
 		$arrangedServer = Factory::create('App\Models\Server', [
 			'name'        => 'Server 1',
 			'description' => '',
@@ -88,7 +75,6 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 		Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
@@ -109,12 +95,6 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 	public function test_Should_PassToValidate_When_ProjectIdFieldAndTaskFieldAreValid()
 	{
-		$arrangedRecipe = Factory::create('App\Models\Recipe', [
-			'name'        => 'Recipe 1',
-			'description' => '',
-			'body'        => '',
-		]);
-
 		$arrangedServer = Factory::create('App\Models\Server', [
 			'name'        => 'Server 1',
 			'description' => '',
@@ -123,7 +103,6 @@ class DeploymentFormLaravelValidatorTest extends TestCase {
 
 		Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);

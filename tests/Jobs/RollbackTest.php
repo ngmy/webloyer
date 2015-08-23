@@ -8,28 +8,37 @@ class RollbackTest extends \TestCase {
 
 	use \Tests\Helpers\MockeryHelper;
 
+	protected $mockDeploymentRepository;
+
 	protected $mockProjectRepository;
 
-	protected $mockDeploymentRepository;
+	protected $mockServerRepository;
 
 	protected $mockProcessBuilder;
 
 	protected $mockProcess;
 
-	protected $mockDeploymentFileBuilder;
+	protected $mockDeployerFileDirector;
 
 	protected $mockServerListFileBuilder;
+
+	protected $mockRecipeFileBuilder;
+
+	protected $mockDeploymentFileBuilder;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		$this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
 		$this->mockDeploymentRepository = $this->mock('App\Repositories\Deployment\DeploymentInterface');
+		$this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
+		$this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
 		$this->mockProcessBuilder = $this->mock('Symfony\Component\Process\ProcessBuilder');
 		$this->mockProcess = $this->mockPartial('Symfony\Component\Process\Process');
-		$this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
+		$this->mockDeployerFileDirector = $this->mock('App\Services\Deployment\DeployerFileDirector');
 		$this->mockServerListFileBuilder = $this->mock('App\Services\Deployment\DeployerServerListFileBuilder');
+		$this->mockRecipeFileBuilder = $this->mock('App\Services\DeploymentInterface\DeployerRecipeFileBuilder');
+		$this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
 	}
 
 	public function test_Should_Work_When_DeployerIsNormalEnd()
@@ -45,6 +54,13 @@ class RollbackTest extends \TestCase {
 			'user'       => new \App\Models\User,
 		]);
 
+		$recipe = factory::build('app\models\recipe', [
+			'id'          => 1,
+			'name'        => 'recipe 1',
+			'desctiption' => '',
+			'body'        => '',
+		]);
+
 		$project = Factory::build('App\Models\Project', [
 			'id'         => 1,
 			'name'       => 'Project 1',
@@ -52,64 +68,31 @@ class RollbackTest extends \TestCase {
 			'stage'      => 'staging',
 			'created_at' => new \Carbon\Carbon,
 			'updated_at' => new \Carbon\Carbon,
+			'recipes'    => [$recipe],
 		]);
-
-		$this->mockDeploymentRepository
-			->shouldReceive('byId')
-			->once()
-			->andReturn($deployment);
 
 		$this->mockProjectRepository
 			->shouldReceive('byId')
 			->once()
 			->andReturn($project);
 
+		$this->mockServerRepository
+			->shouldReceive('byId')
+			->once();
+
 		$this->mockDeploymentRepository
 			->shouldReceive('update')
 			->once();
 
-		$this->mockServerListFileBuilder
-			->shouldReceive('setDeployment')
-			->andReturn($this->mockServerListFileBuilder)
-			->once();
+		$mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
+			->shouldReceive('getFullPath')
+			->once()
+			->mock();
 
-		$this->mockServerListFileBuilder
-			->shouldReceive('setProject')
-			->andReturn($this->mockServerListFileBuilder)
-			->once();
-
-		$this->mockServerListFileBuilder
-			->shouldReceive('build')
-			->andReturn($this->mockServerListFileBuilder)
-			->once();
-
-		$this->mockServerListFileBuilder
-			->shouldReceive('getFilePath')
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('setDeployment')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('setProject')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('setServerListFile')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('build')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('getFilePath')
-			->once();
+		$this->mockDeployerFileDirector
+			->shouldReceive('construct')
+			->andReturn($mockDeployerFile)
+			->times(3);
 
 		$this->mockProcess
 			->shouldReceive('run')
@@ -138,14 +121,17 @@ class RollbackTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
+		\Storage::shouldReceive('delete')
+			->times(1)
+			->andReturn(1);
+
 		$job = new Rollback($deployment);
 
 		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
-			$this->mockProcessBuilder,
-			$this->mockDeploymentFileBuilder,
-			$this->mockServerListFileBuilder
+			$this->mockServerRepository,
+			$this->mockProcessBuilder
 		);
 	}
 
@@ -162,6 +148,13 @@ class RollbackTest extends \TestCase {
 			'user'       => new \App\Models\User,
 		]);
 
+		$recipe = Factory::build('App\Models\Recipe', [
+			'id'          => 1,
+			'name'        => 'Recipe 1',
+			'desctiption' => '',
+			'body'        => '',
+		]);
+
 		$project = Factory::build('App\Models\Project', [
 			'id'         => 1,
 			'name'       => 'Project 1',
@@ -169,64 +162,31 @@ class RollbackTest extends \TestCase {
 			'stage'      => 'staging',
 			'created_at' => new \Carbon\Carbon,
 			'updated_at' => new \Carbon\Carbon,
+			'recipes'    => [$recipe],
 		]);
-
-		$this->mockDeploymentRepository
-			->shouldReceive('byId')
-			->once()
-			->andReturn($deployment);
 
 		$this->mockProjectRepository
 			->shouldReceive('byId')
 			->once()
 			->andReturn($project);
 
+		$this->mockServerRepository
+			->shouldReceive('byId')
+			->once();
+
 		$this->mockDeploymentRepository
 			->shouldReceive('update')
 			->once();
 
-		$this->mockServerListFileBuilder
-			->shouldReceive('setDeployment')
-			->andReturn($this->mockServerListFileBuilder)
-			->once();
+		$mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
+			->shouldReceive('getFullPath')
+			->once()
+			->mock();
 
-		$this->mockServerListFileBuilder
-			->shouldReceive('setProject')
-			->andReturn($this->mockServerListFileBuilder)
-			->once();
-
-		$this->mockServerListFileBuilder
-			->shouldReceive('build')
-			->andReturn($this->mockServerListFileBuilder)
-			->once();
-
-		$this->mockServerListFileBuilder
-			->shouldReceive('getFilePath')
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('setDeployment')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('setProject')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('setServerListFile')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('build')
-			->andReturn($this->mockDeploymentFileBuilder)
-			->once();
-
-		$this->mockDeploymentFileBuilder
-			->shouldReceive('getFilePath')
-			->once();
+		$this->mockDeployerFileDirector
+			->shouldReceive('construct')
+			->andReturn($mockDeployerFile)
+			->times(3);
 
 		$this->mockProcess
 			->shouldReceive('run')
@@ -255,14 +215,17 @@ class RollbackTest extends \TestCase {
 			->once()
 			->andReturn($this->mockProcess);
 
+		\Storage::shouldReceive('delete')
+			->times(1)
+			->andReturn(1);
+
 		$job = new Rollback($deployment);
 
 		$job->handle(
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
-			$this->mockProcessBuilder,
-			$this->mockDeploymentFileBuilder,
-			$this->mockServerListFileBuilder
+			$this->mockServerRepository,
+			$this->mockProcessBuilder
 		);
 	}
 

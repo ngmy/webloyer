@@ -22,6 +22,18 @@
 					"reference": "v1.2.0"
 				}
 			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "lou/multi-select",
+				"version": "0.9.12",
+				"source": {
+					"url": "https://github.com/lou/multi-select.git",
+					"type": "git",
+					"reference": "0.9.12"
+				}
+			}
 		}
 	],
 	"require": {
@@ -30,7 +42,8 @@
 		"laravelcollective/html": "5.1.*",
 		"davejamesmiller/laravel-breadcrumbs": "3.0.*",
 		"robclancy/presenter": "1.3.*",
-		"ajaxorg/ace-builds": "1.2.0"
+		"ajaxorg/ace-builds": "1.2.0",
+		"lou/multi-select": "0.9.12"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
@@ -59,12 +72,20 @@
 			"chmod +x vendor/bin/dep",
 			"mkdir -p public/js/vendor/ajaxorg",
 			"ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
+			"mkdir -p public/vendor/lou/multi-select",
+			"cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
+			"cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
+			"cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select",
 			"php artisan clear-compiled",
 			"php artisan optimize"
 		],
 		"post-update-cmd": [
 			"mkdir -p public/js/vendor/ajaxorg",
 			"ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
+			"mkdir -p public/vendor/lou/multi-select",
+			"cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
+			"cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
+			"cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select",
 			"php artisan clear-compiled",
 			"php artisan optimize"
 		],

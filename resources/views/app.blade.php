@@ -17,6 +17,8 @@
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
+
+	<link href="{{ asset('/vendor/lou/multi-select/css/multi-select.css') }}" rel="stylesheet">
 </head>
 <body>
 	<nav class="navbar navbar-default">
@@ -73,8 +75,10 @@
 
 	<!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-	<script src="/js/vendor/ajaxorg/ace/ace.js"></script>
+	<script src="{{ asset('vendor/lou/multi-select/js/jquery.multi-select.js') }}"></script>
+	<script src="{{ asset('/js/vendor/ajaxorg/ace/ace.js') }}"></script>
 	<script>
 		// Hook up ACE editor to all textareas with data-editor attribute
 		$(function () {
@@ -111,6 +115,85 @@
 			$('form').submit(function () {
 				$(this).find(':submit').attr('disabled', 'disabled');
 			});
+		});
+	</script>
+	<script>
+		// Pre-selected
+		$(function () {
+			$('.ms-container').each(function (i, elem) {
+				var orgId = $(elem).attr('id').replace(/^ms\-/, '');
+				var orderId = orgId + '_order';
+				var getVal = $('#' + orderId).val();
+				var getValArray = getVal.split(',');
+				var newValArray = getValArray.filter(function (x) {
+					return x != '';
+				});
+				var selectableIdArray = newValArray.map(function (x) {
+					var index = $('#' + orgId + ' option').index($('option[value="' + x + '"]'));
+					var id = $('.ms-elem-selectable').eq(index).attr('id');
+					return id;
+				});
+				var selectionIdArray = selectableIdArray.map(function (x) {
+					return x.replace(/selectable/, 'selection');
+				});
+				var ul = $('.ms-selection ul');
+				selectionIdArray.forEach(function (x) {
+					var li = ul.find('#' + x);
+					ul.append(li);
+				});
+			});
+		});
+	</script>
+	<script>
+		// To sortable selected list
+		$(function () {
+			$('.ms-selection ul').sortable({
+				update: function (event, ui) {
+					var sortableIdArray = $(this).sortable('toArray');
+					var selectionIdArray = sortableIdArray.filter(function (x) {
+						return $('#' + x).is(':visible');
+					});
+					var selectableIdArray = selectionIdArray.map(function (x) {
+						return x.replace(/selection/, 'selectable');
+					});
+					var orgId = $(this).closest('.ms-container').attr('id').replace(/^ms\-/, '');
+					var orderId = orgId + '_order';
+					var orgValArray = selectableIdArray.map(function (x) {
+						var index = $('.ms-elem-selectable').index($('#' + x));
+						var orgVal = $('#' + orgId + ' option').eq(index).val();
+						return orgVal;
+					});
+					var newVal = orgValArray.join(',');
+					$('#' + orderId).val(newVal);
+				}
+			});
+		});
+	</script>
+	<script>
+		// Multiple select
+		$('.multi-select').multiSelect({
+			keepOrder: true,
+			afterSelect: function (value) {
+				var orderId = this.$container.attr('id').replace(/^ms\-/, '') + '_order';
+				var getVal = $('#' + orderId).val();
+				var getValArray = getVal.split(',');
+				getValArray.push(value);
+				var newValArray = getValArray.filter(function (x) {
+					return x != '';
+				});
+				var newVal = newValArray.join(',');
+				$('#' + orderId).val(newVal);
+			},
+			afterDeselect: function (value) {
+				var orderId = this.$container.attr('id').replace(/^ms\-/, '') + '_order';
+				var getVal = $('#' + orderId).val();
+				var getValArray = getVal.split(',');
+				var newValArray = getValArray.filter(function (x) {
+					return x != value && x != '';
+				});
+				var newVal = newValArray.join(',');
+				$('#' + orderId).val(newVal);
+			}
 		});
 	</script>
 </body>

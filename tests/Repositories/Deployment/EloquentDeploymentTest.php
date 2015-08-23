@@ -27,7 +27,6 @@ class EloquentDeploymentTest extends TestCase {
 		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
@@ -68,7 +67,6 @@ class EloquentDeploymentTest extends TestCase {
 		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
@@ -109,7 +107,6 @@ class EloquentDeploymentTest extends TestCase {
 		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
@@ -146,7 +143,6 @@ class EloquentDeploymentTest extends TestCase {
 		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
@@ -193,7 +189,6 @@ class EloquentDeploymentTest extends TestCase {
 		]);
 		$arrangedProject = Factory::create('App\Models\Project', [
 			'name'      => 'Project 1',
-			'recipe_id' => $arrangedRecipe->id,
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);

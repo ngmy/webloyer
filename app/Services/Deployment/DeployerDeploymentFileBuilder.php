@@ -1,117 +1,84 @@
 <?php namespace App\Services\Deployment;
 
-use App\Repositories\Recipe\RecipeInterface;
-
 use Storage;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeployerDeploymentFileBuilder {
+class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface {
 
-	protected $recipeRepository;
-
-	protected $deployment;
+	protected $deployerFile;
 
 	protected $project;
 
 	protected $serverListFile;
 
-	public function __construct(RecipeInterface $recipeRepository)
+	protected $recipeFile;
+
+	public function __construct(Model $project, DeployerFile $serverListFile, $recipeFile)
 	{
-		$this->recipeRepository = $recipeRepository;
+		$this->deployerFile   = new DeployerFile;
+		$this->project        = $project;
+		$this->serverListFile = $serverListFile;
+		$this->recipeFile     = $recipeFile;
 	}
 
 	public function __destruct()
 	{
-		$file = $this->getFilename();
-
-		Storage::delete($file);
+		Storage::delete($this->deployerFile->getBaseName());
 	}
 
 	/**
-	 * Get a deployment file path.
+	 * Set a deployment file path info.
 	 *
-	 * @return string
-	 */
-	public function getFilePath()
-	{
-		$filename = $this->getFilename();
-
-		return storage_path("app/{$filename}");
-	}
-
-	/**
-	 * Set a deployment model instance.
-	 *
-	 * @param \Illuminate\Database\Eloquent\Model $deployment
 	 * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
 	 */
-	public function setDeployment(Model $deployment)
+	public function pathInfo()
 	{
-		$this->deployment = $deployment;
+		$id = md5(uniqid(rand(), true));
+
+		$baseName = "deploy_$id.php";
+		$fullPath = storage_path("app/$baseName");
+
+		$this->deployerFile->setBaseName($baseName);
+		$this->deployerFile->setFullPath($fullPath);
 
 		return $this;
 	}
 
 	/**
-	 * Set a project model instance.
+	 * Put a deployment file.
 	 *
-	 * @param \Illuminate\Database\Eloquent\Model $project
 	 * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
 	 */
-	public function setProject(Model $project)
+	public function put()
 	{
-		$this->project = $project;
+		$baseName = $this->deployerFile->getBaseName();
+		$contents[] = '<?php';
+
+		// Include recipe files
+		foreach ($this->recipeFile as $recipeFile) {
+			$contents[] = "require '{$recipeFile->getFullPath()}';";
+		}
+
+		// Set a repository
+		$contents[] = "set('repository', '{$this->project->repository}');";
+
+		// Load a server list file
+		$contents[] = "serverList('{$this->serverListFile->getFullPath()}');";
+
+		Storage::put($baseName, implode(PHP_EOL, $contents));
 
 		return $this;
 	}
 
 	/**
-	 * Set a server list file path.
+	 * Get a deployment file instance.
 	 *
-	 * @param string $serverListFile
-	 * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+	 * @return \App\Services\Deployment\DeployerFile
 	 */
-	public function setServerListFile($serverListFile)
+	public function getResult()
 	{
-		$this->serverListFile = $serverListFile;
-
-		return $this;
-	}
-
-	/**
-	 * Build a deployment file.
-	 *
-	 * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
-	 */
-	public function build()
-	{
-		$recipe = $this->recipeRepository->byId($this->project->recipe_id);
-
-		$contents   = $recipe->body;
-		$repository = $this->project->repository;
-		$servers    = $this->serverListFile;
-
-		$contents = preg_replace('/\{\{\s*repository\s*\}\}/', $repository, $contents);
-		$contents = preg_replace('/\{\{\s*servers\s*\}\}/', $servers, $contents);
-
-		$file = $this->getFilename();
-
-		Storage::put($file, $contents);
-
-		return $this;
-	}
-
-	/**
-	 * Get a deployment file name.
-	 *
-	 * @return string
-	 */
-	protected function getFilename()
-	{
-		$filename = "deploy_{$this->deployment->project_id}_{$this->deployment->number}.php";
-
-		return $filename;
+		return $this->deployerFile;
 	}
 
 }

@@ -46,7 +46,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 		]);
 
 		$input = [
-			'recipe_id'  => 1,
+			'recipe_id'  => [1],
 			'server_id'  => 1,
 			'repository' => 'http://example.com',
 			'stage'      => 'staging',
@@ -71,7 +71,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 
 		$input = [
 			'name'       => 'Project 1',
-			'recipe_id'  => 1,
+			'recipe_id'  => [1],
 			'repository' => 'http://example.com',
 			'stage'      => 'staging',
 		];
@@ -101,7 +101,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 
 		$input = [
 			'name'      => 'Project 1',
-			'recipe_id' => 1,
+			'recipe_id' => [1],
 			'server_id' => 1,
 			'stage'     => 'staging',
 		];
@@ -131,7 +131,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 
 		$input = [
 			'name'       => 'Project 1',
-			'recipe_id'  => 1,
+			'recipe_id'  => [1],
 			'server_id'  => 1,
 			'repository' => 'invalid_url',
 			'stage'      => 'staging',
@@ -162,7 +162,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 
 		$input = [
 			'name'       => 'Project 1',
-			'recipe_id'  => 1,
+			'recipe_id'  => [1],
 			'server_id'  => 1,
 			'repository' => 'http://example.com',
 		];
@@ -192,7 +192,7 @@ class ProjectFormLaravelValidatorTest extends TestCase {
 
 		$input = [
 			'name'       => 'Project 1',
-			'recipe_id'  => 1,
+			'recipe_id'  => [1],
 			'server_id'  => 1,
 			'repository' => 'http://example.com',
 			'stage'      => 'staging',

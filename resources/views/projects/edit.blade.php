@@ -28,7 +28,7 @@
 						<div class="form-group required">
 							<label for="recipe_id" class="col-md-4 control-label">Recipe</label>
 							<div class="col-md-6">
-								{!! Form::select('recipe_id', $recipes, $project->recipe_id, ['class' => 'form-control', 'id' => 'recipe_id']) !!}
+								{!! Form::select('recipe_id[]', $recipes, $projectRecipe, ['class' => 'form-control multi-select', 'id' => 'recipe_id', 'multiple' => 'multiple']) !!}
 							</div>
 						</div>
 						<div class="form-group required">
@@ -55,6 +55,7 @@
 								{!! link_to_route('projects.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
 							</div>
 						</div>
+						{!! Form::hidden('recipe_id_order', implode(',', $projectRecipe), ['id' => 'recipe_id_order']) !!}
 					{!! Form::close() !!}
 				</div>
 			</div>
