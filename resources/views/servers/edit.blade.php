@@ -35,6 +35,7 @@
 							<label for="body" class="col-md-4 control-label">Body</label>
 							<div class="col-md-6">
 								{!! Form::textarea('body', $server->body, ['class' => 'form-control', 'id' => 'body', 'data-editor' => 'yaml']) !!}
+								<p class="help-block">You can define a <a href="http://deployer.org/docs/servers">server list YAML file</a> here.</p>
 							</div>
 						</div>
 						<div class="form-group">

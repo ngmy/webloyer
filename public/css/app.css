@@ -6248,6 +6248,9 @@ button.close {
 .red {
   color: #d9534f;
 }
+.gray {
+  color: gray;
+}
 body,
 label,
 .checkbox label {
