@@ -69,7 +69,10 @@
 
 	<footer class="footer">
 		<div class="container text-center">
-			<p class="text-muted credit">Webloyer is Copyright &copy; 2015 by Yuta Nagamiya hosted on <a href="https://github.com/ngmy/webloyer">GitHub</a>.</p>
+			<p class="text-muted credit">
+				<p>Webloyer is Copyright &copy; 2015 by Yuta Nagamiya hosted on <a href="https://github.com/ngmy/webloyer">GitHub</a>.</p>
+				<p>Webloyer is a Web UI for <a href="http://deployer.org/">Deployer</a>.</p>
+			</p>
 		</div>
 	</footer>
 
