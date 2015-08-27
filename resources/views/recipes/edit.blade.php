@@ -25,7 +25,7 @@
 								{!! Form::text('name', $recipe->name, ['class' => 'form-control', 'id' => 'name']) !!}
 							</div>
 						</div>
-						<div class="form-group required">
+						<div class="form-group">
 							<label for="description" class="col-md-4 control-label">Description</label>
 							<div class="col-md-6">
 								{!! Form::textarea('description', $recipe->description, ['class' => 'form-control', 'id' => 'description']) !!}
