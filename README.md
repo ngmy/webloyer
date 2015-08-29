@@ -52,9 +52,15 @@ Webloyer has the following requirements:
  php artisan migrate
  ```
 
-5. Open the `config/mail.php` file and set your mail server details.
+5. Seed the database with initial data by using the Artisan `db` command:
 
-6. Start the queue listener as a background process by using the Artisan `queue:listen` command:
+ ```
+ php artisan db:seed
+ ```
+
+6. Open the `config/mail.php` file and set your mail server details.
+
+7. Start the queue listener as a background process by using the Artisan `queue:listen` command:
 
  ```
  nohup php artisan queue:listen --timeout=0 &
