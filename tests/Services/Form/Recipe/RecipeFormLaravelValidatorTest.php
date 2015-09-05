@@ -2,11 +2,7 @@
 
 use App\Services\Form\Recipe\RecipeFormLaravelValidator;
 
-use Tests\Helpers\Factory;
-
 class RecipeFormLaravelValidatorTest extends TestCase {
-
-	protected $useDatabase = true;
 
 	public function test_Should_FailToValidate_When_NameFieldIsMissing()
 	{

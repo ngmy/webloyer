@@ -6,10 +6,12 @@ use App\Models\Deployment;
 use App\Models\MaxDeployment;
 use App\Models\Recipe;
 use App\Models\Server;
+use App\Models\User;
 use App\Repositories\Project\EloquentProject;
 use App\Repositories\Deployment\EloquentDeployment;
 use App\Repositories\Recipe\EloquentRecipe;
 use App\Repositories\Server\EloquentServer;
+use App\Repositories\User\EloquentUser;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -55,6 +57,12 @@ class RepositoryServiceProvider extends ServiceProvider {
 		{
 			return new EloquentServer(new Server);
 		});
+
+		$this->app->bind('App\Repositories\User\UserInterface', function ($app)
+		{
+			return new EloquentUser(new User);
+		});
+
 	}
 
 }

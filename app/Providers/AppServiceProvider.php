@@ -11,6 +11,8 @@ use App\Services\Form\Recipe\RecipeForm;
 use App\Services\Form\Recipe\RecipeFormLaravelValidator;
 use App\Services\Form\Server\ServerForm;
 use App\Services\Form\Server\ServerFormLaravelValidator;
+use App\Services\Form\User\UserForm;
+use App\Services\Form\User\UserFormLaravelValidator;
 
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Process\ProcessBuilder;
@@ -82,6 +84,15 @@ class AppServiceProvider extends ServiceProvider {
 				$app->make('App\Repositories\Server\ServerInterface')
 			);
 		});
+
+		$this->app->bind('App\Services\Form\User\UserForm', function ($app)
+		{
+			return new UserForm(
+				new UserFormLaravelValidator($app['validator']),
+				$app->make('App\Repositories\User\UserInterface')
+			);
+		});
+
 
 		$this->app->bind('App\Console\Commands\Deploy', function ($app)
 		{

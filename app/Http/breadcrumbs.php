@@ -80,3 +80,32 @@ Breadcrumbs::register('servers.edit', function ($breadcrumbs, App\Models\Server 
 	$breadcrumbs->parent('servers.show', $server);
 	$breadcrumbs->push('Edit', route('servers.edit', $server));
 });
+
+Breadcrumbs::register('users.index', function ($breadcrumbs)
+{
+	$breadcrumbs->push('Users', route('users.index'));
+});
+
+Breadcrumbs::register('users.create', function ($breadcrumbs)
+{
+	$breadcrumbs->parent('users.index');
+	$breadcrumbs->push('Create', route('users.create'));
+});
+
+Breadcrumbs::register('users.show', function ($breadcrumbs, App\Models\User $user)
+{
+	$breadcrumbs->parent('users.index');
+	$breadcrumbs->push($user->name, route('users.show', $user));
+});
+
+Breadcrumbs::register('users.edit', function ($breadcrumbs, App\Models\User $user)
+{
+	$breadcrumbs->parent('users.show', $user);
+	$breadcrumbs->push('Edit', route('users.edit', $user));
+});
+
+Breadcrumbs::register('users.password.change', function ($breadcrumbs, App\Models\User $user)
+{
+	$breadcrumbs->parent('users.show', $user);
+	$breadcrumbs->push('Change Password', route('users.password.change', $user));
+});
