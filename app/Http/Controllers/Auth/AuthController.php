@@ -62,4 +62,26 @@ class AuthController extends Controller {
 		]);
 	}
 
+	/**
+	 * Show the application registration form.
+	 *
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return void
+	 */
+	public function getRegister()
+	{
+		abort(404);
+	}
+
+	/**
+	 * Handle a registration request for the application.
+	 *
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+	 * @return void
+	 */
+	public function postRegister()
+	{
+		abortd(404);
+	}
+
 }

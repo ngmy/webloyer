@@ -70,23 +70,17 @@ Webloyer has the following requirements:
 
 ## Usage
 
-### Step 1: Create your Webloyer account
-
-1. Go to the Register page by click the "Register" link.
-
-2. Enter your account information.
-
-3. Click the "Register" button to finish registration process.
-
-### Step 2: Login to Webloyer
+### Step 1: Login to Webloyer
 
 1. Go to the Login page by click the "Login" link.
 
-2. Enter your e-mail address and login password.
+2. Enter the e-mail address and password.
+
+ **Note:** The default user e-mail address is `admin@example.com`, and password is `admin`. Please change the password after the first login.
 
 3. Click the "Login" button to login to Webloyer.
 
-### Step 3: Create your project
+### Step 2: Create your project
 
 1. Go to the Create Project page by click the "Create" button in the Projects page.
 
@@ -96,7 +90,7 @@ Webloyer has the following requirements:
 
 3. Click the "Store" button to finish project creation process.
 
-### Step 4: Managing deployments
+### Step 3: Managing deployments
 
 1. Go to the Deployments page by click the "Deployments" button.
 

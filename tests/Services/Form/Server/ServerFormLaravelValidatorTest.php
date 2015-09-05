@@ -2,11 +2,7 @@
 
 use App\Services\Form\Server\ServerFormLaravelValidator;
 
-use Tests\Helpers\Factory;
-
 class ServerFormLaravelValidatorTest extends TestCase {
-
-	protected $useDatabase = true;
 
 	public function test_Should_FailToValidate_When_NameFieldIsMissing()
 	{

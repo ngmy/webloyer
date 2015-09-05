@@ -15,7 +15,7 @@ Route::get('/', 'WelcomeController@index');
 
 Route::controller('auth', 'Auth\AuthController', [
 	'getRegister' => 'auth.register',
-	'getLogin' => 'auth.login',
+	'getLogin'    => 'auth.login',
 ]);
 
 Route::controller('password', 'Auth\PasswordController', [
@@ -31,3 +31,13 @@ Route::resource('projects.deployments', 'DeploymentsController', [
 Route::resource('recipes', 'RecipesController');
 
 Route::resource('servers', 'ServersController');
+
+Route::get('users/{users}/password/change', [
+	'as'   => 'users.password.change',
+	'uses' => 'UsersController@changePassword',
+]);
+Route::put('users/{users}/password', [
+	'as'   => 'users.password.update',
+	'uses' => 'UsersController@updatePassword'
+]);
+Route::resource('users', 'UsersController');

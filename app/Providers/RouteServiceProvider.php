@@ -80,6 +80,20 @@ class RouteServiceProvider extends ServiceProvider {
 
 			return $server;
 		});
+
+		$router->bind('users', function ($id)
+		{
+			$userRepository = $this->app->make('App\Repositories\User\UserInterface');
+
+			$user = $userRepository->byId($id);
+
+			if (is_null($user)) {
+				throw new NotFoundHttpException;
+			}
+
+			return $user;
+		});
+
 	}
 
 	/**
