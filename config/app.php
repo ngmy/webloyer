@@ -148,6 +148,7 @@ return [
 		'Collective\Html\HtmlServiceProvider',
 		'DaveJamesMiller\Breadcrumbs\ServiceProvider',
 		'Robbo\Presenter\PresenterServiceProvider',
+		'Kodeine\Acl\AclServiceProvider',
 
 	],
 

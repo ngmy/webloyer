@@ -6,9 +6,11 @@
 		<div class="col-md-8 col-md-offset-2">
 			<h1 class="page-header">Servers</h1>
 
-			<div class="pull-right margin-bottom-lg">
-				{!! link_to_route('servers.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
-			</div>
+			@if (Auth::user()->can('create.server'))
+				<div class="pull-right margin-bottom-lg">
+					{!! link_to_route('servers.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
+				</div>
+			@endif
 
 			<table class="table table-striped">
 				<thead>
@@ -26,10 +28,15 @@
 							<td>{{ $server->created_at }}</td>
 							<td>{{ $server->updated_at }}</td>
 							<td>
-								{!! link_to_route('servers.edit', 'Edit', [$server->id], ['class' => 'btn btn-default']) !!}
-								{!! Form::open(['route' => ['servers.destroy', $server->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
-								{!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
-								{!! Form::close() !!}
+								{!! link_to_route('servers.show', 'Show', [$server->id], ['class' => 'btn btn-default']) !!}
+								@if (Auth::user()->can('update.server'))
+									{!! link_to_route('servers.edit', 'Edit', [$server->id], ['class' => 'btn btn-default']) !!}
+								@endif
+								@if (Auth::user()->can('delete.server'))
+									{!! Form::open(['route' => ['servers.destroy', $server->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+									{!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
+									{!! Form::close() !!}
+								@endif
 							</td>
 						</tr>
 					@endforeach

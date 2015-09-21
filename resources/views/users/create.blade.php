@@ -34,19 +34,32 @@
 						<div class="form-group required">
 							<label for="password" class="col-md-4 control-label">Password</label>
 							<div class="col-md-6">
-								{!! Form::text('password', null, ['class' => 'form-control', 'id' => 'password', 'type' => 'password']) !!}
+								{!! Form::password('password', ['class' => 'form-control', 'id' => 'password', 'type' => 'password']) !!}
 							</div>
 						</div>
 						<div class="form-group required">
 							<label for="password_confirmation" class="col-md-4 control-label">Confirm Password</label>
 							<div class="col-md-6">
-								{!! Form::text('password_confirmation', null, ['class' => 'form-control', 'id' => 'password_confirmation', 'type' => 'password']) !!}
+								{!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password_confirmation', 'type' => 'password']) !!}
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="role" class="col-md-4 control-label">Role</label>
+							<div class="col-md-6">
+								@foreach ($roles as $role)
+									<div class="checkbox">
+										<label>
+											{!! Form::checkbox('role[]', $role->id) !!}
+											{{ $role->name }}
+										</label>
+									</div>
+								@endforeach
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								{!! Form::submit('Store', ['class' => 'btn btn-primary']) !!}
 								{!! link_to_route('users.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
+								{!! Form::submit('Store', ['class' => 'btn btn-primary']) !!}
 							</div>
 						</div>
 					{!! Form::close() !!}

@@ -6,9 +6,11 @@
 		<div class="col-md-8 col-md-offset-2">
 			<h1 class="page-header">Projects</h1>
 
-			<div class="pull-right margin-bottom-lg">
-				{!! link_to_route('projects.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
-			</div>
+			@if (Auth::user()->can('create.project'))
+				<div class="pull-right margin-bottom-lg">
+					{!! link_to_route('projects.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
+				</div>
+			@endif
 
 			<table class="table table-striped">
 				<thead>
@@ -40,10 +42,15 @@
 							<td>{{ $project->updated_at }}</td>
 							<td>
 								{!! link_to_route('projects.deployments.index', 'Deployments', [$project->id], ['class' => 'btn btn-default']) !!}
-								{!! link_to_route('projects.edit', 'Edit', [$project->id], ['class' => 'btn btn-default']) !!}
-								{!! Form::open(['route' => ['projects.destroy', $project->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
-								{!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
-								{!! Form::close() !!}
+								{!! link_to_route('projects.show', 'Show', [$project->id], ['class' => 'btn btn-default']) !!}
+								@if (Auth::user()->can('edit.project'))
+									{!! link_to_route('projects.edit', 'Edit', [$project->id], ['class' => 'btn btn-default']) !!}
+								@endif
+								@if (Auth::user()->can('delete.project'))
+									{!! Form::open(['route' => ['projects.destroy', $project->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+									{!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
+									{!! Form::close() !!}
+								@endif
 							</td>
 						</tr>
 					@endforeach

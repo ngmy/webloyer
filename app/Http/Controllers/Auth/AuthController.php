@@ -81,7 +81,7 @@ class AuthController extends Controller {
 	 */
 	public function postRegister()
 	{
-		abortd(404);
+		abort(404);
 	}
 
 }

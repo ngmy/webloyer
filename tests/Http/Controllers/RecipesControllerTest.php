@@ -18,7 +18,10 @@ class RecipesControllerTest extends TestCase {
 
 		Session::start();
 
-		$this->auth();
+		$user = $this->mockPartial('App\Models\User');
+		$user->shouldReceive('can')
+			->andReturn(true);
+		$this->auth($user);
 
 		$this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
 		$this->mockRecipeForm = $this->mock('App\Services\Form\Recipe\RecipeForm');
@@ -82,7 +85,7 @@ class RecipesControllerTest extends TestCase {
 		$this->assertSessionHasErrors();
 	}
 
-	public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
+	public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
 	{
 		$recipe = Factory::build('App\Models\Recipe', [
 			'id'          => 1,
@@ -100,7 +103,8 @@ class RecipesControllerTest extends TestCase {
 
 		$this->get('recipes/1');
 
-		$this->assertRedirectedToRoute('recipes.edit', [$recipe]);
+		$this->assertResponseOk();
+		$this->assertViewHas('recipe');
 	}
 
 	public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()

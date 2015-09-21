@@ -18,7 +18,10 @@ class ServersControllerTest extends TestCase {
 
 		Session::start();
 
-		$this->auth();
+		$user = $this->mockPartial('App\Models\User');
+		$user->shouldReceive('can')
+			->andReturn(true);
+		$this->auth($user);
 
 		$this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
 		$this->mockServerForm = $this->mock('App\Services\Form\Server\ServerForm');
@@ -82,7 +85,7 @@ class ServersControllerTest extends TestCase {
 		$this->assertSessionHasErrors();
 	}
 
-	public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
+	public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
 	{
 		$server = Factory::build('App\Models\Server', [
 			'id'          => 1,
@@ -100,7 +103,8 @@ class ServersControllerTest extends TestCase {
 
 		$this->get('servers/1');
 
-		$this->assertRedirectedToRoute('servers.edit', [$server]);
+		$this->assertResponseOk();
+		$this->assertViewHas('server');
 	}
 
 	public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()

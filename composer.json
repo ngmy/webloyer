@@ -43,7 +43,8 @@
 		"davejamesmiller/laravel-breadcrumbs": "3.0.*",
 		"robclancy/presenter": "1.3.*",
 		"ajaxorg/ace-builds": "1.2.0",
-		"lou/multi-select": "0.9.12"
+		"lou/multi-select": "0.9.12",
+		"kodeine/laravel-acl": "~1.0@dev"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

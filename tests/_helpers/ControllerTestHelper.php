@@ -31,9 +31,13 @@ trait ControllerTestHelper {
 		return $this;
 	}
 
-	protected function auth($class = 'App\Models\User', $data = [])
+	protected function auth($obj = null, $data = [])
 	{
-		$user = new $class;
+		if (isset($obj)) {
+			$user = $obj;
+		} else {
+			$user = new \App\Models\User;
+		}
 
 		foreach ($data as $key => $val) {
 			$user->$key = $val;

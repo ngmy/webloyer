@@ -23,21 +23,55 @@ Route::controller('password', 'Auth\PasswordController', [
 	'getReset' => 'password.reset',
 ]);
 
-Route::resource('projects', 'ProjectsController');
-Route::resource('projects.deployments', 'DeploymentsController', [
-	'expect' => ['index', 'store', 'show']
-]);
+Route::group([
+	'protect_alias' => 'project',
+], function ()
+{
+	Route::resource('projects', 'ProjectsController');
+});
 
-Route::resource('recipes', 'RecipesController');
+Route::group([
+	'protect_alias' => 'deployment',
+], function ()
+{
+	Route::resource('projects.deployments', 'DeploymentsController', [
+		'expect' => ['index', 'store', 'show']
+	]);
+});
 
-Route::resource('servers', 'ServersController');
+Route::group([
+	'protect_alias' => 'recipe',
+], function ()
+{
+	Route::resource('recipes', 'RecipesController');
+});
 
-Route::get('users/{users}/password/change', [
-	'as'   => 'users.password.change',
-	'uses' => 'UsersController@changePassword',
-]);
-Route::put('users/{users}/password', [
-	'as'   => 'users.password.update',
-	'uses' => 'UsersController@updatePassword'
-]);
-Route::resource('users', 'UsersController');
+Route::group([
+	'protect_alias' => 'server',
+], function ()
+{
+	Route::resource('servers', 'ServersController');
+});
+
+Route::group([
+	'protect_alias' => 'user',
+], function ()
+{
+	Route::get('users/{users}/password/change', [
+		'as'   => 'users.password.change',
+		'uses' => 'UsersController@changePassword',
+	]);
+	Route::put('users/{users}/password', [
+		'as'   => 'users.password.update',
+		'uses' => 'UsersController@updatePassword'
+	]);
+	Route::get('users/{users}/role/edit', [
+		'as'   => 'users.role.edit',
+		'uses' => 'UsersController@editRole',
+	]);
+	Route::put('users/{users}/role', [
+		'as'   => 'users.role.update',
+		'uses' => 'UsersController@updateRole'
+	]);
+	Route::resource('users', 'UsersController');
+});

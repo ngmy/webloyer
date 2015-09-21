@@ -36,6 +36,7 @@
 					</tr>
 				</tbody>
 			</table>
+			{!! link_to_route('projects.deployments.index', 'Back', [$deployment->project_id], ['class' => 'btn btn-danger']) !!}
 		</div>
 	</div>
 </div>

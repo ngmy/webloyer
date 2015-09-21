@@ -6,9 +6,11 @@
 		<div class="col-md-8 col-md-offset-2">
 			<h1 class="page-header">Recipes</h1>
 
-			<div class="pull-right margin-bottom-lg">
-				{!! link_to_route('recipes.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
-			</div>
+			@if (Auth::user()->can('create.recipe'))
+				<div class="pull-right margin-bottom-lg">
+					{!! link_to_route('recipes.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
+				</div>
+			@endif
 
 			<table class="table table-striped">
 				<thead>
@@ -26,10 +28,15 @@
 							<td>{{ $recipe->created_at }}</td>
 							<td>{{ $recipe->updated_at }}</td>
 							<td>
-								{!! link_to_route('recipes.edit', 'Edit', [$recipe->id], ['class' => 'btn btn-default']) !!}
-								{!! Form::open(['route' => ['recipes.destroy', $recipe->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
-								{!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
-								{!! Form::close() !!}
+								{!! link_to_route('recipes.show', 'Show', [$recipe->id], ['class' => 'btn btn-default']) !!}
+								@if (Auth::user()->can('update.recipe'))
+									{!! link_to_route('recipes.edit', 'Edit', [$recipe->id], ['class' => 'btn btn-default']) !!}
+								@endif
+								@if (Auth::user()->can('delete.recipe'))
+									{!! Form::open(['route' => ['recipes.destroy', $recipe->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+									{!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
+									{!! Form::close() !!}
+								@endif
 							</td>
 						</tr>
 					@endforeach

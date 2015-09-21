@@ -24,7 +24,10 @@ class ProjectsControllerTest extends TestCase {
 
 		Session::start();
 
-		$this->auth();
+		$user = $this->mockPartial('App\Models\User');
+		$user->shouldReceive('can')
+			->andReturn(true);
+		$this->auth($user);
 
 		$this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
 		$this->mockProjectForm = $this->mock('App\Services\Form\Project\ProjectForm');
@@ -105,13 +108,21 @@ class ProjectsControllerTest extends TestCase {
 		$this->assertSessionHasErrors();
 	}
 
-	public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
+	public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
 	{
-		$project = Factory::build('App\Models\Project', [
-			'id'         => 1,
-			'name'       => 'Project 1',
-			'created_at' => new Carbon\Carbon,
-			'updated_at' => new Carbon\Carbon,
+		$project = $this->mockProjectModel
+			->shouldReceive('getRecipes')
+			->once()
+			->andReturn(new Illuminate\Database\Eloquent\Collection)
+			->mock();
+
+		$server = Factory::build('App\Models\Server', [
+			'id'          => 1,
+			'name'        => 'Server 1',
+			'description' => '',
+			'body'        => '',
+			'created_at'  => new Carbon\Carbon,
+			'updated_at'  => new Carbon\Carbon,
 		]);
 
 		$this->mockProjectRepository
@@ -119,9 +130,15 @@ class ProjectsControllerTest extends TestCase {
 			->once()
 			->andReturn($project);
 
+		$this->mockServerRepository
+			->shouldReceive('byId')
+			->once()
+			->andReturn($server);
+
 		$this->get('projects/1');
 
-		$this->assertRedirectedToRoute('projects.edit', [$project]);
+		$this->assertResponseOk();
+		$this->assertViewHas('project');
 	}
 
 	public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()

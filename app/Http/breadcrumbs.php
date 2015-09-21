@@ -109,3 +109,9 @@ Breadcrumbs::register('users.password.change', function ($breadcrumbs, App\Model
 	$breadcrumbs->parent('users.show', $user);
 	$breadcrumbs->push('Change Password', route('users.password.change', $user));
 });
+
+Breadcrumbs::register('users.role.edit', function ($breadcrumbs, App\Models\User $user)
+{
+	$breadcrumbs->parent('users.show', $user);
+	$breadcrumbs->push('Edit Role', route('users.role.edit', $user));
+});
