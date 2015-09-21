@@ -67,7 +67,16 @@ class EloquentUser implements UserInterface
      */
     public function create(array $data)
     {
-        $user = $this->user->create($data);
+        $user = DB::transaction(function () use ($data)
+        {
+            $user = $this->user->create($data);
+
+            if (isset($data['role'])) {
+                $user->assignRole($data['role']);
+            }
+
+            return $user;
+        });
 
         return $user;
     }
@@ -80,9 +89,18 @@ class EloquentUser implements UserInterface
      */
     public function update(array $data)
     {
-        $user = $this->user->find($data['id']);
+        $user = DB::transaction(function () use ($data)
+        {
+            $user = $this->user->find($data['id']);
 
-        $user->update($data);
+            $user->update($data);
+
+            $user->revokeAllRoles();
+
+            if (isset($data['role'])) {
+                $user->assignRole($data['role']);
+            }
+        });
 
         return true;
     }

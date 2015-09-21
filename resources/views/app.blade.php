@@ -34,12 +34,20 @@
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/projects') }}">Projects</a></li>
-					<li><a href="{{ url('/recipes') }}">Recipes</a></li>
-					<li><a href="{{ url('/servers') }}">Servers</a></li>
-					<li><a href="{{ url('/users') }}">Users</a></li>
-				</ul>
+				@if (!Auth::guest())
+					<ul class="nav navbar-nav">
+						<li><a href="{{ url('/projects') }}">Projects</a></li>
+						@if (Auth::user()->can('view.recipe'))
+							<li><a href="{{ url('/recipes') }}">Recipes</a></li>
+						@endif
+						@if (Auth::user()->can('view.server'))
+							<li><a href="{{ url('/servers') }}">Servers</a></li>
+						@endif
+						@if (Auth::user()->can('view.user'))
+							<li><a href="{{ url('/users') }}">Users</a></li>
+						@endif
+					</ul>
+				@endif
 
 				<ul class="nav navbar-nav navbar-right">
 					@if (Auth::guest())

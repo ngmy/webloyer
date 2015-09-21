@@ -20,7 +20,10 @@ class DeploymentsControllerTest extends TestCase {
 
 		Session::start();
 
-		$this->auth();
+		$user = $this->mockPartial('App\Models\User');
+		$user->shouldReceive('can')
+			->andReturn(true);
+		$this->auth($user);
 
 		$this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
 		$this->mockDeploymentRepository = $this->mock('App\Repositories\Deployment\DeploymentInterface');

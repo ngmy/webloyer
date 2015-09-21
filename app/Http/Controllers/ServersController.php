@@ -26,6 +26,7 @@ class ServersController extends Controller
     public function __construct(ServerInterface $server, ServerForm $serverForm)
     {
         $this->middleware('auth');
+        $this->middleware('acl');
 
         $this->server     = $server;
         $this->serverForm = $serverForm;
@@ -85,7 +86,7 @@ class ServersController extends Controller
      */
     public function show(Server $server)
     {
-        return redirect()->route('servers.edit', [$server]);
+        return view('servers.show')->with('server', $server);
     }
 
     /**

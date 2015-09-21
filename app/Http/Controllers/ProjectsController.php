@@ -32,6 +32,7 @@ class ProjectsController extends Controller {
 	public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server)
 	{
 		$this->middleware('auth');
+		$this->middleware('acl');
 
 		$this->project     = $project;
 		$this->projectForm = $projectForm;
@@ -101,7 +102,14 @@ class ProjectsController extends Controller {
 	 */
 	public function show(Project $project)
 	{
-		return redirect()->route('projects.edit', [$project]);
+		$projectRecipe = $project->getRecipes()->toArray();
+
+		$projectServer = $this->server->byId($project->server_id);
+
+		return view('projects.show')
+			->with('project', $project)
+			->with('projectRecipe', $projectRecipe)
+			->with('projectServer', $projectServer);
 	}
 
 	/**

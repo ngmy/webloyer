@@ -12,6 +12,9 @@ use App\Repositories\Deployment\EloquentDeployment;
 use App\Repositories\Recipe\EloquentRecipe;
 use App\Repositories\Server\EloquentServer;
 use App\Repositories\User\EloquentUser;
+use App\Repositories\Role\EloquentRole;
+
+use Kodeine\Acl\Models\Eloquent\Role;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -63,6 +66,10 @@ class RepositoryServiceProvider extends ServiceProvider {
 			return new EloquentUser(new User);
 		});
 
+		$this->app->bind('App\Repositories\Role\RoleInterface', function ($app)
+		{
+			return new EloquentRole(new Role);
+		});
 	}
 
 }

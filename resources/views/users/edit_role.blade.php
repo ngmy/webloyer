@@ -6,14 +6,14 @@
 		<div class="col-md-2 col-md-offset-0">
 			<div class="list-group">
 				{!! link_to_route('users.edit', 'Edit User', [$user->id], ['class' => 'list-group-item']) !!}
-				{!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item selected']) !!}
-				{!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item']) !!}
+				{!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item']) !!}
+				{!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item selected']) !!}
 			</div>
 		</div>
 
 		<div class="col-md-8 col-md-offset-0">
 			<div class="panel panel-default">
-				<div class="panel-heading">Change Password</div>
+				<div class="panel-heading">Edit Role</div>
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
@@ -26,17 +26,18 @@
 						</div>
 					@endif
 
-					{!! Form::open(['route' => ['users.password.update', $user->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
-						<div class="form-group required">
-							<label for="password" class="col-md-4 control-label">Password</label>
+					{!! Form::open(['route' => ['users.role.update', $user->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
+						<div class="form-group">
+							<label for="role" class="col-md-4 control-label">Role</label>
 							<div class="col-md-6">
-								{!! Form::password('password', ['class' => 'form-control', 'id' => 'password', 'data-editor' => 'php']) !!}
-							</div>
-						</div>
-						<div class="form-group required">
-							<label for="password_confirmation" class="col-md-4 control-label">Confirm Password</label>
-							<div class="col-md-6">
-								{!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password_confirmation', 'data-editor' => 'php']) !!}
+								@foreach ($roles as $role)
+									<div class="checkbox">
+										<label>
+											{!! Form::checkbox('role[]', $role->id, $user->is($role->slug)) !!}
+											{{ $role->name }}
+										</label>
+									</div>
+								@endforeach
 							</div>
 						</div>
 						<div class="form-group">

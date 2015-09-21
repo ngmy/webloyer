@@ -40,8 +40,8 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								{!! Form::submit('Store', ['class' => 'btn btn-primary']) !!}
 								{!! link_to_route('recipes.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
+								{!! Form::submit('Store', ['class' => 'btn btn-primary']) !!}
 							</div>
 						</div>
 					{!! Form::close() !!}

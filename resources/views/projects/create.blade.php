@@ -51,8 +51,8 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								{!! Form::submit('Store', ['class' => 'btn btn-primary']) !!}
 								{!! link_to_route('projects.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
+								{!! Form::submit('Store', ['class' => 'btn btn-primary']) !!}
 							</div>
 						</div>
 						{!! Form::hidden('recipe_id_order', null, ['id' => 'recipe_id_order']) !!}

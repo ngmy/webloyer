@@ -7,6 +7,7 @@
 			<div class="list-group">
 				{!! link_to_route('users.edit', 'Edit User', [$user->id], ['class' => 'list-group-item selected']) !!}
 				{!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item']) !!}
+				{!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item']) !!}
 			</div>
 		</div>
 
@@ -40,8 +41,8 @@
 						</div>
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								{!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
 								{!! link_to_route('users.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
+								{!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
 							</div>
 						</div>
 					{!! Form::close() !!}

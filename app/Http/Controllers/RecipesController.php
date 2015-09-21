@@ -26,6 +26,7 @@ class RecipesController extends Controller
     public function __construct(RecipeInterface $recipe, RecipeForm $recipeForm)
     {
         $this->middleware('auth');
+        $this->middleware('acl');
 
         $this->recipe     = $recipe;
         $this->recipeForm = $recipeForm;
@@ -85,7 +86,7 @@ class RecipesController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        return redirect()->route('recipes.edit', [$recipe]);
+        return view('recipes.show')->with('recipe', $recipe);
     }
 
     /**

@@ -25,6 +25,7 @@ class DeploymentsController extends Controller {
 	public function __construct(DeploymentInterface $deployment, DeploymentForm $deploymentForm)
 	{
 		$this->middleware('auth');
+		$this->middleware('acl');
 
 		$this->deployment     = $deployment;
 		$this->deploymentForm = $deploymentForm;

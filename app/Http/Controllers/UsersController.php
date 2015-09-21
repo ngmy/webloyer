@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\User\UserInterface;
+use App\Repositories\Role\RoleInterface;
 use App\Services\Form\User\UserForm;
 use App\Models\User;
 
@@ -16,19 +17,24 @@ class UsersController extends Controller
 
     protected $userForm;
 
+    protected $role;
+
     /**
      * Create a new controller instance.
      *
      * @param \App\Repositories\User\UserInterface $user
      * @param \App\Services\Form\User\UserForm     $userForm
+     * @param \App\Repositories\Role\RoleInterface $role
      * @return void
      */
-    public function __construct(UserInterface $user, UserForm $userForm)
+    public function __construct(UserInterface $user, UserForm $userForm, RoleInterface $role)
     {
         $this->middleware('auth');
+        $this->middleware('acl');
 
         $this->user     = $user;
         $this->userForm = $userForm;
+        $this->role     = $role;
     }
 
     /**
@@ -55,7 +61,10 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = $this->role->all();
+
+        return view('users.create')
+            ->with('roles', $roles);
     }
 
     /**
@@ -145,6 +154,41 @@ class UsersController extends Controller
             return redirect()->route('users.index');
         } else {
             return redirect()->route('users.password.change', [$user])
+                ->withInput()
+                ->withErrors($this->userForm->errors());
+        }
+    }
+
+    /**
+     * Show the form for editing the role of the specified resource.
+     *
+     * @param \App\Models\User $user
+     * @return Response
+     */
+    public function editRole(User $user)
+    {
+        $roles = $this->role->all();
+
+        return view('users.edit_role')
+            ->with('user', $user)
+            ->with('roles', $roles);
+    }
+
+    /**
+     * Update the role of the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User         $user
+     * @return Response
+     */
+    public function updateRole(Request $request, User $user)
+    {
+        $input = array_merge($request->all(), ['id' => $user->id]);
+
+        if ($this->userForm->update($input)) {
+            return redirect()->route('users.index');
+        } else {
+            return redirect()->route('users.role.edit', [$user])
                 ->withInput()
                 ->withErrors($this->userForm->errors());
         }
