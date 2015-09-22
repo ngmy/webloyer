@@ -10,6 +10,34 @@
 
 Webloyer is a Web UI for managing [Deployer](https://github.com/deployphp/deployer) deployments.
 
+## Features
+
+Webloyer has the following features:
+
+* Project management
+
+ * Managing deployment settings on a project-by-project basis
+
+* Deployment management on a project-by-project basis
+
+ * 1-click deploying and rolling back
+
+ * Keeping a log of every deployments
+
+* Recipe management
+
+ * Creating, editing, deleting and listing recipe files
+
+* Server management
+
+ * Creating, editing, deleting and listing server list files
+
+* User management
+
+ * Authentication with e-mail address and password
+
+ * Role-based access control to features
+
 ## Requirements
 
 Webloyer has the following requirements:
