@@ -2,14 +2,12 @@
 
 namespace App\Repositories\User;
 
+use App\Repositories\AbstractEloquentRepository;
 use Illuminate\Database\Eloquent\Model;
-
 use DB;
 
-class EloquentUser implements UserInterface
+class EloquentUser extends AbstractEloquentRepository implements UserInterface
 {
-    protected $user;
-
     /**
      * Create a new repository instance.
      *
@@ -18,18 +16,7 @@ class EloquentUser implements UserInterface
      */
     public function __construct(Model $user)
     {
-        $this->user = $user;
-    }
-
-    /**
-     * Get a user by id.
-     *
-     * @param int $id User id
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function byId($id)
-    {
-        return $this->user->find($id);
+        $this->model = $user;
     }
 
     /**
@@ -41,22 +28,12 @@ class EloquentUser implements UserInterface
      */
     public function byPage($page = 1, $limit = 10)
     {
-        $users = $this->user->orderBy('name')
+        $users = $this->model->orderBy('name')
             ->skip($limit * ($page - 1))
             ->take($limit)
             ->paginate($limit);
 
         return $users;
-    }
-
-    /**
-     * Get all users.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function all()
-    {
-        return $this->user->all();
     }
 
     /**
@@ -69,7 +46,7 @@ class EloquentUser implements UserInterface
     {
         $user = DB::transaction(function () use ($data)
         {
-            $user = $this->user->create($data);
+            $user = $this->model->create($data);
 
             if (isset($data['role'])) {
                 $user->assignRole($data['role']);
@@ -91,7 +68,7 @@ class EloquentUser implements UserInterface
     {
         $user = DB::transaction(function () use ($data)
         {
-            $user = $this->user->find($data['id']);
+            $user = $this->model->find($data['id']);
 
             $user->update($data);
 
@@ -101,21 +78,6 @@ class EloquentUser implements UserInterface
                 $user->assignRole($data['role']);
             }
         });
-
-        return true;
-    }
-
-    /**
-     * Delete an existing user.
-     *
-     * @param int $id User id
-     * @return boolean
-     */
-    public function delete($id)
-    {
-        $user = $this->user->find($id);
-
-        $user->delete();
 
         return true;
     }
