@@ -9,7 +9,7 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Get a model by id.
      *
-     * @param int $id Recipe id
+     * @param int $id Model id
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function byId($id)
@@ -75,7 +75,7 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Delete an existing model.
      *
-     * @param int $id Recipe id
+     * @param int $id Model id
      * @return boolean
      */
     public function delete($id)

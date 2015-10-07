@@ -7,7 +7,7 @@ interface RepositoryInterface
     /**
      * Get a model by id.
      *
-     * @param int $id Recipe id
+     * @param int $id Model id
      * @return mixed
      */
     public function byId($id);
@@ -47,7 +47,7 @@ interface RepositoryInterface
     /**
      * Delete an existing model.
      *
-     * @param int $id Recipe id
+     * @param int $id Model id
      * @return mixed
      */
     public function delete($id);
