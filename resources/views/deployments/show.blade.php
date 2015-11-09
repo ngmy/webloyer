@@ -20,7 +20,7 @@
 					</tr>
 					<tr>
 						<th>Message</th>
-						<td><pre><code>{{ $deployment->message }}</code></pre></td>
+						<td><pre class="ansi_box"><code>{!! $deployment->message() !!}</code></pre></td>
 					</tr>
 					<tr>
 						<th>Started At</th>
