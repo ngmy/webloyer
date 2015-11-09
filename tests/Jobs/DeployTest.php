@@ -113,7 +113,7 @@ class DeployTest extends \TestCase {
 
 		$this->mockProcessBuilder
 			->shouldReceive('add')
-			->times(6)
+			->times(7)
 			->andReturn($this->mockProcessBuilder);
 
 		$this->mockProcessBuilder
@@ -207,7 +207,7 @@ class DeployTest extends \TestCase {
 
 		$this->mockProcessBuilder
 			->shouldReceive('add')
-			->times(6)
+			->times(7)
 			->andReturn($this->mockProcessBuilder);
 
 		$this->mockProcessBuilder

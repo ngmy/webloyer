@@ -68,6 +68,7 @@ class Rollback extends Job implements SelfHandling, ShouldQueue {
 		$processBuilder
 			->add($this->executable)
 			->add("-f={$deploymentFile->getFullPath()}")
+			->add('--ansi')
 			->add('-n')
 			->add('-vv')
 			->add('rollback')

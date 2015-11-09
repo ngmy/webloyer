@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d64dafe3beb5a0c0c70881d428f091e2",
+    "hash": "4e99c7f9f558087a6f08abda52fe653e",
+    "content-hash": "76e29fc35701b0c9dd36bafc63e0b468",
     "packages": [
         {
             "name": "ajaxorg/ace-builds",
@@ -430,7 +431,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kodeine/laravel-acl/zipball/02572eebfc4827c2ee92d54c910db26ccfb60782",
+                "url": "https://api.github.com/repos/kodeine/laravel-acl/zipball/b0caaaa2ec048a0d7d93d19f6b1d1269c1b1866e",
                 "reference": "02572eebfc4827c2ee92d54c910db26ccfb60782",
                 "shasum": ""
             },
@@ -1115,6 +1116,50 @@
             "time": "2015-03-14 08:14:37"
         },
         {
+            "name": "sensiolabs/ansi-to-html",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensiolabs/ansi-to-html.git",
+                "reference": "02598b975c510e9e7d07d0be0a89c7a6b43464d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensiolabs/ansi-to-html/zipball/02598b975c510e9e7d07d0be0a89c7a6b43464d6",
+                "reference": "02598b975c510e9e7d07d0be0a89c7a6b43464d6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "twig/twig": "Provides nice templating features"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "SensioLabs\\AnsiConverter": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "A library to convert a text with ANSI codes to HTML",
+            "time": "2015-07-22 03:07:58"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v5.4.1",
             "source": {
@@ -1172,12 +1217,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:symfony/Console.git",
+                "url": "https://github.com/symfony/console.git",
                 "reference": "564398bc1f33faf92fc2ec86859983d30eb81806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/a1572ad84e6b8dc65c0f5ab18762e0f8079bee26",
+                "url": "https://api.github.com/repos/symfony/console/zipball/564398bc1f33faf92fc2ec86859983d30eb81806",
                 "reference": "564398bc1f33faf92fc2ec86859983d30eb81806",
                 "shasum": ""
             },
@@ -1229,12 +1274,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/CssSelector.git",
+                "url": "https://github.com/symfony/css-selector.git",
                 "reference": "0b5c07b516226b7dd32afbbc82fe547a469c5092"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/CssSelector/zipball/0b5c07b516226b7dd32afbbc82fe547a469c5092",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/0b5c07b516226b7dd32afbbc82fe547a469c5092",
                 "reference": "0b5c07b516226b7dd32afbbc82fe547a469c5092",
                 "shasum": ""
             },
@@ -1282,12 +1327,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Debug.git",
+                "url": "https://github.com/symfony/debug.git",
                 "reference": "075070230c5bbc65abde8241191655bbce0716e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Debug/zipball/075070230c5bbc65abde8241191655bbce0716e2",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/075070230c5bbc65abde8241191655bbce0716e2",
                 "reference": "075070230c5bbc65abde8241191655bbce0716e2",
                 "shasum": ""
             },
@@ -1342,12 +1387,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/DomCrawler.git",
+                "url": "https://github.com/symfony/dom-crawler.git",
                 "reference": "11d8eb8ccc1533f4c2d89a025f674894fda520b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DomCrawler/zipball/11d8eb8ccc1533f4c2d89a025f674894fda520b3",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/11d8eb8ccc1533f4c2d89a025f674894fda520b3",
                 "reference": "11d8eb8ccc1533f4c2d89a025f674894fda520b3",
                 "shasum": ""
             },
@@ -1395,12 +1440,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/EventDispatcher.git",
+                "url": "https://github.com/symfony/event-dispatcher.git",
                 "reference": "be3c5ff8d503c46768aeb78ce6333051aa6f26d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/be3c5ff8d503c46768aeb78ce6333051aa6f26d9",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/be3c5ff8d503c46768aeb78ce6333051aa6f26d9",
                 "reference": "be3c5ff8d503c46768aeb78ce6333051aa6f26d9",
                 "shasum": ""
             },
@@ -1502,12 +1547,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/HttpFoundation.git",
+                "url": "https://github.com/symfony/http-foundation.git",
                 "reference": "4f363c426b0ced57e3d14460022feb63937980ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/4f363c426b0ced57e3d14460022feb63937980ff",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/4f363c426b0ced57e3d14460022feb63937980ff",
                 "reference": "4f363c426b0ced57e3d14460022feb63937980ff",
                 "shasum": ""
             },
@@ -1555,12 +1600,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/HttpKernel.git",
+                "url": "https://github.com/symfony/http-kernel.git",
                 "reference": "208101c7a11e31933183bd2a380486e528c74302"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/208101c7a11e31933183bd2a380486e528c74302",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/208101c7a11e31933183bd2a380486e528c74302",
                 "reference": "208101c7a11e31933183bd2a380486e528c74302",
                 "shasum": ""
             },
@@ -2122,7 +2167,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/22b57c778cfd1fc46e14bff071c5126d9cd50820",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/ee88cd05073533b10678772fe954d042748393c3",
                 "reference": "491d4f3c1792273d73aa851a1330f9050a8257a0",
                 "shasum": ""
             },
@@ -3216,12 +3261,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Config.git",
+                "url": "https://github.com/symfony/config.git",
                 "reference": "58ded81f1f582a87c528ef3dae9a859f78b5f374"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/58ded81f1f582a87c528ef3dae9a859f78b5f374",
+                "url": "https://api.github.com/repos/symfony/config/zipball/58ded81f1f582a87c528ef3dae9a859f78b5f374",
                 "reference": "58ded81f1f582a87c528ef3dae9a859f78b5f374",
                 "shasum": ""
             },
@@ -3266,12 +3311,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
+                "url": "https://github.com/symfony/filesystem.git",
                 "reference": "a0d43eb3e17d4f4c6990289805a488a0482a07f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/a0d43eb3e17d4f4c6990289805a488a0482a07f3",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/a0d43eb3e17d4f4c6990289805a488a0482a07f3",
                 "reference": "a0d43eb3e17d4f4c6990289805a488a0482a07f3",
                 "shasum": ""
             },
