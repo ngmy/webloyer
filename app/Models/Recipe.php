@@ -13,4 +13,14 @@ class Recipe extends BaseModel
         'description',
         'body',
     ];
+
+    public function projects()
+    {
+        return $this->belongsToMany('App\Models\Project');
+    }
+
+    public function getProjects()
+    {
+        return $this->projects()->orderBy('name')->get();
+    }
 }
