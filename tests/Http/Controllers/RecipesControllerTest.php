@@ -25,15 +25,21 @@ class RecipesControllerTest extends TestCase {
 
 		$this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
 		$this->mockRecipeForm = $this->mock('App\Services\Form\Recipe\RecipeForm');
+		$this->mockRecipeModel = $this->mockPartial('App\Models\Recipe');
 	}
 
 	public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
 	{
-		$recipes = Factory::buildList('App\Models\Recipe', [
-			['id' => 1, 'name' => 'Recipe 1', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-			['id' => 2, 'name' => 'Recipe 2', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-			['id' => 3, 'name' => 'Recipe 3', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-		]);
+		$recipes[] = $this->mockRecipeModel
+			->shouldReceive('getProjects')
+			->once()
+			->andReturn(new Illuminate\Database\Eloquent\Collection)
+			->mock();
+		$recipes[] = $this->mockRecipeModel
+			->shouldReceive('getProjects')
+			->once()
+			->andReturn(new Illuminate\Database\Eloquent\Collection)
+			->mock();
 
 		$perPage = 10;
 
@@ -87,14 +93,11 @@ class RecipesControllerTest extends TestCase {
 
 	public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
 	{
-		$recipe = Factory::build('App\Models\Recipe', [
-			'id'          => 1,
-			'name'        => 'Recipe 1',
-			'description' => '',
-			'body'        => '',
-			'created_at'  => new Carbon\Carbon,
-			'updated_at'  => new Carbon\Carbon,
-		]);
+		$recipe = $this->mockRecipeModel
+			->shouldReceive('getProjects')
+			->once()
+			->andReturn(new Illuminate\Database\Eloquent\Collection)
+			->mock();
 
 		$this->mockRecipeRepository
 			->shouldReceive('byId')

@@ -86,7 +86,10 @@ class RecipesController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        return view('recipes.show')->with('recipe', $recipe);
+        $recipeProject = $recipe->getProjects()->toArray();
+
+        return view('recipes.show')->with('recipe', $recipe)
+            ->with('recipeProject', $recipeProject);
     }
 
     /**
