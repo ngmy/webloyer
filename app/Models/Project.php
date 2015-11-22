@@ -28,7 +28,7 @@ class Project extends BaseModel {
 
 	public function getLastDeployment()
 	{
-		return $this->deployments->first();
+		return $this->deployments()->orderBy('number', 'desc')->first();
 	}
 
 	public function getRecipes()
