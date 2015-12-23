@@ -49,6 +49,14 @@
 								{!! Form::text('stage', $project->stage, ['class' => 'form-control', 'id' => 'stage']) !!}
 							</div>
 						</div>
+						<hr>
+						<h5>E-Mail Notification</h5>
+						<div class="form-group">
+							<label for="email_notification_recipient" class="col-md-4 control-label">Recipient</label>
+							<div class="col-md-6">
+								{!! Form::email('email_notification_recipient', $project->email_notification_recipient, ['class' => 'form-control', 'id' => 'email_notification_recipient']) !!}
+							</div>
+						</div>
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								{!! link_to_route('projects.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}

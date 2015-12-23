@@ -9,11 +9,17 @@ class Project extends BaseModel {
 		'stage',
 		'repository',
 		'server_id',
+		'email_notification_recipient',
 	];
 
 	public function setStageAttribute($value)
 	{
 		$this->attributes['stage'] = $this->nullIfBlank($value);
+	}
+
+	public function setEmailNotificationRecipientAttribute($value)
+	{
+		$this->attributes['email_notification_recipient'] = $this->nullIfBlank($value);
 	}
 
 	public function deployments()

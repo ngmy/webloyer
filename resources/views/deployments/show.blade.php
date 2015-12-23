@@ -16,7 +16,7 @@
 					</tr>
 					<tr>
 						<th>Status</th>
-						<td>{{ $deployment->status }}</td>
+						<td>{{ $deployment->statusText() }}</td>
 					</tr>
 					<tr>
 						<th>Message</th>
