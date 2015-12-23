@@ -4,6 +4,7 @@ use App\Jobs\Job;
 use App\Repositories\Deployment\DeploymentInterface;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Server\ServerInterface;
+use App\Services\Notification\NotifierInterface;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,9 +41,10 @@ class Deploy extends Job implements SelfHandling, ShouldQueue {
 	 * @param \App\Repositories\Project\ProjectInterface            $projectRepository
 	 * @param \App\Repositories\Server\ServerInterface              $serverRepository
 	 * @param \Symfony\Component\Process\ProcessBuilder             $processBuilder
+	 * @param \App\Services\Notification\NotifierInterface          $notifier
 	 * @return void
 	 */
-	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder)
+	public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier)
 	{
 		$deployment = $this->deployment;
 		$project    = $projectRepository->byId($deployment->project_id);
@@ -99,6 +101,25 @@ class Deploy extends Job implements SelfHandling, ShouldQueue {
 		$data['status']  = $process->getExitCode();
 
 		$deploymentRepository->update($data);
+
+		// Notify
+		if (isset($project->email_notification_recipient)) {
+			$deployment = $deploymentRepository->byId($deployment->id);
+
+			if ($process->isSuccessful()) {
+				$status = 'success';
+			} else {
+				$status = 'failure';
+			}
+			$subject = "Deployment of {$project->name} #{$deployment->number} finished: {$status}";
+
+			$message = view('emails.notification')
+				->with('project', $project)
+				->with('deployment', $deployment)
+				->render();
+
+			$notifier->to($project->email_notification_recipient)->notify($subject, $message);
+		}
 	}
 
 }

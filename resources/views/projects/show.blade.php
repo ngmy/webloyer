@@ -30,6 +30,10 @@
 						<th>Stage</th>
 						<td>{{ $project->stage }}</td>
 					</tr>
+					<tr>
+						<th>E-Mail Notification Recipient</th>
+						<td>{{ $project->email_notification_recipient }}</td>
+					</tr>
 				</tbody>
 			</table>
 			{!! link_to_route('projects.index', 'Back', [], ['class' => 'btn btn-danger']) !!}

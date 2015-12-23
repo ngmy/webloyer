@@ -86,9 +86,15 @@ Webloyer has the following requirements:
  php artisan db:seed
  ```
 
-6. Open the `config/mail.php` file and set your mail server details.
+6. Open the `config/app.php` file and set your Webloyer URL:
 
-7. Start the queue listener as a background process by using the Artisan `queue:listen` command:
+ ```
+ 'url' => env('APP_URL', 'http://localhost'),
+ ```
+
+7. Open the `config/mail.php` file and set your mail server details.
+
+8. Start the queue listener as a background process by using the Artisan `queue:listen` command:
 
  ```
  nohup php artisan queue:listen --timeout=0 &

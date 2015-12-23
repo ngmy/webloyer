@@ -5,11 +5,12 @@ use App\Services\Validation\AbstractLaravelValidator;
 class ProjectFormLaravelValidator extends AbstractLaravelValidator {
 
 	protected $rules = [
-		'name'       => 'required',
-		'stage'      => 'required',
-		'recipe_id'  => 'required',
-		'server_id'  => 'required|exists:servers,id',
-		'repository' => 'required|url',
+		'name'                         => 'required',
+		'stage'                        => 'required',
+		'recipe_id'                    => 'required',
+		'server_id'                    => 'required|exists:servers,id',
+		'repository'                   => 'required|url',
+		'email_notification_recipient' => 'email',
 	];
 
 	protected function rules()

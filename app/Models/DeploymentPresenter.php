@@ -26,10 +26,29 @@ class DeploymentPresenter extends Presenter
         }
     }
 
+    public function statusText()
+    {
+        if (!isset($this->status)) {
+            return 'running';
+        } elseif ($this->status === 0) {
+            return 'success';
+        } else {
+            return 'failure';
+        }
+    }
+
     public function message()
     {
         $html = $this->converter->convert($this->message);
 
         return $html;
+    }
+
+    public function messageText()
+    {
+        $html = $this->message();
+        $text = htmlspecialchars_decode(strip_tags($html));
+
+        return $text;
     }
 }

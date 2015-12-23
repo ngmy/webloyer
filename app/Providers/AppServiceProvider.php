@@ -13,6 +13,7 @@ use App\Services\Form\Server\ServerForm;
 use App\Services\Form\Server\ServerFormLaravelValidator;
 use App\Services\Form\User\UserForm;
 use App\Services\Form\User\UserFormLaravelValidator;
+use App\Services\Notification\MailNotifier;
 
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Process\ProcessBuilder;
@@ -93,6 +94,10 @@ class AppServiceProvider extends ServiceProvider {
 			);
 		});
 
+		$this->app->bind('App\Services\Notification\NotifierInterface', function ($app)
+		{
+			return new MailNotifier;
+		});
 
 		$this->app->bind('App\Console\Commands\Deploy', function ($app)
 		{

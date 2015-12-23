@@ -26,6 +26,8 @@ class DeployTest extends \TestCase {
 
 	protected $mockDeploymentFileBuilder;
 
+	protected $mockNotifier;
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -39,6 +41,7 @@ class DeployTest extends \TestCase {
 		$this->mockServerListFileBuilder = $this->mock('App\Services\Deployment\DeployerServerListFileBuilder');
 		$this->mockRecipeFileBuilder = $this->mock('App\Services\DeploymentInterface\DeployerRecipeFileBuilder');
 		$this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
+		$this->mockNotifier = $this->mock('App\Services\Notification\NotifierInterface');
 	}
 
 	public function test_Should_Work_When_DeployerIsNormalEnd()
@@ -131,7 +134,8 @@ class DeployTest extends \TestCase {
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockServerRepository,
-			$this->mockProcessBuilder
+			$this->mockProcessBuilder,
+			$this->mockNotifier
 		);
 	}
 
@@ -225,7 +229,8 @@ class DeployTest extends \TestCase {
 			$this->mockDeploymentRepository,
 			$this->mockProjectRepository,
 			$this->mockServerRepository,
-			$this->mockProcessBuilder
+			$this->mockProcessBuilder,
+			$this->mockNotifier
 		);
 	}
 
