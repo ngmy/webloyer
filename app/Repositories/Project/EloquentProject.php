@@ -10,21 +10,17 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
 {
     protected $maxDeployment;
 
-    protected $projectRecipe;
-
     /**
      * Create a new repository instance.
      *
      * @param \Illuminate\Database\Eloquent\Model $project
      * @param \Illuminate\Database\Eloquent\Model $maxDeployment
-     * @param \Illuminate\Database\Eloquent\Model $projectRecipe
      * @return void
      */
-    public function __construct(Model $project, Model $maxDeployment, Model $projectRecipe)
+    public function __construct(Model $project, Model $maxDeployment)
     {
         $this->model = $project;
         $this->maxDeployment = $maxDeployment;
-        $this->projectRecipe = $projectRecipe;
     }
 
     /**
@@ -64,14 +60,8 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
             $this->maxDeployment->project_id = $project->id;
             $this->maxDeployment->save();
 
-            // Insert data to `project_recipe` table
-            foreach ($data['recipe_id'] as $i => $recipeId) {
-                $this->projectRecipe->create([
-                    'project_id'   => $project->id,
-                    'recipe_id'    => $recipeId,
-                    'recipe_order' => $i + 1,
-                ]);
-            }
+            // Replace data in `project_recipe` table
+            $this->syncRecipes($project, $data['recipe_id']);
 
             return $project;
         });
@@ -95,17 +85,25 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
             $project->update($data);
 
             // Replace data in `project_recipe` table
-            $this->projectRecipe->where('project_id', $project->id)->delete();
-
-            foreach ($data['recipe_id'] as $i => $recipeId) {
-                $this->projectRecipe->create([
-                    'project_id'   => $project->id,
-                    'recipe_id'    => $recipeId,
-                    'recipe_order' => $i + 1,
-                ]);
-            }
+            $this->syncRecipes($project, $data['recipe_id']);
         });
 
         return true;
+    }
+
+    /**
+     * Sync recipes for a project.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $project
+     * @param array                               $recipes
+     * @return void
+     */
+    protected function syncRecipes(Model $project, array $recipes)
+    {
+        foreach ($recipes as $i => $recipeId) {
+            $syncRecipeIds[$recipeId] = ['recipe_order' => $i + 1];
+        }
+
+        $project->recipes()->sync($syncRecipeIds);
     }
 }

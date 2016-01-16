@@ -23,8 +23,7 @@ class EloquentProjectTest extends TestCase {
 
 		$projectRepository = new EloquentProject(
 			new App\Models\Project,
-			new App\Models\MaxDeployment,
-			new App\Models\ProjectRecipe
+			new App\Models\MaxDeployment
 		);
 
 		$foundProject = $projectRepository->byId($arrangedProject->id);
@@ -51,8 +50,7 @@ class EloquentProjectTest extends TestCase {
 
 		$projectRepository = new EloquentProject(
 			new App\Models\Project,
-			new App\Models\MaxDeployment,
-			new App\Models\ProjectRecipe
+			new App\Models\MaxDeployment
 		);
 
 		$foundProjects = $projectRepository->byPage();
@@ -64,8 +62,7 @@ class EloquentProjectTest extends TestCase {
 	{
 		$projectRepository = new EloquentProject(
 			new App\Models\Project,
-			new App\Models\MaxDeployment,
-			new App\Models\ProjectRecipe
+			new App\Models\MaxDeployment
 		);
 
 		$arrangedRecipe = Factory::create('App\Models\Recipe', [
@@ -93,10 +90,9 @@ class EloquentProjectTest extends TestCase {
 		$this->assertEquals($arrangedServer->id, $createdProject->server_id);
 		$this->assertEquals('staging', $createdProject->stage);
 
-		$projectRecipe = new App\Models\ProjectRecipe;
-		$updatedProjectRecipe = $projectRecipe->where('project_id', $returnedProject->id)->get();
+		$updatedProjectRecipes = $createdProject->recipes;
 
-		$this->assertEquals($arrangedRecipe->id, $updatedProjectRecipe[0]->recipe_id);
+		$this->assertEquals($arrangedRecipe->id, $updatedProjectRecipes[0]->pivot->recipe_id);
 	}
 
 	public function test_Should_UpdateExistingProject()
@@ -116,16 +112,15 @@ class EloquentProjectTest extends TestCase {
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
-		Factory::create('App\Models\ProjectRecipe', [
-			'project_id'   => $arrangedProject->id,
-			'recipe_id'    => $arrangedRecipe->id,
-			'recipe_order' => 1,
+		$arrangedProject->recipes()->sync([
+			$arrangedRecipe->id => [
+				'recipe_order' => 1,
+			]
 		]);
 
 		$projectRepository = new EloquentProject(
 			new App\Models\Project,
-			new App\Models\MaxDeployment,
-			new App\Models\ProjectRecipe
+			new App\Models\MaxDeployment
 		);
 		$arrangedRecipe2 = Factory::create('App\Models\Recipe', [
 			'name'        => 'Recipe 2',
@@ -153,10 +148,9 @@ class EloquentProjectTest extends TestCase {
 		$this->assertEquals($arrangedServer2->id, $updatedProject->server_id);
 		$this->assertEquals('production', $updatedProject->stage);
 
-		$projectRecipe = new App\Models\ProjectRecipe;
-		$updatedProjectRecipe = $projectRecipe->where('project_id', $arrangedProject->id)->get();
+		$updatedProjectRecipes = $updatedProject->recipes;
 
-		$this->assertEquals($arrangedRecipe2->id, $updatedProjectRecipe[0]->recipe_id);
+		$this->assertEquals($arrangedRecipe2->id, $updatedProjectRecipes[0]->pivot->recipe_id);
 	}
 
 	public function test_Should_DeleteExistingProject()
@@ -176,16 +170,15 @@ class EloquentProjectTest extends TestCase {
 			'server_id' => $arrangedServer->id,
 			'stage'     => 'staging',
 		]);
-		Factory::create('App\Models\ProjectRecipe', [
-			'project_id'   => $arrangedProject->id,
-			'recipe_id'    => $arrangedRecipe->id,
-			'recipe_order' => 1,
+		$arrangedProject->recipes()->sync([
+			$arrangedRecipe->id => [
+				'recipe_order' => 1,
+			]
 		]);
 
 		$projectRepository = new EloquentProject(
 			new App\Models\Project,
-			new App\Models\MaxDeployment,
-			new App\Models\ProjectRecipe
+			new App\Models\MaxDeployment
 		);
 		$projectRepository->delete($arrangedProject->id);
 
@@ -194,10 +187,9 @@ class EloquentProjectTest extends TestCase {
 
 		$this->assertNull($deletedProject);
 
-		$projectRecipe = new App\Models\ProjectRecipe;
-		$updatedProjectRecipe = $projectRecipe->where('project_id', $arrangedProject->id)->get();
+		$updatedProjectRecipes = $arrangedProject->recipes;
 
-		$this->assertEmpty($updatedProjectRecipe);
+		$this->assertEmpty($updatedProjectRecipes);
 	}
 
 }
