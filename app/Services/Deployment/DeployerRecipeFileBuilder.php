@@ -1,67 +1,68 @@
-<?php namespace App\Services\Deployment;
+<?php
+
+namespace App\Services\Deployment;
 
 use Storage;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface {
+class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
+{
+    protected $deployerFile;
 
-	protected $deployerFile;
+    protected $recipe;
 
-	protected $recipe;
+    public function __construct(Model $recipe)
+    {
+        $this->deployerFile = new DeployerFile;
+        $this->recipe = $recipe;
+    }
 
-	public function __construct(Model $recipe)
-	{
-		$this->deployerFile = new DeployerFile;
-		$this->recipe = $recipe;
-	}
+    public function __destruct()
+    {
+        Storage::delete($this->deployerFile->getBaseName());
+    }
 
-	public function __destruct()
-	{
-		Storage::delete($this->deployerFile->getBaseName());
-	}
+    /**
+     * Set a recipe file path info.
+     *
+     * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
+     */
+    public function pathInfo()
+    {
+        $id = md5(uniqid(rand(), true));
 
-	/**
-	 * Set a recipe file path info.
-	 *
-	 * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
-	 */
-	public function pathInfo()
-	{
-		$id = md5(uniqid(rand(), true));
+        $baseName = "recipe_$id.php";
+        $fullPath = storage_path("app/$baseName");
 
-		$baseName = "recipe_$id.php";
-		$fullPath = storage_path("app/$baseName");
+        $this->deployerFile->setBaseName($baseName);
+        $this->deployerFile->setFullPath($fullPath);
 
-		$this->deployerFile->setBaseName($baseName);
-		$this->deployerFile->setFullPath($fullPath);
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Put a recipe file.
+     *
+     * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
+     */
+    public function put()
+    {
+        $baseName = $this->deployerFile->getBaseName();
+        $contents = $this->recipe->body;
 
-	/**
-	 * Put a recipe file.
-	 *
-	 * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
-	 */
-	public function put()
-	{
-		$baseName = $this->deployerFile->getBaseName();
-		$contents = $this->recipe->body;
+        Storage::put($baseName, $contents);
 
-		Storage::put($baseName, $contents);
+        return $this;
+    }
 
-		return $this;
-	}
-
-	/**
-	 * Get a recipe file instance.
-	 *
-	 * @return \App\Services\Deployment\DeployerFile
-	 */
-	public function getResult()
-	{
-		return $this->deployerFile;
-	}
-
+    /**
+     * Get a recipe file instance.
+     *
+     * @return \App\Services\Deployment\DeployerFile
+     */
+    public function getResult()
+    {
+        return $this->deployerFile;
+    }
 }

@@ -1,79 +1,80 @@
-<?php namespace App\Services\Validation;
+<?php
+
+namespace App\Services\Validation;
 
 use Illuminate\Validation\Factory;
 
-abstract class AbstractLaravelValidator implements ValidableInterface {
+abstract class AbstractLaravelValidator implements ValidableInterface
+{
+    protected $validator;
 
-	protected $validator;
+    protected $data = [];
 
-	protected $data = [];
+    protected $errors = [];
 
-	protected $errors = [];
+    protected $rules = [];
 
-	protected $rules = [];
+    /**
+     * Create a new validator instance.
+     *
+     * @param \Illuminate\Validation\Factory $validator
+     * @return void
+     */
+    public function __construct(Factory $validator)
+    {
+        $this->validator = $validator;
+    }
 
-	/**
-	 * Create a new validator instance.
-	 *
-	 * @param \Illuminate\Validation\Factory $validator
-	 * @return void
-	 */
-	public function __construct(Factory $validator)
-	{
-		$this->validator = $validator;
-	}
+    /**
+     * Add data to validation.
+     *
+     * @param array Data to validation
+     * @return \App\Services\Validation\ValidableInterface $this
+     */
+    public function with(array $data)
+    {
+        $this->data = $data;
 
-	/**
-	 * Add data to validation.
-	 *
-	 * @param array Data to validation
-	 * @return \App\Services\Validation\ValidableInterface $this
-	 */
-	public function with(array $data)
-	{
-		$this->data = $data;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Test whether passes validation.
+     *
+     * @return boolean
+     */
+    public function passes()
+    {
+        $rules = array_merge($this->rules, $this->rules());
 
-	/**
-	 * Test whether passes validation.
-	 *
-	 * @return boolean
-	 */
-	public function passes()
-	{
-		$rules = array_merge($this->rules, $this->rules());
+        $validator = $this->validator->make($this->data, $rules);
 
-		$validator = $this->validator->make($this->data, $rules);
+        if ($validator->fails()) {
+            $this->errors = $validator->messages();
 
-		if ($validator->fails()) {
-			$this->errors = $validator->messages();
+            return false;
+        }
 
-			return false;
-		}
+        return true;
+    }
 
-		return true;
-	}
+    /**
+     * Return validation errors.
+     *
+     * @return array
+     */
+    public function errors()
+    {
+        return $this->errors;
+    }
 
-	/**
-	 * Return validation errors.
-	 *
-	 * @return array
-	 */
-	public function errors()
-	{
-		return $this->errors;
-	}
-
-	/**
-	 * Return validation rules.
-	 *
-	 * @return array
-	 */
-	protected function rules()
-	{
-		return [];
-	}
-
+    /**
+     * Return validation rules.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [];
+    }
 }

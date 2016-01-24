@@ -2,111 +2,110 @@
 
 use App\Services\Form\User\UserForm;
 
-class UserFormTest extends TestCase {
+class UserFormTest extends TestCase
+{
+    use Tests\Helpers\MockeryHelper;
 
-	use Tests\Helpers\MockeryHelper;
+    protected $mockValidator;
 
-	protected $mockValidator;
+    protected $mockUserRepository;
 
-	protected $mockUserRepository;
+    public function setUp()
+    {
+        parent::setUp();
 
-	public function setUp()
-	{
-		parent::setUp();
+        $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
+        $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
+    }
 
-		$this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-		$this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
-	}
+    public function test_Should_SucceedToSave_When_ValidationPasses()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(true);
 
-	public function test_Should_SucceedToSave_When_ValidationPasses()
-	{
-		$this->mockValidator
-			->shouldReceive('with')
-			->once()
-			->andReturn($this->mockValidator);
-		$this->mockValidator
-			->shouldReceive('passes')
-			->once()
-			->andReturn(true);
+        $this->mockUserRepository
+            ->shouldReceive('create')
+            ->once()
+            ->andReturn(true);
 
-		$this->mockUserRepository
-			->shouldReceive('create')
-			->once()
-			->andReturn(true);
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->save([]);
 
-		$form = new UserForm($this->mockValidator, $this->mockUserRepository);
-		$result = $form->save([]);
+        $this->assertTrue($result, 'Expected save to succeed.');
+    }
 
-		$this->assertTrue($result, 'Expected save to succeed.');
-	}
+    public function test_Should_FailToSave_When_ValidationFails()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(false);
 
-	public function test_Should_FailToSave_When_ValidationFails()
-	{
-		$this->mockValidator
-			->shouldReceive('with')
-			->once()
-			->andReturn($this->mockValidator);
-		$this->mockValidator
-			->shouldReceive('passes')
-			->once()
-			->andReturn(false);
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->save([]);
 
-		$form = new UserForm($this->mockValidator, $this->mockUserRepository);
-		$result = $form->save([]);
+        $this->assertFalse($result, 'Expected save to fail.');
+    }
 
-		$this->assertFalse($result, 'Expected save to fail.');
-	}
+    public function test_Should_SucceedToUpdate_When_ValidationPasses()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(true);
 
-	public function test_Should_SucceedToUpdate_When_ValidationPasses()
-	{
-		$this->mockValidator
-			->shouldReceive('with')
-			->once()
-			->andReturn($this->mockValidator);
-		$this->mockValidator
-			->shouldReceive('passes')
-			->once()
-			->andReturn(true);
+        $this->mockUserRepository
+            ->shouldReceive('update')
+            ->once()
+            ->andReturn(true);
 
-		$this->mockUserRepository
-			->shouldReceive('update')
-			->once()
-			->andReturn(true);
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->update([]);
 
-		$form = new UserForm($this->mockValidator, $this->mockUserRepository);
-		$result = $form->update([]);
+        $this->assertTrue($result, 'Expected update to succeed.');
+    }
 
-		$this->assertTrue($result, 'Expected update to succeed.');
-	}
+    public function test_Should_FailToUpdate_When_ValidationFails()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(false);
 
-	public function test_Should_FailToUpdate_When_ValidationFails()
-	{
-		$this->mockValidator
-			->shouldReceive('with')
-			->once()
-			->andReturn($this->mockValidator);
-		$this->mockValidator
-			->shouldReceive('passes')
-			->once()
-			->andReturn(false);
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->update([]);
 
-		$form = new UserForm($this->mockValidator, $this->mockUserRepository);
-		$result = $form->update([]);
+        $this->assertFalse($result, 'Expected update to fail.');
+    }
 
-		$this->assertFalse($result, 'Expected update to fail.');
-	}
+    public function test_Should_GetValidationErrors()
+    {
+        $this->mockValidator
+            ->shouldReceive('errors')
+            ->once()
+            ->andReturn(new Illuminate\Support\MessageBag);
 
-	public function test_Should_GetValidationErrors()
-	{
-		$this->mockValidator
-			->shouldReceive('errors')
-			->once()
-			->andReturn(new Illuminate\Support\MessageBag);
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->errors();
 
-		$form = new UserForm($this->mockValidator, $this->mockUserRepository);
-		$result = $form->errors();
-
-		$this->assertEmpty($result);
-	}
-
+        $this->assertEmpty($result);
+    }
 }

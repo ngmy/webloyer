@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -10,163 +12,162 @@ use App\Models\Project;
 
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller {
+class ProjectsController extends Controller
+{
+    protected $project;
 
-	protected $project;
+    protected $projectForm;
 
-	protected $projectForm;
+    protected $recipe;
 
-	protected $recipe;
+    protected $server;
 
-	protected $server;
+    /**
+     * Create a new controller instance.
+     *
+     * @param \App\Repositories\Project\ProjectInterface $project
+     * @param \App\Services\Form\Project\ProjectForm     $projectForm
+     * @param \App\Repositories\Recipe\RecipeInterface   $recipe
+     * @param \App\Repositories\Server\ServerInterface   $server
+     * @return void
+     */
+    public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server)
+    {
+        $this->middleware('auth');
+        $this->middleware('acl');
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @param \App\Repositories\Project\ProjectInterface $project
-	 * @param \App\Services\Form\Project\ProjectForm     $projectForm
-	 * @param \App\Repositories\Recipe\RecipeInterface   $recipe
-	 * @param \App\Repositories\Server\ServerInterface   $server
-	 * @return void
-	 */
-	public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server)
-	{
-		$this->middleware('auth');
-		$this->middleware('acl');
+        $this->project     = $project;
+        $this->projectForm = $projectForm;
+        $this->recipe      = $recipe;
+        $this->server      = $server;
+    }
 
-		$this->project     = $project;
-		$this->projectForm = $projectForm;
-		$this->recipe      = $recipe;
-		$this->server      = $server;
-	}
+    /**
+     * Display a listing of the resource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        $page = $request->input('page', 1);
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @param \Illuminate\Http\Request $request
-	 * @return Response
-	 */
-	public function index(Request $request)
-	{
-		$page = $request->input('page', 1);
+        $perPage = 10;
 
-		$perPage = 10;
+        $projects = $this->project->byPage($page, $perPage);
 
-		$projects = $this->project->byPage($page, $perPage);
+        return view('projects.index')->with('projects', $projects);
+    }
 
-		return view('projects.index')->with('projects', $projects);
-	}
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $recipes = $this->recipe->all()->toArray();
+        $recipes = array_column($recipes, 'name', 'id');
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		$recipes = $this->recipe->all()->toArray();
-		$recipes = array_column($recipes, 'name', 'id');
+        $servers = $this->server->all()->toArray();
+        $servers = array_column($servers, 'name', 'id');
 
-		$servers = $this->server->all()->toArray();
-		$servers = array_column($servers, 'name', 'id');
+        return view('projects.create')
+            ->with('recipes', $recipes)
+            ->with('servers', $servers);
+    }
 
-		return view('projects.create')
-			->with('recipes', $recipes)
-			->with('servers', $servers);
-	}
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        $input = $request->all();
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param \Illuminate\Http\Request $request
-	 * @return Response
-	 */
-	public function store(Request $request)
-	{
-		$input = $request->all();
+        if ($this->projectForm->save($input)) {
+            return redirect()->route('projects.index');
+        } else {
+            return redirect()->route('projects.create')
+                ->withInput()
+                ->withErrors($this->projectForm->errors());
+        }
+    }
 
-		if ($this->projectForm->save($input)) {
-			return redirect()->route('projects.index');
-		} else {
-			return redirect()->route('projects.create')
-				->withInput()
-				->withErrors($this->projectForm->errors());
-		}
-	}
+    /**
+     * Display the specified resource.
+     *
+     * @param \App\Models\Project $project
+     * @return Response
+     */
+    public function show(Project $project)
+    {
+        $projectRecipe = $project->getRecipes()->toArray();
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param \App\Models\Project $project
-	 * @return Response
-	 */
-	public function show(Project $project)
-	{
-		$projectRecipe = $project->getRecipes()->toArray();
+        $projectServer = $this->server->byId($project->server_id);
 
-		$projectServer = $this->server->byId($project->server_id);
+        return view('projects.show')
+            ->with('project', $project)
+            ->with('projectRecipe', $projectRecipe)
+            ->with('projectServer', $projectServer);
+    }
 
-		return view('projects.show')
-			->with('project', $project)
-			->with('projectRecipe', $projectRecipe)
-			->with('projectServer', $projectServer);
-	}
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param \App\Models\Project $project
+     * @return Response
+     */
+    public function edit(Project $project)
+    {
+        $recipes = $this->recipe->all()->toArray();
+        $recipes = array_column($recipes, 'name', 'id');
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param \App\Models\Project $project
-	 * @return Response
-	 */
-	public function edit(Project $project)
-	{
-		$recipes = $this->recipe->all()->toArray();
-		$recipes = array_column($recipes, 'name', 'id');
+        $servers = $this->server->all()->toArray();
+        $servers = array_column($servers, 'name', 'id');
 
-		$servers = $this->server->all()->toArray();
-		$servers = array_column($servers, 'name', 'id');
+        $projectRecipe = $project->getRecipes()->toArray();
+        $projectRecipe = array_column($projectRecipe, 'id');
 
-		$projectRecipe = $project->getRecipes()->toArray();
-		$projectRecipe = array_column($projectRecipe, 'id');
+        return view('projects.edit')
+            ->with('project', $project)
+            ->with('recipes', $recipes)
+            ->with('servers', $servers)
+            ->with('projectRecipe', $projectRecipe);
+    }
 
-		return view('projects.edit')
-			->with('project', $project)
-			->with('recipes', $recipes)
-			->with('servers', $servers)
-			->with('projectRecipe', $projectRecipe);
-	}
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Project      $project
+     * @return Response
+     */
+    public function update(Request $request, Project $project)
+    {
+        $input = array_merge($request->all(), ['id' => $project->id]);
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param \Illuminate\Http\Request $request
-	 * @param \App\Models\Project      $project
-	 * @return Response
-	 */
-	public function update(Request $request, Project $project)
-	{
-		$input = array_merge($request->all(), ['id' => $project->id]);
+        if ($this->projectForm->update($input)) {
+            return redirect()->route('projects.index');
+        } else {
+            return redirect()->route('projects.edit', [$project])
+                ->withInput()
+                ->withErrors($this->projectForm->errors());
+        }
+    }
 
-		if ($this->projectForm->update($input)) {
-			return redirect()->route('projects.index');
-		} else {
-			return redirect()->route('projects.edit', [$project])
-				->withInput()
-				->withErrors($this->projectForm->errors());
-		}
-	}
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param \App\Models\Project $project
+     * @return Response
+     */
+    public function destroy(Project $project)
+    {
+        $this->project->delete($project->id);
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param \App\Models\Project $project
-	 * @return Response
-	 */
-	public function destroy(Project $project)
-	{
-		$this->project->delete($project->id);
-
-		return redirect()->route('projects.index');
-	}
-
+        return redirect()->route('projects.index');
+    }
 }

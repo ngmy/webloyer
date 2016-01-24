@@ -1,26 +1,27 @@
-<?php namespace App\Services\Deployment;
+<?php
 
-interface DeployerFileBuilderInterface {
+namespace App\Services\Deployment;
 
-	/**
-	 * Set a deployer file path info.
-	 *
-	 * @return \App\Services\Deployment\DeployerFileBuilderInterface $this
-	 */
-	public function pathInfo();
+interface DeployerFileBuilderInterface
+{
+    /**
+     * Set a deployer file path info.
+     *
+     * @return \App\Services\Deployment\DeployerFileBuilderInterface $this
+     */
+    public function pathInfo();
 
-	/**
-	 * Put a deployer file.
-	 *
-	 * @return \App\Services\Deployment\DeployerFileBuilderInterface $this
-	 */
-	public function put();
+    /**
+     * Put a deployer file.
+     *
+     * @return \App\Services\Deployment\DeployerFileBuilderInterface $this
+     */
+    public function put();
 
-	/**
-	 * Get a deployer file instance.
-	 *
-	 * @return \App\Services\Deployment\DeployerFile
-	 */
-	public function getResult();
-
+    /**
+     * Get a deployer file instance.
+     *
+     * @return \App\Services\Deployment\DeployerFile
+     */
+    public function getResult();
 }

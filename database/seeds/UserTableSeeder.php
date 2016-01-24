@@ -3,17 +3,16 @@
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
-class UserTableSeeder extends Seeder {
+class UserTableSeeder extends Seeder
+{
+    public function run()
+    {
+        DB::table('users')->delete();
 
-	public function run()
-	{
-		DB::table('users')->delete();
-
-		User::create([
-			'name'     => 'admin',
-			'email'    => 'admin@example.com',
-			'password' => Hash::make('admin'),
-		]);
-	}
-
+        User::create([
+            'name'     => 'admin',
+            'email'    => 'admin@example.com',
+            'password' => Hash::make('admin'),
+        ]);
+    }
 }
