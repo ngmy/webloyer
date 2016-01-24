@@ -1,67 +1,68 @@
-<?php namespace App\Services\Deployment;
+<?php
+
+namespace App\Services\Deployment;
 
 use Storage;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeployerServerListFileBuilder implements DeployerFileBuilderInterface {
+class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
+{
+    protected $deployerFile;
 
-	protected $deployerFile;
+    protected $server;
 
-	protected $server;
+    public function __construct(Model $server)
+    {
+        $this->deployerFile = new DeployerFile;
+        $this->server = $server;
+    }
 
-	public function __construct(Model $server)
-	{
-		$this->deployerFile = new DeployerFile;
-		$this->server = $server;
-	}
+    public function __destruct()
+    {
+        Storage::delete($this->deployerFile->getBaseName());
+    }
 
-	public function __destruct()
-	{
-		Storage::delete($this->deployerFile->getBaseName());
-	}
+    /**
+     * Set a server list file path info.
+     *
+     * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
+     */
+    public function pathInfo()
+    {
+        $id = md5(uniqid(rand(), true));
 
-	/**
-	 * Set a server list file path info.
-	 *
-	 * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
-	 */
-	public function pathInfo()
-	{
-		$id = md5(uniqid(rand(), true));
+        $baseName = "server_$id.yml";
+        $fullPath = storage_path("app/$baseName");
 
-		$baseName = "server_$id.yml";
-		$fullPath = storage_path("app/$baseName");
+        $this->deployerFile->setBaseName($baseName);
+        $this->deployerFile->setFullPath($fullPath);
 
-		$this->deployerFile->setBaseName($baseName);
-		$this->deployerFile->setFullPath($fullPath);
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * Put a server list file.
+     *
+     * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
+     */
+    public function put()
+    {
+        $baseName = $this->deployerFile->getBaseName();
+        $contents = $this->server->body;
 
-	/**
-	 * Put a server list file.
-	 *
-	 * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
-	 */
-	public function put()
-	{
-		$baseName = $this->deployerFile->getBaseName();
-		$contents = $this->server->body;
+        Storage::put($baseName, $contents);
 
-		Storage::put($baseName, $contents);
+        return $this;
+    }
 
-		return $this;
-	}
-
-	/**
-	 * Get a server list file instance.
-	 *
-	 * @return \App\Services\Deployment\DeployerFile
-	 */
-	public function getResult()
-	{
-		return $this->deployerFile;
-	}
-
+    /**
+     * Get a server list file instance.
+     *
+     * @return \App\Services\Deployment\DeployerFile
+     */
+    public function getResult()
+    {
+        return $this->deployerFile;
+    }
 }

@@ -10,21 +10,17 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
 {
     protected $maxDeployment;
 
-    protected $projectRecipe;
-
     /**
      * Create a new repository instance.
      *
      * @param \Illuminate\Database\Eloquent\Model $project
      * @param \Illuminate\Database\Eloquent\Model $maxDeployment
-     * @param \Illuminate\Database\Eloquent\Model $projectRecipe
      * @return void
      */
-    public function __construct(Model $project, Model $maxDeployment, Model $projectRecipe)
+    public function __construct(Model $project, Model $maxDeployment)
     {
         $this->model = $project;
         $this->maxDeployment = $maxDeployment;
-        $this->projectRecipe = $projectRecipe;
     }
 
     /**
@@ -36,8 +32,7 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
      */
     public function byPage($page = 1, $limit = 10)
     {
-        $projects = $this->model->with(['deployments' => function ($query)
-        {
+        $projects = $this->model->with(['deployments' => function ($query) {
             $query->orderBy('number', 'desc');
         }])->orderBy('name')
             ->skip($limit * ($page - 1))
@@ -55,8 +50,7 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
      */
     public function create(array $data)
     {
-        $project = DB::transaction(function () use ($data)
-        {
+        $project = DB::transaction(function () use ($data) {
             // Insert data to `project` table
             $project = $this->model->create($data);
 
@@ -64,14 +58,8 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
             $this->maxDeployment->project_id = $project->id;
             $this->maxDeployment->save();
 
-            // Insert data to `project_recipe` table
-            foreach ($data['recipe_id'] as $i => $recipeId) {
-                $this->projectRecipe->create([
-                    'project_id'   => $project->id,
-                    'recipe_id'    => $recipeId,
-                    'recipe_order' => $i + 1,
-                ]);
-            }
+            // Replace data in `project_recipe` table
+            $this->syncRecipes($project, $data['recipe_id']);
 
             return $project;
         });
@@ -87,25 +75,32 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
      */
     public function update(array $data)
     {
-        $project = DB::transaction(function () use ($data)
-        {
+        $project = DB::transaction(function () use ($data) {
             // Update data in `project` table
             $project = $this->model->find($data['id']);
 
             $project->update($data);
 
             // Replace data in `project_recipe` table
-            $this->projectRecipe->where('project_id', $project->id)->delete();
-
-            foreach ($data['recipe_id'] as $i => $recipeId) {
-                $this->projectRecipe->create([
-                    'project_id'   => $project->id,
-                    'recipe_id'    => $recipeId,
-                    'recipe_order' => $i + 1,
-                ]);
-            }
+            $this->syncRecipes($project, $data['recipe_id']);
         });
 
         return true;
+    }
+
+    /**
+     * Sync recipes for a project.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $project
+     * @param array                               $recipes
+     * @return void
+     */
+    protected function syncRecipes(Model $project, array $recipes)
+    {
+        foreach ($recipes as $i => $recipeId) {
+            $syncRecipeIds[$recipeId] = ['recipe_order' => $i + 1];
+        }
+
+        $project->recipes()->sync($syncRecipeIds);
     }
 }

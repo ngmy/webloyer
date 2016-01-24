@@ -62,8 +62,7 @@ class EloquentDeployment extends AbstractEloquentRepository implements Deploymen
      */
     public function create(array $data)
     {
-        $deployment = DB::transaction(function () use ($data)
-        {
+        $deployment = DB::transaction(function () use ($data) {
             $maxDeployment = DB::table('max_deployments')
                 ->where('project_id', $data['project_id'])
                 ->lockForUpdate()

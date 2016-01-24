@@ -44,8 +44,7 @@ class EloquentUser extends AbstractEloquentRepository implements UserInterface
      */
     public function create(array $data)
     {
-        $user = DB::transaction(function () use ($data)
-        {
+        $user = DB::transaction(function () use ($data) {
             $user = $this->model->create($data);
 
             if (isset($data['role'])) {
@@ -66,8 +65,7 @@ class EloquentUser extends AbstractEloquentRepository implements UserInterface
      */
     public function update(array $data)
     {
-        $user = DB::transaction(function () use ($data)
-        {
+        $user = DB::transaction(function () use ($data) {
             $user = $this->model->find($data['id']);
 
             $user->update($data);

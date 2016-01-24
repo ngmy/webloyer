@@ -1,113 +1,107 @@
-<?php namespace App\Providers;
+<?php
+
+namespace App\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class RouteServiceProvider extends ServiceProvider {
+class RouteServiceProvider extends ServiceProvider
+{
+    /**
+     * This namespace is applied to the controller routes in your routes file.
+     *
+     * In addition, it is set as the URL generator's root namespace.
+     *
+     * @var string
+     */
+    protected $namespace = 'App\Http\Controllers';
 
-	/**
-	 * This namespace is applied to the controller routes in your routes file.
-	 *
-	 * In addition, it is set as the URL generator's root namespace.
-	 *
-	 * @var string
-	 */
-	protected $namespace = 'App\Http\Controllers';
+    /**
+     * Define your route model bindings, pattern filters, etc.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
+    public function boot(Router $router)
+    {
+        parent::boot($router);
 
-	/**
-	 * Define your route model bindings, pattern filters, etc.
-	 *
-	 * @param  \Illuminate\Routing\Router  $router
-	 * @return void
-	 */
-	public function boot(Router $router)
-	{
-		parent::boot($router);
+        //
+        $router->bind('projects', function ($id) {
+            $projectRepository = $this->app->make('App\Repositories\Project\ProjectInterface');
 
-		//
-		$router->bind('projects', function ($id)
-		{
-			$projectRepository = $this->app->make('App\Repositories\Project\ProjectInterface');
+            $project = $projectRepository->byId($id);
 
-			$project = $projectRepository->byId($id);
+            if (is_null($project)) {
+                throw new NotFoundHttpException;
+            }
 
-			if (is_null($project)) {
-				throw new NotFoundHttpException;
-			}
+            return $project;
+        });
 
-			return $project;
-		});
+        $router->bind('deployments', function ($num, $route) {
+            $project = $route->parameter('projects');
 
-		$router->bind('deployments', function ($num, $route)
-		{
-			$project = $route->parameter('projects');
+            $deploymentRepository = $this->app->make('App\Repositories\Deployment\DeploymentInterface');
 
-			$deploymentRepository = $this->app->make('App\Repositories\Deployment\DeploymentInterface');
+            $deployment = $deploymentRepository->byProjectIdAndNumber($project->id, $num);
 
-			$deployment = $deploymentRepository->byProjectIdAndNumber($project->id, $num);
+            if (is_null($deployment)) {
+                throw new NotFoundHttpException;
+            }
 
-			if (is_null($deployment)) {
-				throw new NotFoundHttpException;
-			}
+            return $deployment;
+        });
 
-			return $deployment;
-		});
+        $router->bind('recipes', function ($id) {
+            $recipeRepository = $this->app->make('App\Repositories\Recipe\RecipeInterface');
 
-		$router->bind('recipes', function ($id)
-		{
-			$recipeRepository = $this->app->make('App\Repositories\Recipe\RecipeInterface');
+            $recipe = $recipeRepository->byId($id);
 
-			$recipe = $recipeRepository->byId($id);
+            if (is_null($recipe)) {
+                throw new NotFoundHttpException;
+            }
 
-			if (is_null($recipe)) {
-				throw new NotFoundHttpException;
-			}
+            return $recipe;
+        });
 
-			return $recipe;
-		});
+        $router->bind('servers', function ($id) {
+            $serverRepository = $this->app->make('App\Repositories\Server\ServerInterface');
 
-		$router->bind('servers', function ($id)
-		{
-			$serverRepository = $this->app->make('App\Repositories\Server\ServerInterface');
+            $server = $serverRepository->byId($id);
 
-			$server = $serverRepository->byId($id);
+            if (is_null($server)) {
+                throw new NotFoundHttpException;
+            }
 
-			if (is_null($server)) {
-				throw new NotFoundHttpException;
-			}
+            return $server;
+        });
 
-			return $server;
-		});
+        $router->bind('users', function ($id) {
+            $userRepository = $this->app->make('App\Repositories\User\UserInterface');
 
-		$router->bind('users', function ($id)
-		{
-			$userRepository = $this->app->make('App\Repositories\User\UserInterface');
+            $user = $userRepository->byId($id);
 
-			$user = $userRepository->byId($id);
+            if (is_null($user)) {
+                throw new NotFoundHttpException;
+            }
 
-			if (is_null($user)) {
-				throw new NotFoundHttpException;
-			}
+            return $user;
+        });
+    }
 
-			return $user;
-		});
-
-	}
-
-	/**
-	 * Define the routes for the application.
-	 *
-	 * @param  \Illuminate\Routing\Router  $router
-	 * @return void
-	 */
-	public function map(Router $router)
-	{
-		$router->group(['namespace' => $this->namespace], function($router)
-		{
-			require app_path('Http/routes.php');
-		});
-	}
-
+    /**
+     * Define the routes for the application.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
+    public function map(Router $router)
+    {
+        $router->group(['namespace' => $this->namespace], function ($router) {
+            require app_path('Http/routes.php');
+        });
+    }
 }

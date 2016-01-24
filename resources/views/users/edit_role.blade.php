@@ -2,54 +2,54 @@
 
 @section('content')
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-2 col-md-offset-0">
-			<div class="list-group">
-				{!! link_to_route('users.edit', 'Edit User', [$user->id], ['class' => 'list-group-item']) !!}
-				{!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item']) !!}
-				{!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item selected']) !!}
-			</div>
-		</div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-0">
+            <div class="list-group">
+                {!! link_to_route('users.edit', 'Edit User', [$user->id], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item selected']) !!}
+            </div>
+        </div>
 
-		<div class="col-md-8 col-md-offset-0">
-			<div class="panel panel-default">
-				<div class="panel-heading">Edit Role</div>
-				<div class="panel-body">
-					@if (count($errors) > 0)
-						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-					@endif
+        <div class="col-md-8 col-md-offset-0">
+            <div class="panel panel-default">
+                <div class="panel-heading">Edit Role</div>
+                <div class="panel-body">
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-					{!! Form::open(['route' => ['users.role.update', $user->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
-						<div class="form-group">
-							<label for="role" class="col-md-4 control-label">Role</label>
-							<div class="col-md-6">
-								@foreach ($roles as $role)
-									<div class="checkbox">
-										<label>
-											{!! Form::checkbox('role[]', $role->id, $user->is($role->slug)) !!}
-											{{ $role->name }}
-										</label>
-									</div>
-								@endforeach
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								{!! link_to_route('users.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
-								{!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
-							</div>
-						</div>
-					{!! Form::close() !!}
-				</div>
-			</div>
-		</div>
-	</div>
+                    {!! Form::open(['route' => ['users.role.update', $user->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
+                        <div class="form-group">
+                            <label for="role" class="col-md-4 control-label">Role</label>
+                            <div class="col-md-6">
+                                @foreach ($roles as $role)
+                                    <div class="checkbox">
+                                        <label>
+                                            {!! Form::checkbox('role[]', $role->id, $user->is($role->slug)) !!}
+                                            {{ $role->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                {!! link_to_route('users.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
+                                {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
+                            </div>
+                        </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @stop

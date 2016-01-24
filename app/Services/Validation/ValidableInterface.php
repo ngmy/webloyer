@@ -1,27 +1,28 @@
-<?php namespace App\Services\Validation;
+<?php
 
-interface ValidableInterface {
+namespace App\Services\Validation;
 
-	/**
-	 * Add data to validation.
-	 *
-	 * @param array Data to validation
-	 * @return \App\Services\Validation\ValidableInterface $this
-	 */
-	public function with(array $input);
+interface ValidableInterface
+{
+    /**
+     * Add data to validation.
+     *
+     * @param array Data to validation
+     * @return \App\Services\Validation\ValidableInterface $this
+     */
+    public function with(array $input);
 
-	/**
-	 * Test whether passes validation.
-	 *
-	 * @return boolean
-	 */
-	public function passes();
+    /**
+     * Test whether passes validation.
+     *
+     * @return boolean
+     */
+    public function passes();
 
-	/**
-	 * Return validation errors.
-	 *
-	 * @return array
-	 */
-	public function errors();
-
+    /**
+     * Return validation errors.
+     *
+     * @return array
+     */
+    public function errors();
 }

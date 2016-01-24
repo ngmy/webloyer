@@ -1,51 +1,51 @@
-<?php namespace Tests\Helpers;
+<?php
 
-class Factory {
+namespace Tests\Helpers;
 
-	public static function build($class, $data = [])
-	{
-		$instance = new static;
+class Factory
+{
+    public static function build($class, $data = [])
+    {
+        $instance = new static;
 
-		return $instance->getInstance($class, $data);
-	}
+        return $instance->getInstance($class, $data);
+    }
 
-	public static function create($class, $data = [])
-	{
-		$instance = static::build($class, $data);
+    public static function create($class, $data = [])
+    {
+        $instance = static::build($class, $data);
 
-		$instance->save();
+        $instance->save();
 
-		return $instance->find($instance->id);
-	}
+        return $instance->find($instance->id);
+    }
 
-	public static function buildList($class, $dataList = [])
-	{
-		foreach ($dataList as $data) {
-			$instanceList[] = static::build($class, $data);
-		}
+    public static function buildList($class, $dataList = [])
+    {
+        foreach ($dataList as $data) {
+            $instanceList[] = static::build($class, $data);
+        }
 
-		return $instanceList;
-	}
+        return $instanceList;
+    }
 
-	public static function createList($class, $dataList = [])
-	{
-		foreach ($dataList as $data) {
-			$instanceList[] = static::create($class, $data);
-		}
+    public static function createList($class, $dataList = [])
+    {
+        foreach ($dataList as $data) {
+            $instanceList[] = static::create($class, $data);
+        }
 
-		return $instanceList;
-	}
+        return $instanceList;
+    }
 
-	protected function getInstance($class, $data = [])
-	{
-		$instance = new $class;
+    protected function getInstance($class, $data = [])
+    {
+        $instance = new $class;
 
-		foreach ($data as $key => $val) {
-			$instance->$key = $val;
-		}
+        foreach ($data as $key => $val) {
+            $instance->$key = $val;
+        }
 
-		return $instance;
-	}
-
+        return $instance;
+    }
 }
-

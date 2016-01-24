@@ -1,49 +1,50 @@
-<?php namespace Tests\Helpers;
+<?php
+
+namespace Tests\Helpers;
 
 use Session;
 
-trait ControllerTestHelper {
+trait ControllerTestHelper
+{
+    public function post($uri, array $data = [], array $headers = [])
+    {
+        $data = array_merge($data, ['_token' => Session::token()]);
 
-	public function post($uri, array $data = [], array $headers = [])
-	{
-		$data = array_merge($data, ['_token' => Session::token()]);
+        parent::post($uri, $data, $headers);
 
-		parent::post($uri, $data, $headers);
+        return $this;
+    }
 
-		return $this;
-	}
+    public function put($uri, array $data = [], array $headers = [])
+    {
+        $data = array_merge($data, ['_token' => Session::token()]);
 
-	public function put($uri, array $data = [], array $headers = [])
-	{
-		$data = array_merge($data, ['_token' => Session::token()]);
+        parent::put($uri, $data, $headers);
 
-		parent::put($uri, $data, $headers);
+        return $this;
+    }
 
-		return $this;
-	}
+    public function delete($uri, array $data = [], array $headers = [])
+    {
+        $data = array_merge($data, ['_token' => Session::token()]);
 
-	public function delete($uri, array $data = [], array $headers = [])
-	{
-		$data = array_merge($data, ['_token' => Session::token()]);
+        parent::delete($uri, $data, $headers);
 
-		parent::delete($uri, $data, $headers);
+        return $this;
+    }
 
-		return $this;
-	}
+    protected function auth($obj = null, $data = [])
+    {
+        if (isset($obj)) {
+            $user = $obj;
+        } else {
+            $user = new \App\Models\User;
+        }
 
-	protected function auth($obj = null, $data = [])
-	{
-		if (isset($obj)) {
-			$user = $obj;
-		} else {
-			$user = new \App\Models\User;
-		}
+        foreach ($data as $key => $val) {
+            $user->$key = $val;
+        }
 
-		foreach ($data as $key => $val) {
-			$user->$key = $val;
-		}
-
-		$this->be($user);
-	}
-
+        $this->be($user);
+    }
 }

@@ -1,21 +1,22 @@
-<?php namespace App\Services\Deployment;
+<?php
 
-interface DeployCommanderInterface {
+namespace App\Services\Deployment;
 
-	/**
-	 * Give the command to deploy
-	 *
-	 * @param mixed $deployment
-	 * @return boolean
-	 */
-	public function deploy($deployment);
+interface DeployCommanderInterface
+{
+    /**
+     * Give the command to deploy
+     *
+     * @param mixed $deployment
+     * @return boolean
+     */
+    public function deploy($deployment);
 
-	/**
-	 * Give the command to rollback
-	 *
-	 * @param mixed $deployment
-	 * @return boolean
-	 */
-	public function rollback($deployment);
-
+    /**
+     * Give the command to rollback
+     *
+     * @param mixed $deployment
+     * @return boolean
+     */
+    public function rollback($deployment);
 }

@@ -1,13 +1,14 @@
-<?php namespace App\Models;
+<?php
 
-class MaxDeployment extends BaseModel {
+namespace App\Models;
 
-	protected $table = 'max_deployments';
+class MaxDeployment extends BaseModel
+{
+    protected $table = 'max_deployments';
 
-	protected $fillable = ['project_id', 'number'];
+    protected $fillable = ['project_id', 'number'];
 
-	protected $casts = [
-		'number' => 'integer',
-	];
-
+    protected $casts = [
+        'number' => 'integer',
+    ];
 }

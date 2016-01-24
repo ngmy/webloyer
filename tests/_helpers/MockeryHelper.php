@@ -1,32 +1,33 @@
-<?php namespace Tests\Helpers;
+<?php
+
+namespace Tests\Helpers;
 
 use Mockery as m;
 
-trait MockeryHelper {
+trait MockeryHelper
+{
+    public function tearDown()
+    {
+        parent::tearDown();
 
-	public function tearDown()
-	{
-		parent::tearDown();
+        m::close();
+    }
 
-		m::close();
-	}
+    protected function mock($class)
+    {
+        $mock = m::mock($class);
 
-	protected function mock($class)
-	{
-		$mock = m::mock($class);
+        $this->app->instance($class, $mock);
 
-		$this->app->instance($class, $mock);
+        return $mock;
+    }
 
-		return $mock;
-	}
+    protected function mockPartial($class)
+    {
+        $mock = m::mock($class)->makePartial();
 
-	protected function mockPartial($class)
-	{
-		$mock = m::mock($class)->makePartial();
+        $this->app->instance($class, $mock);
 
-		$this->app->instance($class, $mock);
-
-		return $mock;
-	}
-
+        return $mock;
+    }
 }
