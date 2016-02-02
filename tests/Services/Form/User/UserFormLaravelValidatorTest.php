@@ -142,4 +142,43 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
     }
+
+    public function test_Should_FailToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsNotSpecified()
+    {
+        Factory::create('App\Models\User', [
+            'email' => 'user1@example.com',
+        ]);
+
+        $input = [
+            'email' => 'user1@example.com',
+        ];
+
+        $form = new UserFormLaravelValidator($this->app['validator']);
+
+        $result = $form->with($input)->passes();
+        $errors = $form->errors();
+
+        $this->assertFalse($result, 'Expected validation to fail.');
+        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+    }
+
+    public function test_Should_PassToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsSpecified()
+    {
+        $arrangedUser = Factory::create('App\Models\User', [
+            'email' => 'user1@example.com',
+        ]);
+
+        $input = [
+            'id'    => $arrangedUser->id,
+            'email' => 'user1@example.com',
+        ];
+
+        $form = new UserFormLaravelValidator($this->app['validator']);
+
+        $result = $form->with($input)->passes();
+        $errors = $form->errors();
+
+        $this->assertTrue($result, 'Expected validation to succeed.');
+        $this->assertEmpty($errors);
+    }
 }

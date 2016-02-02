@@ -3,10 +3,20 @@
 use App\Repositories\User\EloquentUser;
 
 use Tests\Helpers\Factory;
+use Kodeine\Acl\Models\Eloquent\Role;
 
 class EloquentUserTest extends TestCase
 {
     protected $useDatabase = true;
+
+    protected $role;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->role = new Role;
+    }
 
     public function test_Should_GetUserById()
     {
@@ -83,6 +93,85 @@ class EloquentUserTest extends TestCase
         $this->assertEquals('User 2', $updatedUser->name);
         $this->assertEquals('user2@example.com', $updatedUser->email);
         $this->assertEquals('23456789', $updatedUser->password);
+    }
+
+    public function test_Should_UpdateExistingUser_When_RoleIsSpecified()
+    {
+        $this->role->create([
+            'name' => 'Role 1',
+            'slug' => 'role1',
+        ]);
+
+        $this->role->create([
+            'name' => 'Role 2',
+            'slug' => 'role2',
+        ]);
+
+        $this->role->create([
+            'name' => 'Role 3',
+            'slug' => 'role3',
+        ]);
+
+        $arrangedUser = Factory::create('App\Models\User', [
+            'name'     => 'User 1',
+            'email'    => 'user1@example.com',
+            'password' => '12345678',
+        ]);
+
+        $arrangedUser->assignRole('role1');
+
+        $userRepository = new EloquentUser(new App\Models\User);
+
+        $userRepository->update([
+            'id'       => $arrangedUser->id,
+            'name'     => 'User 2',
+            'email'    => 'user2@example.com',
+            'password' => '23456789',
+            'role'     => ['role2', 'role3'],
+        ]);
+
+        $user = new App\Models\User;
+        $updatedUser = $user->find($arrangedUser->id);
+
+        $this->assertEquals('User 2', $updatedUser->name);
+        $this->assertEquals('user2@example.com', $updatedUser->email);
+        $this->assertEquals('23456789', $updatedUser->password);
+        $this->assertEquals('role2', $updatedUser->getRoles()[0]);
+        $this->assertEquals('role3', $updatedUser->getRoles()[1]);
+    }
+
+    public function test_Should_UpdateExistingUser_When_RoleIsEmpty()
+    {
+        $this->role->create([
+            'name' => 'Role 1',
+            'slug' => 'role1',
+        ]);
+
+        $arrangedUser = Factory::create('App\Models\User', [
+            'name'     => 'User 1',
+            'email'    => 'user1@example.com',
+            'password' => '12345678',
+        ]);
+
+        $arrangedUser->assignRole('role1');
+
+        $userRepository = new EloquentUser(new App\Models\User);
+
+        $userRepository->update([
+            'id'       => $arrangedUser->id,
+            'name'     => 'User 2',
+            'email'    => 'user2@example.com',
+            'password' => '23456789',
+            'role'     => [],
+        ]);
+
+        $user = new App\Models\User;
+        $updatedUser = $user->find($arrangedUser->id);
+
+        $this->assertEquals('User 2', $updatedUser->name);
+        $this->assertEquals('user2@example.com', $updatedUser->email);
+        $this->assertEquals('23456789', $updatedUser->password);
+        $this->assertEmpty($updatedUser->getRoles());
     }
 
     public function test_Should_DeleteExistingUser()

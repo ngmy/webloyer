@@ -96,6 +96,84 @@ class UserFormTest extends TestCase
         $this->assertFalse($result, 'Expected update to fail.');
     }
 
+    public function test_Should_SucceedToUpdatePassword_When_ValidationPasses()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(true);
+
+        $this->mockUserRepository
+            ->shouldReceive('update')
+            ->once()
+            ->andReturn(true);
+
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->update([]);
+
+        $this->assertTrue($result, 'Expected update to succeed.');
+    }
+
+    public function test_Should_FailToUpdatePassword_When_ValidationFails()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(false);
+
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->update([]);
+
+        $this->assertFalse($result, 'Expected update to fail.');
+    }
+
+    public function test_Should_SucceedToUpdateRole_When_ValidationPasses()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(true);
+
+        $this->mockUserRepository
+            ->shouldReceive('update')
+            ->once()
+            ->andReturn(true);
+
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->update([]);
+
+        $this->assertTrue($result, 'Expected update to succeed.');
+    }
+
+    public function test_Should_FailToUpdateRole_When_ValidationFails()
+    {
+        $this->mockValidator
+            ->shouldReceive('with')
+            ->once()
+            ->andReturn($this->mockValidator);
+        $this->mockValidator
+            ->shouldReceive('passes')
+            ->once()
+            ->andReturn(false);
+
+        $form = new UserForm($this->mockValidator, $this->mockUserRepository);
+        $result = $form->update([]);
+
+        $this->assertFalse($result, 'Expected update to fail.');
+    }
+
     public function test_Should_GetValidationErrors()
     {
         $this->mockValidator

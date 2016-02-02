@@ -150,7 +150,7 @@ class UsersController extends Controller
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        if ($this->userForm->update($input)) {
+        if ($this->userForm->updatePassword($input)) {
             return redirect()->route('users.index');
         } else {
             return redirect()->route('users.password.change', [$user])
@@ -185,7 +185,7 @@ class UsersController extends Controller
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        if ($this->userForm->update($input)) {
+        if ($this->userForm->updateRole($input)) {
             return redirect()->route('users.index');
         } else {
             return redirect()->route('users.role.edit', [$user])

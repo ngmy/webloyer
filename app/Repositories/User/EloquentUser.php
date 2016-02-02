@@ -70,10 +70,12 @@ class EloquentUser extends AbstractEloquentRepository implements UserInterface
 
             $user->update($data);
 
-            $user->revokeAllRoles();
-
             if (isset($data['role'])) {
-                $user->assignRole($data['role']);
+                $user->revokeAllRoles();
+
+                if (!empty($data['role'])) {
+                    $user->assignRole($data['role']);
+                }
             }
         });
 
