@@ -56,8 +56,40 @@ class UserForm
             return false;
         }
 
-        if (isset($input['password'])) {
-            $input['password'] = Hash::make($input['password']);
+        return $this->user->update($input);
+    }
+
+    /**
+     * Update a password of an existing user.
+     *
+     * @param array $input Data to update a user
+     * @return boolean
+     */
+    public function updatePassword(array $input)
+    {
+        if (!$this->valid($input)) {
+            return false;
+        }
+
+        $input['password'] = Hash::make($input['password']);
+
+        return $this->user->update($input);
+    }
+
+    /**
+     * Update a role of an existing user.
+     *
+     * @param array $input Data to update a user
+     * @return boolean
+     */
+    public function updateRole(array $input)
+    {
+        if (!$this->valid($input)) {
+            return false;
+        }
+
+        if (!isset($input['role'])) {
+            $input['role'] = [];
         }
 
         return $this->user->update($input);

@@ -281,7 +281,7 @@ class UsersControllerTest extends TestCase
             ->andReturn($user);
 
         $this->mockUserForm
-            ->shouldReceive('update')
+            ->shouldReceive('updatePassword')
             ->once()
             ->andReturn(true);
 
@@ -307,7 +307,7 @@ class UsersControllerTest extends TestCase
             ->andReturn($user);
 
         $this->mockUserForm
-            ->shouldReceive('update')
+            ->shouldReceive('updatePassword')
             ->once()
             ->andReturn(false);
 
@@ -390,7 +390,7 @@ class UsersControllerTest extends TestCase
             ->andReturn($user);
 
         $this->mockUserForm
-            ->shouldReceive('update')
+            ->shouldReceive('updateRole')
             ->once()
             ->andReturn(true);
 
@@ -416,7 +416,7 @@ class UsersControllerTest extends TestCase
             ->andReturn($user);
 
         $this->mockUserForm
-            ->shouldReceive('update')
+            ->shouldReceive('updateRole')
             ->once()
             ->andReturn(false);
 
