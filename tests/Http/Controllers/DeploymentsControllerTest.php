@@ -10,9 +10,11 @@ class DeploymentsControllerTest extends TestCase
 
     protected $mockProjectRepository;
 
-    protected $mockDeploymentRepository;
-
     protected $mockDeploymentForm;
+
+    protected $mockProjectModel;
+
+    protected $mockDeploymentModel;
 
     public function setUp()
     {
@@ -26,7 +28,6 @@ class DeploymentsControllerTest extends TestCase
         $this->auth($user);
 
         $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockDeploymentRepository = $this->mock('App\Repositories\Deployment\DeploymentInterface');
         $this->mockDeploymentForm = $this->mock('App\Services\Form\Deployment\DeploymentForm');
         $this->mockProjectModel = $this->mockPartial('App\Models\Project');
         $this->mockDeploymentModel = $this->mockPartial('App\Models\Deployment');
@@ -34,18 +35,6 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $project = Factory::build('App\Models\Project', [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
-
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
-
         $deployments = Factory::buildList('App\Models\Deployment', [
             ['id' => 1, 'project_id' => 1, 'number' => 1, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
             ['id' => 2, 'project_id' => 1, 'number' => 2, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
@@ -54,10 +43,16 @@ class DeploymentsControllerTest extends TestCase
 
         $perPage = 10;
 
-        $this->mockDeploymentRepository
-            ->shouldReceive('byProjectId')
+        $project = $this->mockProjectModel
+            ->shouldReceive('getDeploymentsByPage')
             ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($deployments, $perPage));
+            ->andReturn(new Illuminate\Pagination\Paginator($deployments, $perPage))
+            ->mock();
+
+        $this->mockProjectRepository
+            ->shouldReceive('byId')
+            ->once()
+            ->andReturn($project);
 
         $this->get('projects/1/deployments');
 
@@ -131,18 +126,6 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $project = Factory::build('App\Models\Project', [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
-
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
-
         $deployment = Factory::build('App\Models\Deployment', [
             'id'         => 1,
             'project_id' => 1,
@@ -154,10 +137,16 @@ class DeploymentsControllerTest extends TestCase
             'user'       => new App\Models\User,
         ]);
 
-        $this->mockDeploymentRepository
-            ->shouldReceive('byProjectIdAndNumber')
+        $project = $this->mockProjectModel
+            ->shouldReceive('getDeploymentByNumber')
             ->once()
-            ->andReturn($deployment);
+            ->andReturn($deployment)
+            ->mock();
+
+        $this->mockProjectRepository
+            ->shouldReceive('byId')
+            ->once()
+            ->andReturn($project);
 
         $this->get('projects/1/deployments/1');
 
@@ -167,22 +156,16 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
     {
-        $project = Factory::build('App\Models\Project', [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $project = $this->mockProjectModel
+            ->shouldReceive('getDeploymentByNumber')
+            ->once()
+            ->andReturn(null)
+            ->mock();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
             ->once()
             ->andReturn($project);
-
-        $this->mockDeploymentRepository
-            ->shouldReceive('byProjectIdAndNumber')
-            ->once()
-            ->andReturn(null);
 
         $this->get('projects/1/deployments/1');
 

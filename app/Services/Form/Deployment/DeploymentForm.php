@@ -4,13 +4,14 @@ namespace App\Services\Form\Deployment;
 
 use App\Services\Validation\ValidableInterface;
 use App\Services\Deployment\DeployCommanderInterface;
-use App\Repositories\Deployment\DeploymentInterface;
+use App\Repositories\Project\ProjectInterface;
+use DB;
 
 class DeploymentForm
 {
     protected $validator;
 
-    protected $deployment;
+    protected $project;
 
     protected $deployCommander;
 
@@ -18,14 +19,14 @@ class DeploymentForm
      * Create a new form service instance.
      *
      * @param \App\Services\Validation\ValidableInterface       $validator
-     * @param \App\Repositories\Deployment\DeploymentInterface  $deployment
+     * @param \App\Repositories\Project\ProjectInterface        $project
      * @param \App\Services\Deployment\DeployCommanderInterface $deployCommander
      * @return void
      */
-    public function __construct(ValidableInterface $validator, DeploymentInterface $deployment, DeployCommanderInterface $deployCommander)
+    public function __construct(ValidableInterface $validator, ProjectInterface $project, DeployCommanderInterface $deployCommander)
     {
         $this->validator       = $validator;
-        $this->deployment      = $deployment;
+        $this->project         = $project;
         $this->deployCommander = $deployCommander;
     }
 
@@ -41,7 +42,19 @@ class DeploymentForm
             return false;
         }
 
-        $deployment = $this->deployment->create($input);
+        $deployment = DB::transaction(function () use ($input) {
+            $project = $this->project->byId($input['project_id']);
+
+            $maxDeployment = $project->getMaxDeployment();
+            $input['number'] = $maxDeployment->number + 1;
+
+            $project->addDeployment($input);
+            $project->updateMaxDeployment(['number' => $input['number']]);
+
+            $deployment = $project->getDeploymentByNumber($input['number']);
+
+            return $deployment;
+        });
 
         if (!$deployment) {
             return false;

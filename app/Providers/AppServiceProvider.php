@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Console\Commands\Deploy;
-use App\Console\Commands\Rollback;
 use App\Services\Deployment\QueueDeployCommander;
 use App\Services\Form\Project\ProjectForm;
 use App\Services\Form\Project\ProjectFormLaravelValidator;
@@ -64,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\Form\Deployment\DeploymentForm', function ($app) {
             return new DeploymentForm(
                 new DeploymentFormLaravelValidator($app['validator']),
-                $app->make('App\Repositories\Deployment\DeploymentInterface'),
+                $app->make('App\Repositories\Project\ProjectInterface'),
                 $app->make('App\Services\Deployment\DeployCommanderInterface')
             );
         });
@@ -92,26 +90,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Services\Notification\NotifierInterface', function ($app) {
             return new MailNotifier;
-        });
-
-        $this->app->bind('App\Console\Commands\Deploy', function ($app) {
-            $processBuilder = new ProcessBuilder;
-
-            return new Deploy(
-                $app->make('App\Repositories\Project\ProjectInterface'),
-                $app->make('App\Repositories\Deployment\DeploymentInterface'),
-                $processBuilder
-            );
-        });
-
-        $this->app->bind('App\Console\Commands\Rollback', function ($app) {
-            $processBuilder = new ProcessBuilder;
-
-            return new Rollback(
-                $app->make('App\Repositories\Project\ProjectInterface'),
-                $app->make('App\Repositories\Deployment\DeploymentInterface'),
-                $processBuilder
-            );
         });
     }
 }

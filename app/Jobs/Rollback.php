@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
-use App\Repositories\Deployment\DeploymentInterface;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Server\ServerInterface;
 use App\Services\Notification\NotifierInterface;
@@ -39,14 +38,13 @@ class Rollback extends Job implements SelfHandling, ShouldQueue
     /**
      * Execute the job.
      *
-     * @param \App\Repositories\Deployment\DeployCommanderInterface $deploymentRepository
-     * @param \App\Repositories\Project\ProjectInterface            $projectRepository
-     * @param \App\Repositories\Server\ServerInterface              $serverRepository
-     * @param \Symfony\Component\Process\ProcessBuilder             $processBuilder
-     * @param \App\Services\Notification\NotifierInterface          $notifier
+     * @param \App\Repositories\Project\ProjectInterface   $projectRepository
+     * @param \App\Repositories\Server\ServerInterface     $serverRepository
+     * @param \Symfony\Component\Process\ProcessBuilder    $processBuilder
+     * @param \App\Services\Notification\NotifierInterface $notifier
      * @return void
      */
-    public function handle(DeploymentInterface $deploymentRepository, ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier)
+    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier)
     {
         $deployment = $this->deployment;
         $project    = $projectRepository->byId($deployment->project_id);
@@ -84,10 +82,11 @@ class Rollback extends Job implements SelfHandling, ShouldQueue
 
         $process = $processBuilder->getProcess();
         $process->setTimeout(600);
-        $process->run(function ($type, $buffer) use (&$tmp, $deploymentRepository) {
+        $process->run(function ($type, $buffer) use (&$tmp, $project, $deployment) {
             $tmp['message'] .= $buffer;
+            $tmp['number']   = $deployment->number;
 
-            $deploymentRepository->update($tmp);
+            $project->updateDeployment($tmp);
         });
 
         // Store the result
@@ -98,14 +97,15 @@ class Rollback extends Job implements SelfHandling, ShouldQueue
         }
 
         $data['id']      = $deployment->id;
+        $data['number']  = $deployment->number;
         $data['message'] = $message;
         $data['status']  = $process->getExitCode();
 
-        $deploymentRepository->update($data);
+        $project->updateDeployment($data);
 
         // Notify
         if (isset($project->email_notification_recipient)) {
-            $deployment = $deploymentRepository->byId($deployment->id);
+            $deployment = $project->getDeploymentByNumber($deployment->number);
 
             if ($process->isSuccessful()) {
                 $status = 'success';

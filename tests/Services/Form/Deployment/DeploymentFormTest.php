@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\Form\Deployment\DeploymentForm;
+use Tests\Helpers\Factory;
 
 class DeploymentFormTest extends TestCase
 {
@@ -8,17 +9,20 @@ class DeploymentFormTest extends TestCase
 
     protected $mockValidator;
 
-    protected $mockDeploymentRepository;
+    protected $mockProjectRepository;
 
     protected $mockDeployCommander;
+
+    protected $mockProjectModel;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockDeploymentRepository = $this->mock('App\Repositories\Deployment\DeploymentInterface');
+        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
         $this->mockDeployCommander = $this->mock('App\Services\Deployment\DeployCommanderInterface');
+        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
     }
 
     public function test_Should_SucceedToSave_When_ValidationPasses()
@@ -32,10 +36,29 @@ class DeploymentFormTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->mockDeploymentRepository
-            ->shouldReceive('create')
+        $project = $this->mockProjectModel;
+        $maxDeployment = Factory::build('App\Models\MaxDeployment', [
+            'id'         => 1,
+            'project_id' => $project->id,
+            'number'     => 1,
+            'created_at' => new Carbon\Carbon,
+            'updated_at' => new Carbon\Carbon,
+        ]);
+        $project->shouldReceive('getMaxDeployment')
             ->once()
-            ->andReturn(true);
+            ->andReturn($maxDeployment)
+            ->shouldReceive('addDeployment')
+            ->once()
+            ->shouldReceive('updateMaxDeployment')
+            ->once()
+            ->shouldReceive('getDeploymentByNumber')
+            ->once()
+            ->andReturn(true)
+            ->mock();
+        $this->mockProjectRepository
+            ->shouldReceive('byId')
+            ->once()
+            ->andReturn($project);
 
         $this->mockDeployCommander
             ->shouldReceive('deploy')
@@ -44,10 +67,13 @@ class DeploymentFormTest extends TestCase
 
         $form = new DeploymentForm(
             $this->mockValidator,
-            $this->mockDeploymentRepository,
+            $this->mockProjectRepository,
             $this->mockDeployCommander
         );
-        $result = $form->save(['task' => 'deploy']);
+        $result = $form->save([
+            'project_id' => $project->id,
+            'task'       => 'deploy'
+        ]);
 
         $this->assertTrue($result, 'Expected save to succeed.');
     }
@@ -63,10 +89,29 @@ class DeploymentFormTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->mockDeploymentRepository
-            ->shouldReceive('create')
+        $project = $this->mockProjectModel;
+        $maxDeployment = Factory::build('App\Models\MaxDeployment', [
+            'id'         => 1,
+            'project_id' => $project->id,
+            'number'     => 1,
+            'created_at' => new Carbon\Carbon,
+            'updated_at' => new Carbon\Carbon,
+        ]);
+        $project->shouldReceive('getMaxDeployment')
             ->once()
-            ->andReturn(true);
+            ->andReturn($maxDeployment)
+            ->shouldReceive('addDeployment')
+            ->once()
+            ->shouldReceive('updateMaxDeployment')
+            ->once()
+            ->shouldReceive('getDeploymentByNumber')
+            ->once()
+            ->andReturn(true)
+            ->mock();
+        $this->mockProjectRepository
+            ->shouldReceive('byId')
+            ->once()
+            ->andReturn($project);
 
         $this->mockDeployCommander
             ->shouldReceive('deploy')
@@ -75,10 +120,13 @@ class DeploymentFormTest extends TestCase
 
         $form = new DeploymentForm(
             $this->mockValidator,
-            $this->mockDeploymentRepository,
+            $this->mockProjectRepository,
             $this->mockDeployCommander
         );
-        $result = $form->save(['task' => 'deploy']);
+        $result = $form->save([
+            'project_id' => $project->id,
+            'task'       => 'deploy'
+        ]);
 
         $this->assertTrue($result, 'Expected save to succeed.');
     }
@@ -94,17 +142,39 @@ class DeploymentFormTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->mockDeploymentRepository
-            ->shouldReceive('create')
+        $project = $this->mockProjectModel;
+        $maxDeployment = Factory::build('App\Models\MaxDeployment', [
+            'id'         => 1,
+            'project_id' => $project->id,
+            'number'     => 1,
+            'created_at' => new Carbon\Carbon,
+            'updated_at' => new Carbon\Carbon,
+        ]);
+        $project->shouldReceive('getMaxDeployment')
             ->once()
-            ->andReturn(false);
+            ->andReturn($maxDeployment)
+            ->shouldReceive('addDeployment')
+            ->once()
+            ->shouldReceive('updateMaxDeployment')
+            ->once()
+            ->shouldReceive('getDeploymentByNumber')
+            ->once()
+            ->andReturn(false)
+            ->mock();
+        $this->mockProjectRepository
+            ->shouldReceive('byId')
+            ->once()
+            ->andReturn($project);
 
         $form = new DeploymentForm(
             $this->mockValidator,
-            $this->mockDeploymentRepository,
+            $this->mockProjectRepository,
             $this->mockDeployCommander
         );
-        $result = $form->save(['task' => 'deploy']);
+        $result = $form->save([
+            'project_id' => $project->id,
+            'task'       => 'deploy'
+        ]);
 
         $this->assertFalse($result, 'Expected save to fail.');
     }
@@ -122,7 +192,7 @@ class DeploymentFormTest extends TestCase
 
         $form = new DeploymentForm(
             $this->mockValidator,
-            $this->mockDeploymentRepository,
+            $this->mockProjectRepository,
             $this->mockDeployCommander
         );
         $result = $form->save([]);
@@ -139,7 +209,7 @@ class DeploymentFormTest extends TestCase
 
         $form = new DeploymentForm(
             $this->mockValidator,
-            $this->mockDeploymentRepository,
+            $this->mockProjectRepository,
             $this->mockDeployCommander
         );
         $result = $form->errors();
