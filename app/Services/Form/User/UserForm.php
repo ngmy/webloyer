@@ -2,6 +2,7 @@
 
 namespace App\Services\Form\User;
 
+use DB;
 use Hash;
 use App\Services\Validation\ValidableInterface;
 use App\Repositories\User\UserInterface;
@@ -41,7 +42,15 @@ class UserForm
             $input['password'] = Hash::make($input['password']);
         }
 
-        return $this->user->create($input);
+        DB::transaction(function () use ($input) {
+            $user = $this->user->create($input);
+
+            if (isset($input['role'])) {
+                $user->assignRole($input['role']);
+            }
+        });
+
+        return true;
     }
 
     /**
@@ -56,7 +65,11 @@ class UserForm
             return false;
         }
 
-        return $this->user->update($input);
+        DB::transaction(function () use ($input) {
+            $this->user->update($input);
+        });
+
+        return true;
     }
 
     /**
@@ -92,7 +105,17 @@ class UserForm
             $input['role'] = [];
         }
 
-        return $this->user->update($input);
+        DB::transaction(function () use ($input) {
+            $user = $this->user->byId($input['id']);
+
+            $user->revokeAllRoles();
+
+            if (!empty($input['role'])) {
+                $user->assignRole($input['role']);
+            }
+        });
+
+        return true;
     }
 
     /**

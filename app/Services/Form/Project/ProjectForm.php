@@ -4,6 +4,7 @@ namespace App\Services\Form\Project;
 
 use App\Services\Validation\ValidableInterface;
 use App\Repositories\Project\ProjectInterface;
+use DB;
 
 class ProjectForm
 {
@@ -38,7 +39,14 @@ class ProjectForm
             return false;
         }
 
-        return $this->project->create($input);
+        DB::transaction(function () use ($input) {
+            $project = $this->project->create($input);
+
+            $project->addMaxDeployment();
+            $project->syncRecipes($input['recipe_id']);
+        });
+
+        return true;
     }
 
     /**
@@ -55,7 +63,15 @@ class ProjectForm
             return false;
         }
 
-        return $this->project->update($input);
+        DB::transaction(function () use ($input) {
+            $project = $this->project->byId($input['id']);
+
+            $project->syncRecipes($input['recipe_id']);
+
+            $this->project->update($input);
+        });
+
+        return true;
     }
 
     /**

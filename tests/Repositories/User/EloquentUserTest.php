@@ -102,16 +102,6 @@ class EloquentUserTest extends TestCase
             'slug' => 'role1',
         ]);
 
-        $this->role->create([
-            'name' => 'Role 2',
-            'slug' => 'role2',
-        ]);
-
-        $this->role->create([
-            'name' => 'Role 3',
-            'slug' => 'role3',
-        ]);
-
         $arrangedUser = Factory::create('App\Models\User', [
             'name'     => 'User 1',
             'email'    => 'user1@example.com',
@@ -127,7 +117,6 @@ class EloquentUserTest extends TestCase
             'name'     => 'User 2',
             'email'    => 'user2@example.com',
             'password' => '23456789',
-            'role'     => ['role2', 'role3'],
         ]);
 
         $user = new App\Models\User;
@@ -136,8 +125,7 @@ class EloquentUserTest extends TestCase
         $this->assertEquals('User 2', $updatedUser->name);
         $this->assertEquals('user2@example.com', $updatedUser->email);
         $this->assertEquals('23456789', $updatedUser->password);
-        $this->assertEquals('role2', $updatedUser->getRoles()[0]);
-        $this->assertEquals('role3', $updatedUser->getRoles()[1]);
+        $this->assertEquals('role1', $updatedUser->getRoles()[0]);
     }
 
     public function test_Should_UpdateExistingUser_When_RoleIsEmpty()
@@ -162,7 +150,6 @@ class EloquentUserTest extends TestCase
             'name'     => 'User 2',
             'email'    => 'user2@example.com',
             'password' => '23456789',
-            'role'     => [],
         ]);
 
         $user = new App\Models\User;
@@ -171,7 +158,7 @@ class EloquentUserTest extends TestCase
         $this->assertEquals('User 2', $updatedUser->name);
         $this->assertEquals('user2@example.com', $updatedUser->email);
         $this->assertEquals('23456789', $updatedUser->password);
-        $this->assertEmpty($updatedUser->getRoles());
+        $this->assertEquals('role1', $updatedUser->getRoles()[0]);
     }
 
     public function test_Should_DeleteExistingUser()

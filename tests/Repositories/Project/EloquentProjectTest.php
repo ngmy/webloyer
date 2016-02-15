@@ -65,11 +65,6 @@ class EloquentProjectTest extends TestCase
             new App\Models\MaxDeployment
         );
 
-        $arrangedRecipe = Factory::create('App\Models\Recipe', [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
         $arrangedServer = Factory::create('App\Models\Server', [
             'name'        => 'Recipe 1',
             'description' => '',
@@ -77,7 +72,6 @@ class EloquentProjectTest extends TestCase
         ]);
         $returnedProject = $projectRepository->create([
             'name'      => 'Project 1',
-            'recipe_id' => [$arrangedRecipe->id],
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
         ]);
@@ -86,13 +80,8 @@ class EloquentProjectTest extends TestCase
         $createdProject = $project->find($returnedProject->id);
 
         $this->assertEquals('Project 1', $createdProject->name);
-        $this->assertEquals($arrangedRecipe->id, $createdProject->recipes->first()->id);
         $this->assertEquals($arrangedServer->id, $createdProject->server_id);
         $this->assertEquals('staging', $createdProject->stage);
-
-        $updatedProjectRecipes = $createdProject->recipes;
-
-        $this->assertEquals($arrangedRecipe->id, $updatedProjectRecipes[0]->pivot->recipe_id);
     }
 
     public function test_Should_UpdateExistingProject()
@@ -122,11 +111,6 @@ class EloquentProjectTest extends TestCase
             new App\Models\Project,
             new App\Models\MaxDeployment
         );
-        $arrangedRecipe2 = Factory::create('App\Models\Recipe', [
-            'name'        => 'Recipe 2',
-            'description' => '',
-            'body'        => '',
-        ]);
         $arrangedServer2 = Factory::create('App\Models\Server', [
             'name'        => 'Server 2 ',
             'description' => '',
@@ -135,7 +119,6 @@ class EloquentProjectTest extends TestCase
         $projectRepository->update([
             'id'        => $arrangedProject->id,
             'name'      => 'Project 2',
-            'recipe_id' => [$arrangedRecipe2->id],
             'server_id' => $arrangedServer2->id,
             'stage'     => 'production',
         ]);
@@ -144,13 +127,9 @@ class EloquentProjectTest extends TestCase
         $updatedProject = $project->find($arrangedProject->id);
 
         $this->assertEquals('Project 2', $updatedProject->name);
-        $this->assertEquals($arrangedRecipe2->id, $updatedProject->recipes->first()->id);
+        $this->assertEquals($arrangedRecipe->id, $updatedProject->recipes->first()->id);
         $this->assertEquals($arrangedServer2->id, $updatedProject->server_id);
         $this->assertEquals('production', $updatedProject->stage);
-
-        $updatedProjectRecipes = $updatedProject->recipes;
-
-        $this->assertEquals($arrangedRecipe2->id, $updatedProjectRecipes[0]->pivot->recipe_id);
     }
 
     public function test_Should_DeleteExistingProject()

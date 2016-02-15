@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\Deployment\DeploymentInterface;
+use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Deployment\DeploymentForm;
 use App\Models\Project;
 use App\Models\Deployment;
@@ -13,23 +13,23 @@ use Illuminate\Http\Request;
 
 class DeploymentsController extends Controller
 {
-    protected $deployment;
+    protected $project;
 
     protected $deploymentForm;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Deployment\DeploymentInterface $deployment
-     * @param \App\Services\Form\Deployment\DeploymentForm     $deploymentForm
+     * @param \App\Repositories\Project\ProjectInterface   $project
+     * @param \App\Services\Form\Deployment\DeploymentForm $deploymentForm
      * @return void
      */
-    public function __construct(DeploymentInterface $deployment, DeploymentForm $deploymentForm)
+    public function __construct(ProjectInterface $project, DeploymentForm $deploymentForm)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->deployment     = $deployment;
+        $this->project        = $project;
         $this->deploymentForm = $deploymentForm;
     }
 
@@ -46,7 +46,7 @@ class DeploymentsController extends Controller
 
         $perPage = 10;
 
-        $deployments = $this->deployment->byProjectId($project->id, $page, $perPage);
+        $deployments = $project->getDeploymentsByPage($page, $perPage);
 
         return view('deployments.index')
             ->with('deployments', $deployments)

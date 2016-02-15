@@ -4,7 +4,6 @@ namespace App\Repositories\User;
 
 use App\Repositories\AbstractEloquentRepository;
 use Illuminate\Database\Eloquent\Model;
-use DB;
 
 class EloquentUser extends AbstractEloquentRepository implements UserInterface
 {
@@ -34,51 +33,5 @@ class EloquentUser extends AbstractEloquentRepository implements UserInterface
             ->paginate($limit);
 
         return $users;
-    }
-
-    /**
-     * Create a new user.
-     *
-     * @param array $data Data to create a user
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function create(array $data)
-    {
-        $user = DB::transaction(function () use ($data) {
-            $user = $this->model->create($data);
-
-            if (isset($data['role'])) {
-                $user->assignRole($data['role']);
-            }
-
-            return $user;
-        });
-
-        return $user;
-    }
-
-    /**
-     * Update an existing user.
-     *
-     * @param array $data Data to update a user
-     * @return boolean
-     */
-    public function update(array $data)
-    {
-        $user = DB::transaction(function () use ($data) {
-            $user = $this->model->find($data['id']);
-
-            $user->update($data);
-
-            if (isset($data['role'])) {
-                $user->revokeAllRoles();
-
-                if (!empty($data['role'])) {
-                    $user->assignRole($data['role']);
-                }
-            }
-        });
-
-        return true;
     }
 }

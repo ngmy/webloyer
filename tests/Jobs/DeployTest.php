@@ -10,8 +10,6 @@ class DeployTest extends \TestCase
 {
     use \Tests\Helpers\MockeryHelper;
 
-    protected $mockDeploymentRepository;
-
     protected $mockProjectRepository;
 
     protected $mockServerRepository;
@@ -30,11 +28,12 @@ class DeployTest extends \TestCase
 
     protected $mockNotifier;
 
+    protected $mockProjectModel;
+
     public function setUp()
     {
         parent::setUp();
 
-        $this->mockDeploymentRepository = $this->mock('App\Repositories\Deployment\DeploymentInterface');
         $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
         $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
         $this->mockProcessBuilder = $this->mock('Symfony\Component\Process\ProcessBuilder');
@@ -44,6 +43,7 @@ class DeployTest extends \TestCase
         $this->mockRecipeFileBuilder = $this->mock('App\Services\DeploymentInterface\DeployerRecipeFileBuilder');
         $this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
         $this->mockNotifier = $this->mock('App\Services\Notification\NotifierInterface');
+        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
     }
 
     public function test_Should_Work_When_DeployerIsNormalEnd()
@@ -66,15 +66,11 @@ class DeployTest extends \TestCase
             'body'        => '',
         ]);
 
-        $project = Factory::build('App\Models\Project', [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'recipe_id'  => 1,
-            'stage'      => 'staging',
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'recipes'    => [$recipe],
-        ]);
+        $project = $this->mockProjectModel
+            ->shouldReceive('updateDeployment')
+            ->once()
+            ->mock();
+        $project->recipes = [$recipe];
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -83,10 +79,6 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
-
-        $this->mockDeploymentRepository
-            ->shouldReceive('update')
             ->once();
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
@@ -133,7 +125,6 @@ class DeployTest extends \TestCase
         $job = new Deploy($deployment);
 
         $job->handle(
-            $this->mockDeploymentRepository,
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,
@@ -161,15 +152,11 @@ class DeployTest extends \TestCase
             'body'        => '',
         ]);
 
-        $project = Factory::build('App\Models\Project', [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'recipe_id'  => 1,
-            'stage'      => 'staging',
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'recipes'    => [$recipe],
-        ]);
+        $project = $this->mockProjectModel
+            ->shouldReceive('updateDeployment')
+            ->once()
+            ->mock();
+        $project->recipes = [$recipe];
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -178,10 +165,6 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
-
-        $this->mockDeploymentRepository
-            ->shouldReceive('update')
             ->once();
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
@@ -228,7 +211,6 @@ class DeployTest extends \TestCase
         $job = new Deploy($deployment);
 
         $job->handle(
-            $this->mockDeploymentRepository,
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,
@@ -268,16 +250,15 @@ class DeployTest extends \TestCase
             'body'        => '',
         ]);
 
-        $project = Factory::build('App\Models\Project', [
-            'id'                           => 1,
-            'name'                         => 'Project 1',
-            'recipe_id'                    => 1,
-            'stage'                        => 'staging',
-            'email_notification_recipient' => 'webloyer@example.com',
-            'created_at'                   => new \Carbon\Carbon,
-            'updated_at'                   => new \Carbon\Carbon,
-            'recipes'                      => [$recipe],
-        ]);
+        $project = $this->mockProjectModel
+            ->shouldReceive('updateDeployment')
+            ->once()
+            ->shouldReceive('getDeploymentByNumber')
+            ->once()
+            ->andReturn($updatedDeployment)
+            ->mock();
+        $project->recipes = [$recipe];
+        $project->email_notification_recipient = 'webloyer@example.com';
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -286,15 +267,6 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
-
-        $this->mockDeploymentRepository
-            ->shouldReceive('update')
-            ->once();
-
-        $this->mockDeploymentRepository
-            ->shouldReceive('byId')
-            ->andReturn($updatedDeployment)
             ->once();
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
@@ -350,7 +322,6 @@ class DeployTest extends \TestCase
         $job = new Deploy($deployment);
 
         $job->handle(
-            $this->mockDeploymentRepository,
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,
@@ -390,16 +361,15 @@ class DeployTest extends \TestCase
             'body'        => '',
         ]);
 
-        $project = Factory::build('App\Models\Project', [
-            'id'                           => 1,
-            'name'                         => 'Project 1',
-            'recipe_id'                    => 1,
-            'stage'                        => 'staging',
-            'email_notification_recipient' => 'webloyer@example.com',
-            'created_at'                   => new \Carbon\Carbon,
-            'updated_at'                   => new \Carbon\Carbon,
-            'recipes'                      => [$recipe],
-        ]);
+        $project = $this->mockProjectModel
+            ->shouldReceive('updateDeployment')
+            ->once()
+            ->shouldReceive('getDeploymentByNumber')
+            ->once()
+            ->andReturn($updatedDeployment)
+            ->mock();
+        $project->recipes = [$recipe];
+        $project->email_notification_recipient = 'webloyer@example.com';
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -408,15 +378,6 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
-
-        $this->mockDeploymentRepository
-            ->shouldReceive('update')
-            ->once();
-
-        $this->mockDeploymentRepository
-            ->shouldReceive('byId')
-            ->andReturn($updatedDeployment)
             ->once();
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
@@ -472,7 +433,6 @@ class DeployTest extends \TestCase
         $job = new Deploy($deployment);
 
         $job->handle(
-            $this->mockDeploymentRepository,
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,

@@ -10,12 +10,15 @@ class ProjectFormTest extends TestCase
 
     protected $mockProjectRepository;
 
+    protected $mockProjectModel;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
         $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
+        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
     }
 
     public function test_Should_SucceedToSave_When_ValidationPasses()
@@ -29,10 +32,16 @@ class ProjectFormTest extends TestCase
             ->once()
             ->andReturn(true);
 
+        $project = $this->mockProjectModel
+            ->shouldReceive('addMaxDeployment')
+            ->once()
+            ->shouldReceive('syncRecipes')
+            ->once()
+            ->mock();
         $this->mockProjectRepository
             ->shouldReceive('create')
             ->once()
-            ->andReturn(true);
+            ->andReturn($project);
 
         $input = [
             'recipe_id_order' => '3,1,2',
@@ -76,12 +85,21 @@ class ProjectFormTest extends TestCase
             ->once()
             ->andReturn(true);
 
+        $project = $this->mockProjectModel
+            ->shouldReceive('syncRecipes')
+            ->once()
+            ->mock();
+        $this->mockProjectRepository
+            ->shouldReceive('byId')
+            ->once()
+            ->andReturn($project);
         $this->mockProjectRepository
             ->shouldReceive('update')
             ->once()
             ->andReturn(true);
 
         $input = [
+            'id'              => $project->id,
             'recipe_id_order' => '3,1,2',
         ];
 
