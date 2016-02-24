@@ -14,6 +14,8 @@ use App\Services\Form\Server\ServerFormLaravelValidator;
 use App\Services\Form\User\UserForm;
 use App\Services\Form\User\UserFormLaravelValidator;
 use App\Services\Notification\MailNotifier;
+use App\Services\Config\DotenvWriter;
+use App\Services\Filesystem\LaravelFilesystem;
 
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Process\ProcessBuilder;
@@ -90,6 +92,15 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Services\Notification\NotifierInterface', function ($app) {
             return new MailNotifier;
+        });
+
+        $this->app->bind('App\Services\Config\ConfigWriterInterface', function ($app) {
+            $path = base_path('.env');
+
+            return new DotenvWriter(
+                new LaravelFilesystem($app['files']),
+                $path
+            );
         });
     }
 }

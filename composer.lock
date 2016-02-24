@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4e99c7f9f558087a6f08abda52fe653e",
-    "content-hash": "76e29fc35701b0c9dd36bafc63e0b468",
+    "hash": "36ccc5b26202195a748c5578f37f6bcc",
+    "content-hash": "329c1d62c27d351a59901e5e44476958",
     "packages": [
         {
             "name": "ajaxorg/ace-builds",
@@ -431,7 +431,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kodeine/laravel-acl/zipball/b0caaaa2ec048a0d7d93d19f6b1d1269c1b1866e",
+                "url": "https://api.github.com/repos/kodeine/laravel-acl/zipball/8a1ca6b9c7146bb0f158cc3d19170bfb2e3e7a8e",
                 "reference": "02572eebfc4827c2ee92d54c910db26ccfb60782",
                 "shasum": ""
             },
@@ -1729,12 +1729,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Routing.git",
+                "url": "https://github.com/symfony/routing.git",
                 "reference": "5581be29185b8fb802398904555f70da62f6d50d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/5581be29185b8fb802398904555f70da62f6d50d",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/5581be29185b8fb802398904555f70da62f6d50d",
                 "reference": "5581be29185b8fb802398904555f70da62f6d50d",
                 "shasum": ""
             },
@@ -2158,6 +2158,52 @@
             "time": "2015-05-11 14:41:42"
         },
         {
+            "name": "mikey179/vfsStream",
+            "version": "v1.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikey179/vfsStream.git",
+                "reference": "fefd182fa739d4e23d9dc7c80d3344f528d600ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/fefd182fa739d4e23d9dc7c80d3344f528d600ab",
+                "reference": "fefd182fa739d4e23d9dc7c80d3344f528d600ab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "org\\bovigo\\vfs\\": "src/main/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Frank Kleine",
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Virtual file system to mock the real file system in unit tests.",
+            "homepage": "http://vfs.bovigo.org/",
+            "time": "2016-01-13 09:41:49"
+        },
+        {
             "name": "mockery/mockery",
             "version": "dev-master",
             "source": {
@@ -2167,7 +2213,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/ee88cd05073533b10678772fe954d042748393c3",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/d173b9a3c6d3dcf52d7f8f70ac591ba11c475e8c",
                 "reference": "491d4f3c1792273d73aa851a1330f9050a8257a0",
                 "shasum": ""
             },
@@ -2820,7 +2866,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/2fbf803803d179ab1082807308a67bbd5a760c70",
+                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/50c60bb64054974f8ed7540ae6e75fd7981a5fd3",
                 "reference": "2fbf803803d179ab1082807308a67bbd5a760c70",
                 "shasum": ""
             },
