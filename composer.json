@@ -51,7 +51,8 @@
         "phpunit/phpunit": "~4.0",
         "phpspec/phpspec": "~2.1",
         "mockery/mockery": "dev-master",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "mikey179/vfsStream": "~1"
     },
     "autoload": {
         "classmap": [
