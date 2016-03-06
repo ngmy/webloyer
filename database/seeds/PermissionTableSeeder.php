@@ -135,5 +135,44 @@ class PermissionTableSeeder extends Seeder
             'inherit_id'  => $permissionUser->getKey(),
             'description' => 'Moderator user permissions.',
         ]);
+
+        // setting
+        $permission = new Permission;
+        $permissionSetting = $permission->create([
+            'name'        => 'setting',
+            'slug'        => [
+                'create' => true,
+                'view'   => true,
+                'update' => true,
+                'delete' => true,
+            ],
+            'description' => 'Manage setting permissions.',
+        ]);
+
+        $permission = new Permission;
+        $permissionSettingDeveloper = $permission->create([
+            'name'        => 'setting.developer',
+            'slug'        => [
+                'create' => false,
+                'view'   => false,
+                'update' => false,
+                'delete' => false,
+            ],
+            'inherit_id'  => $permissionSetting->getKey(),
+            'description' => 'Developer setting permissions.',
+        ]);
+
+        $permission = new Permission;
+        $permissionSettingModerator = $permission->create([
+            'name'        => 'setting.moderator',
+            'slug'        => [
+                'create' => false,
+                'view'   => false,
+                'update' => false,
+                'delete' => false,
+            ],
+            'inherit_id'  => $permissionSetting->getKey(),
+            'description' => 'Moderator setting permissions.',
+        ]);
     }
 }

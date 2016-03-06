@@ -70,3 +70,11 @@ Route::group([
     ]);
     Route::resource('users', 'UsersController');
 });
+
+Route::group([
+    'protect_alias' => 'setting'
+], function () {
+    Route::controller('settings', 'SettingsController', [
+        'getEmail' => 'settings.email'
+    ]);
+});

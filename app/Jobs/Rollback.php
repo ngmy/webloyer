@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Jobs\Job;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Server\ServerInterface;
+use App\Repositories\Setting\MailSettingInterface;
 use App\Services\Notification\NotifierInterface;
 
 use Illuminate\Queue\SerializesModels;
@@ -38,13 +39,14 @@ class Rollback extends Job implements SelfHandling, ShouldQueue
     /**
      * Execute the job.
      *
-     * @param \App\Repositories\Project\ProjectInterface   $projectRepository
-     * @param \App\Repositories\Server\ServerInterface     $serverRepository
-     * @param \Symfony\Component\Process\ProcessBuilder    $processBuilder
-     * @param \App\Services\Notification\NotifierInterface $notifier
+     * @param \App\Repositories\Project\ProjectInterface     $projectRepository
+     * @param \App\Repositories\Server\ServerInterface       $serverRepository
+     * @param \Symfony\Component\Process\ProcessBuilder      $processBuilder
+     * @param \App\Services\Notification\NotifierInterface   $notifier
+     * @param \App\Repositories\Setting\MailSettingInterface $mailSettingRepository
      * @return void
      */
-    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier)
+    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier, MailSettingInterface $mailSettingRepository)
     {
         $deployment = $this->deployment;
         $project    = $projectRepository->byId($deployment->project_id);
@@ -105,6 +107,18 @@ class Rollback extends Job implements SelfHandling, ShouldQueue
 
         // Notify
         if (isset($project->email_notification_recipient)) {
+            $mailSettings = $mailSettingRepository->all();
+
+            config(['mail.driver'       => $mailSettings->getDriver()]);
+            config(['mail.from.address' => $mailSettings->getFrom()['address']]);
+            config(['mail.from.name'    => $mailSettings->getFrom()['name']]);
+            config(['mail.host'         => $mailSettings->getSmtpHost()]);
+            config(['mail.port'         => $mailSettings->getSmtpPort()]);
+            config(['mail.encryption'   => $mailSettings->getSmtpEncryption()]);
+            config(['mail.username'     => $mailSettings->getSmtpUsername()]);
+            config(['mail.password'     => $mailSettings->getSmtpPassword()]);
+            config(['mail.sendmail'     => $mailSettings->getSendmailPath()]);
+
             $deployment = $project->getDeploymentByNumber($deployment->number);
 
             if ($process->isSuccessful()) {

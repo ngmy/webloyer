@@ -13,7 +13,10 @@ use App\Services\Form\Server\ServerForm;
 use App\Services\Form\Server\ServerFormLaravelValidator;
 use App\Services\Form\User\UserForm;
 use App\Services\Form\User\UserFormLaravelValidator;
+use App\Services\Form\Setting\MailSettingForm;
+use App\Services\Form\Setting\MailSettingFormLaravelValidator;
 use App\Services\Notification\MailNotifier;
+use App\Services\Config\DotenvReader;
 use App\Services\Config\DotenvWriter;
 use App\Services\Filesystem\LaravelFilesystem;
 
@@ -90,8 +93,24 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
+        $this->app->bind('App\Services\Form\Setting\MailSettingForm', function ($app) {
+            return new MailSettingForm(
+                new MailSettingFormLaravelValidator($app['validator']),
+                $app->make('App\Repositories\Setting\MailSettingInterface')
+            );
+        });
+
         $this->app->bind('App\Services\Notification\NotifierInterface', function ($app) {
             return new MailNotifier;
+        });
+
+        $this->app->bind('App\Services\Config\ConfigReaderInterface', function ($app) {
+            $path = base_path('.env');
+
+            return new DotenvReader(
+                new LaravelFilesystem($app['files']),
+                $path
+            );
         });
 
         $this->app->bind('App\Services\Config\ConfigWriterInterface', function ($app) {

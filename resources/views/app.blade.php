@@ -46,6 +46,9 @@
                         @if (Auth::user()->can('view.user'))
                             <li><a href="{{ url('/users') }}">Users</a></li>
                         @endif
+                        @if (Auth::user()->can('view.setting'))
+                            <li><a href="{{ url('/settings/email') }}">Settings</a></li>
+                        @endif
                     </ul>
                 @endif
 

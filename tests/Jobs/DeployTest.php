@@ -30,6 +30,10 @@ class DeployTest extends \TestCase
 
     protected $mockProjectModel;
 
+    protected $mockMailSettingRepositroy;
+
+    protected $mockMailSettingEntity;
+
     public function setUp()
     {
         parent::setUp();
@@ -44,6 +48,8 @@ class DeployTest extends \TestCase
         $this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
         $this->mockNotifier = $this->mock('App\Services\Notification\NotifierInterface');
         $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockMailSettingRepositroy = $this->mock('App\Repositories\Setting\MailSettingInterface');
+        $this->mockMailSettingEntity = $this->mockPartial('App\Entities\Setting\MailSettingEntity');
     }
 
     public function test_Should_Work_When_DeployerIsNormalEnd()
@@ -128,7 +134,8 @@ class DeployTest extends \TestCase
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,
-            $this->mockNotifier
+            $this->mockNotifier,
+            $this->mockMailSettingRepositroy
         );
     }
 
@@ -214,7 +221,8 @@ class DeployTest extends \TestCase
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,
-            $this->mockNotifier
+            $this->mockNotifier,
+            $this->mockMailSettingRepositroy
         );
     }
 
@@ -319,13 +327,19 @@ class DeployTest extends \TestCase
             ->shouldReceive('notify')
             ->once();
 
+        $this->mockMailSettingRepositroy
+            ->shouldReceive('all')
+            ->once()
+            ->andReturn($this->mockMailSettingEntity);
+
         $job = new Deploy($deployment);
 
         $job->handle(
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,
-            $this->mockNotifier
+            $this->mockNotifier,
+            $this->mockMailSettingRepositroy
         );
     }
 
@@ -430,13 +444,19 @@ class DeployTest extends \TestCase
             ->shouldReceive('notify')
             ->once();
 
+        $this->mockMailSettingRepositroy
+            ->shouldReceive('all')
+            ->once()
+            ->andReturn($this->mockMailSettingEntity);
+
         $job = new Deploy($deployment);
 
         $job->handle(
             $this->mockProjectRepository,
             $this->mockServerRepository,
             $this->mockProcessBuilder,
-            $this->mockNotifier
+            $this->mockNotifier,
+            $this->mockMailSettingRepositroy
         );
     }
 }
