@@ -11,6 +11,7 @@ use App\Repositories\Recipe\EloquentRecipe;
 use App\Repositories\Server\EloquentServer;
 use App\Repositories\User\EloquentUser;
 use App\Repositories\Role\EloquentRole;
+use App\Repositories\Setting\ConfigMailSetting;
 
 use Kodeine\Acl\Models\Eloquent\Role;
 
@@ -54,5 +55,12 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind('App\Repositories\Role\RoleInterface', function ($app) {
             return new EloquentRole(new Role);
         });
+
+        $this->app->bind('App\Repositories\Setting\MailSettingInterface', function ($app) {
+                return new ConfigMailSetting(
+                    $app->make('App\Services\Config\ConfigReaderInterface'),
+                    $app->make('App\Services\Config\ConfigWriterInterface')
+                );
+            });
     }
 }

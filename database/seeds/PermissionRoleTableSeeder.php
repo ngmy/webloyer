@@ -18,6 +18,7 @@ class PermissionRoleTableSeeder extends Seeder
             'recipe',
             'server',
             'user',
+            'setting',
         ]);
 
         $roleDeveloper = Role::where('name', 'Developer')
@@ -29,6 +30,7 @@ class PermissionRoleTableSeeder extends Seeder
             'recipe',
             'server',
             'user.developer',
+            'setting.developer',
         ]);
 
         $roleModerator = Role::where('name', 'Moderator')
@@ -40,6 +42,7 @@ class PermissionRoleTableSeeder extends Seeder
             'recipe.moderator',
             'server.moderator',
             'user.moderator',
+            'setting.moderator',
         ]);
     }
 }
