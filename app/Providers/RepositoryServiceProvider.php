@@ -11,6 +11,8 @@ use App\Repositories\Recipe\EloquentRecipe;
 use App\Repositories\Server\EloquentServer;
 use App\Repositories\User\EloquentUser;
 use App\Repositories\Role\EloquentRole;
+use App\Repositories\Setting\ConfigAppSetting;
+use App\Repositories\Setting\ConfigDbSetting;
 use App\Repositories\Setting\ConfigMailSetting;
 
 use Kodeine\Acl\Models\Eloquent\Role;
@@ -57,10 +59,24 @@ class RepositoryServiceProvider extends ServiceProvider
         });
 
         $this->app->bind('App\Repositories\Setting\MailSettingInterface', function ($app) {
-                return new ConfigMailSetting(
-                    $app->make('App\Services\Config\ConfigReaderInterface'),
-                    $app->make('App\Services\Config\ConfigWriterInterface')
-                );
-            });
+            return new ConfigMailSetting(
+                $app->make('App\Services\Config\ConfigReaderInterface'),
+                $app->make('App\Services\Config\ConfigWriterInterface')
+            );
+        });
+
+        $this->app->bind('App\Repositories\Setting\DbSettingInterface', function ($app) {
+            return new ConfigDbSetting(
+                $app->make('App\Services\Config\ConfigReaderInterface'),
+                $app->make('App\Services\Config\ConfigWriterInterface')
+            );
+        });
+
+        $this->app->bind('App\Repositories\Setting\AppSettingInterface', function ($app) {
+            return new ConfigAppSetting(
+                $app->make('App\Services\Config\ConfigReaderInterface'),
+                $app->make('App\Services\Config\ConfigWriterInterface')
+            );
+        });
     }
 }

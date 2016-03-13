@@ -5,7 +5,8 @@ namespace App\Console\Commands\Webloyer;
 use Artisan;
 use Hash;
 
-use App\Services\Config\ConfigWriterInterface;
+use App\Repositories\Setting\AppSettingInterface;
+use App\Repositories\Setting\DbSettingInterface;
 use App\Repositories\User\UserInterface;
 
 use Illuminate\Console\Command;
@@ -39,27 +40,47 @@ class Install extends Command
     /**
      * Execute the console command.
      *
-     * @param \App\Services\Config\ConfigWriterInterface $configWriter
-     * @param \App\Repositories\User\UserInterface       $userRepository
+     * @param \App\Repositories\Setting\AppSettingInterface $appSetting
+     * @param \App\Repositories\Setting\DbSettingInterface  $dbSetting
+     * @param \App\Repositories\User\UserInterface          $userRepository
      * @return void
      */
-    public function handle(ConfigWriterInterface $configWriter, UserInterface $userRepository)
+    public function handle(AppSettingInterface $appSetting, DbSettingInterface $dbSetting, UserInterface $userRepository)
     {
-        $config['app_url']        = $this->ask(trans('webloyer.enter_webloyer_url'));
-        $config['db_host']        = $this->ask(trans('webloyer.enter_db_host'), 'localhost');
-        $config['db_database']    = $this->ask(trans('webloyer.enter_db_name'), 'webloyer');
-        $config['db_username']    = $this->ask(trans('webloyer.enter_db_username'), 'webloyer');
-        $config['db_password']    = $this->ask(trans('webloyer.enter_db_password'), false);
-        $config['admin_name']     = $this->ask(trans('webloyer.enter_admin_name'));
-        $config['admin_email']    = $this->ask(trans('webloyer.enter_admin_email'));
-        $config['admin_password'] = $this->ask(trans('webloyer.enter_admin_password'));
+        $config['app']['url'] = $this->ask(trans('webloyer.enter_webloyer_url'));
+
+        $config['db']['driver'] = $this->choice(trans('webloyer.enter_db_system'), [
+            'mysql'  => 'MySQL',
+            'pgsql'  => 'Postgres',
+            'sqlite' => 'SQLite',
+            'sqlsrv' => 'SQL Server',
+        ], 'mysql');
+
+        if ($config['db']['driver'] !== 'sqlite') {
+            $config['db']['host']     = $this->ask(trans('webloyer.enter_db_host'), 'localhost');
+            $config['db']['database'] = $this->ask(trans('webloyer.enter_db_name'), 'webloyer');
+            $config['db']['username'] = $this->ask(trans('webloyer.enter_db_username'), 'webloyer');
+            $config['db']['password'] = $this->ask(trans('webloyer.enter_db_password'), false);
+        } else {
+            $config['db']['host']     = null;
+            $config['db']['database'] = $this->ask(trans('webloyer.enter_db_name_sqlite'), storage_path('webloyer.sqlite'));
+            $config['db']['username'] = null;
+            $config['db']['password'] = null;
+        }
+
+        $config['admin']['name']     = $this->ask(trans('webloyer.enter_admin_name'));
+        $config['admin']['email']    = $this->ask(trans('webloyer.enter_admin_email'));
+        $config['admin']['password'] = $this->ask(trans('webloyer.enter_admin_password'));
 
         // Set configuration to .env
-        $configWriter->setConfig('APP_URL',     $config['app_url']);
-        $configWriter->setConfig('DB_HOST',     $config['db_host']);
-        $configWriter->setConfig('DB_DATABASE', $config['db_database']);
-        $configWriter->setConfig('DB_USERNAME', $config['db_username']);
-        $configWriter->setConfig('DB_PASSWORD', $config['db_password']);
+        $appSetting->update($config['app']);
+        $dbSetting->update($config['db']);
+
+        config(['database.default'                                          => $config['db']['driver']]);
+        config(['database.connections.'.$config['db']['driver'].'.host'     => $config['db']['host']]);
+        config(['database.connections.'.$config['db']['driver'].'.database' => $config['db']['database']]);
+        config(['database.connections.'.$config['db']['driver'].'.username' => $config['db']['username']]);
+        config(['database.connections.'.$config['db']['driver'].'.password' => $config['db']['password']]);
 
         // Migrate and seed database
         Artisan::call('migrate:refresh', [
@@ -89,11 +110,9 @@ class Install extends Command
         ]);
 
         // Create admin user
-        $admin['name']     = $config['admin_name'];
-        $admin['email']    = $config['admin_email'];
-        $admin['password'] = Hash::make($config['admin_password']);
+        $config['admin']['password'] = Hash::make($config['admin']['password']);
 
-        $user = $userRepository->create($admin);
+        $user = $userRepository->create($config['admin']);
         $user->assignRole('administrator');
     }
 }
