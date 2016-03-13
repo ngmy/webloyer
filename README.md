@@ -24,6 +24,8 @@ Webloyer has the following features:
 
  * Keeping a log of every deployments
 
+ * E-mail notifications can be sent when a deployment finishes
+
 * Recipe management
 
  * Creating, editing, deleting and listing recipe files
@@ -60,41 +62,20 @@ Webloyer has the following requirements:
  composer create-project ngmy/webloyer
  ```
 
-2. Give write permission to the `storage` directory for your web-server user by running the following command:
+2. Give write permission to the `storage` and the `bootstrap/cache` directories for your web-server user by running the following command:
 
  ```
  chmod -R 777 storage
+ chmod -R 777 bootstrap/cache
  ```
 
-3. Open the `config/database.php` file and set your database connection:
+3. Run the installer by using the Artisan `webloyer:install` command:
 
  ```
- 'default' => 'mysql',  // Default database connection
+ php artisan webloyer:install
  ```
 
- Then, configure the `connections` section below it with the database credentials.
-
-4. Create the database tables by using the Artisan `migrate` command:
-
- ```
- php artisan migrate
- ```
-
-5. Seed the database with initial data by using the Artisan `db` command:
-
- ```
- php artisan db:seed
- ```
-
-6. Open the `config/app.php` file and set your Webloyer URL:
-
- ```
- 'url' => env('APP_URL', 'http://localhost'),
- ```
-
-7. Open the `config/mail.php` file and set your mail server details.
-
-8. Start the queue listener as a background process by using the Artisan `queue:listen` command:
+4. Start the queue listener as a background process by using the Artisan `queue:listen` command:
 
  ```
  nohup php artisan queue:listen --timeout=0 &
@@ -110,8 +91,6 @@ Webloyer has the following requirements:
 
 2. Enter the e-mail address and password.
 
- **Note:** The default user e-mail address is `admin@example.com`, and password is `admin`. Please change the password after the first login.
-
 3. Click the "Login" button to login to Webloyer.
 
 ### Step 2: Create your project
@@ -121,6 +100,8 @@ Webloyer has the following requirements:
 2. Enter your project information.
 
  **Note:** For now, Webloyer only supports the `deploy` task and the `rollback` task. Therefore, you must define these tasks in your Deployer recipe file.
+
+ **Note:** If you want to use the e-mail notification, you need to enter your e-mail settings from the E-Mail Settings page.
 
 3. Click the "Store" button to finish project creation process.
 
