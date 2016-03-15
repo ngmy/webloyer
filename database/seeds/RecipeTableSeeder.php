@@ -10,6 +10,15 @@ class RecipeTableSeeder extends Seeder
         DB::table('recipes')->delete();
 
         $deployerRecipes = [
+            'cakephp' => [
+                'name'        => 'deployer-cakephp-recipe',
+                'description' => 'This recipe is specifically for deploying CakePHP 3 projects.',
+                'body'        => <<<EOF
+<?php
+require 'recipe/cakephp.php';
+EOF
+                ,
+            ],
             'codeigniter' => [
                 'name'        => 'deployer-codeigniter-recipe',
                 'description' => 'This recipe is specifically for deploying CodeIgniter projects.',
@@ -46,6 +55,15 @@ require 'recipe/drupal7.php';
 EOF
                 ,
             ],
+            'drupal8' => [
+                'name'        => 'deployer-drupal8-recipe',
+                'description' => 'This recipe is specifically for deploying Drupal 8 projects.',
+                'body'        => <<<EOF
+<?php
+require 'recipe/drupal8.php';
+EOF
+                ,
+            ],
             'fuelphp' => [
                 'name'        => 'deployer-fuelphp-recipe',
                 'description' => 'This recipe is specifically for deploying FuelPHP projects.',
@@ -79,6 +97,15 @@ EOF
                 'body'        => <<<EOF
 <?php
 require 'recipe/symfony.php';
+EOF
+                ,
+            ],
+            'symfony3' => [
+                'name'        => 'deployer-symfony3-recipe',
+                'description' => 'This recipe is specifically for deploying Symfony 3 projects.',
+                'body'        => <<<EOF
+<?php
+require 'recipe/symfony3.php';
 EOF
                 ,
             ],
