@@ -40,6 +40,10 @@ Webloyer has the following features:
 
  * Role-based access control to features
 
+## Screenshots
+
+See [screenshots](/SCREENSHOTS.md).
+
 ## Requirements
 
 Webloyer has the following requirements:
