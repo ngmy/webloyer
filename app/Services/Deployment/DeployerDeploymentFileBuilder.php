@@ -2,12 +2,14 @@
 
 namespace App\Services\Deployment;
 
-use Storage;
-
+use App\Services\Deployment\DeployerFile;
+use App\Services\Filesystem\FilesystemInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
 {
+    protected $fs;
+
     protected $deployerFile;
 
     protected $project;
@@ -16,17 +18,15 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
 
     protected $recipeFile;
 
-    public function __construct(Model $project, DeployerFile $serverListFile, $recipeFile)
+    public function __construct(FilesystemInterface $fs, DeployerFile $deployerFile)
     {
-        $this->deployerFile   = new DeployerFile;
-        $this->project        = $project;
-        $this->serverListFile = $serverListFile;
-        $this->recipeFile     = $recipeFile;
+        $this->fs           = $fs;
+        $this->deployerFile = $deployerFile;
     }
 
     public function __destruct()
     {
-        Storage::delete($this->deployerFile->getBaseName());
+        $this->fs->delete($this->deployerFile->getFullPath());
     }
 
     /**
@@ -54,7 +54,7 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
      */
     public function put()
     {
-        $baseName = $this->deployerFile->getBaseName();
+        $fullPath = $this->deployerFile->getFullPath();
         $contents[] = '<?php';
 
         // Include recipe files
@@ -68,7 +68,7 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
         // Load a server list file
         $contents[] = "serverList('{$this->serverListFile->getFullPath()}');";
 
-        Storage::put($baseName, implode(PHP_EOL, $contents));
+        $this->fs->put($fullPath, implode(PHP_EOL, $contents));
 
         return $this;
     }
@@ -81,5 +81,44 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
     public function getResult()
     {
         return $this->deployerFile;
+    }
+
+    /**
+     * Set a project model instance.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $project
+     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     */
+    public function setProject(Model $project)
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Set a server list file instance.
+     *
+     * @param \App\Services\Deployment\DeployerFile $serverListFile
+     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     */
+    public function setServerListFile(DeployerFile $serverListFile)
+    {
+        $this->serverListFile = $serverListFile;
+
+        return $this;
+    }
+
+    /**
+     * Set recipe file instances.
+     *
+     * @param array $recipeFile
+     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     */
+    public function setRecipeFile(array $recipeFile)
+    {
+        $this->recipeFile = $recipeFile;
+
+        return $this;
     }
 }

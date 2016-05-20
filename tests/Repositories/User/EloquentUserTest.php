@@ -97,7 +97,7 @@ class EloquentUserTest extends TestCase
 
     public function test_Should_UpdateExistingUser_When_RoleIsSpecified()
     {
-        $this->role->create([
+        $role = $this->role->create([
             'name' => 'Role 1',
             'slug' => 'role1',
         ]);
@@ -125,12 +125,12 @@ class EloquentUserTest extends TestCase
         $this->assertEquals('User 2', $updatedUser->name);
         $this->assertEquals('user2@example.com', $updatedUser->email);
         $this->assertEquals('23456789', $updatedUser->password);
-        $this->assertEquals('role1', $updatedUser->getRoles()[0]);
+        $this->assertEquals('role1', $updatedUser->getRoles()[$role->id]);
     }
 
     public function test_Should_UpdateExistingUser_When_RoleIsEmpty()
     {
-        $this->role->create([
+        $role = $this->role->create([
             'name' => 'Role 1',
             'slug' => 'role1',
         ]);
@@ -158,7 +158,7 @@ class EloquentUserTest extends TestCase
         $this->assertEquals('User 2', $updatedUser->name);
         $this->assertEquals('user2@example.com', $updatedUser->email);
         $this->assertEquals('23456789', $updatedUser->password);
-        $this->assertEquals('role1', $updatedUser->getRoles()[0]);
+        $this->assertEquals('role1', $updatedUser->getRoles()[$role->id]);
     }
 
     public function test_Should_DeleteExistingUser()

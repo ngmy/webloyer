@@ -44,6 +44,14 @@ class ProjectForm
 
             $project->addMaxDeployment();
             $project->syncRecipes($input['recipe_id']);
+
+            if (!empty($input['deploy_path'])) {
+                $attribute = [
+                    'name'  => 'deploy_path',
+                    'value' => $input['deploy_path'],
+                ];
+                $project->addProjectAttribute($attribute);
+            }
         });
 
         return true;
@@ -67,6 +75,16 @@ class ProjectForm
             $project = $this->project->byId($input['id']);
 
             $project->syncRecipes($input['recipe_id']);
+
+            $project->deleteProjectAttributes();
+
+            if (!empty($input['deploy_path'])) {
+                $attribute = [
+                    'name'  => 'deploy_path',
+                    'value' => $input['deploy_path'],
+                ];
+                $project->addProjectAttribute($attribute);
+            }
 
             $this->project->update($input);
         });

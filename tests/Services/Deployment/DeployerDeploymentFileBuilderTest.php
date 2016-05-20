@@ -1,26 +1,58 @@
 <?php
 
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
-
-use Tests\Helpers\Factory;
+use App\Services\Deployment\DeployerFile;
+use App\Services\Filesystem\LaravelFilesystem;
 
 class DeployerDeploymentFileBuilderTest extends TestCase
 {
+    use Tests\Helpers\MockeryHelper;
+
+    protected $mockProjectModel;
+
+    protected $mockFilesystem;
+
+    protected $mockRecipeFile;
+
+    protected $mockServerListFile;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockFilesystem = $this->mock('App\Services\Filesystem\FilesystemInterface');
+        $this->mockRecipeFile = $this->mock('App\Services\Deployment\DeployerFile');
+        $this->mockServerListFile = $this->mock('App\Services\Deployment\DeployerFile');
+    }
+
     public function test_Should_BuildDeployerDeploymentFile()
     {
-        Storage::shouldReceive('delete')
-            ->once()
-            ->andReturn(1);
+        $this->mockFilesystem
+            ->shouldReceive('delete')
+            ->once();
+        $this->mockFilesystem
+            ->shouldReceive('put')
+            ->once();
 
-        Storage::shouldReceive('put')
+        $mockRecipeFile = $this->mockRecipeFile
+            ->shouldReceive('getFullPath')
             ->once()
-            ->andReturn(1);
+            ->mock();
+        $mockRecipeFiles = [$mockRecipeFile];
+
+        $mockServerListFile = $this->mockServerListFile
+            ->shouldReceive('getFullPath')
+            ->once()
+            ->mock();
 
         $deploymentFileBuilder = new DeployerDeploymentFileBuilder(
-            new App\Models\Project,
-            new App\Services\Deployment\DeployerFile,
-            [new App\Services\Deployment\DeployerFile]
+            $this->mockFilesystem,
+            new DeployerFile
         );
+        $deploymentFileBuilder->setProject($this->mockProjectModel)
+            ->setServerListFile($mockServerListFile)
+            ->setRecipeFile($mockRecipeFiles);
         $result = $deploymentFileBuilder
             ->pathInfo()
             ->put()

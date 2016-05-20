@@ -1,24 +1,80 @@
 <?php
 
 use App\Services\Deployment\DeployerServerListFileBuilder;
-
-use Tests\Helpers\Factory;
+use App\Services\Deployment\DeployerFile;
+use App\Services\Filesystem\LaravelFilesystem;
+use org\bovigo\vfs\vfsStream;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 class DeployerServerListFileBuilderTest extends TestCase
 {
+    use Tests\Helpers\MockeryHelper;
+
+    protected $mockProjectModel;
+
+    protected $mockProjectAttributeModel;
+
+    protected $mockServerModel;
+
+    protected $mockFilesystem;
+
+    protected $mockYamlParser;
+
+    protected $mockYamlDumper;
+
+    protected $mockDeployerFile;
+
+    protected $rootDir;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->mockProjectModel = $this->mock('App\Models\Project');
+        $this->mockProjectAttributeModel = $this->mockPartial('App\Models\ProjectAttribute');
+        $this->mockServerModel = $this->mockPartial('App\Models\Server');
+        $this->mockFilesystem = $this->mock('App\Services\Filesystem\FilesystemInterface');
+        $this->mockYamlParser = $this->mock('Symfony\Component\Yaml\Parser');
+        $this->mockYamlDumper = $this->mock('Symfony\Component\Yaml\Dumper');
+        $this->mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile');
+
+        $this->rootDir = vfsStream::setup('rootDir');
+    }
+
     public function test_Should_BuildDeployerServerListFile()
     {
-        Storage::shouldReceive('delete')
+        $this->mockProjectModel
+            ->shouldReceive('getProjectAttributes')
             ->once()
-            ->andReturn(1);
+            ->andReturn([]);
 
-        Storage::shouldReceive('put')
+        $this->mockFilesystem
+            ->shouldReceive('delete')
+            ->once();
+        $this->mockFilesystem
+            ->shouldReceive('put')
+            ->once();
+
+        $this->mockYamlParser
+            ->shouldReceive('parse')
             ->once()
-            ->andReturn(1);
+            ->andReturn([]);
+
+        $this->mockYamlDumper
+            ->shouldReceive('dump')
+            ->once()
+            ->andReturn('');
 
         $serverListFileBuilder = new DeployerServerListFileBuilder(
-            new App\Models\Server
+            $this->mockFilesystem,
+            new DeployerFile,
+            $this->mockYamlParser,
+            $this->mockYamlDumper
         );
+        $serverListFileBuilder->setServer($this->mockServerModel)
+            ->setProject($this->mockProjectModel);
         $result = $serverListFileBuilder
             ->pathInfo()
             ->put()
@@ -26,5 +82,108 @@ class DeployerServerListFileBuilderTest extends TestCase
 
         $this->assertStringMatchesFormat('server_%x.yml', $result->getBaseName());
         $this->assertStringMatchesFormat(storage_path("app/server_%x.yml"), $result->getFullPath());
+    }
+
+    public function test_Should_OverrideAttributeInDeployerServerListFile_When_ProjectAttributeIsSpecified()
+    {
+        $path = vfsStream::url('rootDir/server.yml');
+
+        $this->mockProjectAttributeModel->name = 'deploy_path';
+        $this->mockProjectAttributeModel->value = '/home/www/deploy2';
+
+        $this->mockProjectModel
+            ->shouldReceive('getProjectAttributes')
+            ->once()
+            ->andReturn([$this->mockProjectAttributeModel]);
+
+        $this->mockDeployerFile
+            ->shouldReceive('setBaseName')
+            ->once();
+        $this->mockDeployerFile
+            ->shouldReceive('setFullPath')
+            ->once();
+        $this->mockDeployerFile
+            ->shouldReceive('getFullPath')
+            ->andReturn($path);
+
+        $serverListFileBuilder = new DeployerServerListFileBuilder(
+            new LaravelFilesystem($this->app['files']),
+            $this->mockDeployerFile,
+            new Parser,
+            new Dumper
+        );
+
+        $this->mockServerModel->body = <<<EOF
+test:
+  host: localhost
+  user: www
+  identity_file:
+    public_key: /path/to/public_key
+    private_key: /path/to/private_key
+  stage: testing
+  deploy_path: /home/www/deploy1
+EOF;
+
+        $serverListFileBuilder->setServer($this->mockServerModel)
+            ->setProject($this->mockProjectModel);
+        $result = $serverListFileBuilder
+            ->pathInfo()
+            ->put()
+            ->getResult();
+
+        $serverListFile = Yaml::parse(file_get_contents($path));
+
+        $this->assertEquals('/home/www/deploy2', $serverListFile['test']['deploy_path']);
+    }
+
+    public function test_Should_OverrideAttributeInDeployerServerListFile_When_ProjectAttributeIsNotSpecified()
+    {
+        $path = vfsStream::url('rootDir/server.yml');
+
+        $this->mockProjectAttributeModel->name = 'deploy_path';
+        $this->mockProjectAttributeModel->value = '/home/www/deploy2';
+
+        $this->mockProjectModel
+            ->shouldReceive('getProjectAttributes')
+            ->once()
+            ->andReturn([$this->mockProjectAttributeModel]);
+
+        $this->mockDeployerFile
+            ->shouldReceive('setBaseName')
+            ->once();
+        $this->mockDeployerFile
+            ->shouldReceive('setFullPath')
+            ->once();
+        $this->mockDeployerFile
+            ->shouldReceive('getFullPath')
+            ->andReturn($path);
+
+        $serverListFileBuilder = new DeployerServerListFileBuilder(
+            new LaravelFilesystem($this->app['files']),
+            $this->mockDeployerFile,
+            new Parser,
+            new Dumper
+        );
+
+        $this->mockServerModel->body = <<<EOF
+test:
+  host: localhost
+  user: www
+  identity_file:
+    public_key: /path/to/public_key
+    private_key: /path/to/private_key
+  stage: testing
+EOF;
+
+        $serverListFileBuilder->setServer($this->mockServerModel)
+            ->setProject($this->mockProjectModel);
+        $result = $serverListFileBuilder
+            ->pathInfo()
+            ->put()
+            ->getResult();
+
+        $serverListFile = Yaml::parse(file_get_contents($path));
+
+        $this->assertEquals('/home/www/deploy2', $serverListFile['test']['deploy_path']);
     }
 }

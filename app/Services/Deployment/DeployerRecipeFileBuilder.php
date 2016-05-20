@@ -2,25 +2,27 @@
 
 namespace App\Services\Deployment;
 
-use Storage;
-
+use App\Services\Deployment\DeployerFile;
+use App\Services\Filesystem\FilesystemInterface;
 use Illuminate\Database\Eloquent\Model;
 
 class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
 {
+    protected $fs;
+
     protected $deployerFile;
 
     protected $recipe;
 
-    public function __construct(Model $recipe)
+    public function __construct(FilesystemInterface $fs, DeployerFile $deployerFile)
     {
-        $this->deployerFile = new DeployerFile;
-        $this->recipe = $recipe;
+        $this->fs           = $fs;
+        $this->deployerFile = $deployerFile;
     }
 
     public function __destruct()
     {
-        Storage::delete($this->deployerFile->getBaseName());
+        $this->fs->delete($this->deployerFile->getFullPath());
     }
 
     /**
@@ -48,10 +50,10 @@ class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
      */
     public function put()
     {
-        $baseName = $this->deployerFile->getBaseName();
+        $fullPath = $this->deployerFile->getFullPath();
         $contents = $this->recipe->body;
 
-        Storage::put($baseName, $contents);
+        $this->fs->put($fullPath, $contents);
 
         return $this;
     }
@@ -64,5 +66,18 @@ class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
     public function getResult()
     {
         return $this->deployerFile;
+    }
+
+    /**
+     * Set a recipe model instance.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $recipe
+     * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
+     */
+    public function setRecipe(Model $recipe)
+    {
+        $this->recipe = $recipe;
+
+        return $this;
     }
 }

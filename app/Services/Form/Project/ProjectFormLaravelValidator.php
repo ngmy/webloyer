@@ -12,6 +12,7 @@ class ProjectFormLaravelValidator extends AbstractLaravelValidator
         'recipe_id'                    => 'required',
         'server_id'                    => 'required|exists:servers,id',
         'repository'                   => 'required|url',
+        'deploy_path'                  => 'string',
         'email_notification_recipient' => 'email',
     ];
 

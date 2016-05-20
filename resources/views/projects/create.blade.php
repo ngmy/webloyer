@@ -50,6 +50,14 @@
                             </div>
                         </div>
                         <hr>
+                        <h5>Overriding Server Definition</h5>
+                        <div class="form-group">
+                            <label for="deploy_path" class="col-md-4 control-label">Deploy Path</label>
+                            <div class="col-md-6">
+                                {!! Form::text('deploy_path', null, ['class' => 'form-control', 'id' => 'deploy_path']) !!}
+                            </div>
+                        </div>
+                        <hr>
                         <h5>E-Mail Notification</h5>
                         <div class="form-group">
                             <label for="email_notification_recipient" class="col-md-4 control-label">Recipient</label>
