@@ -6,8 +6,10 @@ use App\Jobs\Job;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Server\ServerInterface;
 use App\Repositories\Setting\MailSettingInterface;
+use App\Services\Deployment\DeployerDeploymentFileBuilder;
+use App\Services\Deployment\DeployerRecipeFileBuilder;
+use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Notification\NotifierInterface;
-
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -39,14 +41,17 @@ class Rollback extends Job implements SelfHandling, ShouldQueue
     /**
      * Execute the job.
      *
-     * @param \App\Repositories\Project\ProjectInterface     $projectRepository
-     * @param \App\Repositories\Server\ServerInterface       $serverRepository
-     * @param \Symfony\Component\Process\ProcessBuilder      $processBuilder
-     * @param \App\Services\Notification\NotifierInterface   $notifier
-     * @param \App\Repositories\Setting\MailSettingInterface $mailSettingRepository
+     * @param \App\Repositories\Project\ProjectInterface             $projectRepository
+     * @param \App\Repositories\Server\ServerInterface               $serverRepository
+     * @param \Symfony\Component\Process\ProcessBuilder              $processBuilder
+     * @param \App\Services\Notification\NotifierInterface           $notifier
+     * @param \App\Repositories\Setting\MailSettingInterface         $mailSettingRepository
+     * @param \App\Services\Deployment\DeployerServerListFileBuilder $serverListFileBuilder
+     * @param \App\Services\Deployment\DeployerRecipeFileBuilder     $recipeFileBuilder
+     * @param \App\Services\Deployment\DeployerDeploymentFileBuilder $deploymentFileBuilder
      * @return void
      */
-    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier, MailSettingInterface $mailSettingRepository)
+    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier, MailSettingInterface $mailSettingRepository, DeployerServerListFileBuilder $serverListFileBuilder, DeployerRecipeFileBuilder $recipeFileBuilder, DeployerDeploymentFileBuilder $deploymentFileBuilder)
     {
         $deployment = $this->deployment;
         $project    = $projectRepository->byId($deployment->project_id);
@@ -55,17 +60,17 @@ class Rollback extends Job implements SelfHandling, ShouldQueue
         $app = app();
 
         // Create a server list file
-        $serverListFileBuilder = $app->make('App\Services\Deployment\DeployerServerListFileBuilder', [$server]);
+        $serverListFileBuilder->setServer($server)->setProject($project);
         $serverListFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$serverListFileBuilder])->construct();
 
         // Create recipe files
         foreach ($project->recipes as $i => $recipe) {
-            $recipeFileBuilders[] = $app->make('App\Services\Deployment\DeployerRecipeFileBuilder', [$recipe]);
+            $recipeFileBuilders[] = $recipeFileBuilder->setRecipe($recipe);
             $recipeFiles[] = $app->make('App\Services\Deployment\DeployerFileDirector', [$recipeFileBuilders[$i]])->construct();
         }
 
         // Create a deployment file
-        $deploymentFileBuilder = $app->make('App\Services\Deployment\DeployerDeploymentFileBuilder', [$project, $serverListFile, $recipeFiles]);
+        $deploymentFileBuilder->setProject($project)->setServerListFile($serverListFile)->setRecipeFile($recipeFiles);
         $deploymentFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$deploymentFileBuilder])->construct();
 
         // Create a command

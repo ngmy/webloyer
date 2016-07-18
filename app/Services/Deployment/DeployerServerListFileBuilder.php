@@ -2,25 +2,37 @@
 
 namespace App\Services\Deployment;
 
-use Storage;
-
+use App\Services\Deployment\DeployerFile;
+use App\Services\Filesystem\FilesystemInterface;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Dumper;
 
 class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
 {
+    protected $fs;
+
     protected $deployerFile;
+
+    protected $yamlParser;
+
+    protected $yamlDumper;
 
     protected $server;
 
-    public function __construct(Model $server)
+    protected $project;
+
+    public function __construct(FilesystemInterface $fs, DeployerFile $deployerFile, Parser $parser, Dumper $dumper)
     {
-        $this->deployerFile = new DeployerFile;
-        $this->server = $server;
+        $this->fs           = $fs;
+        $this->deployerFile = $deployerFile;
+        $this->yamlParser   = $parser;
+        $this->yamlDumper   = $dumper;
     }
 
     public function __destruct()
     {
-        Storage::delete($this->deployerFile->getBaseName());
+        $this->fs->delete($this->deployerFile->getFullPath());
     }
 
     /**
@@ -48,10 +60,20 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
      */
     public function put()
     {
-        $baseName = $this->deployerFile->getBaseName();
+        $fullPath = $this->deployerFile->getFullPath();
         $contents = $this->server->body;
 
-        Storage::put($baseName, $contents);
+        // Override settings in a server list file
+        $serverList = $this->yamlParser->parse($contents);
+        $projectAttributes = $this->project->getProjectAttributes();
+        foreach ($projectAttributes as $projectAttribute) {
+            foreach ($serverList as $i => $server) {
+                $serverList[$i][$projectAttribute->name] = $projectAttribute->value;
+            }
+        }
+        $newContents = $this->yamlDumper->dump($serverList);
+
+        $this->fs->put($fullPath, $newContents);
 
         return $this;
     }
@@ -64,5 +86,31 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
     public function getResult()
     {
         return $this->deployerFile;
+    }
+
+    /**
+     * Set a server model instance.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $server
+     * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
+     */
+    public function setServer(Model $server)
+    {
+        $this->server = $server;
+
+        return $this;
+    }
+
+    /**
+     * Set a project model instance.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $project
+     * @return \App\Services\ServerList\DeployerServerListFileBuilder $this
+     */
+    public function setProject(Model $project)
+    {
+        $this->project = $project;
+
+        return $this;
     }
 }

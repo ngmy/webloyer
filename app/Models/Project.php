@@ -29,6 +29,11 @@ class Project extends BaseModel
         return $this->hasOne('App\Models\MaxDeployment');
     }
 
+    public function projectAttributes()
+    {
+        return $this->hasMany('App\Models\ProjectAttribute');
+    }
+
     public function deployments()
     {
         return $this->hasMany('App\Models\Deployment');
@@ -63,6 +68,18 @@ class Project extends BaseModel
             ->paginate($limit);
     }
 
+    public function getProjectAttributeByName($name)
+    {
+        return $this->projectAttributes()
+            ->where('name', $name)
+            ->first();
+    }
+
+    public function getProjectAttributes()
+    {
+        return $this->projectAttributes()->get();
+    }
+
     public function getRecipes()
     {
         return $this->recipes()->orderBy('recipe_order')->get();
@@ -83,6 +100,16 @@ class Project extends BaseModel
         return $this->deployments()
             ->where('number', $data['number'])
             ->update($data);
+    }
+
+    public function addProjectAttribute(array $data)
+    {
+        return $this->projectAttributes()->create($data);
+    }
+
+    public function deleteProjectAttributes()
+    {
+        return $this->projectAttributes()->delete();
     }
 
     public function syncRecipes(array $data)

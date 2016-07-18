@@ -31,6 +31,14 @@
                         <td>{{ $project->stage }}</td>
                     </tr>
                     <tr>
+                        <th>Deploy Path</th>
+                        <td>
+                            @if (!is_null ($project->getProjectAttributeByName('deploy_path')))
+                                {{ $project->getProjectAttributeByName('deploy_path')->value }}
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
                         <th>E-Mail Notification Recipient</th>
                         <td>{{ $project->email_notification_recipient }}</td>
                     </tr>

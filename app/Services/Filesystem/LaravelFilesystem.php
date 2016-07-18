@@ -37,4 +37,15 @@ class LaravelFilesystem implements FilesystemInterface
     {
         return $this->fs->get($path);
     }
+
+    /**
+     * Delete a file.
+     *
+     * @param string $path File path
+     * @return boolean
+     */
+    public function delete($path)
+    {
+        return $this->fs->delete($path);
+    }
 }

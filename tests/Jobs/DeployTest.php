@@ -30,6 +30,8 @@ class DeployTest extends \TestCase
 
     protected $mockProjectModel;
 
+    protected $mockServerModel;
+
     protected $mockMailSettingRepositroy;
 
     protected $mockMailSettingEntity;
@@ -44,10 +46,11 @@ class DeployTest extends \TestCase
         $this->mockProcess = $this->mockPartial('Symfony\Component\Process\Process');
         $this->mockDeployerFileDirector = $this->mock('App\Services\Deployment\DeployerFileDirector');
         $this->mockServerListFileBuilder = $this->mock('App\Services\Deployment\DeployerServerListFileBuilder');
-        $this->mockRecipeFileBuilder = $this->mock('App\Services\DeploymentInterface\DeployerRecipeFileBuilder');
+        $this->mockRecipeFileBuilder = $this->mock('App\Services\Deployment\DeployerRecipeFileBuilder');
         $this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
         $this->mockNotifier = $this->mock('App\Services\Notification\NotifierInterface');
         $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockServerModel = $this->mockPartial('App\Models\Server');
         $this->mockMailSettingRepositroy = $this->mock('App\Repositories\Setting\MailSettingInterface');
         $this->mockMailSettingEntity = $this->mockPartial('App\Entities\Setting\MailSettingEntity');
     }
@@ -85,7 +88,8 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
+            ->once()
+            ->andReturn($this->mockServerModel);
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
             ->shouldReceive('getFullPath')
@@ -124,9 +128,31 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($this->mockProcess);
 
-        \Storage::shouldReceive('delete')
-            ->times(1)
-            ->andReturn(1);
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setServer')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+
+        $this->mockRecipeFileBuilder
+            ->shouldReceive('setRecipe')
+            ->once();
+
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setServerListFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setRecipeFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
 
         $job = new Deploy($deployment);
 
@@ -135,7 +161,10 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockMailSettingRepositroy,
+            $this->mockServerListFileBuilder,
+            $this->mockRecipeFileBuilder,
+            $this->mockDeploymentFileBuilder
         );
     }
 
@@ -172,7 +201,8 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
+            ->once()
+            ->andReturn($this->mockServerModel);
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
             ->shouldReceive('getFullPath')
@@ -211,9 +241,31 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($this->mockProcess);
 
-        \Storage::shouldReceive('delete')
-            ->times(1)
-            ->andReturn(1);
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setServer')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+
+        $this->mockRecipeFileBuilder
+            ->shouldReceive('setRecipe')
+            ->once();
+
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setServerListFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setRecipeFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
 
         $job = new Deploy($deployment);
 
@@ -222,7 +274,10 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockMailSettingRepositroy,
+            $this->mockServerListFileBuilder,
+            $this->mockRecipeFileBuilder,
+            $this->mockDeploymentFileBuilder
         );
     }
 
@@ -275,7 +330,8 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
+            ->once()
+            ->andReturn($this->mockServerModel);
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
             ->shouldReceive('getFullPath')
@@ -314,10 +370,6 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($this->mockProcess);
 
-        \Storage::shouldReceive('delete')
-            ->times(1)
-            ->andReturn(1);
-
         $this->mockNotifier
             ->shouldReceive('to')
             ->once()
@@ -332,6 +384,32 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($this->mockMailSettingEntity);
 
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setServer')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+
+        $this->mockRecipeFileBuilder
+            ->shouldReceive('setRecipe')
+            ->once();
+
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setServerListFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setRecipeFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+
         $job = new Deploy($deployment);
 
         $job->handle(
@@ -339,7 +417,10 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockMailSettingRepositroy,
+            $this->mockServerListFileBuilder,
+            $this->mockRecipeFileBuilder,
+            $this->mockDeploymentFileBuilder
         );
     }
 
@@ -392,7 +473,8 @@ class DeployTest extends \TestCase
 
         $this->mockServerRepository
             ->shouldReceive('byId')
-            ->once();
+            ->once()
+            ->andReturn($this->mockServerModel);
 
         $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
             ->shouldReceive('getFullPath')
@@ -431,10 +513,6 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($this->mockProcess);
 
-        \Storage::shouldReceive('delete')
-            ->times(1)
-            ->andReturn(1);
-
         $this->mockNotifier
             ->shouldReceive('to')
             ->once()
@@ -449,6 +527,32 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($this->mockMailSettingEntity);
 
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setServer')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+        $this->mockServerListFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockServerListFileBuilder);
+
+        $this->mockRecipeFileBuilder
+            ->shouldReceive('setRecipe')
+            ->once();
+
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setProject')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setServerListFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+        $this->mockDeploymentFileBuilder
+            ->shouldReceive('setRecipeFile')
+            ->once()
+            ->andReturn($this->mockDeploymentFileBuilder);
+
         $job = new Deploy($deployment);
 
         $job->handle(
@@ -456,7 +560,10 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockMailSettingRepositroy,
+            $this->mockServerListFileBuilder,
+            $this->mockRecipeFileBuilder,
+            $this->mockDeploymentFileBuilder
         );
     }
 }

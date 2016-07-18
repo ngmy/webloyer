@@ -34,4 +34,14 @@ class LaravelFilesystemTest extends TestCase
 
         $this->assertEquals('contents', $getFile);
     }
+
+    public function test_Should_DeleteFile()
+    {
+        $file = vfsStream::newFile('file')->at($this->rootDir);
+
+        $fs = new LaravelFilesystem($this->app['files']);
+        $fs->delete(vfsStream::url('rootDir/file'));
+
+        $this->assertFileNotExists(vfsStream::url('rootDir/file'));
+    }
 }

@@ -114,6 +114,9 @@ class ProjectsControllerTest extends TestCase
             ->shouldReceive('getRecipes')
             ->once()
             ->andReturn(new Illuminate\Database\Eloquent\Collection)
+            ->shouldReceive('getProjectAttributeByName')
+            ->twice()
+            ->andReturn(new App\Models\ProjectAttribute)
             ->mock();
 
         $server = Factory::build('App\Models\Server', [
@@ -159,6 +162,9 @@ class ProjectsControllerTest extends TestCase
             ->shouldReceive('getRecipes')
             ->once()
             ->andReturn(new Illuminate\Database\Eloquent\Collection)
+            ->shouldReceive('getProjectAttributeByName')
+            ->twice()
+            ->andReturn(new App\Models\ProjectAttribute)
             ->mock();
 
         $this->mockProjectRepository
