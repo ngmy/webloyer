@@ -7,13 +7,38 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="false"
-         syntaxCheck="false">
+         stopOnFailure="false">
     <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>./tests/</directory>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./app</directory>
+            <exclude>
+                <directory>./app/Providers</directory>
+                <directory suffix="Interface.php">./app</directory>
+                <file>./app/Console/Commands/Inspire.php</file>
+                <file>./app/Console/Kernel.php</file>
+                <file>./app/Events/Event.php</file>
+                <file>./app/Exceptions/Handler.php</file>
+                <file>./app/Http/Controllers/Auth/AuthController.php</file>
+                <file>./app/Http/Controllers/Auth/PasswordController.php</file>
+                <file>./app/Http/Controllers/Controller.php</file>
+                <file>./app/Http/Controllers/HomeController.php</file>
+                <file>./app/Http/Controllers/WelcomeController.php</file>
+                <file>./app/Http/Kernel.php</file>
+                <file>./app/Http/Middleware/Authenticate.php</file>
+                <file>./app/Http/Middleware/RedirectIfAuthenticated.php</file>
+                <file>./app/Http/Middleware/VerifyCsrfToken.php</file>
+                <file>./app/Http/Requests/Request.php</file>
+                <file>./app/Http/breadcrumbs.php</file>
+                <file>./app/Http/routes.php</file>
+                <file>./app/Jobs/Job.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
