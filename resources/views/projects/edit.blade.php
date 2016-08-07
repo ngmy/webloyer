@@ -54,11 +54,7 @@
                         <div class="form-group">
                             <label for="deploy_path" class="col-md-4 control-label">Deploy Path</label>
                             <div class="col-md-6">
-                                @if (!is_null ($project->getProjectAttributeByName('deploy_path')))
-                                    {!! Form::text('deploy_path', $project->getProjectAttributeByName('deploy_path')->value, ['class' => 'form-control', 'id' => 'deploy_path']) !!}
-                                @else
-                                    {!! Form::text('deploy_path', null, ['class' => 'form-control', 'id' => 'deploy_path']) !!}
-                                @endif
+                                {!! Form::text('deploy_path', $project->attributes->getDeployPath(), ['class' => 'form-control', 'id' => 'deploy_path']) !!}
                             </div>
                         </div>
                         <hr>

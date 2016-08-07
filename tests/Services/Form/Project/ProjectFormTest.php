@@ -70,8 +70,6 @@ class ProjectFormTest extends TestCase
             ->once()
             ->shouldReceive('syncRecipes')
             ->once()
-            ->shouldReceive('addProjectAttribute')
-            ->once()
             ->mock();
         $this->mockProjectRepository
             ->shouldReceive('create')
@@ -125,8 +123,6 @@ class ProjectFormTest extends TestCase
         $project = $this->mockProjectModel
             ->shouldReceive('syncRecipes')
             ->once()
-            ->shouldReceive('deleteProjectAttributes')
-            ->once()
             ->mock();
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -162,10 +158,6 @@ class ProjectFormTest extends TestCase
 
         $project = $this->mockProjectModel
             ->shouldReceive('syncRecipes')
-            ->once()
-            ->shouldReceive('deleteProjectAttributes')
-            ->once()
-            ->shouldReceive('addProjectAttribute')
             ->once()
             ->mock();
         $this->mockProjectRepository
