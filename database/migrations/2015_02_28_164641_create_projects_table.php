@@ -19,6 +19,7 @@ class CreateProjectsTable extends Migration
             $table->integer('server_id')->unsigned();
             $table->string('repository');
             $table->string('email_notification_recipient')->nullable();
+            $table->text('attributes');
             $table->timestamps();
 
             $table->foreign('server_id')

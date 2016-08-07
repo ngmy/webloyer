@@ -32,11 +32,7 @@
                     </tr>
                     <tr>
                         <th>Deploy Path</th>
-                        <td>
-                            @if (!is_null ($project->getProjectAttributeByName('deploy_path')))
-                                {{ $project->getProjectAttributeByName('deploy_path')->value }}
-                            @endif
-                        </td>
+                        <td>{{ $project->attributes->getDeployPath() }}</td>
                     </tr>
                     <tr>
                         <th>E-Mail Notification Recipient</th>

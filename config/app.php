@@ -149,6 +149,7 @@ return [
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
         'Robbo\Presenter\PresenterServiceProvider',
         'Kodeine\Acl\AclServiceProvider',
+        'Ngmy\EloquentSerializedLob\SerializedLobTraitServiceProvider',
 
     ],
 

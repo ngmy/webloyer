@@ -40,18 +40,17 @@ class ProjectForm
         }
 
         DB::transaction(function () use ($input) {
+            $projectAttribute = new \App\Entities\ProjectAttribute\ProjectAttributeEntity;
+            if (!empty($input['deploy_path'])) {
+                $projectAttribute->setDeployPath($input['deploy_path']);
+            }
+            $input['attributes'] = $projectAttribute;
+
             $project = $this->project->create($input);
 
             $project->addMaxDeployment();
             $project->syncRecipes($input['recipe_id']);
 
-            if (!empty($input['deploy_path'])) {
-                $attribute = [
-                    'name'  => 'deploy_path',
-                    'value' => $input['deploy_path'],
-                ];
-                $project->addProjectAttribute($attribute);
-            }
         });
 
         return true;
@@ -76,15 +75,11 @@ class ProjectForm
 
             $project->syncRecipes($input['recipe_id']);
 
-            $project->deleteProjectAttributes();
-
+            $projectAttribute = new \App\Entities\ProjectAttribute\ProjectAttributeEntity;
             if (!empty($input['deploy_path'])) {
-                $attribute = [
-                    'name'  => 'deploy_path',
-                    'value' => $input['deploy_path'],
-                ];
-                $project->addProjectAttribute($attribute);
+                $projectAttribute->setDeployPath($input['deploy_path']);
             }
+            $input['attributes'] = $projectAttribute;
 
             $this->project->update($input);
         });

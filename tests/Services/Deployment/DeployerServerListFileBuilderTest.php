@@ -14,7 +14,7 @@ class DeployerServerListFileBuilderTest extends TestCase
 
     protected $mockProjectModel;
 
-    protected $mockProjectAttributeModel;
+    protected $mockProjectAttributeEntity;
 
     protected $mockServerModel;
 
@@ -32,8 +32,8 @@ class DeployerServerListFileBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockProjectModel = $this->mock('App\Models\Project');
-        $this->mockProjectAttributeModel = $this->mockPartial('App\Models\ProjectAttribute');
+        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockProjectAttributeEntity = $this->mock('App\Entities\ProjectAttribute\ProjectAttributeEntity');
         $this->mockServerModel = $this->mockPartial('App\Models\Server');
         $this->mockFilesystem = $this->mock('App\Services\Filesystem\FilesystemInterface');
         $this->mockYamlParser = $this->mock('Symfony\Component\Yaml\Parser');
@@ -45,11 +45,6 @@ class DeployerServerListFileBuilderTest extends TestCase
 
     public function test_Should_BuildDeployerServerListFile()
     {
-        $this->mockProjectModel
-            ->shouldReceive('getProjectAttributes')
-            ->once()
-            ->andReturn([]);
-
         $this->mockFilesystem
             ->shouldReceive('delete')
             ->once();
@@ -88,13 +83,15 @@ class DeployerServerListFileBuilderTest extends TestCase
     {
         $path = vfsStream::url('rootDir/server.yml');
 
-        $this->mockProjectAttributeModel->name = 'deploy_path';
-        $this->mockProjectAttributeModel->value = '/home/www/deploy2';
+        $this->mockProjectAttributeEntity
+            ->shouldReceive('getDeployPath')
+            ->twice()
+            ->andReturn('/home/www/deploy2');
 
         $this->mockProjectModel
-            ->shouldReceive('getProjectAttributes')
-            ->once()
-            ->andReturn([$this->mockProjectAttributeModel]);
+            ->shouldReceive('getAttribute')
+            ->with('attributes')
+            ->andReturn($this->mockProjectAttributeEntity);
 
         $this->mockDeployerFile
             ->shouldReceive('setBaseName')
@@ -140,13 +137,15 @@ EOF;
     {
         $path = vfsStream::url('rootDir/server.yml');
 
-        $this->mockProjectAttributeModel->name = 'deploy_path';
-        $this->mockProjectAttributeModel->value = '/home/www/deploy2';
+        $this->mockProjectAttributeEntity
+            ->shouldReceive('getDeployPath')
+            ->twice()
+            ->andReturn('/home/www/deploy2');
 
         $this->mockProjectModel
-            ->shouldReceive('getProjectAttributes')
-            ->once()
-            ->andReturn([$this->mockProjectAttributeModel]);
+            ->shouldReceive('getAttribute')
+            ->with('attributes')
+            ->andReturn($this->mockProjectAttributeEntity);
 
         $this->mockDeployerFile
             ->shouldReceive('setBaseName')

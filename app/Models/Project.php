@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Ngmy\EloquentSerializedLob\SerializedLobTrait;
+
 class Project extends BaseModel
 {
+    use SerializedLobTrait;
+
     protected $table = 'projects';
 
     protected $fillable = [
@@ -12,6 +16,7 @@ class Project extends BaseModel
         'repository',
         'server_id',
         'email_notification_recipient',
+        'attributes',
     ];
 
     public function setStageAttribute($value)
@@ -27,11 +32,6 @@ class Project extends BaseModel
     public function maxDeployment()
     {
         return $this->hasOne('App\Models\MaxDeployment');
-    }
-
-    public function projectAttributes()
-    {
-        return $this->hasMany('App\Models\ProjectAttribute');
     }
 
     public function deployments()
@@ -68,18 +68,6 @@ class Project extends BaseModel
             ->paginate($limit);
     }
 
-    public function getProjectAttributeByName($name)
-    {
-        return $this->projectAttributes()
-            ->where('name', $name)
-            ->first();
-    }
-
-    public function getProjectAttributes()
-    {
-        return $this->projectAttributes()->get();
-    }
-
     public function getRecipes()
     {
         return $this->recipes()->orderBy('recipe_order')->get();
@@ -102,16 +90,6 @@ class Project extends BaseModel
             ->update($data);
     }
 
-    public function addProjectAttribute(array $data)
-    {
-        return $this->projectAttributes()->create($data);
-    }
-
-    public function deleteProjectAttributes()
-    {
-        return $this->projectAttributes()->delete();
-    }
-
     public function syncRecipes(array $data)
     {
         foreach ($data as $i => $recipeId) {
@@ -124,5 +102,20 @@ class Project extends BaseModel
     public function updateMaxDeployment(array $data)
     {
         return $this->maxDeployment()->update($data);
+    }
+
+    protected function serializedLobColumn()
+    {
+        return 'attributes';
+    }
+
+    protected function serializedLobSerializer()
+    {
+        return \Ngmy\EloquentSerializedLob\Serializer\JsonSerializer::class;
+    }
+
+    protected function serializedLobDeserializeType()
+    {
+        return \App\Entities\ProjectAttribute\ProjectAttributeEntity::class;
     }
 }

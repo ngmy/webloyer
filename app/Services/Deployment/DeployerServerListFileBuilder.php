@@ -65,10 +65,12 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
 
         // Override settings in a server list file
         $serverList = $this->yamlParser->parse($contents);
-        $projectAttributes = $this->project->getProjectAttributes();
-        foreach ($projectAttributes as $projectAttribute) {
+        $projectAttributes = $this->project->attributes;
+        if (!is_null($projectAttributes)) {
             foreach ($serverList as $i => $server) {
-                $serverList[$i][$projectAttribute->name] = $projectAttribute->value;
+                if (!is_null($projectAttributes->getDeployPath())) {
+                    $serverList[$i]['deploy_path'] = $projectAttributes->getDeployPath();
+                }
             }
         }
         $newContents = $this->yamlDumper->dump($serverList);
