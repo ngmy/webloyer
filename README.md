@@ -88,6 +88,12 @@ Webloyer has the following requirements:
 
  **Note:** You must be running this command as your deployment-user.
 
+5. Add the following Cron entry to your server:
+
+ ```
+ * * * * * php /path/to/webloyer/artisan schedule:run >> /dev/null 2>&1
+ ```
+
 ## Usage
 
 ### Step 1: Login to Webloyer

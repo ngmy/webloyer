@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Specifications\DeploymentSpecification;
 use Ngmy\EloquentSerializedLob\SerializedLobTrait;
+use Illuminate\Support\Collection;
+use DateTime;
 
 class Project extends BaseModel
 {
@@ -17,6 +20,9 @@ class Project extends BaseModel
         'server_id',
         'email_notification_recipient',
         'attributes',
+        'days_to_keep_deployments',
+        'max_number_of_deployments_to_keep',
+        'keep_last_deployment',
     ];
 
     public function setStageAttribute($value)
@@ -27,6 +33,16 @@ class Project extends BaseModel
     public function setEmailNotificationRecipientAttribute($value)
     {
         $this->attributes['email_notification_recipient'] = $this->nullIfBlank($value);
+    }
+
+    public function setDaysToKeepDeploymentsAttribute($value)
+    {
+        $this->attributes['days_to_keep_deployments'] = $this->nullIfBlank($value);
+    }
+
+    public function setMaxNumberOfDeploymentsToKeepAttribute($value)
+    {
+        $this->attributes['max_number_of_deployments_to_keep'] = $this->nullIfBlank($value);
     }
 
     public function maxDeployment()
@@ -68,6 +84,22 @@ class Project extends BaseModel
             ->paginate($limit);
     }
 
+    public function getDeployments()
+    {
+        return $this->deployments()->orderBy('number', 'desc')->get();
+    }
+
+    public function deleteDeployments(Collection $deployments)
+    {
+        foreach ($deployments as $deployment) {
+            $deploymentIds[] = $deployment->id;
+        }
+
+        return $this->deployments()
+            ->whereIn('id', $deploymentIds)
+            ->delete();
+    }
+
     public function getRecipes()
     {
         return $this->recipes()->orderBy('recipe_order')->get();
@@ -102,6 +134,27 @@ class Project extends BaseModel
     public function updateMaxDeployment(array $data)
     {
         return $this->maxDeployment()->update($data);
+    }
+
+    public function getDeploymentsWhereCreatedAtBefore(DateTime $date)
+    {
+        return $this->deployments()
+            ->orderBy('number', 'desc')
+            ->where('created_at', '<', $date)
+            ->get();
+    }
+
+    public function getDeploymentsWhereNumberBefore($number)
+    {
+        return $this->deployments()
+            ->orderBy('number', 'desc')
+            ->where('number', '<', $number)
+            ->get();
+    }
+
+    public function getSatisfyingDeployments(DeploymentSpecification $spec)
+    {
+        return $spec->satisfyingElementsFrom($this);
     }
 
     protected function serializedLobColumn()

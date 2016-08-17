@@ -20,6 +20,9 @@ class CreateProjectsTable extends Migration
             $table->string('repository');
             $table->string('email_notification_recipient')->nullable();
             $table->text('attributes');
+            $table->integer('days_to_keep_deployments')->unsigned()->nullable();
+            $table->integer('max_number_of_deployments_to_keep')->unsigned()->nullable();
+            $table->tinyInteger('keep_last_deployment')->unsigned();
             $table->timestamps();
 
             $table->foreign('server_id')

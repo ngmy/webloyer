@@ -46,11 +46,16 @@ class ProjectForm
             }
             $input['attributes'] = $projectAttribute;
 
+            if (isset($input['keep_last_deployment'])) {
+                $input['keep_last_deployment'] = true;
+            } else {
+                $input['keep_last_deployment'] = false;
+            }
+
             $project = $this->project->create($input);
 
             $project->addMaxDeployment();
             $project->syncRecipes($input['recipe_id']);
-
         });
 
         return true;
@@ -80,6 +85,12 @@ class ProjectForm
                 $projectAttribute->setDeployPath($input['deploy_path']);
             }
             $input['attributes'] = $projectAttribute;
+
+            if (isset($input['keep_last_deployment'])) {
+                $input['keep_last_deployment'] = true;
+            } else {
+                $input['keep_last_deployment'] = false;
+            }
 
             $this->project->update($input);
         });

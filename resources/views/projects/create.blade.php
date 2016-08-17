@@ -65,6 +65,28 @@
                                 {!! Form::email('email_notification_recipient', null, ['class' => 'form-control', 'id' => 'email_notification_recipient']) !!}
                             </div>
                         </div>
+                        <hr>
+                        <h5>Discard Old Deployments</h5>
+                        <div class="form-group">
+                            <label for="days_to_keep_deployments" class="col-md-4 control-label">Days To Keep Deployments</label>
+                            <div class="col-md-6">
+                                {!! Form::text('days_to_keep_deployments', null, ['class' => 'form-control', 'id' => 'days_to_keep_deployments']) !!}
+                            </div>
+                            <div class="col-md-6 col-md-offset-4">
+                                <div class="checkbox">
+                                    <label class"col-md-4">
+                                        {!! Form::checkbox('keep_last_deployment', true) !!}
+                                        Keep Last Deployment
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="max_number_of_deployments_to_keep" class="col-md-4 control-label">Max # Of Deployments To Keep</label>
+                            <div class="col-md-6">
+                                {!! Form::text('max_number_of_deployments_to_keep', null, ['class' => 'form-control', 'id' => 'max_number_of_deployments_to_keep']) !!}
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 {!! link_to_route('projects.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
