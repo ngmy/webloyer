@@ -38,6 +38,18 @@
                         <th>E-Mail Notification Recipient</th>
                         <td>{{ $project->email_notification_recipient }}</td>
                     </tr>
+                    <tr>
+                        <th>Days To Keep Deployments</th>
+                        <td>{{ $project->days_to_keep_deployments }}</td>
+                    </tr>
+                    <tr>
+                        <th>Keep Last Deployment</th>
+                        <td>{{ $project->keep_last_deployment }}</td>
+                    </tr>
+                    <tr>
+                        <th>Max # Of Deployments To Keep</th>
+                        <td>{{ $project->max_number_of_deployments_to_keep }}</td>
+                    </tr>
                 </tbody>
             </table>
             {!! link_to_route('projects.index', 'Back', [], ['class' => 'btn btn-danger']) !!}
