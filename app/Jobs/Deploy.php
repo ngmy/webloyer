@@ -6,9 +6,6 @@ use App\Jobs\Job;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Server\ServerInterface;
 use App\Repositories\Setting\MailSettingInterface;
-use App\Services\Deployment\DeployerDeploymentFileBuilder;
-use App\Services\Deployment\DeployerRecipeFileBuilder;
-use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Notification\NotifierInterface;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -41,17 +38,14 @@ class Deploy extends Job implements SelfHandling, ShouldQueue
     /**
      * Execute the job.
      *
-     * @param \App\Repositories\Project\ProjectInterface             $projectRepository
-     * @param \App\Repositories\Server\ServerInterface               $serverRepository
-     * @param \Symfony\Component\Process\ProcessBuilder              $processBuilder
-     * @param \App\Services\Notification\NotifierInterface           $notifier
-     * @param \App\Repositories\Setting\MailSettingInterface         $mailSettingRepository
-     * @param \App\Services\Deployment\DeployerServerListFileBuilder $serverListFileBuilder
-     * @param \App\Services\Deployment\DeployerRecipeFileBuilder     $recipeFileBuilder
-     * @param \App\Services\Deployment\DeployerDeploymentFileBuilder $deploymentFileBuilder
+     * @param \App\Repositories\Project\ProjectInterface     $projectRepository
+     * @param \App\Repositories\Server\ServerInterface       $serverRepository
+     * @param \Symfony\Component\Process\ProcessBuilder      $processBuilder
+     * @param \App\Services\Notification\NotifierInterface   $notifier
+     * @param \App\Repositories\Setting\MailSettingInterface $mailSettingRepository
      * @return void
      */
-    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier, MailSettingInterface $mailSettingRepository, DeployerServerListFileBuilder $serverListFileBuilder, DeployerRecipeFileBuilder $recipeFileBuilder, DeployerDeploymentFileBuilder $deploymentFileBuilder)
+    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier, MailSettingInterface $mailSettingRepository)
     {
         $deployment = $this->deployment;
         $project    = $projectRepository->byId($deployment->project_id);
@@ -60,17 +54,23 @@ class Deploy extends Job implements SelfHandling, ShouldQueue
         $app = app();
 
         // Create a server list file
-        $serverListFileBuilder->setServer($server)->setProject($project);
+        $serverListFileBuilder = $app->make('App\Services\Deployment\DeployerServerListFileBuilder')
+            ->setServer($server)
+            ->setProject($project);
         $serverListFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$serverListFileBuilder])->construct();
 
         // Create recipe files
-        foreach ($project->recipes as $i => $recipe) {
-            $recipeFileBuilders[] = $recipeFileBuilder->setRecipe($recipe);
+        foreach ($project->getRecipes() as $i => $recipe) {
+            // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array, a destructor is called and a recipe file is deleted immediately.
+            $recipeFileBuilders[] = $app->make('App\Services\Deployment\DeployerRecipeFileBuilder')->setRecipe($recipe);
             $recipeFiles[] = $app->make('App\Services\Deployment\DeployerFileDirector', [$recipeFileBuilders[$i]])->construct();
         }
 
         // Create a deployment file
-        $deploymentFileBuilder->setProject($project)->setServerListFile($serverListFile)->setRecipeFile($recipeFiles);
+        $deploymentFileBuilder = $app->make('App\Services\Deployment\DeployerDeploymentFileBuilder')
+            ->setProject($project)
+            ->setServerListFile($serverListFile)
+            ->setRecipeFile($recipeFiles);
         $deploymentFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$deploymentFileBuilder])->construct();
 
         // Create a command
