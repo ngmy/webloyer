@@ -79,7 +79,11 @@ class DeployTest extends \TestCase
             ->shouldReceive('updateDeployment')
             ->once()
             ->mock();
-        $project->recipes = [$recipe];
+        $project = $this->mockProjectModel
+            ->shouldReceive('getRecipes')
+            ->once()
+            ->andReturn([$recipe])
+            ->mock();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -161,10 +165,7 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy,
-            $this->mockServerListFileBuilder,
-            $this->mockRecipeFileBuilder,
-            $this->mockDeploymentFileBuilder
+            $this->mockMailSettingRepositroy
         );
     }
 
@@ -192,7 +193,11 @@ class DeployTest extends \TestCase
             ->shouldReceive('updateDeployment')
             ->once()
             ->mock();
-        $project->recipes = [$recipe];
+        $project = $this->mockProjectModel
+            ->shouldReceive('getRecipes')
+            ->once()
+            ->andReturn([$recipe])
+            ->mock();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -274,10 +279,7 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy,
-            $this->mockServerListFileBuilder,
-            $this->mockRecipeFileBuilder,
-            $this->mockDeploymentFileBuilder
+            $this->mockMailSettingRepositroy
         );
     }
 
@@ -320,7 +322,11 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($updatedDeployment)
             ->mock();
-        $project->recipes = [$recipe];
+        $project = $this->mockProjectModel
+            ->shouldReceive('getRecipes')
+            ->once()
+            ->andReturn([$recipe])
+            ->mock();
         $project->email_notification_recipient = 'webloyer@example.com';
 
         $this->mockProjectRepository
@@ -417,10 +423,7 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy,
-            $this->mockServerListFileBuilder,
-            $this->mockRecipeFileBuilder,
-            $this->mockDeploymentFileBuilder
+            $this->mockMailSettingRepositroy
         );
     }
 
@@ -463,7 +466,11 @@ class DeployTest extends \TestCase
             ->once()
             ->andReturn($updatedDeployment)
             ->mock();
-        $project->recipes = [$recipe];
+        $project = $this->mockProjectModel
+            ->shouldReceive('getRecipes')
+            ->once()
+            ->andReturn([$recipe])
+            ->mock();
         $project->email_notification_recipient = 'webloyer@example.com';
 
         $this->mockProjectRepository
@@ -560,10 +567,7 @@ class DeployTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy,
-            $this->mockServerListFileBuilder,
-            $this->mockRecipeFileBuilder,
-            $this->mockDeploymentFileBuilder
+            $this->mockMailSettingRepositroy
         );
     }
 }
