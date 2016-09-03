@@ -33,7 +33,7 @@ Route::group([
     'protect_alias' => 'deployment',
 ], function () {
     Route::resource('projects.deployments', 'DeploymentsController', [
-        'expect' => ['index', 'store', 'show']
+        'only' => ['index', 'store', 'show']
     ]);
 });
 

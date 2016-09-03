@@ -9,13 +9,12 @@ use App\Repositories\Setting\MailSettingInterface;
 use App\Services\Notification\NotifierInterface;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 
 use Symfony\Component\Process\ProcessBuilder;
 
-class Rollback extends Job implements SelfHandling, ShouldQueue
+class Rollback extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
