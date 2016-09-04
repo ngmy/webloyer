@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => env('MAIL_FROM_ADDRESS'), 'name' => env('MAIL_FROM_NAME')],
+    'from' => ['address' => null, 'name' => null],
 
     /*
     |--------------------------------------------------------------------------
@@ -106,6 +106,6 @@ return [
     |
     */
 
-    'sendmail' => env('MAIL_SENDMAIL', '/usr/sbin/sendmail -bs'),
+    'sendmail' => '/usr/sbin/sendmail -bs',
 
 ];

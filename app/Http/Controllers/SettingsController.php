@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Services\Form\Setting\MailSettingForm;
-use App\Repositories\Setting\MailSettingInterface;
+use App\Repositories\Setting\SettingInterface;
 
 class SettingsController extends Controller
 {
@@ -17,9 +17,9 @@ class SettingsController extends Controller
         $this->middleware('acl');
     }
 
-    public function getEmail(MailSettingInterface $mailSettingRepository)
+    public function getEmail(SettingInterface $settingRepository)
     {
-        $settings = $mailSettingRepository->all();
+        $settings = $settingRepository->byType('mail');
 
         return view('settings.email')
             ->with('settings', $settings);

@@ -66,12 +66,11 @@ Webloyer has the following requirements:
  composer create-project ngmy/webloyer
  ```
 
-2. Give write permission to the `storage` directory, the `bootstrap/cache` directory, and the `.env` file for your web-server user by running the following command:
+2. Give write permission to the `storage` directory and the `bootstrap/cache` directory for your web-server user by running the following command:
 
  ```
  chmod -R 777 storage
  chmod -R 777 bootstrap/cache
- chmod 666 .env
  ```
 
 3. Run the installer by using the Artisan `webloyer:install` command:

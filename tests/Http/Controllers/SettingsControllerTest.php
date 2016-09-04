@@ -1,12 +1,14 @@
 <?php
 
+use Tests\Helpers\DummyMiddleware;
+
 class SettingsControllerTest extends TestCase
 {
     use Tests\Helpers\ControllerTestHelper;
 
     use Tests\Helpers\MockeryHelper;
 
-    protected $mockMailSettingRepository;
+    protected $mockSettingRepository;
 
     protected $mockMailSettingForm;
 
@@ -16,6 +18,8 @@ class SettingsControllerTest extends TestCase
     {
         parent::setUp();
 
+        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+
         Session::start();
 
         $user = $this->mockPartial('App\Models\User');
@@ -23,17 +27,39 @@ class SettingsControllerTest extends TestCase
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockMailSettingRepository = $this->mock('App\Repositories\Setting\MailSettingInterface');
+        $this->mockSettingRepository = $this->mock('App\Repositories\Setting\SettingInterface');
         $this->mockMailSettingForm = $this->mock('App\Services\Form\Setting\MailSettingForm');
-        $this->mockMailSettingEntity = $this->mockPartial('App\Entities\Setting\MailSettingEntity');
+        $this->mockSettingModel = $this->mockPartial('App\Models\Setting');
+        $this->mockMailSettingEntity = $this->mock('App\Entities\Setting\MailSettingEntity');
     }
 
     public function test_Should_DisplayEmailSettingPage()
     {
-        $this->mockMailSettingRepository
-            ->shouldReceive('all')
+        $this->mockMailSettingEntity
+            ->shouldReceive('getDriver')
             ->once()
+            ->shouldReceive('getFrom')
+            ->twice()
+            ->shouldReceive('getSmtpHost')
+            ->once()
+            ->shouldReceive('getSmtpPort')
+            ->once()
+            ->shouldReceive('getSmtpEncryption')
+            ->once()
+            ->shouldReceive('getSmtpUsername')
+            ->once()
+            ->shouldReceive('getSmtpPassword')
+            ->once()
+            ->shouldReceive('getSendmailPath')
+            ->once();
+        $this->mockSettingModel
+            ->shouldReceive('getAttribute')
+            ->with('attributes')
             ->andReturn($this->mockMailSettingEntity);
+        $this->mockSettingRepository
+            ->shouldReceive('byType')
+            ->once()
+            ->andReturn($this->mockSettingModel);
 
         $this->get('settings/email');
 

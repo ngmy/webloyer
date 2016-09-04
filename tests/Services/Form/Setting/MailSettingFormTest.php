@@ -8,14 +8,14 @@ class MailSettingFormTest extends TestCase
 
     protected $mockValidator;
 
-    protected $mockMailSettingRepository;
+    protected $mockSettingRepository;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockMailSettingRepository = $this->mock('App\Repositories\Setting\MailSettingInterface');
+        $this->mockSettingRepository = $this->mock('App\Repositories\Setting\SettingInterface');
     }
 
     public function test_Should_SucceedToUpdate_When_ValidationPasses()
@@ -29,13 +29,23 @@ class MailSettingFormTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->mockMailSettingRepository
-            ->shouldReceive('update')
+        $this->mockSettingRepository
+            ->shouldReceive('updateByType')
             ->once()
             ->andReturn(true);
 
-        $form = new MailSettingForm($this->mockValidator, $this->mockMailSettingRepository);
-        $result = $form->update([]);
+        $form = new MailSettingForm($this->mockValidator, $this->mockSettingRepository);
+        $result = $form->update([
+            'driver'          => '',
+            'from_address'    => '',
+            'from_name'       => '',
+            'smtp_host'       => '',
+            'smtp_port'       => '',
+            'smtp_encryption' => '',
+            'smtp_username'   => '',
+            'smtp_password'   => '',
+            'sendmail_path'   => '',
+        ]);
 
         $this->assertTrue($result, 'Expected update to succeed.');
     }
@@ -51,7 +61,7 @@ class MailSettingFormTest extends TestCase
             ->once()
             ->andReturn(false);
 
-        $form = new MailSettingForm($this->mockValidator, $this->mockMailSettingRepository);
+        $form = new MailSettingForm($this->mockValidator, $this->mockSettingRepository);
         $result = $form->update([]);
 
         $this->assertFalse($result, 'Expected update to fail.');
@@ -64,7 +74,7 @@ class MailSettingFormTest extends TestCase
             ->once()
             ->andReturn(new Illuminate\Support\MessageBag);
 
-        $form = new MailSettingForm($this->mockValidator, $this->mockMailSettingRepository);
+        $form = new MailSettingForm($this->mockValidator, $this->mockSettingRepository);
         $result = $form->errors();
 
         $this->assertEmpty($result);
