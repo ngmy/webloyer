@@ -1,6 +1,7 @@
 <?php
 
 use Tests\Helpers\Factory;
+use Tests\Helpers\DummyMiddleware;
 
 class ServersControllerTest extends TestCase
 {
@@ -15,6 +16,8 @@ class ServersControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
 
         Session::start();
 

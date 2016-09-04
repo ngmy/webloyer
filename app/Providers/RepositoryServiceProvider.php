@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Project;
 use App\Models\Recipe;
 use App\Models\Server;
+use App\Models\Setting;
 use App\Models\User;
 use App\Repositories\Project\EloquentProject;
 use App\Repositories\Recipe\EloquentRecipe;
@@ -13,7 +14,7 @@ use App\Repositories\User\EloquentUser;
 use App\Repositories\Role\EloquentRole;
 use App\Repositories\Setting\ConfigAppSetting;
 use App\Repositories\Setting\ConfigDbSetting;
-use App\Repositories\Setting\ConfigMailSetting;
+use App\Repositories\Setting\EloquentSetting;
 
 use Kodeine\Acl\Models\Eloquent\Role;
 
@@ -58,11 +59,8 @@ class RepositoryServiceProvider extends ServiceProvider
             return new EloquentRole(new Role);
         });
 
-        $this->app->bind('App\Repositories\Setting\MailSettingInterface', function ($app) {
-            return new ConfigMailSetting(
-                $app->make('App\Services\Config\ConfigReaderInterface'),
-                $app->make('App\Services\Config\ConfigWriterInterface')
-            );
+        $this->app->bind('App\Repositories\Setting\SettingInterface', function ($app) {
+            return new EloquentSetting(new Setting);
         });
 
         $this->app->bind('App\Repositories\Setting\DbSettingInterface', function ($app) {

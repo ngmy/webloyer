@@ -101,7 +101,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\Form\Setting\MailSettingForm', function ($app) {
             return new MailSettingForm(
                 new MailSettingFormLaravelValidator($app['validator']),
-                $app->make('App\Repositories\Setting\MailSettingInterface')
+                $app->make('App\Repositories\Setting\SettingInterface')
             );
         });
 

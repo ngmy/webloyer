@@ -32,9 +32,11 @@ class RollbackTest extends \TestCase
 
     protected $mockServerModel;
 
-    protected $mockMailSettingRepositroy;
+    protected $mockSettingRepositroy;
 
     protected $mockMailSettingEntity;
+
+    protected $mockSettingModel;
 
     public function setUp()
     {
@@ -51,8 +53,9 @@ class RollbackTest extends \TestCase
         $this->mockNotifier = $this->mock('App\Services\Notification\NotifierInterface');
         $this->mockProjectModel = $this->mockPartial('App\Models\Project');
         $this->mockServerModel = $this->mockPartial('App\Models\Server');
-        $this->mockMailSettingRepositroy = $this->mock('App\Repositories\Setting\MailSettingInterface');
-        $this->mockMailSettingEntity = $this->mockPartial('App\Entities\Setting\MailSettingEntity');
+        $this->mockSettingRepositroy = $this->mock('App\Repositories\Setting\SettingInterface');
+        $this->mockMailSettingEntity = $this->mock('App\Entities\Setting\MailSettingEntity');
+        $this->mockSettingModel = $this->mockPartial('App\Models\Setting');
     }
 
     public function test_Should_Work_When_DeployerIsNormalEnd()
@@ -165,7 +168,7 @@ class RollbackTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockSettingRepositroy
         );
     }
 
@@ -279,7 +282,7 @@ class RollbackTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockSettingRepositroy
         );
     }
 
@@ -385,10 +388,31 @@ class RollbackTest extends \TestCase
             ->shouldReceive('notify')
             ->once();
 
-        $this->mockMailSettingRepositroy
-            ->shouldReceive('all')
+        $this->mockMailSettingEntity
+            ->shouldReceive('getDriver')
             ->once()
+            ->shouldReceive('getFrom')
+            ->twice()
+            ->shouldReceive('getSmtpHost')
+            ->once()
+            ->shouldReceive('getSmtpPort')
+            ->once()
+            ->shouldReceive('getSmtpEncryption')
+            ->once()
+            ->shouldReceive('getSmtpUsername')
+            ->once()
+            ->shouldReceive('getSmtpPassword')
+            ->once()
+            ->shouldReceive('getSendmailPath')
+            ->once();
+        $this->mockSettingModel
+            ->shouldReceive('getAttribute')
+            ->with('attributes')
             ->andReturn($this->mockMailSettingEntity);
+        $this->mockSettingRepositroy
+            ->shouldReceive('byType')
+            ->once()
+            ->andReturn($this->mockSettingModel);
 
         $this->mockServerListFileBuilder
             ->shouldReceive('setServer')
@@ -423,7 +447,7 @@ class RollbackTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockSettingRepositroy
         );
     }
 
@@ -529,10 +553,31 @@ class RollbackTest extends \TestCase
             ->shouldReceive('notify')
             ->once();
 
-        $this->mockMailSettingRepositroy
-            ->shouldReceive('all')
+        $this->mockMailSettingEntity
+            ->shouldReceive('getDriver')
             ->once()
+            ->shouldReceive('getFrom')
+            ->twice()
+            ->shouldReceive('getSmtpHost')
+            ->once()
+            ->shouldReceive('getSmtpPort')
+            ->once()
+            ->shouldReceive('getSmtpEncryption')
+            ->once()
+            ->shouldReceive('getSmtpUsername')
+            ->once()
+            ->shouldReceive('getSmtpPassword')
+            ->once()
+            ->shouldReceive('getSendmailPath')
+            ->once();
+        $this->mockSettingModel
+            ->shouldReceive('getAttribute')
+            ->with('attributes')
             ->andReturn($this->mockMailSettingEntity);
+        $this->mockSettingRepositroy
+            ->shouldReceive('byType')
+            ->once()
+            ->andReturn($this->mockSettingModel);
 
         $this->mockServerListFileBuilder
             ->shouldReceive('setServer')
@@ -567,7 +612,7 @@ class RollbackTest extends \TestCase
             $this->mockServerRepository,
             $this->mockProcessBuilder,
             $this->mockNotifier,
-            $this->mockMailSettingRepositroy
+            $this->mockSettingRepositroy
         );
     }
 }
