@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8021a958d551d41c6a982ca648e881be",
-    "content-hash": "55f93dcc4a8da14053c67f368953512a",
+    "hash": "9adce62c200476550d68e333a411eea5",
+    "content-hash": "1b04a36e199a1fd83671a8e2513f51b8",
     "packages": [
         {
             "name": "ajaxorg/ace-builds",
@@ -395,6 +395,45 @@
                 "parser"
             ],
             "time": "2014-09-09 13:34:57"
+        },
+        {
+            "name": "fguillot/json-rpc",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fguillot/JsonRPC.git",
+                "reference": "d491bb549bfa11aff4c37abcea2ffb28c9523f69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fguillot/JsonRPC/zipball/d491bb549bfa11aff4c37abcea2ffb28c9523f69",
+                "reference": "d491bb549bfa11aff4c37abcea2ffb28c9523f69",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JsonRPC": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frédéric Guillot"
+                }
+            ],
+            "description": "Simple Json-RPC client/server library that just works",
+            "homepage": "https://github.com/fguillot/JsonRPC",
+            "time": "2016-06-25 23:11:10"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -4403,6 +4442,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "kodeine/laravel-acl": 20,
+        "fguillot/json-rpc": 0,
         "mockery/mockery": 20,
         "satooshi/php-coveralls": 20
     },

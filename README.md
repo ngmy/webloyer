@@ -40,6 +40,12 @@ Webloyer has the following features:
 
  * Role-based access control to features
 
+* Web APIs
+
+* Webhooks
+
+ * GitHub
+
 ## Screenshots
 
 See [screenshots](/SCREENSHOTS.md).
@@ -93,7 +99,7 @@ Webloyer has the following requirements:
  * * * * * php /path/to/webloyer/artisan schedule:run >> /dev/null 2>&1
  ```
 
-## Usage
+## Basic Usage
 
 ### Step 1: Login to Webloyer
 
@@ -122,6 +128,12 @@ Webloyer has the following requirements:
 2. Run the `deploy` task by click the "Deploy" button. Or run the `rollback` task by click the "Rollback" button.
 
 3. After the task of execution has been completed, it is possible to go to the Deployment Detail page by click the "Show" button, you can see the details of the task execution results.
+
+## Advanced Usage
+
+* [Web APIs](/WEBAPIS.md)
+
+* [Webhooks](/WEBHOOKS.md)
 
 ## Foundation library
 

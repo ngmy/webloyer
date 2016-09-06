@@ -111,6 +111,7 @@ class Install extends Command
 
         // Create admin user
         $config['admin']['password'] = Hash::make($config['admin']['password']);
+        $config['admin']['api_token'] = str_random(60);
 
         $user = $userRepository->create($config['admin']);
         $user->assignRole('administrator');

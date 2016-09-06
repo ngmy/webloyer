@@ -87,10 +87,24 @@
                                 {!! Form::text('max_number_of_deployments_to_keep', $project->max_number_of_deployments_to_keep, ['class' => 'form-control', 'id' => 'max_number_of_deployments_to_keep']) !!}
                             </div>
                         </div>
+                        <hr>
+                        <h5>GitHub Webhook</h5>
+                        <div class="form-group">
+                            <label for="github_webhook_secret" class="col-md-4 control-label">Secret</label>
+                            <div class="col-md-6">
+                                {!! Form::text('github_webhook_secret', $project->github_webhook_secret, ['class' => 'form-control', 'id' => 'github_webhook_secret']) !!}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="github_webhook_user_id" class="col-md-4 control-label">Execute By</label>
+                            <div class="col-md-6">
+                                {!! Form::select('github_webhook_user_id', $users, $project->github_webhook_user_id, ['class' => 'form-control', 'id' => 'github_webhook_user_id']) !!}
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                {!! link_to_route('projects.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
-                                {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
+                                {!! link_to_route('projects.index', 'cancel', [], ['class' => 'btn btn-danger']) !!}
+                                {!! form::submit('update', ['class' => 'btn btn-primary']) !!}
                             </div>
                         </div>
                         {!! Form::hidden('recipe_id_order', implode(',', $projectRecipe), ['id' => 'recipe_id_order']) !!}

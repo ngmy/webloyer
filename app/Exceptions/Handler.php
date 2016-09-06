@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Traits\RestExceptionHandlerTrait;
 use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -11,6 +12,8 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+    use RestExceptionHandlerTrait;
+
     /**
      * A list of the exception types that should not be reported.
      *
@@ -45,6 +48,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($request->is('webhook/*')) {
+            return $this->getJsonResponseForException($request, $e);
+        }
+
         return parent::render($request, $e);
     }
 }
