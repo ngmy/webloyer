@@ -115,37 +115,6 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
     }
 
-    public function test_Should_FailToValidate_When_RepositoryFieldIsInvalidUrl()
-    {
-        Factory::create('App\Models\Recipe', [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create('App\Models\Server', [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        $input = [
-            'name'       => 'Project 1',
-            'recipe_id'  => [1],
-            'server_id'  => 1,
-            'repository' => 'invalid_url',
-            'stage'      => 'staging',
-        ];
-
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
-
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
-
-        $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
-    }
-
     public function test_Should_FailToValidate_When_StageFieldIsMissing()
     {
         Factory::create('App\Models\Recipe', [
