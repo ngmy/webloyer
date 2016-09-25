@@ -11,7 +11,7 @@ class ProjectFormLaravelValidator extends AbstractLaravelValidator
         'stage'                             => 'required',
         'recipe_id'                         => 'required',
         'server_id'                         => 'required|exists:servers,id',
-        'repository'                        => 'required|url',
+        'repository'                        => 'required',
         'deploy_path'                       => 'string',
         'email_notification_recipient'      => 'email',
         'days_to_keep_deployments'          => 'integer|min:1',
