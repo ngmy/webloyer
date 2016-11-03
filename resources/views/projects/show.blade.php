@@ -50,6 +50,14 @@
                         <th>Max # Of Deployments To Keep</th>
                         <td>{{ $project->max_number_of_deployments_to_keep }}</td>
                     </tr>
+                    <tr>
+                        <th>GitHub Webhook Secret</th>
+                        <td>{{ $project->github_webhook_secret }}</td>
+                    </tr>
+                    <tr>
+                        <th>GitHub Webhook Execute By</th>
+                        <td>{{ $project->getGithubWebhookUser()->email }}</td>
+                    </tr>
                 </tbody>
             </table>
             {!! link_to_route('projects.index', 'Back', [], ['class' => 'btn btn-danger']) !!}

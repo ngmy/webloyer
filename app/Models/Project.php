@@ -23,6 +23,8 @@ class Project extends BaseModel
         'days_to_keep_deployments',
         'max_number_of_deployments_to_keep',
         'keep_last_deployment',
+        'github_webhook_secret',
+        'github_webhook_user_id',
     ];
 
     public function setStageAttribute($value)
@@ -45,6 +47,16 @@ class Project extends BaseModel
         $this->attributes['max_number_of_deployments_to_keep'] = $this->nullIfBlank($value);
     }
 
+    public function setGithubWebhookSecretAttribute($value)
+    {
+        $this->attributes['github_webhook_secret'] = $this->nullIfBlank($value);
+    }
+
+    public function setGithubWebhookUserIdAttribute($value)
+    {
+        $this->attributes['github_webhook_user_id'] = $this->nullIfBlank($value);
+    }
+
     public function maxDeployment()
     {
         return $this->hasOne('App\Models\MaxDeployment');
@@ -58,6 +70,16 @@ class Project extends BaseModel
     public function recipes()
     {
         return $this->belongsToMany('App\Models\Recipe');
+    }
+
+    public function githubWebhookUser()
+    {
+        return $this->belongsTo('App\Models\User', 'github_webhook_user_id');
+    }
+
+    public function getGithubWebhookUser()
+    {
+        return $this->githubWebhookUser()->first();
     }
 
     public function getMaxDeployment()

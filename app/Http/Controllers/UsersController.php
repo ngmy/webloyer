@@ -195,6 +195,38 @@ class UsersController extends Controller
     }
 
     /**
+     * Show the form for editing the API token of the specified resource.
+     *
+     * @param \App\Models\User $user
+     * @return Response
+     */
+    public function editApiToken(User $user)
+    {
+        return view('users.edit_api_token')
+            ->with('user', $user);
+    }
+
+    /**
+     * Regenerate the API token of the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User         $user
+     * @return Response
+     */
+    public function regenerateApiToken(Request $request, User $user)
+    {
+        $input = array_merge($request->all(), ['id' => $user->id]);
+
+        if ($this->userForm->regenerateApiToken($input)) {
+            return redirect()->route('users.index');
+        } else {
+            return redirect()->route('users.api_token.edit', [$user])
+                ->withInput()
+                ->withErrors($this->userForm->errors());
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param \App\Models\User $user

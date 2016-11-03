@@ -17,6 +17,8 @@ class ProjectsControllerTest extends TestCase
 
     protected $mockServerRepository;
 
+    protected $mockUserRepository;
+
     protected $mockProjectModel;
 
     public function setUp()
@@ -36,6 +38,7 @@ class ProjectsControllerTest extends TestCase
         $this->mockProjectForm = $this->mock('App\Services\Form\Project\ProjectForm');
         $this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
         $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
+        $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
         $this->mockProjectModel = $this->mockPartial('App\Models\Project');
     }
 
@@ -72,6 +75,11 @@ class ProjectsControllerTest extends TestCase
             ->andReturn(new Illuminate\Database\Eloquent\Collection);
 
         $this->mockServerRepository
+            ->shouldReceive('all')
+            ->once()
+            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+
+        $this->mockUserRepository
             ->shouldReceive('all')
             ->once()
             ->andReturn(new Illuminate\Database\Eloquent\Collection);
@@ -113,11 +121,13 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $project = $this->mockProjectModel
-            ->shouldReceive('getRecipes')
+        $project = $this->mockProjectModel;
+        $project->shouldReceive('getRecipes')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection)
-            ->mock();
+            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+        $project->shouldReceive('getGithubWebhookUser')
+            ->once()
+            ->andReturn(new App\Models\User);
 
         $server = Factory::build('App\Models\Server', [
             'id'          => 1,
@@ -175,6 +185,11 @@ class ProjectsControllerTest extends TestCase
             ->andReturn(new Illuminate\Database\Eloquent\Collection);
 
         $this->mockServerRepository
+            ->shouldReceive('all')
+            ->once()
+            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+
+        $this->mockUserRepository
             ->shouldReceive('all')
             ->once()
             ->andReturn(new Illuminate\Database\Eloquent\Collection);

@@ -23,11 +23,16 @@ class CreateProjectsTable extends Migration
             $table->integer('days_to_keep_deployments')->unsigned()->nullable();
             $table->integer('max_number_of_deployments_to_keep')->unsigned()->nullable();
             $table->tinyInteger('keep_last_deployment')->unsigned();
+            $table->string('github_webhook_secret')->nullable();
+            $table->integer('github_webhook_user_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('server_id')
                 ->references('id')
                 ->on('servers');
+            $table->foreign('github_webhook_user_id')
+                ->references('id')
+                ->on('users');
         });
     }
 

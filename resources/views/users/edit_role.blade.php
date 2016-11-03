@@ -8,6 +8,7 @@
                 {!! link_to_route('users.edit', 'Edit User', [$user->id], ['class' => 'list-group-item']) !!}
                 {!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item']) !!}
                 {!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item selected']) !!}
+                {!! link_to_route('users.api_token.edit', 'Edit API Token', [$user->id], ['class' => 'list-group-item']) !!}
             </div>
         </div>
 

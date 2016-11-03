@@ -42,6 +42,8 @@ class UserForm
             $input['password'] = Hash::make($input['password']);
         }
 
+        $input['api_token'] = str_random(60);
+
         DB::transaction(function () use ($input) {
             $user = $this->user->create($input);
 
@@ -114,6 +116,15 @@ class UserForm
                 $user->assignRole($input['role']);
             }
         });
+
+        return true;
+    }
+
+    public function regenerateApiToken(array $input)
+    {
+        $input['api_token'] = str_random(60);
+
+        return $this->user->update($input);
 
         return true;
     }

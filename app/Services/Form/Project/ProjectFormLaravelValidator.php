@@ -17,6 +17,7 @@ class ProjectFormLaravelValidator extends AbstractLaravelValidator
         'days_to_keep_deployments'          => 'integer|min:1',
         'max_number_of_deployments_to_keep' => 'integer|min:1',
         'keep_last_deployment'              => 'boolean',
+        'github_webhook_secret'             => 'string',
     ];
 
     protected function rules()

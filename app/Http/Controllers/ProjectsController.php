@@ -7,9 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Recipe\RecipeInterface;
 use App\Repositories\Server\ServerInterface;
+use App\Repositories\User\UserInterface;
 use App\Services\Form\Project\ProjectForm;
 use App\Models\Project;
-
 use Illuminate\Http\Request;
 
 class ProjectsController extends Controller
@@ -22,6 +22,8 @@ class ProjectsController extends Controller
 
     protected $server;
 
+    protected $user;
+
     /**
      * Create a new controller instance.
      *
@@ -29,9 +31,10 @@ class ProjectsController extends Controller
      * @param \App\Services\Form\Project\ProjectForm     $projectForm
      * @param \App\Repositories\Recipe\RecipeInterface   $recipe
      * @param \App\Repositories\Server\ServerInterface   $server
+     * @param \App\Repositories\User\UserInterface       $user
      * @return void
      */
-    public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server)
+    public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server, UserInterface $user)
     {
         $this->middleware('auth');
         $this->middleware('acl');
@@ -40,6 +43,7 @@ class ProjectsController extends Controller
         $this->projectForm = $projectForm;
         $this->recipe      = $recipe;
         $this->server      = $server;
+        $this->user        = $user;
     }
 
     /**
@@ -72,9 +76,14 @@ class ProjectsController extends Controller
         $servers = $this->server->all()->toArray();
         $servers = array_column($servers, 'name', 'id');
 
+        $users = $this->user->all()->toArray();
+        $users = array_column($users, 'email', 'id');
+        $users = ['' => ''] + $users;
+
         return view('projects.create')
             ->with('recipes', $recipes)
-            ->with('servers', $servers);
+            ->with('servers', $servers)
+            ->with('users', $users);
     }
 
     /**
@@ -131,11 +140,16 @@ class ProjectsController extends Controller
         $projectRecipe = $project->getRecipes()->toArray();
         $projectRecipe = array_column($projectRecipe, 'id');
 
+        $users = $this->user->all()->toArray();
+        $users = array_column($users, 'email', 'id');
+        $users = ['' => ''] + $users;
+
         return view('projects.edit')
             ->with('project', $project)
             ->with('recipes', $recipes)
             ->with('servers', $servers)
-            ->with('projectRecipe', $projectRecipe);
+            ->with('projectRecipe', $projectRecipe)
+            ->with('users', $users);
     }
 
     /**

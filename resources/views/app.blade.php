@@ -91,6 +91,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
     <script src="{{ asset('vendor/lou/multi-select/js/jquery.multi-select.js') }}"></script>
     <script src="{{ asset('/js/vendor/ajaxorg/ace/ace.js') }}"></script>
     <script>
@@ -208,6 +209,20 @@
                 var newVal = newValArray.join(',');
                 $('#' + orderId).val(newVal);
             }
+        });
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    <script>
+        $(function () {
+            var clipboard = new Clipboard('.btn');
+
+            clipboard.on('success', function (e) {
+                e.clearSelection();
+            });
         });
     </script>
 </body>

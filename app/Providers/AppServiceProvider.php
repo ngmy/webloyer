@@ -23,6 +23,7 @@ use App\Services\Notification\MailNotifier;
 use App\Services\Config\DotenvReader;
 use App\Services\Config\DotenvWriter;
 use App\Services\Filesystem\LaravelFilesystem;
+use App\Services\Api\JsonRpc;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Yaml\Parser;
@@ -145,6 +146,13 @@ class AppServiceProvider extends ServiceProvider
             return new DeployerDeploymentFileBuilder(
                 new LaravelFilesystem($app['files']),
                 new DeployerFile
+            );
+        });
+
+        $this->app->bind('App\Services\Api\JsonRpc', function ($app) {
+            return new JsonRpc(
+                $app->make('App\Repositories\Project\ProjectInterface'),
+                $app->make('App\Services\Form\Deployment\DeploymentForm')
             );
         });
     }

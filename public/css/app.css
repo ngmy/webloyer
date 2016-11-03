@@ -867,6 +867,9 @@ th {
 .glyphicon-tree-deciduous:before {
   content: "\e200";
 }
+.glyphicon-copy:before {
+  content: "\e205";
+}
 * {
   box-sizing: border-box;
 }

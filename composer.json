@@ -47,7 +47,8 @@
         "kodeine/laravel-acl": "~1.0@dev",
         "sensiolabs/ansi-to-html": "~1.0",
         "symfony/yaml": "~3.0",
-        "ngmy/eloquent-serialized-lob": "^0.1.0"
+        "ngmy/eloquent-serialized-lob": "^0.1.0",
+        "fguillot/json-rpc": "@stable"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
