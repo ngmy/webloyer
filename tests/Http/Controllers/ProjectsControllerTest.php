@@ -21,6 +21,8 @@ class ProjectsControllerTest extends TestCase
 
     protected $mockProjectModel;
 
+    protected $mockProjectAttributeEntity;
+
     public function setUp()
     {
         parent::setUp();
@@ -40,6 +42,7 @@ class ProjectsControllerTest extends TestCase
         $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
         $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
         $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockProjectAttributeEntity = $this->mock('App\Entities\ProjectAttribute\ProjectAttributeEntity');
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
@@ -121,6 +124,10 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
+        $this->mockProjectAttributeEntity
+            ->shouldReceive('getDeployPath')
+            ->once();
+
         $project = $this->mockProjectModel;
         $project->shouldReceive('getRecipes')
             ->once()
@@ -128,6 +135,9 @@ class ProjectsControllerTest extends TestCase
         $project->shouldReceive('getGithubWebhookUser')
             ->twice()
             ->andReturn(new App\Models\User);
+        $project->shouldReceive('getAttribute')
+            ->with('attributes')
+            ->andReturn($this->mockProjectAttributeEntity);
 
         $server = Factory::build('App\Models\Server', [
             'id'          => 1,
@@ -168,11 +178,18 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
+        $this->mockProjectAttributeEntity
+            ->shouldReceive('getDeployPath')
+            ->once();
+
         $project = $this->mockProjectModel
             ->shouldReceive('getRecipes')
             ->once()
             ->andReturn(new Illuminate\Database\Eloquent\Collection)
             ->mock();
+        $project->shouldReceive('getAttribute')
+            ->with('attributes')
+            ->andReturn($this->mockProjectAttributeEntity);
 
         $this->mockProjectRepository
             ->shouldReceive('byId')

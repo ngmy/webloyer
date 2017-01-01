@@ -45,6 +45,11 @@ class DeployerServerListFileBuilderTest extends TestCase
 
     public function test_Should_BuildDeployerServerListFile()
     {
+        $this->mockProjectModel
+            ->shouldReceive('getAttribute')
+            ->with('attributes')
+            ->andReturn($this->mockProjectAttributeEntity);
+
         $this->mockFilesystem
             ->shouldReceive('delete')
             ->once();

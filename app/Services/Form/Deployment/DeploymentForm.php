@@ -60,7 +60,7 @@ class DeploymentForm
             return false;
         }
 
-        $this->deployCommander->$input['task']($deployment);
+        $this->deployCommander->{$input['task']}($deployment);
 
         return true;
     }
