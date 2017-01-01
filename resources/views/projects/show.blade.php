@@ -56,7 +56,7 @@
                     </tr>
                     <tr>
                         <th>GitHub Webhook Execute By</th>
-                        <td>{{ $project->getGithubWebhookUser()->email }}</td>
+                        <td>{{ is_null($project->getGithubWebhookUser()) ? '' : $project->getGithubWebhookUser()->email }}</td>
                     </tr>
                 </tbody>
             </table>
