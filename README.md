@@ -142,3 +142,9 @@ Webloyer uses [Laravel](http://laravel.com/) as a foundation PHP framework.
 ## License
 
 Webloyer is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+
+## Donation
+
+Do you want to buy me a coffee?
+
+[![Flattr this](https://button.flattr.com/flattr-badge-large.png "Flattr this")](https://flattr.com/submit/auto?fid=513grl&url=https%3A%2F%2Fgithub.com%2Fngmy%2Fwebloyer)
