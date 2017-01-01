@@ -57,6 +57,9 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
         $fullPath = $this->deployerFile->getFullPath();
         $contents[] = '<?php';
 
+        // Declare a namespace
+        $contents[] = 'namespace Deployer;';
+
         // Include recipe files
         foreach ($this->recipeFile as $recipeFile) {
             $contents[] = "require '{$recipeFile->getFullPath()}';";
