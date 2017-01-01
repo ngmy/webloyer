@@ -126,7 +126,7 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(new Illuminate\Database\Eloquent\Collection);
         $project->shouldReceive('getGithubWebhookUser')
-            ->once()
+            ->twice()
             ->andReturn(new App\Models\User);
 
         $server = Factory::build('App\Models\Server', [
