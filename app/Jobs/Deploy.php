@@ -81,7 +81,6 @@ class Deploy extends Job implements ShouldQueue
             ->add('-vv')
             ->add('deploy')
             ->inheritEnvironmentVariables(false)
-            ->addEnvironmentVariables(array_diff($_SERVER, $_ENV))
             ->add($project->stage);
 
         // Run the command
