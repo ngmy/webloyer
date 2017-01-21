@@ -44,5 +44,17 @@ class PermissionRoleTableSeeder extends Seeder
             'user.moderator',
             'setting.moderator',
         ]);
+
+        $roleModerator = Role::where('name', 'Product Owner')
+            ->where('slug', 'p-o')
+            ->first();
+        $roleModerator->assignPermission([
+            'project.p-o',
+            'deployment',
+            'recipe.p-o',
+            'server.p-o',
+            'user.p-o',
+            'setting.p-o',
+        ]);
     }
 }

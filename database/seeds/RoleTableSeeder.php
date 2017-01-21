@@ -29,5 +29,12 @@ class RoleTableSeeder extends Seeder
             'slug'        => 'moderator',
             'description' => 'Manage moderator privileges.',
         ]);
+
+        $role = new Role;
+        $roleProductOwner = $role->create([
+            'name'        => 'Product Owner',
+            'slug'        => 'p-o',
+            'description' => 'Manage product owner privileges.'
+        ]);
     }
 }

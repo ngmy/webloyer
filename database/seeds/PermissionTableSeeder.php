@@ -34,6 +34,18 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Moderator project permissions.',
         ]);
 
+        $permission = new Permission;
+        $permissionProjectProductOwner = $permission->create([
+            'name'        => 'project.p-o',
+            'slug'        => [
+                'create' => false,
+                'update' => false,
+                'delete' => false,
+            ],
+            'inherit_id'  => $permissionProject->getKey(),
+            'description' => 'Product Owner project permissions.',
+        ]);
+
         // deployment
         $permission = new Permission;
         $permissionDeployment = $permission->create([
@@ -72,6 +84,19 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Moderator recipe permissions.',
         ]);
 
+        $permission = new Permission;
+        $permissionRecipeProductOwner= $permission->create([
+            'name'        => 'recipe.p-o',
+            'slug'        => [
+                'create' => false,
+                'update' => false,
+                'delete' => false,
+                'view'   => false,
+            ],
+            'inherit_id'  => $permissionRecipe->getKey(),
+            'description' => 'Product Owner recipe permissions.',
+        ]);
+
         // server
         $permission = new Permission;
         $permissionServer = $permission->create([
@@ -95,6 +120,19 @@ class PermissionTableSeeder extends Seeder
             ],
             'inherit_id'  => $permissionServer->getKey(),
             'description' => 'Moderator server permissions.',
+        ]);
+
+        $permission = new Permission;
+        $permissionServerProductOwner = $permission->create([
+            'name'        => 'server.p-o',
+            'slug'        => [
+                'create' => false,
+                'update' => false,
+                'delete' => false,
+                'view'   => false,
+            ],
+            'inherit_id'  => $permissionServer->getKey(),
+            'description' => 'Product Owner server permissions.',
         ]);
 
         // user
@@ -136,6 +174,19 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Moderator user permissions.',
         ]);
 
+        $permission = new Permission;
+        $permissionUserProductOwner = $permission->create([
+            'name'        => 'user.p-o',
+            'slug'        => [
+                'create' => false,
+                'view'   => false,
+                'update' => false,
+                'delete' => false,
+            ],
+            'inherit_id'  => $permissionUser->getKey(),
+            'description' => 'Product Owner user permissions.',
+        ]);
+
         // setting
         $permission = new Permission;
         $permissionSetting = $permission->create([
@@ -173,6 +224,19 @@ class PermissionTableSeeder extends Seeder
             ],
             'inherit_id'  => $permissionSetting->getKey(),
             'description' => 'Moderator setting permissions.',
+        ]);
+
+        $permission = new Permission;
+        $permissionSettingProductOwner = $permission->create([
+            'name'        => 'setting.p-o',
+            'slug'        => [
+                'create' => false,
+                'view'   => false,
+                'update' => false,
+                'delete' => false,
+            ],
+            'inherit_id'  => $permissionSetting->getKey(),
+            'description' => 'Product Owner setting permissions.',
         ]);
     }
 }
