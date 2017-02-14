@@ -20,7 +20,7 @@
                     @endforeach
                     <tr>
                         <th>Server</th>
-                        <td>{{ $projectServer->name }}</td>
+                        <td>{{ $projectServer?$projectServer->name:'' }}</td>
                     </tr>
                     <tr>
                         <th>Repository URL</th>
