@@ -31,7 +31,7 @@ class Deploy extends Job implements ShouldQueue
     public function __construct(Model $deployment)
     {
         $this->deployment = $deployment;
-        $this->executable = base_path('vendor/bin/dep');
+        $this->executable = env('DEPLOY_EXE_PATH',false)?:base_path('vendor/bin/dep');
     }
 
     /**
