@@ -48,34 +48,39 @@ class Deploy extends Job implements ShouldQueue
     {
         $deployment = $this->deployment;
         $project    = $projectRepository->byId($deployment->project_id);
-        $server     = $serverRepository->byId($project->server_id);
 
-        $app = app();
+        $deploymentFilePath = env('DEPLOY_FILE_PATH',false);
+        if(!$deploymentFilePath) {
+            $server = $serverRepository->byId($project->server_id);
 
-        // Create a server list file
-        $serverListFileBuilder = $app->make('App\Services\Deployment\DeployerServerListFileBuilder')
-            ->setServer($server)
-            ->setProject($project);
-        $serverListFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$serverListFileBuilder])->construct();
+            $app = app();
 
-        // Create recipe files
-        foreach ($project->getRecipes() as $i => $recipe) {
-            // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array, a destructor is called and a recipe file is deleted immediately.
-            $recipeFileBuilders[] = $app->make('App\Services\Deployment\DeployerRecipeFileBuilder')->setRecipe($recipe);
-            $recipeFiles[] = $app->make('App\Services\Deployment\DeployerFileDirector', [$recipeFileBuilders[$i]])->construct();
+            // Create a server list file
+            $serverListFileBuilder = $app->make('App\Services\Deployment\DeployerServerListFileBuilder')
+                                         ->setServer($server)
+                                         ->setProject($project);
+            $serverListFile        = $app->make('App\Services\Deployment\DeployerFileDirector', [$serverListFileBuilder])->construct();
+
+            // Create recipe files
+            foreach ($project->getRecipes() as $i => $recipe) {
+                // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array, a destructor is called and a recipe file is deleted immediately.
+                $recipeFileBuilders[] = $app->make('App\Services\Deployment\DeployerRecipeFileBuilder')->setRecipe($recipe);
+                $recipeFiles[]        = $app->make('App\Services\Deployment\DeployerFileDirector', [$recipeFileBuilders[$i]])->construct();
+            }
+
+            // Create a deployment file
+            $deploymentFileBuilder = $app->make('App\Services\Deployment\DeployerDeploymentFileBuilder')
+                                         ->setProject($project)
+                                         ->setServerListFile($serverListFile)
+                                         ->setRecipeFile($recipeFiles);
+            $deploymentFile        = $app->make('App\Services\Deployment\DeployerFileDirector', [$deploymentFileBuilder])->construct();
+            $deploymentFilePath = $deploymentFile->getFullPath();
         }
-
-        // Create a deployment file
-        $deploymentFileBuilder = $app->make('App\Services\Deployment\DeployerDeploymentFileBuilder')
-            ->setProject($project)
-            ->setServerListFile($serverListFile)
-            ->setRecipeFile($recipeFiles);
-        $deploymentFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$deploymentFileBuilder])->construct();
 
         // Create a command
         $processBuilder
             ->add($this->executable)
-            ->add("-f={$deploymentFile->getFullPath()}")
+            ->add("-f={$deploymentFilePath}")
             ->add('--ansi')
             ->add('-n')
             ->add('-vv')
