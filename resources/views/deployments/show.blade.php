@@ -32,7 +32,7 @@
                     </tr>
                     <tr>
                         <th>Executed By</th>
-                        <td>{{ $deployment->user->email }}</td>
+                        <td>{{ is_null($deployment->user) ? '' : $deployment->user->email }}</td>
                     </tr>
                 </tbody>
             </table>

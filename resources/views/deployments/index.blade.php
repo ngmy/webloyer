@@ -44,7 +44,7 @@
                             <td>{{ $deployment->task }}</td>
                             <td>{{ $deployment->created_at }}</td>
                             <td>{{ $deployment->updated_at }}</td>
-                            <td>{{ $deployment->user->email }}</td>
+                            <td>{{ is_null($deployment->user) ? '' : $deployment->user->email }}</td>
                             <td>
                                 {!! link_to_route('projects.deployments.show', 'Show', [$project, $deployment->number], ['class' => 'btn btn-default']) !!}
                             </td>
