@@ -32,7 +32,8 @@ class CreateProjectsTable extends Migration
                 ->on('servers');
             $table->foreign('github_webhook_user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('set null');
         });
     }
 
