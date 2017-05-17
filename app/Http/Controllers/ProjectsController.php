@@ -44,6 +44,7 @@ class ProjectsController extends Controller
         $this->recipe      = $recipe;
         $this->server      = $server;
         $this->user        = $user;
+        $this->usingCustomDeployFile = (bool)env('DEPLOY_FILE_PATH',false);
     }
 
     /**
@@ -81,6 +82,7 @@ class ProjectsController extends Controller
         $users = ['' => ''] + $users;
 
         return view('projects.create')
+            ->with('usingCustomDeployFile',$this->usingCustomDeployFile)
             ->with('recipes', $recipes)
             ->with('servers', $servers)
             ->with('users', $users);
@@ -145,6 +147,7 @@ class ProjectsController extends Controller
         $users = ['' => ''] + $users;
 
         return view('projects.edit')
+            ->with('usingCustomDeployFile',$this->usingCustomDeployFile)
             ->with('project', $project)
             ->with('recipes', $recipes)
             ->with('servers', $servers)

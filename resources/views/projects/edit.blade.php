@@ -25,24 +25,26 @@
                                 {!! Form::text('name', $project->name, ['class' => 'form-control', 'id' => 'name']) !!}
                             </div>
                         </div>
-                        <div class="form-group required">
-                            <label for="recipe_id" class="col-md-4 control-label">Recipe</label>
-                            <div class="col-md-6">
-                                {!! Form::select('recipe_id[]', $recipes, $projectRecipe, ['class' => 'form-control multi-select', 'id' => 'recipe_id', 'multiple' => 'multiple']) !!}
+                        @if (!$usingCustomDeployFile)
+                            <div class="form-group required">
+                                <label for="recipe_id" class="col-md-4 control-label">Recipe</label>
+                                <div class="col-md-6">
+                                    {!! Form::select('recipe_id[]', $recipes, $projectRecipe, ['class' => 'form-control multi-select', 'id' => 'recipe_id', 'multiple' => 'multiple']) !!}
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group required">
-                            <label for="server_id" class="col-md-4 control-label">Server</label>
-                            <div class="col-md-6">
-                                {!! Form::select('server_id', $servers, $project->server_id, ['class' => 'form-control', 'id' => 'server_id']) !!}
+                            <div class="form-group required">
+                                <label for="server_id" class="col-md-4 control-label">Server</label>
+                                <div class="col-md-6">
+                                    {!! Form::select('server_id', $servers, $project->server_id, ['class' => 'form-control', 'id' => 'server_id']) !!}
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group required">
-                            <label for="repository" class="col-md-4 control-label">Repository URL</label>
-                            <div class="col-md-6">
-                                {!! Form::text('repository', $project->repository, ['class' => 'form-control', 'id' => 'repository']) !!}
+                            <div class="form-group required">
+                                <label for="repository" class="col-md-4 control-label">Repository URL</label>
+                                <div class="col-md-6">
+                                    {!! Form::text('repository', $project->repository, ['class' => 'form-control', 'id' => 'repository']) !!}
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         <div class="form-group required">
                             <label for="stage" class="col-md-4 control-label">Stage</label>
                             <div class="col-md-6">
@@ -50,14 +52,16 @@
                             </div>
                         </div>
                         <hr>
-                        <h5>Overriding Server Definition</h5>
-                        <div class="form-group">
-                            <label for="deploy_path" class="col-md-4 control-label">Deploy Path</label>
-                            <div class="col-md-6">
-                                {!! Form::text('deploy_path', $project->attributes->getDeployPath(), ['class' => 'form-control', 'id' => 'deploy_path']) !!}
+                        @if (!$usingCustomDeployFile)
+                            <h5>Overriding Server Definition</h5>
+                            <div class="form-group">
+                                <label for="deploy_path" class="col-md-4 control-label">Deploy Path</label>
+                                <div class="col-md-6">
+                                    {!! Form::text('deploy_path', $project->attributes->getDeployPath(), ['class' => 'form-control', 'id' => 'deploy_path']) !!}
+                                </div>
                             </div>
-                        </div>
-                        <hr>
+                            <hr>
+                        @endif
                         <h5>E-Mail Notification</h5>
                         <div class="form-group">
                             <label for="email_notification_recipient" class="col-md-4 control-label">Recipient</label>
