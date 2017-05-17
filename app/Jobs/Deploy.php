@@ -80,6 +80,7 @@ class Deploy extends Job implements ShouldQueue
             ->add('-n')
             ->add('-vv')
             ->add('deploy')
+            ->inheritEnvironmentVariables(false)
             ->add($project->stage);
 
         // Run the command
