@@ -18,23 +18,23 @@
                         </div>
                     @endif
 
-                    {!! Form::open(['route' => ['servers.update', $server->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' => ['servers.update', $server->serverId()->id()], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
                         <div class="form-group required">
                             <label for="name" class="col-md-4 control-label">Name</label>
                             <div class="col-md-6">
-                                {!! Form::text('name', $server->name, ['class' => 'form-control', 'id' => 'name']) !!}
+                                {!! Form::text('name', $server->name(), ['class' => 'form-control', 'id' => 'name']) !!}
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="description" class="col-md-4 control-label">Description</label>
                             <div class="col-md-6">
-                                {!! Form::textarea('description', $server->description, ['class' => 'form-control', 'id' => 'description']) !!}
+                                {!! Form::textarea('description', $server->description(), ['class' => 'form-control', 'id' => 'description']) !!}
                             </div>
                         </div>
                         <div class="form-group required">
                             <label for="body" class="col-md-4 control-label">Body</label>
                             <div class="col-md-6">
-                                {!! Form::textarea('body', $server->body, ['class' => 'form-control', 'id' => 'body', 'data-editor' => 'yaml']) !!}
+                                {!! Form::textarea('body', $server->body(), ['class' => 'form-control', 'id' => 'body', 'data-editor' => 'yaml']) !!}
                                 <p class="help-block">You can define a <a href="http://deployer.org/docs/servers">server list YAML file</a> here.</p>
                             </div>
                         </div>
@@ -44,6 +44,7 @@
                                 {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
                             </div>
                         </div>
+                        {!! Form::hidden('concurrency_version', $server->concurrencyVersion(), ['id' => 'concurrency_version']) !!}
                     {!! Form::close() !!}
                 </div>
             </div>

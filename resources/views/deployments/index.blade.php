@@ -14,11 +14,11 @@
             <h1 class="page-header">Deployments</h1>
 
             <div class="pull-right margin-bottom-lg">
-                {!! Form::open(['route' => ['projects.deployments.store', $project], 'method' => 'post', 'style' => 'display:inline']) !!}
+                {!! Form::open(['route' => ['projects.deployments.store', $project->projectId()->id()], 'method' => 'post', 'style' => 'display:inline']) !!}
                 {!! Form::hidden('task', 'deploy') !!}
                 {!! Form::submit('Deploy', ['class' => 'btn btn-primary btn-lg']) !!}
                 {!! Form::close() !!}
-                {!! Form::open(['route' => ['projects.deployments.store', $project], 'method' => 'post', 'style' => 'display:inline']) !!}
+                {!! Form::open(['route' => ['projects.deployments.store', $project->projectId()->id()], 'method' => 'post', 'style' => 'display:inline']) !!}
                 {!! Form::hidden('task', 'rollback') !!}
                 {!! Form::submit('Rollback', ['class' => 'btn btn-danger btn-lg']) !!}
                 {!! Form::close() !!}
@@ -39,14 +39,14 @@
                 <tbody>
                     @foreach ($deployments as $deployment)
                         <tr>
-                            <td>{!! $deployment->status() !!}</td>
-                            <td>{{ $deployment->number }}</td>
-                            <td>{{ $deployment->task }}</td>
-                            <td>{{ $deployment->created_at }}</td>
-                            <td>{{ $deployment->updated_at }}</td>
-                            <td>{{ is_null($deployment->user) ? '' : $deployment->user->email }}</td>
+                            <td>{!! $deployment->statusIcon() !!}</td>
+                            <td>{{ $deployment->deploymentId()->id() }}</td>
+                            <td>{{ $deployment->task()->value() }}</td>
+                            <td>{{ $deployment->createdAt() }}</td>
+                            <td>{{ $deployment->updatedAt() }}</td>
+                            <td>{{ array_key_exists($deployment->deploymentId()->id(), $deployedUsers) ? $deployedUsers[$deployment->deploymentId()->id()]->email() : '' }}</td>
                             <td>
-                                {!! link_to_route('projects.deployments.show', 'Show', [$project, $deployment->number], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('projects.deployments.show', 'Show', [$deployment->projectId()->id(), $deployment->deploymentId()->id()], ['class' => 'btn btn-default']) !!}
                             </td>
                         </tr>
                     @endforeach

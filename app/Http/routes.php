@@ -27,57 +27,81 @@ Route::group(['middleware' => 'web'], function () {
     Route::group([
         'protect_alias' => 'project',
     ], function () {
-        Route::resource('projects', 'ProjectsController');
+        Route::resource('projects', 'ProjectsController', [
+            'parameters' => [
+                'projects' => 'project',
+            ],
+        ]);
     });
 
     Route::group([
         'protect_alias' => 'deployment',
     ], function () {
         Route::resource('projects.deployments', 'DeploymentsController', [
-            'only' => ['index', 'store', 'show']
+            'only' => [
+                'index',
+                'store',
+                'show',
+            ],
+            'parameters' => [
+                'projects' => 'project',
+                'deployments' => 'deployment',
+            ],
         ]);
     });
 
     Route::group([
         'protect_alias' => 'recipe',
     ], function () {
-        Route::resource('recipes', 'RecipesController');
+        Route::resource('recipes', 'RecipesController', [
+            'parameters' => [
+                'recipes' => 'recipe',
+            ],
+        ]);
     });
 
     Route::group([
         'protect_alias' => 'server',
     ], function () {
-        Route::resource('servers', 'ServersController');
+        Route::resource('servers', 'ServersController', [
+            'parameters' => [
+                'servers' => 'server',
+            ],
+        ]);
     });
 
     Route::group([
         'protect_alias' => 'user',
     ], function () {
-        Route::get('users/{users}/password/change', [
+        Route::get('users/{user}/password/change', [
             'as'   => 'users.password.change',
             'uses' => 'UsersController@changePassword',
         ]);
-        Route::put('users/{users}/password', [
+        Route::put('users/{user}/password', [
             'as'   => 'users.password.update',
             'uses' => 'UsersController@updatePassword'
         ]);
-        Route::get('users/{users}/role/edit', [
+        Route::get('users/{user}/role/edit', [
             'as'   => 'users.role.edit',
             'uses' => 'UsersController@editRole',
         ]);
-        Route::put('users/{users}/role', [
+        Route::put('users/{user}/role', [
             'as'   => 'users.role.update',
             'uses' => 'UsersController@updateRole'
         ]);
-        Route::get('users/{users}/api_token/edit', [
+        Route::get('users/{user}/api_token/edit', [
             'as'   => 'users.api_token.edit',
             'uses' => 'UsersController@editApiToken',
         ]);
-        Route::put('users/{users}/api_token', [
+        Route::put('users/{user}/api_token', [
             'as'   => 'users.api_token.regenerate',
             'uses' => 'UsersController@regenerateApiToken'
         ]);
-        Route::resource('users', 'UsersController');
+        Route::resource('users', 'UsersController', [
+            'parameters' => [
+                'users' => 'user',
+            ],
+        ]);
     });
 
     Route::group([
@@ -92,18 +116,24 @@ Route::group(['middleware' => 'web'], function () {
 Route::group(['middleware' => 'api'], function () {
     Route::group(['prefix' => 'api/v1'], function () {
         Route::post('jsonrpc', function (Illuminate\Http\Request $request) {
-            $server = new JsonRPC\Server;
+            $server = new JsonRPC\Server();
             $middlewareHandler = $server->getMiddlewareHandler();
-            $middlewareHandler->withMiddleware(new App\Services\Api\Middleware\Authenticate($request));
+            $middlewareHandler->withMiddleware(app()->make(Ngmy\Webloyer\Webloyer\Port\Adapter\JsonRpc\Middleware\Authenticate::class, [$request]));
             $procedureHandler = $server->getProcedureHandler();
-            $procedureHandler->withObject(app()->make('App\Services\Api\JsonRpc'));
+            $procedureHandler->withObject(app()->make(Ngmy\Webloyer\Webloyer\Port\Adapter\JsonRpc\JsonRpc::class));
             return $server->execute();
         });
     });
 
     Route::group(['prefix' => 'webhook/github/v1', 'middleware' => 'github_webhook_secret'], function () {
         Route::resource('projects.deployments', 'Webhook\Github\V1\DeploymentsController', [
-            'only' => ['store']
+            'only' => [
+                'store',
+            ],
+            'parameters' => [
+                'projects' => 'project',
+                'deployments' => 'deployment',
+            ],
         ]);
     });
 });

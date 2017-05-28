@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Services\Form\Setting\MailSettingForm;
-use App\Repositories\Setting\SettingInterface;
+use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\SettingForm\MailSettingForm;
 
 class SettingsController extends Controller
 {
@@ -17,12 +17,12 @@ class SettingsController extends Controller
         $this->middleware('acl');
     }
 
-    public function getEmail(SettingInterface $settingRepository)
+    public function getEmail(SettingService $settingService)
     {
-        $settings = $settingRepository->byType('mail');
+        $mailSetting = $settingService->getMailSetting();
 
         return view('settings.email')
-            ->with('settings', $settings);
+            ->with('mailSetting', $mailSetting);
     }
 
     public function postEmail(Request $request, MailSettingForm $mailSettingForm)

@@ -2,13 +2,13 @@
 
 namespace App\Exceptions;
 
-use App\Traits\RestExceptionHandlerTrait;
 use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\JsonRpc\RestExceptionHandlerTrait;
 
 class Handler extends ExceptionHandler
 {
@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($request->is('webhook/*')) {
+        if ($request->is('webhook/*') || $request->is('api/*')) {
             return $this->getJsonResponseForException($request, $e);
         }
 

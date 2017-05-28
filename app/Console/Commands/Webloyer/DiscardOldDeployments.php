@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands\Webloyer;
 
-use App\Repositories\Project\ProjectInterface;
-use App\Specifications\OldDeploymentSpecification;
+use DateTimeImmutable;
 use Illuminate\Console\Command;
-use DB;
-use DateTime;
+use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService;
+use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
 
 class DiscardOldDeployments extends Command
 {
@@ -24,22 +23,26 @@ class DiscardOldDeployments extends Command
      */
     protected $description = 'Discard old deployments';
 
-    protected $projectRepository;
+    protected $projectService;
 
-    protected $spec;
+    protected $deploymentService;
+
+    protected $currentDate;
 
     /**
      * Create a new command instance.
      *
-     * @param \App\Repositories\Project\ProjectInterface $projectRepository
+     * @param \Ngmy\Webloyer\Webloyer\Application\Project\ProjectService       $projectService
+     * @param \Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService $deploymentService
      * @return void
      */
-    public function __construct(ProjectInterface $projectRepository)
+    public function __construct(ProjectService $projectService, DeploymentService $deploymentService)
     {
         parent::__construct();
 
-        $this->projectRepository = $projectRepository;
-        $this->spec = new OldDeploymentSpecification(new DateTime);
+        $this->projectService = $projectService;
+        $this->deploymentService = $deploymentService;
+        $this->currentDate = new DateTimeImmutable();
     }
 
     /**
@@ -49,14 +52,9 @@ class DiscardOldDeployments extends Command
      */
     public function handle()
     {
-        DB::transaction(function () {
-            $projects = $this->projectRepository->all();
-            foreach ($projects as $project) {
-                $oldDeployments = $project->getSatisfyingDeployments($this->spec);
-                if (!$oldDeployments->isEmpty()) {
-                    $project->deleteDeployments($oldDeployments);
-                }
-            }
-        });
+        $projects = $this->projectService->getAllProjects();
+        foreach ($projects as $project) {
+            $oldDeployments = $this->deploymentService->removeOldDeploymentsOfProject($project->projectId()->id(), $this->currentDate);
+        }
     }
 }

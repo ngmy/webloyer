@@ -33,16 +33,16 @@ class PermissionRoleTableSeeder extends Seeder
             'setting.developer',
         ]);
 
-        $roleModerator = Role::where('name', 'Moderator')
-            ->where('slug', 'moderator')
+        $roleOperator = Role::where('name', 'Operator')
+            ->where('slug', 'operator')
             ->first();
-        $roleModerator->assignPermission([
-            'project.moderator',
+        $roleOperator->assignPermission([
+            'project.operator',
             'deployment',
-            'recipe.moderator',
-            'server.moderator',
-            'user.moderator',
-            'setting.moderator',
+            'recipe.operator',
+            'server.operator',
+            'user.operator',
+            'setting.operator',
         ]);
     }
 }

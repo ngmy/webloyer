@@ -8,28 +8,28 @@
                 <tbody>
                     <tr>
                         <th>Name</th>
-                        <td>{{ $recipe->name }}</td>
+                        <td>{{ $recipe->name() }}</td>
                     </tr>
                     <tr>
                         <th>Description</th>
-                        <td>{{ $recipe->description }}</td>
+                        <td>{{ $recipe->description() }}</td>
                     </tr>
                     <tr>
                         <th>Body</th>
-                        <td><pre><code>{{ $recipe->body }}</code></pre></td>
+                        <td><pre><code>{{ $recipe->body() }}</code></pre></td>
                     </tr>
-                    @if (count($recipeProject) === 0)
+                    @if ($recipe->afferentProjectsCount() === 0)
                         <tr>
                             <th>Used By</th>
                             <td></td>
                         </tr>
                     @else
-                        @foreach ($recipeProject as $i => $project)
+                        @foreach ($afferentProjects as $i => $afferentProject)
                             <tr>
                                 @if ($i === 0)
-                                    <th rowspan="{{ count($recipeProject) }}">Used By</th>
+                                    <th rowspan="{{ count($afferentProject) }}">Used By</th>
                                 @endif
-                                <td>{!! link_to_route('projects.show', $project['name'], $project['id']) !!}</td>
+                                <td>{!! link_to_route('projects.show', $afferentProject->name(), $afferentProject->projectId()->id()) !!}</td>
                             </tr>
                         @endforeach
                     @endif
@@ -37,7 +37,7 @@
             </table>
             {!! link_to_route('recipes.index', 'Back', [], ['class' => 'btn btn-danger']) !!}
             @if (Auth::user()->can('update.recipe'))
-                {!! link_to_route('recipes.edit', 'Edit', [$recipe->id], ['class' => 'btn btn-primary']) !!}
+                {!! link_to_route('recipes.edit', 'Edit', [$recipe->recipeId()->id()], ['class' => 'btn btn-primary']) !!}
             @endif
         </div>
     </div>

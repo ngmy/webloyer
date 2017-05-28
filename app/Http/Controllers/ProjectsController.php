@@ -4,46 +4,53 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\Project\ProjectInterface;
-use App\Repositories\Recipe\RecipeInterface;
-use App\Repositories\Server\ServerInterface;
-use App\Repositories\User\UserInterface;
-use App\Services\Form\Project\ProjectForm;
-use App\Models\Project;
 use Illuminate\Http\Request;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
+use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentPresenter;
+use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService;
+use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
+use Ngmy\Webloyer\Webloyer\Application\Server\ServerService;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\ProjectForm\ProjectForm;
+use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
+use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 
 class ProjectsController extends Controller
 {
-    protected $project;
+    private $projectForm;
 
-    protected $projectForm;
+    private $projectService;
 
-    protected $recipe;
+    private $deploymentService;
 
-    protected $server;
+    private $recipeService;
 
-    protected $user;
+    private $serverService;
+
+    private $userService;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Project\ProjectInterface $project
-     * @param \App\Services\Form\Project\ProjectForm     $projectForm
-     * @param \App\Repositories\Recipe\RecipeInterface   $recipe
-     * @param \App\Repositories\Server\ServerInterface   $server
-     * @param \App\Repositories\User\UserInterface       $user
+     * @param \Ngmy\Webloyer\Webloyer\Port\Adapter\Form\ProjectForm\ProjectForm $projectForm
+     * @param \Ngmy\Webloyer\Webloyer\Application\Project\ProjectServicea       $projectService
+     * @param \Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService  $deploymentService
+     * @param \Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService          $recipeService
+     * @param \Ngmy\Webloyer\Webloyer\Application\Server\ServerService          $serverService
+     * @param \Ngmy\Webloyer\IdentityAccess\Application\User\UserService        $userService
      * @return void
      */
-    public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server, UserInterface $user)
+    public function __construct(ProjectForm $projectForm, ProjectService $projectService, DeploymentService $deploymentService, RecipeService $recipeService, ServerService $serverService, UserService $userService)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->project     = $project;
         $this->projectForm = $projectForm;
-        $this->recipe      = $recipe;
-        $this->server      = $server;
-        $this->user        = $user;
+        $this->projectService = $projectService;
+        $this->deploymentService = $deploymentService;
+        $this->recipeService = $recipeService;
+        $this->serverService = $serverService;
+        $this->userService = $userService;
     }
 
     /**
@@ -58,9 +65,19 @@ class ProjectsController extends Controller
 
         $perPage = 10;
 
-        $projects = $this->project->byPage($page, $perPage);
+        $projects = $this->projectService->getProjectsOfPage($page, $perPage);
 
-        return view('projects.index')->with('projects', $projects);
+        $lastDeployments = [];
+        foreach ($projects as $project) {
+            $lastDeployment = $this->deploymentService->getLastDeploymentOfProject($project->projectId()->id());
+            if (!is_null($lastDeployment)) {
+                $lastDeployments[$project->projectId()->id()] = new DeploymentPresenter($lastDeployment, new AnsiToHtmlConverter());
+            }
+        }
+
+        return view('projects.index')
+            ->with('projects', $projects)
+            ->with('lastDeployments', $lastDeployments);
     }
 
     /**
@@ -70,20 +87,29 @@ class ProjectsController extends Controller
      */
     public function create()
     {
-        $recipes = $this->recipe->all()->toArray();
-        $recipes = array_column($recipes, 'name', 'id');
+        $recipes = $this->recipeService->getAllRecipes();
+        $recipeList = [];
+        foreach ($recipes as $recipe) {
+            $recipeList[$recipe->recipeId()->id()] = $recipe->name();
+        }
 
-        $servers = $this->server->all()->toArray();
-        $servers = array_column($servers, 'name', 'id');
+        $servers = $this->serverService->getAllServers();
+        $serverList = [];
+        foreach ($servers as $server) {
+            $serverList[$server->serverId()->id()] = $server->name();
+        }
 
-        $users = $this->user->all()->toArray();
-        $users = array_column($users, 'email', 'id');
-        $users = ['' => ''] + $users;
+        $users = $this->userService->getAllUsers();
+        $userList = [];
+        foreach ($users as $user) {
+            $userList[$user->userId()->id()] = $user->email();
+        }
+        $userList = ['' => ''] + $userList;
 
         return view('projects.create')
-            ->with('recipes', $recipes)
-            ->with('servers', $servers)
-            ->with('users', $users);
+            ->with('recipes', $recipeList)
+            ->with('servers', $serverList)
+            ->with('users', $userList);
     }
 
     /**
@@ -108,14 +134,17 @@ class ProjectsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Project $project
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project $project
      * @return Response
      */
     public function show(Project $project)
     {
-        $projectRecipe = $project->getRecipes()->toArray();
+        $projectRecipe = [];
+        foreach ($project->recipeIds() as $recipeId) {
+            $projectRecipe[] = $this->recipeService->getRecipeOfId($recipeId->id());
+        }
 
-        $projectServer = $this->server->byId($project->server_id);
+        $projectServer = $this->serverService->getServerOfId($project->serverId()->id());
 
         return view('projects.show')
             ->with('project', $project)
@@ -126,42 +155,57 @@ class ProjectsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Project $project
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project $project
      * @return Response
      */
     public function edit(Project $project)
     {
-        $recipes = $this->recipe->all()->toArray();
-        $recipes = array_column($recipes, 'name', 'id');
+        $recipes = $this->recipeService->getAllRecipes();
+        $recipeList = [];
+        foreach ($recipes as $recipe) {
+            $recipeList[$recipe->recipeId()->id()] = $recipe->name();
+        }
 
-        $servers = $this->server->all()->toArray();
-        $servers = array_column($servers, 'name', 'id');
+        $servers = $this->serverService->getAllServers();
+        $serverList = [];
+        foreach ($servers as $server) {
+            $serverList[$server->serverId()->id()] = $server->name();
+        }
 
-        $projectRecipe = $project->getRecipes()->toArray();
-        $projectRecipe = array_column($projectRecipe, 'id');
+        $projectRecipe = [];
+        foreach ($project->recipeIds() as $recipeId) {
+            $projectRecipe[] = $this->recipeService->getRecipeOfId($recipeId->id());
+        }
+        $projectRecipeList = [];
+        foreach ($projectRecipe as $recipeId) {
+            $projectRecipeList[] = $recipeId->recipeId()->id();
+        }
 
-        $users = $this->user->all()->toArray();
-        $users = array_column($users, 'email', 'id');
-        $users = ['' => ''] + $users;
+        $users = $this->userService->getAllUsers();
+        $userList = [];
+        foreach ($users as $user) {
+            $userList[$user->userId()->id()] = $user->email();
+        }
+        $userList = ['' => ''] + $userList;
 
         return view('projects.edit')
             ->with('project', $project)
-            ->with('recipes', $recipes)
-            ->with('servers', $servers)
-            ->with('projectRecipe', $projectRecipe)
-            ->with('users', $users);
+            ->with('recipes', $recipeList)
+            ->with('servers', $serverList)
+            ->with('projectRecipe', $projectRecipeList)
+            ->with('users', $userList);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Project      $project
+     * @param \Illuminate\Http\Request                             $request
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project $project
      * @return Response
      */
     public function update(Request $request, Project $project)
     {
-        $input = array_merge($request->all(), ['id' => $project->id]);
+        $input = array_merge($request->all(), ['id' => $project->projectId()->id()]);
 
         if ($this->projectForm->update($input)) {
             return redirect()->route('projects.index');
@@ -175,12 +219,12 @@ class ProjectsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Project $project
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project $project
      * @return Response
      */
     public function destroy(Project $project)
     {
-        $this->project->delete($project->id);
+        $this->projectService->removeProject($project->projectId()->id());
 
         return redirect()->route('projects.index');
     }

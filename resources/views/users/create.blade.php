@@ -49,8 +49,8 @@
                                 @foreach ($roles as $role)
                                     <div class="checkbox">
                                         <label>
-                                            {!! Form::checkbox('role[]', $role->id) !!}
-                                            {{ $role->name }}
+                                            {!! Form::checkbox('role[]', $role->roleId()->id()) !!}
+                                            {{ $role->name() }}
                                         </label>
                                     </div>
                                 @endforeach

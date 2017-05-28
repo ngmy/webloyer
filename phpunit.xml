@@ -9,8 +9,17 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Application Test Suite">
+        <testsuite name="Laravel">
             <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+        <testsuite name="Webloyer">
+            <directory suffix="Test.php">./packages/webloyer/tests</directory>
+        </testsuite>
+        <testsuite name="IdentityAccess">
+            <directory suffix="Test.php">./packages/identity_access/tests</directory>
+        </testsuite>
+        <testsuite name="Common">
+            <directory suffix="Test.php">./packages/common/tests</directory>
         </testsuite>
     </testsuites>
     <filter>

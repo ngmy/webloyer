@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-
+use Illuminate\Routing\Router;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService;
+use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
+use Ngmy\Webloyer\Webloyer\Application\Server\ServerService;
+use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -29,61 +33,63 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot($router);
 
         //
-        $router->bind('projects', function ($id) {
-            $projectRepository = $this->app->make('App\Repositories\Project\ProjectInterface');
+        $router->bind('project', function ($id) {
+            $projectService = $this->app->make(ProjectService::class);
 
-            $project = $projectRepository->byId($id);
+            $project = $projectService->getProjectOfId($id);
 
             if (is_null($project)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $project;
         });
 
-        $router->bind('deployments', function ($num, $route) {
-            $project = $route->parameter('projects');
+        $router->bind('deployment', function ($id, $route) {
+            $deploymentService = $this->app->make(DeploymentService::class);
 
-            $deployment = $project->getDeploymentByNumber($num);
+            $project = $route->parameter('project');
+            $deployment = $deploymentService->getDeploymentOfId($project->projectId()->id(), $id);
 
             if (is_null($deployment)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $deployment;
         });
 
-        $router->bind('recipes', function ($id) {
-            $recipeRepository = $this->app->make('App\Repositories\Recipe\RecipeInterface');
+        $router->bind('recipe', function ($id) {
+            $recipeService = $this->app->make(RecipeService::class);
 
-            $recipe = $recipeRepository->byId($id);
+            $recipe = $recipeService->getRecipeOfId($id);
 
             if (is_null($recipe)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $recipe;
         });
 
-        $router->bind('servers', function ($id) {
-            $serverRepository = $this->app->make('App\Repositories\Server\ServerInterface');
+        $router->bind('server', function ($id) {
+            $serverService = $this->app->make(ServerService::class);
 
-            $server = $serverRepository->byId($id);
+            $server = $serverService->getServerOfId($id);
 
             if (is_null($server)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $server;
         });
 
-        $router->bind('users', function ($id) {
-            $userRepository = $this->app->make('App\Repositories\User\UserInterface');
+        $router->bind('user', function ($id) {
+            $userService = $this->app->make(UserService::class);
 
-            $user = $userRepository->byId($id);
+            $useId = $id;
+            $user = $userService->getUserOfId($useId);
 
             if (is_null($user)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $user;

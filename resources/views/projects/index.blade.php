@@ -27,27 +27,27 @@
                     @foreach ($projects as $project)
                         <tr>
                             <td>
-                                @if (!empty($project->getLastDeployment()))
-                                    {!! $project->getLastDeployment()->getPresenter()->status() !!}
+                            @if (!empty($lastDeployments[$project->projectId()->id()]))
+                                    {!! $lastDeployments[$project->projectId()->id()]->statusIcon() !!}
                                 @endif
                             </td>
-                            <td>{{ $project->name }}</td>
+                            <td>{{ $project->name() }}</td>
                             <td>
-                                @if (!empty($project->getLastDeployment()))
-                                    {{ $project->getLastDeployment()->updated_at }}
-                                    ({!! link_to_route('projects.deployments.show', "#{$project->getLastDeployment()->number}", [$project->id,  $project->getLastDeployment()->number]) !!})
+                                @if (!empty($lastDeployments[$project->projectId()->id()]))
+                                    {{ $lastDeployments[$project->projectId()->id()]->updatedAt() }}
+                                    ({!! link_to_route('projects.deployments.show', "#{$lastDeployments[$project->projectId()->id()]->deploymentId()->id()}", [$project->projectId()->id(),  $lastDeployments[$project->projectId()->id()]->deploymentId()->id()]) !!})
                                 @endif
                             </td>
-                            <td>{{ $project->created_at }}</td>
-                            <td>{{ $project->updated_at }}</td>
+                            <td>{{ $project->createdAt() }}</td>
+                            <td>{{ $project->updatedAt() }}</td>
                             <td>
-                                {!! link_to_route('projects.deployments.index', 'Deployments', [$project->id], ['class' => 'btn btn-default']) !!}
-                                {!! link_to_route('projects.show', 'Show', [$project->id], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('projects.deployments.index', 'Deployments', [$project->projectId()->id()], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('projects.show', 'Show', [$project->projectId()->id()], ['class' => 'btn btn-default']) !!}
                                 @if (Auth::user()->can('edit.project'))
-                                    {!! link_to_route('projects.edit', 'Edit', [$project->id], ['class' => 'btn btn-default']) !!}
+                                    {!! link_to_route('projects.edit', 'Edit', [$project->projectId()->id()], ['class' => 'btn btn-default']) !!}
                                 @endif
                                 @if (Auth::user()->can('delete.project'))
-                                    {!! Form::open(['route' => ['projects.destroy', $project->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                                    {!! Form::open(['route' => ['projects.destroy', $project->projectId()->id()], 'method' => 'delete', 'style' => 'display:inline']) !!}
                                     {!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
                                     {!! Form::close() !!}
                                 @endif

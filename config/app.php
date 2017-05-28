@@ -155,13 +155,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        App\Providers\RepositoryServiceProvider::class,
-
         Collective\Html\HtmlServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         Robbo\Presenter\PresenterServiceProvider::class,
         Kodeine\Acl\AclServiceProvider::class,
         Ngmy\EloquentSerializedLob\SerializedLobTraitServiceProvider::class,
+
+        Ngmy\Webloyer\Webloyer\WebloyerServiceProvider::class,
+        Ngmy\Webloyer\IdentityAccess\IdentityAccessServiceProvider::class,
+        Ngmy\Webloyer\Common\CommonServiceProvider::class,
 
     ],
 

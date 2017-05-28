@@ -23,15 +23,15 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         $permission = new Permission;
-        $permissionProjectModerator = $permission->create([
-            'name'        => 'project.moderator',
+        $permissionProjectOperator = $permission->create([
+            'name'        => 'project.operator',
             'slug'        => [
                 'create' => false,
                 'update' => false,
                 'delete' => false,
             ],
             'inherit_id'  => $permissionProject->getKey(),
-            'description' => 'Moderator project permissions.',
+            'description' => 'Operator project permissions.',
         ]);
 
         // deployment
@@ -61,15 +61,15 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         $permission = new Permission;
-        $permissionRecipeModerator = $permission->create([
-            'name'        => 'recipe.moderator',
+        $permissionRecipeOperator = $permission->create([
+            'name'        => 'recipe.operator',
             'slug'        => [
                 'create' => false,
                 'update' => false,
                 'delete' => false,
             ],
             'inherit_id'  => $permissionRecipe->getKey(),
-            'description' => 'Moderator recipe permissions.',
+            'description' => 'Operator recipe permissions.',
         ]);
 
         // server
@@ -86,15 +86,15 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         $permission = new Permission;
-        $permissionServerModerator = $permission->create([
-            'name'        => 'server.moderator',
+        $permissionServerOperator = $permission->create([
+            'name'        => 'server.operator',
             'slug'        => [
                 'create' => false,
                 'update' => false,
                 'delete' => false,
             ],
             'inherit_id'  => $permissionServer->getKey(),
-            'description' => 'Moderator server permissions.',
+            'description' => 'Operator server permissions.',
         ]);
 
         // user
@@ -124,8 +124,8 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         $permission = new Permission;
-        $permissionUserModerator = $permission->create([
-            'name'        => 'user.moderator',
+        $permissionUserOperator = $permission->create([
+            'name'        => 'user.operator',
             'slug'        => [
                 'create' => false,
                 'view'   => false,
@@ -133,7 +133,7 @@ class PermissionTableSeeder extends Seeder
                 'delete' => false,
             ],
             'inherit_id'  => $permissionUser->getKey(),
-            'description' => 'Moderator user permissions.',
+            'description' => 'Operator user permissions.',
         ]);
 
         // setting
@@ -163,8 +163,8 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         $permission = new Permission;
-        $permissionSettingModerator = $permission->create([
-            'name'        => 'setting.moderator',
+        $permissionSettingOperator = $permission->create([
+            'name'        => 'setting.operator',
             'slug'        => [
                 'create' => false,
                 'view'   => false,
@@ -172,7 +172,7 @@ class PermissionTableSeeder extends Seeder
                 'delete' => false,
             ],
             'inherit_id'  => $permissionSetting->getKey(),
-            'description' => 'Moderator setting permissions.',
+            'description' => 'Operator setting permissions.',
         ]);
     }
 }

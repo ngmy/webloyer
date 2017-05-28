@@ -24,16 +24,16 @@
                 <tbody>
                     @foreach ($servers as $server)
                         <tr>
-                            <td>{{ $server->name }}</td>
-                            <td>{{ $server->created_at }}</td>
-                            <td>{{ $server->updated_at }}</td>
+                            <td>{{ $server->name() }}</td>
+                            <td>{{ $server->createdAt() }}</td>
+                            <td>{{ $server->updatedAt() }}</td>
                             <td>
-                                {!! link_to_route('servers.show', 'Show', [$server->id], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('servers.show', 'Show', [$server->serverId()->id()], ['class' => 'btn btn-default']) !!}
                                 @if (Auth::user()->can('update.server'))
-                                    {!! link_to_route('servers.edit', 'Edit', [$server->id], ['class' => 'btn btn-default']) !!}
+                                    {!! link_to_route('servers.edit', 'Edit', [$server->serverId()->id()], ['class' => 'btn btn-default']) !!}
                                 @endif
                                 @if (Auth::user()->can('delete.server'))
-                                    {!! Form::open(['route' => ['servers.destroy', $server->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                                    {!! Form::open(['route' => ['servers.destroy', $server->serverId()->id()], 'method' => 'delete', 'style' => 'display:inline']) !!}
                                     {!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
                                     {!! Form::close() !!}
                                 @endif

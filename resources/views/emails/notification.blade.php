@@ -1,18 +1,18 @@
-Deployment of {{ $project->name }} #{{ $deployment->number }} finished
+Deployment of {{ $project->name() }} #{{ $deployment->deploymentId()->id() }} finished
 
-Task: {{ $deployment->task }}
+Task: {{ $deployment->task()->value() }}
 
-Status: {{ $deployment->statusText() }}
+Status: {{ $deployment->status()->text() }}
 
-Started At: {{ $deployment->created_at }}
+Started At: {{ $deployment->createdAt() }}
 
-Finished At: {{ $deployment->updated_at }}
-
-
-Executed By: {{ is_null($deployment->user) ? '' : $deployment->user->email }}
+Finished At: {{ $deployment->updatedAt() }}
 
 
-Deployment URL: {{ route('projects.deployments.show', [$project->id, $deployment->number]) }}
+Executed By: {{ is_null($deployedUser) ? '' : $deployedUser->email() }}
+
+
+Deployment URL: {{ route('projects.deployments.show', [$project->projectId()->id(), $deployment->deploymentId()->id()]) }}
 
 
 Log:

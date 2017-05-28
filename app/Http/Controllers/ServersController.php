@@ -2,34 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\Server\ServerInterface;
-use App\Services\Form\Server\ServerForm;
-use App\Models\Server;
+use Illuminate\Http\Request;
+use Ngmy\Webloyer\Webloyer\Application\Server\ServerService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\ServerForm\ServerForm;
 
 class ServersController extends Controller
 {
-    protected $server;
+    private $serverForm;
 
-    protected $serverForm;
+    private $serverService;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Server\ServerInterface $server
-     * @param \App\Services\Form\Server\ServerForm     $serverForm
+     * @param \Ngmy\Webloyer\Webloyer\Port\Adapter\Form\ServerForm\ServerForm $serverForm
+     * @param \Ngmy\Webloyer\Webloyer\Application\Server\ServerService        $serverService
      * @return void
      */
-    public function __construct(ServerInterface $server, ServerForm $serverForm)
+    public function __construct(ServerForm $serverForm, ServerService $serverService)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->server     = $server;
         $this->serverForm = $serverForm;
+        $this->serverService = $serverService;
     }
 
     /**
@@ -44,7 +43,7 @@ class ServersController extends Controller
 
         $perPage = 10;
 
-        $servers = $this->server->byPage($page, $perPage);
+        $servers = $this->serverService->getServersOfPage($page, $perPage);
 
         return view('servers.index')->with('servers', $servers);
     }
@@ -81,7 +80,7 @@ class ServersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Server $server
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server $server
      * @return Response
      */
     public function show(Server $server)
@@ -92,7 +91,7 @@ class ServersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Server $server
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server $server
      * @return Response
      */
     public function edit(Server $server)
@@ -103,13 +102,13 @@ class ServersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Server       $server
+     * @param \Illuminate\Http\Request                           $request
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server $server
      * @return Response
      */
     public function update(Request $request, Server $server)
     {
-        $input = array_merge($request->all(), ['id' => $server->id]);
+        $input = array_merge($request->all(), ['id' => $server->serverId()->id()]);
 
         if ($this->serverForm->update($input)) {
             return redirect()->route('servers.index');
@@ -123,12 +122,12 @@ class ServersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Server $server
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server $server
      * @return Response
      */
     public function destroy(Server $server)
     {
-        $this->server->delete($server->id);
+        $this->serverService->removeServer($server->serverId()->id());
 
         return redirect()->route('servers.index');
     }

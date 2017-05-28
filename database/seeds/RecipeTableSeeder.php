@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Recipe;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Recipe;
 
 class RecipeTableSeeder extends Seeder
 {

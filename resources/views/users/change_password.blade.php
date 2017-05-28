@@ -5,10 +5,10 @@
     <div class="row">
         <div class="col-md-2 col-md-offset-0">
             <div class="list-group">
-                {!! link_to_route('users.edit', 'Edit User', [$user->id], ['class' => 'list-group-item']) !!}
-                {!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item selected']) !!}
-                {!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item']) !!}
-                {!! link_to_route('users.api_token.edit', 'Edit API Token', [$user->id], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.edit', 'Edit User', [$user->userId()->id()], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.password.change', 'Change Password', [$user->userId()->id()], ['class' => 'list-group-item selected']) !!}
+                {!! link_to_route('users.role.edit', 'Edit Role', [$user->userId()->id()], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.api_token.edit', 'Edit API Token', [$user->userId()->id()], ['class' => 'list-group-item']) !!}
             </div>
         </div>
 
@@ -27,7 +27,7 @@
                         </div>
                     @endif
 
-                    {!! Form::open(['route' => ['users.password.update', $user->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' => ['users.password.update', $user->userId()->id()], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
                         <div class="form-group required">
                             <label for="password" class="col-md-4 control-label">Password</label>
                             <div class="col-md-6">
@@ -46,6 +46,7 @@
                                 {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
                             </div>
                         </div>
+                        {!! Form::hidden('concurrency_version', $user->concurrencyVersion(), ['id' => 'concurrency_version']) !!}
                     {!! Form::close() !!}
                 </div>
             </div>

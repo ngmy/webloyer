@@ -22,12 +22,12 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->created_at }}</td>
-                            <td>{{ $user->updated_at }}</td>
+                            <td>{{ $user->name() }}</td>
+                            <td>{{ $user->createdAt() }}</td>
+                            <td>{{ $user->updatedAt() }}</td>
                             <td>
-                                {!! link_to_route('users.edit', 'Edit', [$user->id], ['class' => 'btn btn-default']) !!}
-                                {!! Form::open(['route' => ['users.destroy', $user->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                                {!! link_to_route('users.edit', 'Edit', [$user->userId()->id()], ['class' => 'btn btn-default']) !!}
+                                {!! Form::open(['route' => ['users.destroy', $user->userId()->id()], 'method' => 'delete', 'style' => 'display:inline']) !!}
                                 {!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
                                 {!! Form::close() !!}
                             </td>

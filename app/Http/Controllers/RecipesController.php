@@ -6,30 +6,33 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\Recipe\RecipeInterface;
-use App\Services\Form\Recipe\RecipeForm;
-use App\Models\Recipe;
+use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\RecipeForm\RecipeForm;
 
 class RecipesController extends Controller
 {
-    protected $recipe;
+    private $recipeForm;
 
-    protected $recipeForm;
+    private $recipeService;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Recipe\RecipeInterface $recipe
-     * @param \App\Services\Form\Recipe\RecipeForm     $recipeForm
+     * @param \Ngmy\Webloyer\Webloyer\Port\Adapter\Form\RecipeForm\RecipeForm $recipeForm
+     * @param \Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService        $recipeService
+     * @param \Ngmy\Webloyer\Webloyer\Application\Project\ProjectService      $projectService
      * @return void
      */
-    public function __construct(RecipeInterface $recipe, RecipeForm $recipeForm)
+    public function __construct(RecipeForm $recipeForm, RecipeService $recipeService, ProjectService $projectService)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->recipe     = $recipe;
         $this->recipeForm = $recipeForm;
+        $this->recipeService = $recipeService;
+        $this->projectService = $projectService;
     }
 
     /**
@@ -44,7 +47,7 @@ class RecipesController extends Controller
 
         $perPage = 10;
 
-        $recipes = $this->recipe->byPage($page, $perPage);
+        $recipes = $this->recipeService->getRecipesOfPage($page, $perPage);
 
         return view('recipes.index')->with('recipes', $recipes);
     }
@@ -81,21 +84,25 @@ class RecipesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Recipe $recipe
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe $recipe
      * @return Response
      */
     public function show(Recipe $recipe)
     {
-        $recipeProject = $recipe->getProjects()->toArray();
+        $afferentProjectIds = $recipe->afferentProjectIds();
+        $afferentProjects = [];
+        foreach ($afferentProjectIds as $afferentProjectId) {
+            $afferentProjects[] = $this->projectService->getProjectOfId($afferentProjectId->id());
+        }
 
         return view('recipes.show')->with('recipe', $recipe)
-            ->with('recipeProject', $recipeProject);
+            ->with('afferentProjects', $afferentProjects);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Recipe $recipe
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe $recipe
      * @return Response
      */
     public function edit(Recipe $recipe)
@@ -106,13 +113,13 @@ class RecipesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Recipe       $recipe
+     * @param \Illuminate\Http\Request                           $request
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe $recipe
      * @return Response
      */
     public function update(Request $request, Recipe $recipe)
     {
-        $input = array_merge($request->all(), ['id' => $recipe->id]);
+        $input = array_merge($request->all(), ['id' => $recipe->recipeId()->id()]);
 
         if ($this->recipeForm->update($input)) {
             return redirect()->route('recipes.index');
@@ -126,12 +133,12 @@ class RecipesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Recipe $recipe
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe $recipe
      * @return Response
      */
     public function destroy(Recipe $recipe)
     {
-        $this->recipe->delete($recipe->id);
+        $this->recipeService->removeRecipe($recipe->recipeId()->id());
 
         return redirect()->route('recipes.index');
     }

@@ -2,39 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\User\UserInterface;
-use App\Repositories\Role\RoleInterface;
-use App\Services\Form\User\UserForm;
-use App\Models\User;
+use Illuminate\Http\Request;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\UserForm\UserForm;
+use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
+use Ngmy\Webloyer\IdentityAccess\Application\Role\RoleService;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 
 class UsersController extends Controller
 {
-    protected $user;
+    private $userForm;
 
-    protected $userForm;
+    private $userService;
 
-    protected $role;
+    private $roleService;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\User\UserInterface $user
-     * @param \App\Services\Form\User\UserForm     $userForm
-     * @param \App\Repositories\Role\RoleInterface $role
+     * @param \Ngmy\Webloyer\Webloyer\Port\Adapter\Form\UserForm\UserForm $userForm
+     * @param \Ngmy\Webloyer\IdentityAccess\Application\User\UserService  $userService
+     * @param \Ngmy\Webloyer\IdentityAccess\Application\Role\RoleService  $roleService
      * @return void
      */
-    public function __construct(UserInterface $user, UserForm $userForm, RoleInterface $role)
+    public function __construct(UserForm $userForm, UserService $userService, RoleService $roleService)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->user     = $user;
         $this->userForm = $userForm;
-        $this->role     = $role;
+        $this->userService = $userService;
+        $this->roleService = $roleService;
     }
 
     /**
@@ -49,7 +48,7 @@ class UsersController extends Controller
 
         $perPage = 10;
 
-        $users = $this->user->byPage($page, $perPage);
+        $users = $this->userService->getUsersOfPage($page, $perPage);
 
         return view('users.index')->with('users', $users);
     }
@@ -61,7 +60,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        $roles = $this->role->all();
+        $roles = $this->roleService->getAllRoles();
 
         return view('users.create')
             ->with('roles', $roles);
@@ -89,18 +88,18 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function show(User $user)
     {
-        return redirect()->route('users.edit', [$user]);
+        return redirect()->route('users.edit', [$user->userId()->id()]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function edit(User $user)
@@ -111,13 +110,13 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
+     * @param \Illuminate\Http\Request                             $request
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function update(Request $request, User $user)
     {
-        $input = array_merge($request->all(), ['id' => $user->id]);
+        $input = array_merge($request->all(), ['id' => $user->userId()->id()]);
 
         if ($this->userForm->update($input)) {
             return redirect()->route('users.index');
@@ -131,7 +130,7 @@ class UsersController extends Controller
     /**
      * Show the form for changing the password of the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function changePassword(User $user)
@@ -142,18 +141,18 @@ class UsersController extends Controller
     /**
      * Update the password of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
+     * @param \Illuminate\Http\Request                             $request
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function updatePassword(Request $request, User $user)
     {
-        $input = array_merge($request->all(), ['id' => $user->id]);
+        $input = array_merge($request->all(), ['id' => $user->userId()->id()]);
 
         if ($this->userForm->updatePassword($input)) {
             return redirect()->route('users.index');
         } else {
-            return redirect()->route('users.password.change', [$user])
+            return redirect()->route('users.password.change', [$user->userId()->id()])
                 ->withInput()
                 ->withErrors($this->userForm->errors());
         }
@@ -162,12 +161,12 @@ class UsersController extends Controller
     /**
      * Show the form for editing the role of the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function editRole(User $user)
     {
-        $roles = $this->role->all();
+        $roles = $this->roleService->getAllRoles();
 
         return view('users.edit_role')
             ->with('user', $user)
@@ -177,13 +176,13 @@ class UsersController extends Controller
     /**
      * Update the role of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
+     * @param \Illuminate\Http\Request                             $request
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function updateRole(Request $request, User $user)
     {
-        $input = array_merge($request->all(), ['id' => $user->id]);
+        $input = array_merge($request->all(), ['id' => $user->userId()->id()]);
 
         if ($this->userForm->updateRole($input)) {
             return redirect()->route('users.index');
@@ -197,7 +196,7 @@ class UsersController extends Controller
     /**
      * Show the form for editing the API token of the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function editApiToken(User $user)
@@ -209,13 +208,13 @@ class UsersController extends Controller
     /**
      * Regenerate the API token of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
+     * @param \Illuminate\Http\Request                             $request
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function regenerateApiToken(Request $request, User $user)
     {
-        $input = array_merge($request->all(), ['id' => $user->id]);
+        $input = array_merge($request->all(), ['id' => $user->userId()->id()]);
 
         if ($this->userForm->regenerateApiToken($input)) {
             return redirect()->route('users.index');
@@ -229,12 +228,12 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\User $user
+     * @param \Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User $user
      * @return Response
      */
     public function destroy(User $user)
     {
-        $this->user->delete($user->id);
+        $this->userService->removeUser($user->userId()->id());
 
         return redirect()->route('users.index');
     }

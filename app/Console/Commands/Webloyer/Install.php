@@ -4,12 +4,16 @@ namespace App\Console\Commands\Webloyer;
 
 use Artisan;
 use Hash;
-
-use App\Repositories\Setting\AppSettingInterface;
-use App\Repositories\Setting\DbSettingInterface;
-use App\Repositories\User\UserInterface;
-
 use Illuminate\Console\Command;
+use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\DbSettingDriver;
+use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
+use Ngmy\Webloyer\IdentityAccess\Application\Role\RoleService;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleSlug;
+use PermissionRoleTableSeeder;
+use PermissionTableSeeder;
+use RecipeTableSeeder;
+use RoleTableSeeder;
 
 class Install extends Command
 {
@@ -40,47 +44,63 @@ class Install extends Command
     /**
      * Execute the console command.
      *
-     * @param \App\Repositories\Setting\AppSettingInterface $appSetting
-     * @param \App\Repositories\Setting\DbSettingInterface  $dbSetting
-     * @param \App\Repositories\User\UserInterface          $userRepository
+     * @param \Ngmy\Webloyer\Webloyer\Application\Setting\SettingService $settingService
+     * @param \Ngmy\Webloyer\IdentityAccess\Application\User\UserService $userService
+     * @param \Ngmy\Webloyer\IdentityAccess\Application\Role\RoleService $roleService
      * @return void
      */
-    public function handle(AppSettingInterface $appSetting, DbSettingInterface $dbSetting, UserInterface $userRepository)
+    public function handle(SettingService $settingService, UserService $userService, RoleService $roleService)
     {
-        $config['app']['url'] = $this->ask(trans('webloyer.enter_webloyer_url'));
+        $appSettingUrl = $this->ask(trans('webloyer.enter_webloyer_url'));
 
-        $config['db']['driver'] = $this->choice(trans('webloyer.enter_db_system'), [
-            'mysql'  => 'MySQL',
-            'pgsql'  => 'Postgres',
-            'sqlite' => 'SQLite',
-            'sqlsrv' => 'SQL Server',
-        ], 'mysql');
+        $dbSettingDriverMysql     = DbSettingDriver::mysql();
+        $dbSettingDriverPostgres  = DbSettingDriver::postgres();
+        $dbSettingDriverSqlite    = DbSettingDriver::sqlite();
+        $dbSettingDriverSqlServer = DbSettingDriver::sqlServer();
 
-        if ($config['db']['driver'] !== 'sqlite') {
-            $config['db']['host']     = $this->ask(trans('webloyer.enter_db_host'), 'localhost');
-            $config['db']['database'] = $this->ask(trans('webloyer.enter_db_name'), 'webloyer');
-            $config['db']['username'] = $this->ask(trans('webloyer.enter_db_username'), 'webloyer');
-            $config['db']['password'] = $this->ask(trans('webloyer.enter_db_password'), false);
+        $dbSettingDriver = new DbSettingDriver(
+            $this->choice(trans('webloyer.enter_db_system'), [
+                $dbSettingDriverMysql->value()     => $dbSettingDriverMysql->displayName(),
+                $dbSettingDriverPostgres->value()  => $dbSettingDriverPostgres->displayName(),
+                $dbSettingDriverSqlite->value()    => $dbSettingDriverSqlite->displayName(),
+                $dbSettingDriverSqlServer->value() => $dbSettingDriverSqlServer->displayName(),
+            ], $dbSettingDriverMysql->value())
+        );
+
+        if (!$dbSettingDriver->isSqlite()) {
+            $dbSettingHost     = $this->ask(trans('webloyer.enter_db_host'), 'localhost');
+            $dbSettingDatabase = $this->ask(trans('webloyer.enter_db_name'), 'webloyer');
+            $dbSettingUserName = $this->ask(trans('webloyer.enter_db_username'), 'webloyer');
+            $dbSettingPassword = $this->ask(trans('webloyer.enter_db_password'), false);
         } else {
-            $config['db']['host']     = null;
-            $config['db']['database'] = $this->ask(trans('webloyer.enter_db_name_sqlite'), storage_path('webloyer.sqlite'));
-            $config['db']['username'] = null;
-            $config['db']['password'] = null;
+            $dbSettingHost     = null;
+            $dbSettingDatabase = $this->ask(trans('webloyer.enter_db_name_sqlite'), storage_path('webloyer.sqlite'));
+            $dbSettingUserName = null;
+            $dbSettingPassword = null;
         }
 
-        $config['admin']['name']     = $this->ask(trans('webloyer.enter_admin_name'));
-        $config['admin']['email']    = $this->ask(trans('webloyer.enter_admin_email'));
-        $config['admin']['password'] = $this->ask(trans('webloyer.enter_admin_password'));
+        $adminName     = $this->ask(trans('webloyer.enter_admin_name'));
+        $adminEmail    = $this->ask(trans('webloyer.enter_admin_email'));
+        $adminPassword = $this->ask(trans('webloyer.enter_admin_password'));
 
-        // Set configuration to .env
-        $appSetting->update($config['app']);
-        $dbSetting->update($config['db']);
+        // Set application configuration to .env
+        $settingService->saveAppSetting($appSettingUrl);
 
-        config(['database.default'                                          => $config['db']['driver']]);
-        config(['database.connections.'.$config['db']['driver'].'.host'     => $config['db']['host']]);
-        config(['database.connections.'.$config['db']['driver'].'.database' => $config['db']['database']]);
-        config(['database.connections.'.$config['db']['driver'].'.username' => $config['db']['username']]);
-        config(['database.connections.'.$config['db']['driver'].'.password' => $config['db']['password']]);
+        // Set database configuration to .env
+        $settingService->saveDbSetting(
+            $dbSettingDriver->value(),
+            $dbSettingHost,
+            $dbSettingDatabase,
+            $dbSettingUserName,
+            $dbSettingPassword
+        );
+        $dbSetting = $settingService->getDbSetting();
+
+        config(['database.default'                                                    => $dbSetting->driver()->value()]);
+        config(['database.connections.' . $dbSetting->driver()->value() . '.host'     => $dbSetting->host()]);
+        config(['database.connections.' . $dbSetting->driver()->value() . '.database' => $dbSetting->database()]);
+        config(['database.connections.' . $dbSetting->driver()->value() . '.username' => $dbSetting->userName()]);
+        config(['database.connections.' . $dbSetting->driver()->value() . '.password' => $dbSetting->password()]);
 
         // Migrate and seed database
         Artisan::call('migrate:refresh', [
@@ -91,29 +111,39 @@ class Install extends Command
         Artisan::call('db:seed', [
             '--force'          => true,
             '--no-interaction' => true,
-            '--class'          => 'RecipeTableSeeder',
+            '--class'          => RecipeTableSeeder::class,
         ]);
         Artisan::call('db:seed', [
             '--force'          => true,
             '--no-interaction' => true,
-            '--class'          => 'RoleTableSeeder',
+            '--class'          => RoleTableSeeder::class,
         ]);
         Artisan::call('db:seed', [
             '--force'          => true,
             '--no-interaction' => true,
-            '--class'          => 'PermissionTableSeeder',
+            '--class'          => PermissionTableSeeder::class,
         ]);
         Artisan::call('db:seed', [
             '--force'          => true,
             '--no-interaction' => true,
-            '--class'          => 'PermissionRoleTableSeeder',
+            '--class'          => PermissionRoleTableSeeder::class,
         ]);
 
         // Create admin user
-        $config['admin']['password'] = Hash::make($config['admin']['password']);
-        $config['admin']['api_token'] = str_random(60);
+        $adminHashedPassword = Hash::make($adminPassword);
+        $adminApiToken = str_random(60);
 
-        $user = $userRepository->create($config['admin']);
-        $user->assignRole('administrator');
+        $adminRole = $roleService->getRoleOfSlug(RoleSlug::administrator()->value());
+        $adminRoleIds = [
+            $adminRole->roleId()->id(),
+        ];
+        $adminUser = $userService->saveUser(
+            null,
+            $adminName,
+            $adminEmail,
+            $adminHashedPassword,
+            $adminApiToken,
+            $adminRoleIds
+        );
     }
 }

@@ -9,25 +9,25 @@ class RoleTableSeeder extends Seeder
     {
         DB::table('roles')->delete();
 
-        $role = new Role;
+        $role = new Role();
         $roleAdmin = $role->create([
             'name'        => 'Administrator',
             'slug'        => 'administrator',
             'description' => 'Manage administration privileges.',
         ]);
 
-        $role = new Role;
+        $role = new Role();
         $roleDeveloper = $role->create([
             'name'        => 'Developer',
             'slug'        => 'developer',
             'description' => 'Manage developer privileges.',
         ]);
 
-        $role = new Role;
-        $roleModerator = $role->create([
-            'name'        => 'Moderator',
-            'slug'        => 'moderator',
-            'description' => 'Manage moderator privileges.',
+        $role = new Role();
+        $roleOperator = $role->create([
+            'name'        => 'Operator',
+            'slug'        => 'operator',
+            'description' => 'Manage operator privileges.',
         ]);
     }
 }

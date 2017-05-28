@@ -65,10 +65,10 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
+         'users' => [
+             'driver' => 'eloquent',
+             'model' => Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\User::class,
+         ],
 
         // 'users' => [
         //     'driver' => 'database',

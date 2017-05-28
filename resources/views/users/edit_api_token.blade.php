@@ -5,10 +5,10 @@
     <div class="row">
         <div class="col-md-2 col-md-offset-0">
             <div class="list-group">
-                {!! link_to_route('users.edit', 'Edit User', [$user->id], ['class' => 'list-group-item']) !!}
-                {!! link_to_route('users.password.change', 'Change Password', [$user->id], ['class' => 'list-group-item']) !!}
-                {!! link_to_route('users.role.edit', 'Edit Role', [$user->id], ['class' => 'list-group-item']) !!}
-                {!! link_to_route('users.api_token.edit', 'Edit API Token', [$user->id], ['class' => 'list-group-item selected']) !!}
+                {!! link_to_route('users.edit', 'Edit User', [$user->userId()->id()], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.password.change', 'Change Password', [$user->userId()->id()], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.role.edit', 'Edit Role', [$user->userId()->id()], ['class' => 'list-group-item']) !!}
+                {!! link_to_route('users.api_token.edit', 'Edit API Token', [$user->userId()->id()], ['class' => 'list-group-item selected']) !!}
             </div>
         </div>
 
@@ -27,11 +27,11 @@
                         </div>
                     @endif
 
-                    {!! Form::open(['route' => ['users.api_token.regenerate', $user->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' => ['users.api_token.regenerate', $user->userId()->id()], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
                         <div class="form-group required">
                             <label for="api_token" class="col-md-4 control-label">API Token</label>
                             <div class="col-md-6 input-group">
-                                {!! Form::text('api_token', $user->api_token, ['class' => 'form-control', 'id' => 'api_token', 'readonly' => 'readonly']) !!}
+                                {!! Form::text('api_token', $user->apiToken(), ['class' => 'form-control', 'id' => 'api_token', 'readonly' => 'readonly']) !!}
                                 <div class="input-group-btn">
                                     <button type="button" class="btn btn-default" aria-label="Copy API Token" data-toggle="tooltip" data-placement="bottom" title="Copy API Token", data-clipboard-target="#api_token">
                                         <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
@@ -45,6 +45,7 @@
                                 {!! Form::submit('Regenerate', ['class' => 'btn btn-primary']) !!}
                             </div>
                         </div>
+                        {!! Form::hidden('concurrency_version', $user->concurrencyVersion(), ['id' => 'concurrency_version']) !!}
                     {!! Form::close() !!}
                 </div>
             </div>

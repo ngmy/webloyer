@@ -3,15 +3,15 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Repositories\Setting\SettingInterface;
+use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
 
 class ApplySettings
 {
-    protected $settingRepository;
+    protected $settingService;
 
-    public function __construct(SettingInterface $settingRepository)
+    public function __construct(SettingService $settingService)
     {
-        $this->settingRepository = $settingRepository;
+        $this->settingService = $settingService;
     }
 
     /**
@@ -23,29 +23,29 @@ class ApplySettings
      */
     public function handle($request, Closure $next)
     {
-        $mailSettings = $this->settingRepository->byType('mail');
+        $mailSetting = $this->settingService->getMailSetting();
 
-        if (isset($mailSettings->attributes->getFrom()['address'])) {
-            $fromAddress = $mailSettings->attributes->getFrom()['address'];
+        if (isset($mailSetting->from()['address'])) {
+            $fromAddress = $mailSetting->from()['address'];
         } else {
             $fromAddress = null;
         }
 
-        if (isset($mailSettings->attributes->getFrom()['name'])) {
-            $fromName = $mailSettings->attributes->getFrom()['name'];
+        if (isset($mailSetting->from()['name'])) {
+            $fromName = $mailSetting->from()['name'];
         } else {
             $fromName = null;
         }
 
-        config(['mail.driver'       => $mailSettings->attributes->getDriver()]);
+        config(['mail.driver'       => $mailSetting->driver()->value()]);
         config(['mail.from.address' => $fromAddress]);
         config(['mail.from.name'    => $fromName]);
-        config(['mail.host'         => $mailSettings->attributes->getSmtpHost()]);
-        config(['mail.port'         => $mailSettings->attributes->getSmtpPort()]);
-        config(['mail.encryption'   => $mailSettings->attributes->getSmtpEncryption()]);
-        config(['mail.username'     => $mailSettings->attributes->getSmtpUsername()]);
-        config(['mail.password'     => $mailSettings->attributes->getSmtpPassword()]);
-        config(['mail.sendmail'     => $mailSettings->attributes->getSendmailPath()]);
+        config(['mail.host'         => $mailSetting->smtpHost()]);
+        config(['mail.port'         => $mailSetting->smtpPort()]);
+        config(['mail.encryption'   => $mailSetting->smtpEncryption()->value()]);
+        config(['mail.username'     => $mailSetting->smtpUsername()]);
+        config(['mail.password'     => $mailSetting->smtpPassword()]);
+        config(['mail.sendmail'     => $mailSetting->sendmailPath()]);
 
         return $next($request);
     }

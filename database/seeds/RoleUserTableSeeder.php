@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use Kodeine\Acl\Models\Eloquent\RoleUser;
+use Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\User;
 
 class RoleUserTableSeeder extends Seeder
 {

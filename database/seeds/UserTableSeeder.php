@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\User;
 
 class UserTableSeeder extends Seeder
 {
