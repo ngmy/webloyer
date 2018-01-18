@@ -170,7 +170,7 @@ class UserForm
     /**
      * Return validation errors.
      *
-     * @return array
+     * @return \Illuminate\Contracts\Support\MessageBag
      */
     public function errors()
     {
@@ -180,6 +180,7 @@ class UserForm
     /**
      * Test whether form validator passes.
      *
+     * @param array $input Data to test whether form validator passes
      * @return boolean
      */
     protected function valid(array $input)

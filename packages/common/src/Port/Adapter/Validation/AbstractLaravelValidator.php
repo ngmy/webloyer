@@ -62,7 +62,7 @@ abstract class AbstractLaravelValidator implements ValidableInterface
     /**
      * Return validation errors.
      *
-     * @return array
+     * @return \Illuminate\Contracts\Support\MessageBag
      */
     public function errors()
     {
