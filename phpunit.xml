@@ -25,6 +25,9 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
+            <directory suffix=".php">./packages/common/src</directory>
+            <directory suffix=".php">./packages/identity_access/src</directory>
+            <directory suffix=".php">./packages/webloyer/src</directory>
             <exclude>
                 <directory>./app/Providers</directory>
                 <directory suffix="Interface.php">./app</directory>
@@ -45,6 +48,9 @@
                 <file>./app/Http/breadcrumbs.php</file>
                 <file>./app/Http/routes.php</file>
                 <file>./app/Jobs/Job.php</file>
+                <file>./packages/common/src/CommonServiceProvider.php</file>
+                <file>./packages/identity_access/src/IdentityAccessServiceProvider.php</file>
+                <file>./packages/webloyer/src/WebloyerServiceProvider.php</file>
             </exclude>
         </whitelist>
     </filter>
