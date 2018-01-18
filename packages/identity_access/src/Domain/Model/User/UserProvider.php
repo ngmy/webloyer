@@ -2,7 +2,7 @@
 
 namespace Ngmy\Webloyer\IdentityAccess\Domain\Model\User;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\UserProvider as IlluminateUserProvider;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Str;
@@ -53,7 +53,7 @@ class UserProvider implements IlluminateUserProvider
      * @param  string  $token
      * @return void
      */
-    public function updateRememberToken(Authenticatable $user, $token)
+    public function updateRememberToken(AuthenticatableContract $user, $token)
     {
         // Save the given "remember me" token for the given user
         // TODO
@@ -92,7 +92,7 @@ class UserProvider implements IlluminateUserProvider
      * @param  array  $credentials
      * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(AuthenticatableContract $user, array $credentials)
     {
         $plain = $credentials['password'];
 

@@ -13,16 +13,56 @@ class ProjectFormTest extends TestCase
 {
     use MockeryHelper;
 
-    private $mockValidator;
+    private $validator;
 
-    private $mockProjectService;
+    private $projectService;
+
+    private $projectForm;
+
+    private $inputToSave = [
+        'recipe_id_order'                   => null,
+        'name'                              => null,
+        'recipe_id'                         => null,
+        'server_id'                         => null,
+        'repository'                        => null,
+        'stage'                             => null,
+        'deploy_path'                       => null,
+        'email_notification_recipient'      => null,
+        'days_to_keep_deployments'          => null,
+        'max_number_of_deployments_to_keep' => null,
+        'keep_last_deployment'              => null,
+        'github_webhook_secret'             => null,
+        'github_webhook_user_id'            => null,
+    ];
+
+    private $inputToUpdate = [
+        'recipe_id_order'                   => null,
+        'id'                                => null,
+        'name'                              => null,
+        'recipe_id'                         => null,
+        'server_id'                         => null,
+        'repository'                        => null,
+        'stage'                             => null,
+        'deploy_path'                       => null,
+        'email_notification_recipient'      => null,
+        'days_to_keep_deployments'          => null,
+        'max_number_of_deployments_to_keep' => null,
+        'keep_last_deployment'              => null,
+        'github_webhook_secret'             => null,
+        'github_webhook_user_id'            => null,
+        'concurrency_version'               => null,
+    ];
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->mockValidator = $this->mock(ValidableInterface::class);
-        $this->mockProjectService = $this->mock(ProjectService::class);
+        $this->validator = $this->mock(ValidableInterface::class);
+        $this->projectService = $this->mock(ProjectService::class);
+        $this->projectForm = new ProjectForm(
+            $this->validator,
+            $this->projectService
+        );
     }
 
     public function tearDown()
@@ -32,170 +72,110 @@ class ProjectFormTest extends TestCase
         $this->closeMock();
     }
 
-    public function test_Should_SucceedToSave_When_ValidationPassesAndDaysToKeepLastDeploymentIsTrue()
+    public function test_Should_SucceedToSave_When_ValidationPassesAndDaysToKeepLastDeploymentIsSet()
     {
-        $projectForm = new ProjectForm($this->mockValidator, $this->mockProjectService);
-
-        $this->mockValidator
+        $this->validator
             ->shouldReceive('with->passes')
             ->andReturn(true);
 
-        $this->mockProjectService
+        $this->projectService
             ->shouldReceive('saveProject');
 
-        $input = $this->getInputToSave();
-        $input['recipe_id_order'] = '1,2,3';
-        $input['keep_last_deployment'] = true;
+        $this->inputToSave['recipe_id_order'] = '1,2,3';
+        $this->inputToSave['keep_last_deployment'] = true;
 
-        $result = $projectForm->save($input);
+        $actualResult = $this->projectForm->save($this->inputToSave);
 
-        $this->assertTrue($result, 'Expected save to succeed.');
+        $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
 
-    public function test_Should_SucceedToSave_When_ValidationPassesAndDaysToKeepLastDeploymentIsFalse()
+    public function test_Should_SucceedToSave_When_ValidationPassesAndDaysToKeepLastDeploymentIsNotSet()
     {
-        $projectForm = new ProjectForm($this->mockValidator, $this->mockProjectService);
-
-        $this->mockValidator
+        $this->validator
             ->shouldReceive('with->passes')
             ->andReturn(true);
 
-        $this->mockProjectService
+        $this->projectService
             ->shouldReceive('saveProject');
 
-        $input = $this->getInputToSave();
-        $input['recipe_id_order'] = '1,2,3';
-        $input['keep_last_deployment'] = false;
+        $this->inputToSave['recipe_id_order'] = '1,2,3';
+        unset($this->inputToSave['keep_last_deployment']);;
 
-        $result = $projectForm->save($input);
+        $actualResult = $this->projectForm->save($this->inputToSave);
 
-        $this->assertTrue($result, 'Expected save to succeed.');
+        $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
 
     public function test_Should_FailToSave_When_ValidationFails()
     {
-        $projectForm = new ProjectForm($this->mockValidator, $this->mockProjectService);
-
-        $this->mockValidator
+        $this->validator
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $input = $this->getInputToSave();
-        $input['recipe_id_order'] = '1,2,3';
+        $this->inputToSave['recipe_id_order'] = '1,2,3';
 
-        $result = $projectForm->save($input);
+        $actualResult = $this->projectForm->save($this->inputToSave);
 
-        $this->assertFalse($result, 'Expected save to fail.');
+        $this->assertFalse($actualResult, 'Expected save to fail.');
     }
 
-    public function test_Should_SucceedToUpdate_When_ValidationPassesAndDaysToKeepLastDeploymentIsTrue()
+    public function test_Should_SucceedToUpdate_When_ValidationPassesAndDaysToKeepLastDeploymentIsSet()
     {
-        $projectForm = new ProjectForm($this->mockValidator, $this->mockProjectService);
-
-        $this->mockValidator
+        $this->validator
             ->shouldReceive('with->passes')
             ->andReturn(true);
 
-        $this->mockProjectService
+        $this->projectService
             ->shouldReceive('saveProject');
 
-        $input = $this->getInputToUpdate();
-        $input['recipe_id_order'] = '1,2,3';
-        $input['keep_last_deployment'] = true;
+        $this->inputToUpdate['recipe_id_order'] = '1,2,3';
+        $this->inputToUpdate['keep_last_deployment'] = true;
 
-        $result = $projectForm->update($input);
+        $actualResult = $this->projectForm->update($this->inputToUpdate);
 
-        $this->assertTrue($result, 'Expected update to succeed.');
+        $this->assertTrue($actualResult, 'Expected update to succeed.');
     }
 
-    public function test_Should_SucceedToUpdate_When_ValidationPassesAndDaysToKeepLastDeploymentIsFalse()
+    public function test_Should_SucceedToUpdate_When_ValidationPassesAndDaysToKeepLastDeploymentIsNotSet()
     {
-        $projectForm = new ProjectForm($this->mockValidator, $this->mockProjectService);
-
-        $this->mockValidator
+        $this->validator
             ->shouldReceive('with->passes')
             ->andReturn(true);
 
-        $this->mockProjectService
+        $this->projectService
             ->shouldReceive('saveProject');
 
-        $input = $this->getInputToUpdate();
-        $input['recipe_id_order'] = '1,2,3';
-        $input['keep_last_deployment'] = false;
+        $this->inputToUpdate['recipe_id_order'] = '1,2,3';
+        unset($this->inputToUpdate['keep_last_deployment']);
 
-        $result = $projectForm->update($input);
+        $actualResult = $this->projectForm->update($this->inputToUpdate);
 
-        $this->assertTrue($result, 'Expected update to succeed.');
+        $this->assertTrue($actualResult, 'Expected update to succeed.');
     }
 
     public function test_Should_FailToUpdate_When_ValidationFails()
     {
-        $projectForm = new ProjectForm($this->mockValidator, $this->mockProjectService);
-
-        $this->mockValidator
+        $this->validator
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $input = $this->getInputToUpdate();
-        $input['recipe_id_order'] = '1,2,3';
+        $this->inputToUpdate['recipe_id_order'] = '1,2,3';
 
-        $result = $projectForm->update($input);
+        $actualResult = $this->projectForm->update($this->inputToUpdate);
 
-        $this->assertFalse($result, 'Expected update to fail.');
+        $this->assertFalse($actualResult, 'Expected update to fail.');
     }
 
     public function test_Should_GetValidationErrors()
     {
-        $projectForm = new ProjectForm($this->mockValidator, $this->mockProjectService);
-
         $expectedResult = new MessageBag();
 
-        $this->mockValidator
+        $this->validator
             ->shouldReceive('errors')
             ->andReturn($expectedResult);
 
-        $actualResult = $projectForm->errors();
+        $actualResult = $this->projectForm->errors();
 
         $this->assertEquals($expectedResult, $actualResult);
-    }
-
-    private function getInputToSave()
-    {
-        return [
-            'recipe_id_order'                   => null,
-            'name'                              => null,
-            'recipe_id'                         => null,
-            'server_id'                         => null,
-            'repository'                        => null,
-            'stage'                             => null,
-            'deploy_path'                       => null,
-            'email_notification_recipient'      => null,
-            'days_to_keep_deployments'          => null,
-            'max_number_of_deployments_to_keep' => null,
-            'keep_last_deployment'              => null,
-            'github_webhook_secret'             => null,
-            'github_webhook_user_id'            => null,
-        ];
-    }
-
-    private function getInputToUpdate()
-    {
-        return [
-            'recipe_id_order'                   => null,
-            'id'                                => null,
-            'name'                              => null,
-            'recipe_id'                         => null,
-            'server_id'                         => null,
-            'repository'                        => null,
-            'stage'                             => null,
-            'deploy_path'                       => null,
-            'email_notification_recipient'      => null,
-            'days_to_keep_deployments'          => null,
-            'max_number_of_deployments_to_keep' => null,
-            'keep_last_deployment'              => null,
-            'github_webhook_secret'             => null,
-            'github_webhook_user_id'            => null,
-            'concurrency_version'               => null,
-        ];
     }
 }

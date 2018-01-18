@@ -38,9 +38,7 @@ class UserForm
             return false;
         }
 
-        if (isset($input['password'])) {
-            $hashedPassword = Hash::make($input['password']);
-        }
+        $hashedPassword = Hash::make($input['password']);
 
         $apiToken = str_random(60);
 
