@@ -12,6 +12,11 @@ class UserFormLaravelValidator extends AbstractLaravelValidator
         'role'     => 'sometimes|required',
     ];
 
+    /**
+     * Return validation rules.
+     *
+     * @return array
+     */
     protected function rules()
     {
         $rules = [];

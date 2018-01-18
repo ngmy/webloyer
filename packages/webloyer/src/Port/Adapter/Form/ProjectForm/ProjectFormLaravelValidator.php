@@ -20,6 +20,11 @@ class ProjectFormLaravelValidator extends AbstractLaravelValidator
         'github_webhook_secret'             => 'string',
     ];
 
+    /**
+     * Return validation rules.
+     *
+     * @return array
+     */
     protected function rules()
     {
         $rules = [];
