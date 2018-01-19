@@ -92,7 +92,7 @@ class RecipesController extends Controller
         $afferentProjectIds = $recipe->afferentProjectIds();
         $afferentProjects = [];
         foreach ($afferentProjectIds as $afferentProjectId) {
-            $afferentProjects[] = $this->projectService->getProjectOfId($afferentProjectId->id());
+            $afferentProjects[] = $this->projectService->getProjectById($afferentProjectId->id());
         }
 
         return view('recipes.show')->with('recipe', $recipe)

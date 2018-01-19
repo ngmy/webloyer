@@ -78,7 +78,7 @@ class DeployerService
     public function runDeployer($projectId, $deploymentId)
     {
         $deployment = $this->deploymentService->getDeploymentOfId($projectId, $deploymentId);
-        $project    = $this->projectService->getProjectOfId($projectId);
+        $project    = $this->projectService->getProjectById($projectId);
         $server     = $this->serverService->getServerOfId($project->serverId()->id());
 
         $app = app();

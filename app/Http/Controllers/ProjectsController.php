@@ -65,7 +65,7 @@ class ProjectsController extends Controller
 
         $perPage = 10;
 
-        $projects = $this->projectService->getProjectsOfPage($page, $perPage);
+        $projects = $this->projectService->getProjectsByPage($page, $perPage);
 
         $lastDeployments = [];
         foreach ($projects as $project) {

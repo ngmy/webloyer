@@ -36,7 +36,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->bind('project', function ($id) {
             $projectService = $this->app->make(ProjectService::class);
 
-            $project = $projectService->getProjectOfId($id);
+            $project = $projectService->getProjectById($id);
 
             if (is_null($project)) {
                 throw new NotFoundHttpException();

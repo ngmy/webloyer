@@ -67,7 +67,7 @@ class DeploymentService
     public function getDeploymentOfId($projectId, $deploymentId)
     {
         return $this->deploymentRepository->deploymentOfId(
-            $this->projectService->getProjectOfId($projectId),
+            $this->projectService->getProjectById($projectId),
             new DeploymentId($deploymentId)
         );
     }
@@ -75,7 +75,7 @@ class DeploymentService
     public function getNextDeploymentIdOfProject($projectId)
     {
         return $this->deploymentRepository->nextIdentity(
-            $this->projectService->getProjectOfId($projectId)
+            $this->projectService->getProjectById($projectId)
         );
     }
 
@@ -102,7 +102,7 @@ class DeploymentService
     {
         DB::transaction(function () use ($projectId, $currentDate) {
             $spec = new OldDeploymentSpecification(
-                $this->projectService->getProjectOfId($projectId),
+                $this->projectService->getProjectById($projectId),
                 $currentDate
             );
             $oldDeployments = $this->deploymentRepository->satisfyingDeployments($spec);

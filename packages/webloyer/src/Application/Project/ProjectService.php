@@ -16,31 +16,74 @@ class ProjectService
 {
     private $projectRepository;
 
+    /**
+     * Create a new application service instance.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectRepositoryInterface $projectRepository
+     * @return void
+     */
     public function __construct(ProjectRepositoryInterface $projectRepository)
     {
         $this->projectRepository = $projectRepository;
     }
 
+    /**
+     * Get all projects.
+     *
+     * @return array
+     */
     public function getAllProjects()
     {
         return $this->projectRepository->allProjects();
     }
 
-    public function getProjectOfId($id)
-    {
-        return $this->projectRepository->projectOfId(new ProjectId($id));
-    }
-
-    public function getProjectsOfPage($page = 1, $perPage = 10)
+    /**
+     * Get projects by page.
+     *
+     * @param int $page
+     * @param int $perPage
+     * @return void
+     */
+    public function getProjectsByPage($page = 1, $perPage = 10)
     {
         return $this->projectRepository->projectsOfPage($page, $perPage);
     }
 
-    public function saveProject($id, $name, array $recipeIds, $serverId, $repositoryUrl, $stage, $deployPath, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, $keepLastDeployment, $githubWebhookSecret, $githubWebhookExecuteUserId, $concurrencyVersion)
+    /**
+     * Get a project by id.
+     *
+     * @param int $projectId
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project
+     */
+    public function getProjectById($projectId)
     {
-        $project = DB::transaction(function () use ($id, $name, $recipeIds, $serverId, $repositoryUrl, $stage, $deployPath, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, $keepLastDeployment, $githubWebhookSecret, $githubWebhookExecuteUserId, $concurrencyVersion) {
-            if (!is_null($id)) {
-                $existsProject = $this->getProjectOfId($id);
+        return $this->projectRepository->projectOfId(new ProjectId($projectId));
+    }
+
+    /**
+     * Create or Update a project.
+     *
+     * @param int|null $projectId
+     * @param string   $name
+     * @param int[]    $recipeIds
+     * @param int      $serverId
+     * @param string   $repositoryUrl
+     * @param string   $stage
+     * @param string   $deployPath
+     * @param string   $emailNotificationRecipient
+     * @param int      $daysToKeepDeployments
+     * @param int      $maxNumberOfDeploymentsToKeep
+     * @param int      $keepLastDeployment
+     * @param string   $githubWebhookSecret
+     * @param int      $githubWebhookExecuteUserId
+     * @param string   $concurrencyVersion
+     * @return void
+     */
+    public function saveProject($projectId, $name, array $recipeIds, $serverId, $repositoryUrl, $stage, $deployPath, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, $keepLastDeployment, $githubWebhookSecret, $githubWebhookExecuteUserId, $concurrencyVersion)
+    {
+        DB::transaction(function () use ($projectId, $name, $recipeIds, $serverId, $repositoryUrl, $stage, $deployPath, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, $keepLastDeployment, $githubWebhookSecret, $githubWebhookExecuteUserId, $concurrencyVersion) {
+            if (!is_null($projectId)) {
+                $existsProject = $this->getProjectById($projectId);
 
                 if (!is_null($existsProject)) {
                     $existsProject->failWhenConcurrencyViolation($concurrencyVersion);
@@ -48,7 +91,7 @@ class ProjectService
             }
 
             $project = new Project(
-                new ProjectId($id),
+                new ProjectId($projectId),
                 $name,
                 array_map(function ($recipeId) {
                     return new RecipeId($recipeId);
@@ -70,11 +113,19 @@ class ProjectService
             $this->projectRepository->save($project);
         });
 
-        return $project;
+        return;
     }
 
-    public function removeProject($id)
+    /**
+     * Remove a project.
+     *
+     * @param int $projectId
+     * @return void
+     */
+    public function removeProject($projectId)
     {
-        return $this->projectRepository->remove($this->getProjectOfId($id));
+        $this->projectRepository->remove($this->getProjectById($projectId));
+
+        return;
     }
 }
