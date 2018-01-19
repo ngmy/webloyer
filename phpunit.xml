@@ -31,6 +31,9 @@
             <exclude>
                 <directory>./app/Providers</directory>
                 <directory suffix="Interface.php">./app</directory>
+                <directory suffix="Interface.php">./packages/common/src</directory>
+                <directory suffix="Interface.php">./packages/identity_access/src</directory>
+                <directory suffix="Interface.php">./packages/webloyer/src</directory>
                 <file>./app/Console/Commands/Inspire.php</file>
                 <file>./app/Console/Kernel.php</file>
                 <file>./app/Events/Event.php</file>
