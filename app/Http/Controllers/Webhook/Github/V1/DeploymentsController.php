@@ -47,7 +47,7 @@ class DeploymentsController extends Controller
         ]);
 
         if ($this->deploymentForm->save($input)) {
-            $lastDeployment = $this->deploymentService->getLastDeploymentOfProject($project->projectId()->id());
+            $lastDeployment = $this->deploymentService->getLastDeployment($project->projectId()->id());
             return DeploymentResponse::fromDeployment($lastDeployment)->toJson();
         } else {
             abort(400, $this->deploymentForm->errors());

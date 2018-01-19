@@ -52,7 +52,7 @@ class DeploymentsController extends Controller
 
         $perPage = 10;
 
-        $deployments = $this->deploymentService->getDeploymentsOfProjectAndPage(
+        $deployments = $this->deploymentService->getDeploymentsByPage(
             $project->projectId()->id(),
             $page,
             $perPage
@@ -92,7 +92,7 @@ class DeploymentsController extends Controller
         ]);
 
         if ($this->deploymentForm->save($input)) {
-            $lastDeployment = $this->deploymentService->getLastDeploymentOfProject($project->projectId()->id());
+            $lastDeployment = $this->deploymentService->getLastDeployment($project->projectId()->id());
             $link = link_to_route('projects.deployments.show', "#{$lastDeployment->deploymentId()->id()}", [$project->projectId()->id(), $lastDeployment->deploymentId()->id()]);
             $request->session()->flash('status', "The deployment $link was successfully started.");
 

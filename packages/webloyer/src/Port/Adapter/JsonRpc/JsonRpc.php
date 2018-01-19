@@ -44,7 +44,7 @@ class JsonRpc
         ];
 
         if ($this->deploymentForm->save($input)) {
-            $lastDeployment = $this->deploymentService->getLastDeploymentOfProject($project_id);
+            $lastDeployment = $this->deploymentService->getLastDeployment($project_id);
             return DeploymentResponse::fromDeployment($lastDeployment)->toJson();
         } else {
             throw new InvalidArgumentException($this->deploymentForm->errors());
@@ -68,7 +68,7 @@ class JsonRpc
         ];
 
         if ($this->deploymentForm->save($input)) {
-            $lastDeployment = $this->deploymentService->getLastDeploymentOfProject($project_id);
+            $lastDeployment = $this->deploymentService->getLastDeployment($project_id);
             return DeploymentResponse::fromDeployment($lastDeployment)->toJson();
         } else {
             throw new InvalidArgumentException($this->deploymentForm->errors());

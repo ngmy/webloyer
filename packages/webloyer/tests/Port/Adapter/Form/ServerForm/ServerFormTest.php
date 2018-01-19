@@ -19,13 +19,13 @@ class ServerFormTest extends TestCase
 
     private $serverForm;
 
-    private $inputToSave = [
+    private $inputForSave = [
         'name'        => null,
         'description' => null,
         'body'        => null,
     ];
 
-    private $inputToUpdate = [
+    private $inputForUpdate = [
         'id'                  => null,
         'name'                => null,
         'description'         => null,
@@ -61,7 +61,7 @@ class ServerFormTest extends TestCase
         $this->serverService
             ->shouldReceive('saveServer');
 
-        $actualResult = $this->serverForm->save($this->inputToSave);
+        $actualResult = $this->serverForm->save($this->inputForSave);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -72,7 +72,7 @@ class ServerFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->serverForm->save($this->inputToSave);
+        $actualResult = $this->serverForm->save($this->inputForSave);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }
@@ -86,7 +86,7 @@ class ServerFormTest extends TestCase
         $this->serverService
             ->shouldReceive('saveServer');
 
-        $actualResult = $this->serverForm->update($this->inputToUpdate);
+        $actualResult = $this->serverForm->update($this->inputForUpdate);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -97,7 +97,7 @@ class ServerFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->serverForm->update($this->inputToUpdate);
+        $actualResult = $this->serverForm->update($this->inputForUpdate);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }

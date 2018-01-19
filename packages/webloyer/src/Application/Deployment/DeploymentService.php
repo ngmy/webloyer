@@ -25,13 +25,41 @@ class DeploymentService
 
     private $deploymentRepository;
 
+    /**
+     * Create a new application service instance.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Application\Project\ProjectService                    $projectService
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentRepositoryInterface $deploymentRepository
+     * @return void
+     */
     public function __construct(ProjectService $projectService, DeploymentRepositoryInterface $deploymentRepository)
     {
         $this->projectService = $projectService;
         $this->deploymentRepository = $deploymentRepository;
     }
 
-    public function getDeploymentsOfProjectAndPage($projectId, $page = 1, $perPage = 10)
+    /**
+     * Get next identity.
+     *
+     * @param int $projectId
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentId
+     */
+    public function getNextIdentity($projectId)
+    {
+        return $this->deploymentRepository->nextIdentity(
+            $this->projectService->getProjectById($projectId)
+        );
+    }
+
+    /**
+     * Get deployments by page.
+     *
+     * @param int $projectId
+     * @param int $page
+     * @param int $perPage
+     * @return array
+     */
+    public function getDeploymentsByPage($projectId, $page = 1, $perPage = 10)
     {
         $criteria = new DeploymentCriteria($projectId);
         $order = new Order('deployments.created_at', Direction::desc());
@@ -43,7 +71,28 @@ class DeploymentService
         return $this->deploymentRepository->deployments($queryObject);
     }
 
-    public function getLastDeploymentOfProject($projectId)
+    /**
+     * Get a deployment by id.
+     *
+     * @param int $projectId
+     * @param int $deploymentId
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment
+     */
+    public function getDeploymentById($projectId, $deploymentId)
+    {
+        return $this->deploymentRepository->deploymentOfId(
+            $this->projectService->getProjectById($projectId),
+            new DeploymentId($deploymentId)
+        );
+    }
+
+    /**
+     * Get last deployment.
+     *
+     * @param int $projectId
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment
+     */
+    public function getLastDeployment($projectId)
     {
         $criteria = new DeploymentCriteria($projectId);
         $order = new Order('deployments.created_at', Direction::desc());
@@ -59,29 +108,20 @@ class DeploymentService
         return $deployments[0];
     }
 
-    public function getAllDeployments()
-    {
-        return $this->deploymentRepository->allDeployments();
-    }
-
-    public function getDeploymentOfId($projectId, $deploymentId)
-    {
-        return $this->deploymentRepository->deploymentOfId(
-            $this->projectService->getProjectById($projectId),
-            new DeploymentId($deploymentId)
-        );
-    }
-
-    public function getNextDeploymentIdOfProject($projectId)
-    {
-        return $this->deploymentRepository->nextIdentity(
-            $this->projectService->getProjectById($projectId)
-        );
-    }
-
+    /**
+     * Save a deployment.
+     *
+     * @param int         $projectId
+     * @param int         $deploymentId
+     * @param string      $task
+     * @param int|null    $processExitCode
+     * @param string|null $message
+     * @param int         $deployedUserId
+     * @return void
+     */
     public function saveDeployment($projectId, $deploymentId, $task, $processExitCode, $message, $deployedUserId)
     {
-        $deployment = DB::transaction(function () use ($projectId, $deploymentId, $task, $processExitCode, $message, $deployedUserId) {
+        DB::transaction(function () use ($projectId, $deploymentId, $task, $processExitCode, $message, $deployedUserId) {
             $deployment = new Deployment(
                 new ProjectId($projectId),
                 new DeploymentId($deploymentId),
@@ -92,13 +132,18 @@ class DeploymentService
                 null,
                 null
             );
-            return $this->deploymentRepository->save($deployment);
+            $this->deploymentRepository->save($deployment);
         });
-
-        return $deployment;
     }
 
-    public function removeOldDeploymentsOfProject($projectId, DateTimeImmutable $currentDate)
+    /**
+     * Remove old deployments.
+     *
+     * @param int                $projectId
+     * @param \DateTimeImmutable $currentDate
+     * @return void
+     */
+    public function removeOldDeployments($projectId, DateTimeImmutable $currentDate)
     {
         DB::transaction(function () use ($projectId, $currentDate) {
             $spec = new OldDeploymentSpecification(
@@ -110,6 +155,5 @@ class DeploymentService
                 $this->deploymentRepository->removeAll($oldDeployments);
             }
         });
-        return true;
     }
 }

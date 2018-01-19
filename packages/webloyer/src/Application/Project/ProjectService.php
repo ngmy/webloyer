@@ -84,12 +84,10 @@ class ProjectService
         DB::transaction(function () use ($projectId, $name, $recipeIds, $serverId, $repositoryUrl, $stage, $deployPath, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, $keepLastDeployment, $githubWebhookSecret, $githubWebhookExecuteUserId, $concurrencyVersion) {
             if (!is_null($projectId)) {
                 $existsProject = $this->getProjectById($projectId);
-
                 if (!is_null($existsProject)) {
                     $existsProject->failWhenConcurrencyViolation($concurrencyVersion);
                 }
             }
-
             $project = new Project(
                 new ProjectId($projectId),
                 $name,
@@ -109,11 +107,8 @@ class ProjectService
                 null,
                 null
             );
-
             $this->projectRepository->save($project);
         });
-
-        return;
     }
 
     /**
@@ -125,7 +120,5 @@ class ProjectService
     public function removeProject($projectId)
     {
         $this->projectRepository->remove($this->getProjectById($projectId));
-
-        return;
     }
 }

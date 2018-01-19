@@ -48,7 +48,7 @@ class DeploymentForm
 
         $deployment = $this->deploymentService->saveDeployment(
             $input['project_id'],
-            $this->deploymentService->getNextDeploymentIdOfProject($input['project_id'])->id(),
+            $this->deploymentService->getNextIdentity($input['project_id'])->id(),
             $input['task'],
             null,
             null,

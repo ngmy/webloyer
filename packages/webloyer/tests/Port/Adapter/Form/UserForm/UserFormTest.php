@@ -21,33 +21,33 @@ class UserFormTest extends TestCase
 
     private $userForm;
 
-    private $inputToSave = [
+    private $inputForSave = [
         'name'     => null,
         'email'    => null,
         'password' => null,
         'role'     => [],
     ];
 
-    private $inputToUpdate = [
+    private $inputForUpdate = [
         'id'                  => null,
         'name'                => null,
         'email'               => null,
         'concurrency_version' => null,
     ];
 
-    private $inputToUpdatePassword = [
+    private $inputForUpdatePassword = [
         'id'                  => null,
         'password'            => null,
         'concurrency_version' => null,
     ];
 
-    private $inputToUpdateRole = [
+    private $inputForUpdateRole = [
         'id'                  => null,
         'role'                => [],
         'concurrency_version' => null,
     ];
 
-    private $inputToRegerateApiToken = [
+    private $inputForRegerateApiToken = [
         'id'                  => null,
         'concurrency_version' => null,
     ];
@@ -80,7 +80,7 @@ class UserFormTest extends TestCase
         $this->userService
             ->shouldReceive('saveUser');
 
-        $actualResult = $this->userForm->save($this->inputToSave);
+        $actualResult = $this->userForm->save($this->inputForSave);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -91,7 +91,7 @@ class UserFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->userForm->save($this->inputToSave);
+        $actualResult = $this->userForm->save($this->inputForSave);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }
@@ -113,7 +113,7 @@ class UserFormTest extends TestCase
         $this->userService
             ->shouldReceive('saveUser');
 
-        $actualResult = $this->userForm->update($this->inputToUpdate);
+        $actualResult = $this->userForm->update($this->inputForUpdate);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -124,7 +124,7 @@ class UserFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->userForm->update($this->inputToUpdate);
+        $actualResult = $this->userForm->update($this->inputForUpdate);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }
@@ -147,7 +147,7 @@ class UserFormTest extends TestCase
         $this->userService
             ->shouldReceive('saveUser');
 
-        $actualResult = $this->userForm->updatePassword($this->inputToUpdatePassword);
+        $actualResult = $this->userForm->updatePassword($this->inputForUpdatePassword);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -158,7 +158,7 @@ class UserFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->userForm->updatePassword($this->inputToUpdatePassword);
+        $actualResult = $this->userForm->updatePassword($this->inputForUpdatePassword);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }
@@ -180,7 +180,7 @@ class UserFormTest extends TestCase
         $this->userService
             ->shouldReceive('saveUser');
 
-        $actualResult = $this->userForm->updateRole($this->inputToUpdateRole);
+        $actualResult = $this->userForm->updateRole($this->inputForUpdateRole);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -202,9 +202,9 @@ class UserFormTest extends TestCase
         $this->userService
             ->shouldReceive('saveUser');
 
-        unset($this->inputToUpdateRole['role']);
+        unset($this->inputForUpdateRole['role']);
 
-        $actualResult = $this->userForm->updateRole($this->inputToUpdateRole);
+        $actualResult = $this->userForm->updateRole($this->inputForUpdateRole);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -215,7 +215,7 @@ class UserFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->userForm->updateRole($this->inputToUpdateRole);
+        $actualResult = $this->userForm->updateRole($this->inputForUpdateRole);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }
@@ -234,7 +234,7 @@ class UserFormTest extends TestCase
         $this->userService
             ->shouldReceive('saveUser');
 
-        $actualResult = $this->userForm->regenerateApiToken($this->inputToUpdatePassword);
+        $actualResult = $this->userForm->regenerateApiToken($this->inputForUpdatePassword);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }

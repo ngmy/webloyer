@@ -19,7 +19,7 @@ class MailSettingFormTest extends TestCase
 
     private $mailSettingForm;
 
-    private $inputToUpdate = [
+    private $inputForUpdate = [
         'driver'          => null,
         'from_address'    => null,
         'from_name'       => null,
@@ -59,7 +59,7 @@ class MailSettingFormTest extends TestCase
         $this->settingService
             ->shouldReceive('saveMailSetting');
 
-        $actualResult = $this->mailSettingForm->update($this->inputToUpdate);
+        $actualResult = $this->mailSettingForm->update($this->inputForUpdate);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -70,7 +70,7 @@ class MailSettingFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->mailSettingForm->update($this->inputToUpdate);
+        $actualResult = $this->mailSettingForm->update($this->inputForUpdate);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }

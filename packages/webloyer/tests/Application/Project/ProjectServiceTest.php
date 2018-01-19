@@ -22,12 +22,12 @@ class ProjectServiceTest extends TestCase
 
     private $projectRepository;
 
-    private $inputToGetProjectByPage = [
+    private $inputForGetProjectsByPage = [
         'page'    => 1,
         'perPage' => 10,
     ];
 
-    private $inputToSaveProject = [
+    private $inputForSaveProject = [
         'projectId'                    => 1,
         'name'                         => '',
         'recipeIds'                    => [1],
@@ -66,12 +66,12 @@ class ProjectServiceTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_GetProjectByPage_When_PageAndPerPageIsNotSpecified()
+    public function test_Should_GetProjectsByPage_When_PageAndPerPageIsNotSpecified()
     {
         $this->checkGetProjectsByPage(null, null, 1, 10);
     }
 
-    public function test_Should_GetProjectByPage_When_PageAndPerPageIsSpecified()
+    public function test_Should_GetProjectsByPage_When_PageAndPerPageIsSpecified()
     {
         $this->checkGetProjectsByPage(2, 20, 2, 20);
     }
@@ -131,8 +131,8 @@ class ProjectServiceTest extends TestCase
 
     private function checkGetProjectsByPage($inputPage, $inputPerPage, $expectedPage, $expectedPerPage)
     {
-        $this->inputToGetProjectByPage['page'] = $inputPage;
-        $this->inputToGetProjectByPage['perPage'] = $inputPerPage;
+        $this->inputForGetProjectsByPage['page'] = $inputPage;
+        $this->inputForGetProjectsByPage['perPage'] = $inputPerPage;
 
         $expectedResult = true;
         $this->projectRepository
@@ -141,7 +141,7 @@ class ProjectServiceTest extends TestCase
             ->once()
             ->andReturn($expectedResult);
 
-        extract($this->inputToGetProjectByPage);
+        extract($this->inputForGetProjectsByPage);
 
         if (isset($page) && isset($perPage)) {
             $actualResult = $this->projectService->getProjectsByPage($page, $perPage);
@@ -157,14 +157,14 @@ class ProjectServiceTest extends TestCase
     private function checkSaveProject($isNullInputProjectId, $existsProject)
     {
         if ($isNullInputProjectId) {
-            $this->inputToSaveProject['projectId'] = null;
+            $this->inputForSaveProject['projectId'] = null;
         } else {
-            $this->inputToSaveProject['projectId'] = 1;
+            $this->inputForSaveProject['projectId'] = 1;
             if ($existsProject) {
                 $project = $this->mock(Project::class);
                 $project
                     ->shouldReceive('failWhenConcurrencyViolation')
-                    ->with($this->inputToSaveProject['concurrencyVersion'])
+                    ->with($this->inputForSaveProject['concurrencyVersion'])
                     ->once();
             } else {
                 $project = null;
@@ -172,7 +172,7 @@ class ProjectServiceTest extends TestCase
             $this->projectRepository
                 ->shouldReceive('projectOfId')
                 ->with(Mockery::on(function ($arg) {
-                    return $arg == new ProjectId($this->inputToSaveProject['projectId']);
+                    return $arg == new ProjectId($this->inputForSaveProject['projectId']);
                 }))
                 ->once()
                 ->andReturn($project);
@@ -181,7 +181,7 @@ class ProjectServiceTest extends TestCase
         $this->projectRepository
             ->shouldReceive('save')
             ->with(Mockery::on(function ($arg) {
-                extract($this->inputToSaveProject);
+                extract($this->inputForSaveProject);
                 return $arg == new Project(
                     new ProjectId($projectId),
                     $name,
@@ -204,7 +204,7 @@ class ProjectServiceTest extends TestCase
             }))
             ->once();
 
-        extract($this->inputToSaveProject);
+        extract($this->inputForSaveProject);
 
         $this->projectService->saveProject(
             $projectId,

@@ -19,13 +19,13 @@ class RecipeFormTest extends TestCase
 
     private $recipeForm;
 
-    private $inputToSave = [
+    private $inputForSave = [
         'name'        => null,
         'description' => null,
         'body'        => null,
     ];
 
-    private $inputToUpdate = [
+    private $inputForUpdate = [
         'id'                  => null,
         'name'                => null,
         'description'         => null,
@@ -61,7 +61,7 @@ class RecipeFormTest extends TestCase
         $this->recipeService
             ->shouldReceive('saveRecipe');
 
-        $actualResult = $this->recipeForm->save($this->inputToSave);
+        $actualResult = $this->recipeForm->save($this->inputForSave);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -72,7 +72,7 @@ class RecipeFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->recipeForm->save($this->inputToSave);
+        $actualResult = $this->recipeForm->save($this->inputForSave);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }
@@ -86,7 +86,7 @@ class RecipeFormTest extends TestCase
         $this->recipeService
             ->shouldReceive('saveRecipe');
 
-        $actualResult = $this->recipeForm->update($this->inputToUpdate);
+        $actualResult = $this->recipeForm->update($this->inputForUpdate);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -97,7 +97,7 @@ class RecipeFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->recipeForm->update($this->inputToUpdate);
+        $actualResult = $this->recipeForm->update($this->inputForUpdate);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }

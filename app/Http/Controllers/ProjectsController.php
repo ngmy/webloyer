@@ -69,7 +69,7 @@ class ProjectsController extends Controller
 
         $lastDeployments = [];
         foreach ($projects as $project) {
-            $lastDeployment = $this->deploymentService->getLastDeploymentOfProject($project->projectId()->id());
+            $lastDeployment = $this->deploymentService->getLastDeployment($project->projectId()->id());
             if (!is_null($lastDeployment)) {
                 $lastDeployments[$project->projectId()->id()] = new DeploymentPresenter($lastDeployment, new AnsiToHtmlConverter());
             }

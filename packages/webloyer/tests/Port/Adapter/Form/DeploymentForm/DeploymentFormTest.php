@@ -26,7 +26,7 @@ class DeploymentFormTest extends TestCase
 
     private $deploymentForm;
 
-    private $inputToSave = [
+    private $inputForSave = [
         'project_id' => null,
         'task'       => null,
         'user_id'    => null,
@@ -62,7 +62,7 @@ class DeploymentFormTest extends TestCase
             ->andReturn(true);
 
         $this->deploymentService
-            ->shouldReceive('getNextDeploymentIdOfProject->id');
+            ->shouldReceive('getNextIdentity->id');
         $mockDeployment = $this->mock(Deployment::class);
         $mockDeployment->shouldReceive('projectId->id');
         $mockDeployment->shouldReceive('deploymentId->id');
@@ -73,7 +73,7 @@ class DeploymentFormTest extends TestCase
         $this->deployerService
             ->shouldReceive('dispatchDeployer');
 
-        $actualResult = $this->deploymentForm->save($this->inputToSave);
+        $actualResult = $this->deploymentForm->save($this->inputForSave);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -84,7 +84,7 @@ class DeploymentFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $actualResult = $this->deploymentForm->save($this->inputToSave);
+        $actualResult = $this->deploymentForm->save($this->inputForSave);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }

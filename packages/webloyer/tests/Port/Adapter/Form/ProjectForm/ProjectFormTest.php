@@ -19,7 +19,7 @@ class ProjectFormTest extends TestCase
 
     private $projectForm;
 
-    private $inputToSave = [
+    private $inputForSave = [
         'recipe_id_order'                   => null,
         'name'                              => null,
         'recipe_id'                         => null,
@@ -35,7 +35,7 @@ class ProjectFormTest extends TestCase
         'github_webhook_user_id'            => null,
     ];
 
-    private $inputToUpdate = [
+    private $inputForUpdate = [
         'recipe_id_order'                   => null,
         'id'                                => null,
         'name'                              => null,
@@ -81,10 +81,10 @@ class ProjectFormTest extends TestCase
         $this->projectService
             ->shouldReceive('saveProject');
 
-        $this->inputToSave['recipe_id_order'] = '1,2,3';
-        $this->inputToSave['keep_last_deployment'] = true;
+        $this->inputForSave['recipe_id_order'] = '1,2,3';
+        $this->inputForSave['keep_last_deployment'] = true;
 
-        $actualResult = $this->projectForm->save($this->inputToSave);
+        $actualResult = $this->projectForm->save($this->inputForSave);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -98,10 +98,10 @@ class ProjectFormTest extends TestCase
         $this->projectService
             ->shouldReceive('saveProject');
 
-        $this->inputToSave['recipe_id_order'] = '1,2,3';
-        unset($this->inputToSave['keep_last_deployment']);;
+        $this->inputForSave['recipe_id_order'] = '1,2,3';
+        unset($this->inputForSave['keep_last_deployment']);;
 
-        $actualResult = $this->projectForm->save($this->inputToSave);
+        $actualResult = $this->projectForm->save($this->inputForSave);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
     }
@@ -112,9 +112,9 @@ class ProjectFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $this->inputToSave['recipe_id_order'] = '1,2,3';
+        $this->inputForSave['recipe_id_order'] = '1,2,3';
 
-        $actualResult = $this->projectForm->save($this->inputToSave);
+        $actualResult = $this->projectForm->save($this->inputForSave);
 
         $this->assertFalse($actualResult, 'Expected save to fail.');
     }
@@ -128,10 +128,10 @@ class ProjectFormTest extends TestCase
         $this->projectService
             ->shouldReceive('saveProject');
 
-        $this->inputToUpdate['recipe_id_order'] = '1,2,3';
-        $this->inputToUpdate['keep_last_deployment'] = true;
+        $this->inputForUpdate['recipe_id_order'] = '1,2,3';
+        $this->inputForUpdate['keep_last_deployment'] = true;
 
-        $actualResult = $this->projectForm->update($this->inputToUpdate);
+        $actualResult = $this->projectForm->update($this->inputForUpdate);
 
         $this->assertTrue($actualResult, 'Expected update to succeed.');
     }
@@ -145,10 +145,10 @@ class ProjectFormTest extends TestCase
         $this->projectService
             ->shouldReceive('saveProject');
 
-        $this->inputToUpdate['recipe_id_order'] = '1,2,3';
-        unset($this->inputToUpdate['keep_last_deployment']);
+        $this->inputForUpdate['recipe_id_order'] = '1,2,3';
+        unset($this->inputForUpdate['keep_last_deployment']);
 
-        $actualResult = $this->projectForm->update($this->inputToUpdate);
+        $actualResult = $this->projectForm->update($this->inputForUpdate);
 
         $this->assertTrue($actualResult, 'Expected update to succeed.');
     }
@@ -159,9 +159,9 @@ class ProjectFormTest extends TestCase
             ->shouldReceive('with->passes')
             ->andReturn(false);
 
-        $this->inputToUpdate['recipe_id_order'] = '1,2,3';
+        $this->inputForUpdate['recipe_id_order'] = '1,2,3';
 
-        $actualResult = $this->projectForm->update($this->inputToUpdate);
+        $actualResult = $this->projectForm->update($this->inputForUpdate);
 
         $this->assertFalse($actualResult, 'Expected update to fail.');
     }

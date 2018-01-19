@@ -49,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
             $deploymentService = $this->app->make(DeploymentService::class);
 
             $project = $route->parameter('project');
-            $deployment = $deploymentService->getDeploymentOfId($project->projectId()->id(), $id);
+            $deployment = $deploymentService->getDeploymentById($project->projectId()->id(), $id);
 
             if (is_null($deployment)) {
                 throw new NotFoundHttpException();

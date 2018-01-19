@@ -54,7 +54,7 @@ class DiscardOldDeployments extends Command
     {
         $projects = $this->projectService->getAllProjects();
         foreach ($projects as $project) {
-            $oldDeployments = $this->deploymentService->removeOldDeploymentsOfProject($project->projectId()->id(), $this->currentDate);
+            $oldDeployments = $this->deploymentService->removeOldDeployments($project->projectId()->id(), $this->currentDate);
         }
     }
 }

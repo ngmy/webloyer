@@ -71,13 +71,13 @@ class DeployerService
     public function dispatchDeployer($projectId, $deploymentId)
     {
         return $this->deployerDispatcherService->dispatch(
-            $this->deploymentService->getDeploymentOfId($projectId, $deploymentId)
+            $this->deploymentService->getDeploymentById($projectId, $deploymentId)
         );
     }
 
     public function runDeployer($projectId, $deploymentId)
     {
-        $deployment = $this->deploymentService->getDeploymentOfId($projectId, $deploymentId);
+        $deployment = $this->deploymentService->getDeploymentById($projectId, $deploymentId);
         $project    = $this->projectService->getProjectById($projectId);
         $server     = $this->serverService->getServerOfId($project->serverId()->id());
 
@@ -151,7 +151,7 @@ class DeployerService
         // Notify
         if (!empty($project->emailNotificationRecipient())) {
             $mailSetting = $this->settingService->getMailSetting();
-            $deployment = $this->deploymentService->getDeploymentOfId($deployment->projectId()->id(), $deployment->deploymentId()->id());
+            $deployment = $this->deploymentService->getDeploymentById($deployment->projectId()->id(), $deployment->deploymentId()->id());
 
             if (isset($mailSetting->from()['address'])) {
                 $fromAddress = $mailSetting->from()['address'];
