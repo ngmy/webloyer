@@ -182,7 +182,7 @@ class ProjectServiceTest extends TestCase
             ->shouldReceive('save')
             ->with(Mockery::on(function ($arg) {
                 extract($this->inputForSaveProject);
-                return $arg == new Project(
+                $project = new Project(
                     new ProjectId($projectId),
                     $name,
                     array_map(function ($recipeId) {
@@ -201,6 +201,7 @@ class ProjectServiceTest extends TestCase
                     null,
                     null
                 );
+                return $arg == $project;
             }))
             ->once();
 

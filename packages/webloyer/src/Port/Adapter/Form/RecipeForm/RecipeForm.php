@@ -36,7 +36,7 @@ class RecipeForm
             return false;
         }
 
-        $recipe = $this->recipeService->saveRecipe(
+        $this->recipeService->saveRecipe(
             null,
             $input['name'],
             $input['description'],
@@ -59,7 +59,7 @@ class RecipeForm
             return false;
         }
 
-        $recipe = $this->recipeService->saveRecipe(
+        $this->recipeService->saveRecipe(
             $input['id'],
             $input['name'],
             $input['description'],

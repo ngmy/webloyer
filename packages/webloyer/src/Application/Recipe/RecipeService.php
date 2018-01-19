@@ -11,39 +11,72 @@ class RecipeService
 {
     private $recipeRepository;
 
+    /**
+     * Create a new application service instance.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeRepositoryInterface $recipeRepository
+     * @return void
+     */
     public function __construct(RecipeRepositoryInterface $recipeRepository)
     {
         $this->recipeRepository = $recipeRepository;
     }
 
-    public function getRecipeOfId($id)
-    {
-        return $this->recipeRepository->recipeOfId(new RecipeId($id));
-    }
-
+    /**
+     * Get all recipes.
+     *
+     * @return array
+     */
     public function getAllRecipes()
     {
         return $this->recipeRepository->allRecipes();
     }
 
-    public function getRecipesOfPage($page = 1, $perPage = 10)
+    /**
+     * Get recipes by page.
+     *
+     * @param int $page
+     * @param int $perPage
+     * @return array
+     */
+    public function getRecipesByPage($page = 1, $perPage = 10)
     {
         return $this->recipeRepository->recipesOfPage($page, $perPage);
     }
 
-    public function saveRecipe($id, $name, $description, $body, $concurrencyVersion)
+    /**
+     * Get a recipe by id.
+     *
+     * @param int $recipeId
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe
+     */
+    public function getRecipeById($recipeId)
     {
-        $recipe = DB::transaction(function () use ($id, $name, $description, $body, $concurrencyVersion) {
-            if (!is_null($id)) {
-                $existsRecipe = $this->getRecipeOfId($id);
+        return $this->recipeRepository->recipeOfId(new RecipeId($recipeId));
+    }
+
+    /**
+     * Create or Update a recipe.
+     *
+     * @param int|null $recipeId
+     * @param string   $name
+     * @param string   $description
+     * @param string   $body
+     * @param string   $concurrencyVersion
+     * @return void
+     */
+    public function saveRecipe($recipeId, $name, $description, $body, $concurrencyVersion)
+    {
+        DB::transaction(function () use ($recipeId, $name, $description, $body, $concurrencyVersion) {
+            if (!is_null($recipeId)) {
+                $existsRecipe = $this->getRecipeById($recipeId);
 
                 if (!is_null($existsRecipe)) {
                     $existsRecipe->failWhenConcurrencyViolation($concurrencyVersion);
                 }
             }
-
             $recipe = new Recipe(
-                new RecipeId($id),
+                new RecipeId($recipeId),
                 $name,
                 $description,
                 $body,
@@ -51,13 +84,18 @@ class RecipeService
                 null,
                 null
             );
-            return $this->recipeRepository->save($recipe);
+            $this->recipeRepository->save($recipe);
         });
-        return $recipe;
     }
 
-    public function removeRecipe($id)
+    /**
+     * Remove a recipe.
+     *
+     * @param int $recipeId
+     * @return void
+     */
+    public function removeRecipe($recipeId)
     {
-        return $this->recipeRepository->remove($this->getRecipeOfId($id));
+        $this->recipeRepository->remove($this->getRecipeById($recipeId));
     }
 }

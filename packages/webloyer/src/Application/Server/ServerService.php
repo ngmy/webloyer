@@ -11,52 +11,90 @@ class ServerService
 {
     private $serverRepository;
 
+    /**
+     * Create a new application service instance.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerRepositoryInterface $serverRepository
+     * @return void
+     */
     public function __construct(ServerRepositoryInterface $serverRepository)
     {
         $this->serverRepository = $serverRepository;
     }
 
-    public function getServerOfId($id)
-    {
-        return $this->serverRepository->serverOfId(new ServerId($id));
-    }
-
+    /**
+     * Get all servers.
+     *
+     * @return array
+     */
     public function getAllServers()
     {
         return $this->serverRepository->allServers();
     }
 
-    public function getServersOfPage($page = 1, $perPage = 10)
+    /**
+     * Get servers by page.
+     *
+     * @param int $page
+     * @param int $perPage
+     * @return array
+     */
+    public function getServersByPage($page = 1, $perPage = 10)
     {
         return $this->serverRepository->serversOfPage($page, $perPage);
     }
 
-    public function saveServer($id, $name, $description, $body, $concurrencyVersion)
+    /**
+     * Get a server by id.
+     *
+     * @param int $serverId
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server
+     */
+    public function getServerById($serverId)
     {
-        $server = DB::transaction(function () use ($id, $name, $description, $body, $concurrencyVersion) {
-            if (!is_null($id)) {
-                $existsServer = $this->getServerOfId($id);
+        return $this->serverRepository->serverOfId(new ServerId($serverId));
+    }
+
+    /**
+     * Create or Update a server.
+     *
+     * @param int|null $serverId
+     * @param string   $name
+     * @param string   $description
+     * @param string   $body
+     * @param string   $concurrencyVersion
+     * @return void
+     */
+    public function saveServer($serverId, $name, $description, $body, $concurrencyVersion)
+    {
+        DB::transaction(function () use ($serverId, $name, $description, $body, $concurrencyVersion) {
+            if (!is_null($serverId)) {
+                $existsServer = $this->getServerById($serverId);
 
                 if (!is_null($existsServer)) {
                     $existsServer->failWhenConcurrencyViolation($concurrencyVersion);
                 }
             }
-
             $server = new Server(
-                new ServerId($id),
+                new ServerId($serverId),
                 $name,
                 $description,
                 $body,
                 null,
                 null
             );
-            return $this->serverRepository->save($server);
+            $this->serverRepository->save($server);
         });
-        return $server;
     }
 
-    public function removeServer($id)
+    /**
+     * Remove a server.
+     *
+     * @param int $serverId
+     * @return void
+     */
+    public function removeServer($serverId)
     {
-        return $this->serverRepository->remove($this->getServerOfId($id));
+        $this->serverRepository->remove($this->getServerById($serverId));
     }
 }

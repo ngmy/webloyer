@@ -61,7 +61,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->bind('recipe', function ($id) {
             $recipeService = $this->app->make(RecipeService::class);
 
-            $recipe = $recipeService->getRecipeOfId($id);
+            $recipe = $recipeService->getRecipeById($id);
 
             if (is_null($recipe)) {
                 throw new NotFoundHttpException();
@@ -73,7 +73,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->bind('server', function ($id) {
             $serverService = $this->app->make(ServerService::class);
 
-            $server = $serverService->getServerOfId($id);
+            $server = $serverService->getServerById($id);
 
             if (is_null($server)) {
                 throw new NotFoundHttpException();

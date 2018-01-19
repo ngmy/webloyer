@@ -43,7 +43,7 @@ class ServersController extends Controller
 
         $perPage = 10;
 
-        $servers = $this->serverService->getServersOfPage($page, $perPage);
+        $servers = $this->serverService->getServersByPage($page, $perPage);
 
         return view('servers.index')->with('servers', $servers);
     }

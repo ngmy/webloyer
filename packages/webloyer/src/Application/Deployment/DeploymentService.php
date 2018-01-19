@@ -87,7 +87,7 @@ class DeploymentService
     }
 
     /**
-     * Get last deployment.
+     * Get a last deployment.
      *
      * @param int $projectId
      * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment
@@ -109,7 +109,7 @@ class DeploymentService
     }
 
     /**
-     * Save a deployment.
+     * Create a deployment.
      *
      * @param int         $projectId
      * @param int         $deploymentId

@@ -46,9 +46,11 @@ class DeploymentForm
             return false;
         }
 
-        $deployment = $this->deploymentService->saveDeployment(
+        $deploymentId = $this->deploymentService->getNextIdentity($input['project_id'])->id();
+
+        $this->deploymentService->saveDeployment(
             $input['project_id'],
-            $this->deploymentService->getNextIdentity($input['project_id'])->id(),
+            $deploymentId,
             $input['task'],
             null,
             null,
@@ -56,8 +58,8 @@ class DeploymentForm
         );
 
         $this->deployerService->dispatchDeployer(
-            $deployment->projectId()->id(),
-            $deployment->deploymentId()->id()
+            $input['project_id'],
+            $deploymentId
         );
 
         return true;

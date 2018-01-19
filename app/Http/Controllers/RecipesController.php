@@ -47,7 +47,7 @@ class RecipesController extends Controller
 
         $perPage = 10;
 
-        $recipes = $this->recipeService->getRecipesOfPage($page, $perPage);
+        $recipes = $this->recipeService->getRecipesByPage($page, $perPage);
 
         return view('recipes.index')->with('recipes', $recipes);
     }

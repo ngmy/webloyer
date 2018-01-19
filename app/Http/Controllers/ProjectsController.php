@@ -141,10 +141,10 @@ class ProjectsController extends Controller
     {
         $projectRecipe = [];
         foreach ($project->recipeIds() as $recipeId) {
-            $projectRecipe[] = $this->recipeService->getRecipeOfId($recipeId->id());
+            $projectRecipe[] = $this->recipeService->getRecipeById($recipeId->id());
         }
 
-        $projectServer = $this->serverService->getServerOfId($project->serverId()->id());
+        $projectServer = $this->serverService->getServerById($project->serverId()->id());
 
         return view('projects.show')
             ->with('project', $project)
@@ -174,7 +174,7 @@ class ProjectsController extends Controller
 
         $projectRecipe = [];
         foreach ($project->recipeIds() as $recipeId) {
-            $projectRecipe[] = $this->recipeService->getRecipeOfId($recipeId->id());
+            $projectRecipe[] = $this->recipeService->getRecipeById($recipeId->id());
         }
         $projectRecipeList = [];
         foreach ($projectRecipe as $recipeId) {

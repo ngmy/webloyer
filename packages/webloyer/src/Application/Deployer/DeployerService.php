@@ -79,7 +79,7 @@ class DeployerService
     {
         $deployment = $this->deploymentService->getDeploymentById($projectId, $deploymentId);
         $project    = $this->projectService->getProjectById($projectId);
-        $server     = $this->serverService->getServerOfId($project->serverId()->id());
+        $server     = $this->serverService->getServerById($project->serverId()->id());
 
         $app = app();
 
@@ -91,7 +91,7 @@ class DeployerService
 
         // Create recipe files
         foreach ($project->recipeIds() as $i => $recipeId) {
-            $recipe = $this->recipeService->getRecipeOfId($recipeId->id());
+            $recipe = $this->recipeService->getRecipeById($recipeId->id());
             // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array, a destructor is called and a recipe file is deleted immediately.
             $recipeFileBuilders[] = $app->make(DeployerRecipeFileBuilder::class)->setRecipe($recipe);
             $recipeFiles[] = $app->make(DeployerFileDirector::class, [$recipeFileBuilders[$i]])->construct();
@@ -139,7 +139,7 @@ class DeployerService
             $message = $process->getErrorOutput();
         }
 
-        $deployment = $this->deploymentService->saveDeployment(
+        $this->deploymentService->saveDeployment(
             $deployment->projectId()->id(),
             $deployment->deploymentId()->id(),
             $deployment->task()->value(),
