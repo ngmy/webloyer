@@ -100,12 +100,12 @@ class ProjectServiceTest extends TestCase
 
     public function test_Should_SaveProject_When_ProjectIdIsNotNullAndProjectExists()
     {
-        $this->checkSaveProject(true, true);
+        $this->checkSaveProject(false, true);
     }
 
     public function test_Should_SaveProject_When_ProjectIdIsNotNullAndProjectNotExists()
     {
-        $this->checkSaveProject(true, false);
+        $this->checkSaveProject(false, false);
     }
 
     public function test_Should_RemoveProject()

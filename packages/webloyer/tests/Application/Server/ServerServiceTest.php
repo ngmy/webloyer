@@ -88,12 +88,12 @@ class ServerServiceTest extends TestCase
 
     public function test_Should_SaveServer_When_ServerIdIsNotNullAndServerExists()
     {
-        $this->checkSaveServer(true, true);
+        $this->checkSaveServer(false, true);
     }
 
     public function test_Should_SaveServer_When_ServerIdIsNotNullAndServerNotExists()
     {
-        $this->checkSaveServer(true, false);
+        $this->checkSaveServer(false, false);
     }
 
     public function test_Should_RemoveServer()

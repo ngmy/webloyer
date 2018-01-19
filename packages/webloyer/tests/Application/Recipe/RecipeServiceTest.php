@@ -88,12 +88,12 @@ class RecipeServiceTest extends TestCase
 
     public function test_Should_SaveRecipe_When_RecipeIdIsNotNullAndRecipeExists()
     {
-        $this->checkSaveRecipe(true, true);
+        $this->checkSaveRecipe(false, true);
     }
 
     public function test_Should_SaveRecipe_When_RecipeIdIsNotNullAndRecipeNotExists()
     {
-        $this->checkSaveRecipe(true, false);
+        $this->checkSaveRecipe(false, false);
     }
 
     public function test_Should_RemoveRecipe()
