@@ -11,27 +11,6 @@ trait MockeryHelper
     {
         $args = func_get_args();
 
-        $mock = $this->createMock($args);
-
-        return $mock;
-    }
-
-    protected function partialMock()
-    {
-        $args = func_get_args();
-
-        $mock = $this->createMock($args);
-
-        return $mock->makePartial();
-    }
-
-    protected function closeMock()
-    {
-        Mockery::close();
-    }
-
-    protected function createMock(array $args)
-    {
         $numArgs = count($args);
 
         if ($numArgs == 1) {
@@ -51,5 +30,19 @@ trait MockeryHelper
         }
 
         return $mock;
+    }
+
+    protected function partialMock()
+    {
+        $args = func_get_args();
+
+        $mock = $this->mock($args);
+
+        return $mock->makePartial();
+    }
+
+    protected function closeMock()
+    {
+        Mockery::close();
     }
 }
