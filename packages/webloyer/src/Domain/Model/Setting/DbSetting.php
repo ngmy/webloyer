@@ -3,6 +3,7 @@
 namespace Ngmy\Webloyer\Webloyer\Domain\Model\Setting;
 
 use Ngmy\Webloyer\Webloyer\Domain\Model\AbstractEntity;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\DbSettingDriver;
 
 class DbSetting extends AbstractEntity
 {
@@ -16,7 +17,17 @@ class DbSetting extends AbstractEntity
 
     private $password;
 
-    public function __construct($driver, $host, $database, $userName, $password)
+    /**
+     * Create a new entity instance.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\DbSettingDriver $driver
+     * @param string                                                       $host
+     * @param string                                                       $database
+     * @param string                                                       $userName
+     * @param string                                                       $password
+     * @return void
+     */
+    public function __construct(DbSettingDriver $driver, $host, $database, $userName, $password)
     {
         $this->setDriver($driver);
         $this->setHost($host);
@@ -25,37 +36,68 @@ class DbSetting extends AbstractEntity
         $this->setPassword($password);
     }
 
+    /**
+     * Get a driver.
+     *
+     * @return Ngmy\Webloyer\Webloyer\Domain\Model\Setting\DbSettingDriver
+     */
     public function driver()
     {
         return $this->driver;
     }
 
+    /**
+     * Get a host.
+     *
+     * @return string
+     */
     public function host()
     {
         return $this->host;
     }
 
+    /**
+     * Get a database.
+     *
+     * @return string
+     */
     public function database()
     {
         return $this->database;
     }
 
+    /**
+     * Get a user name.
+     *
+     * @return string
+     */
     public function userName()
     {
         return $this->userName;
     }
 
+    /**
+     * Get a password.
+     *
+     * @return string
+     */
     public function password()
     {
         return $this->password;
     }
 
+    /**
+     * Indicates whether some other object is equal to this one.
+     *
+     * @param object $object
+     * @return bool
+     */
     public function equals($object)
     {
         return $object == $this;
     }
 
-    private function setDriver($driver)
+    private function setDriver(DbSettingDriver $driver)
     {
         $this->driver = $driver;
 

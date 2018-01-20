@@ -3,6 +3,7 @@
 namespace Ngmy\Webloyer\Webloyer\Application\Recipe;
 
 use Mockery;
+use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeRepositoryInterface;

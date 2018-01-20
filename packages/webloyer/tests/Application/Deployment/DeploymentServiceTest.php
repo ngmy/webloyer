@@ -9,6 +9,7 @@ use Ngmy\Webloyer\Common\QueryObject\Order;
 use Ngmy\Webloyer\Common\QueryObject\Pagination;
 use Ngmy\Webloyer\Common\QueryObject\QueryObject;
 use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentCriteria;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentId;

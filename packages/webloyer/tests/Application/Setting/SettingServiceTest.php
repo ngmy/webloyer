@@ -3,6 +3,7 @@
 namespace Ngmy\Webloyer\Webloyer\Application\Setting;
 
 use Mockery;
+use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\AppSetting;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\AppSettingRepositoryInterface;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\DbSetting;

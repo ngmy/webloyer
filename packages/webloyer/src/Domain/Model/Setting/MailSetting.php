@@ -70,6 +70,19 @@ class MailSetting extends AbstractEntity
      */
     private $sendmailPath;
 
+    /**
+     * Create a new entity instance.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingDriver              $driver
+     * @param array                                                                       $from
+     * @param string                                                                      $smtpHost
+     * @param int                                                                         $smtpPort
+     * @param string                                                                      $smtpUserName
+     * @param string                                                                      $smtpPassword
+     * @param string                                                                      $sendmailPath
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingSmtpEncryption|null $smtpEncryption
+     * @return void
+     */
     public function __construct(MailSettingDriver $driver, array $from, $smtpHost, $smtpPort, $smtpUserName, $smtpPassword, $sendmailPath, MailSettingSmtpEncryption $smtpEncryption = null)
     {
         $this->setDriver($driver);
@@ -82,31 +95,61 @@ class MailSetting extends AbstractEntity
         $this->setSmtpEncryption($smtpEncryption);
     }
 
+    /**
+     * Get a driver.
+     *
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingDriver
+     */
     public function driver()
     {
         return $this->driver;
     }
 
+    /**
+     * Get a driver value.
+     *
+     * @return string
+     */
     public function driverValue()
     {
         return $this->driver->value();
     }
 
+    /**
+     * Get a from address and name.
+     *
+     * @return array
+     */
     public function from()
     {
         return $this->from;
     }
 
+    /**
+     * Get a SMTP host.
+     *
+     * @return string
+     */
     public function smtpHost()
     {
         return $this->smtpHost;
     }
 
+    /**
+     * Get a SMTP port.
+     *
+     * @return int
+     */
     public function smtpPort()
     {
         return $this->smtpPort;
     }
 
+    /**
+     * Get a SMTP encryption.
+     *
+     * @return Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingSmtpEncryption|Ngmy\Webloyer\Webloyer\Domain\Model\Setting\NullMailSettingSmtpEncryption
+     */
     public function smtpEncryption()
     {
         if (is_null($this->smtpEncryption)) {
@@ -115,6 +158,11 @@ class MailSetting extends AbstractEntity
         return $this->smtpEncryption;
     }
 
+    /**
+     * Get a SMTP encryption value.
+     *
+     * @return string|null
+     */
     public function smtpEncryptionValue()
     {
         if (is_null($this->smtpEncryption)) {
@@ -123,21 +171,42 @@ class MailSetting extends AbstractEntity
         return $this->smtpEncryption->value();
     }
 
+    /**
+     * Get a SMTP user name.
+     *
+     * @return string
+     */
     public function smtpUserName()
     {
         return $this->smtpUserName;
     }
 
+    /**
+     * Get a SMTP user password.
+     *
+     * @return string
+     */
     public function smtpPassword()
     {
         return $this->smtpPassword;
     }
 
+    /**
+     * Get a Sendmail path.
+     *
+     * @return string
+     */
     public function sendmailPath()
     {
         return $this->sendmailPath;
     }
 
+    /**
+     * Set a driver.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingDriver $driver
+     * @return $this
+     */
     public function setDriver(MailSettingDriver $driver)
     {
         $this->driver = $driver;
@@ -145,6 +214,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a driver value.
+     *
+     * @param string $driverValue
+     * @return $this
+     */
     public function setDriverValue($driverValue)
     {
         $this->setDriver(new MailSettingDriver($driverValue));
@@ -152,6 +227,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a from address and name.
+     *
+     * @param array $from
+     * @return $this
+     */
     public function setFrom(array $from)
     {
         $this->from = $from;
@@ -159,6 +240,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a SMTP host.
+     *
+     * @param string$smtpHost
+     * @return $this
+     */
     public function setSmtpHost($smtpHost)
     {
         $this->smtpHost = $smtpHost;
@@ -166,6 +253,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a SMTP port.
+     *
+     * @param int $smtpPort
+     * @return $this
+     */
     public function setSmtpPort($smtpPort)
     {
         $this->smtpPort = $smtpPort;
@@ -173,6 +266,13 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a SMTP encryption.
+     *
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingSmtpEncryption|null $smtpEncryption
+     * @access public
+     * @return $this
+     */
     public function setSmtpEncryption(MailSettingSmtpEncryption $smtpEncryption = null)
     {
         $this->smtpEncryption = $smtpEncryption;
@@ -180,6 +280,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a SMTP encryption value.
+     *
+     * @param string $smtpEncryptionValue
+     * @return $this
+     */
     public function setSmtpEncryptionValue($smtpEncryptionValue)
     {
         $this->setSmtpEncryption(new MailSettingSmtpEncryption($smtpEncryptionValue));
@@ -187,6 +293,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set SMTP user name.
+     *
+     * @param string $smtpUserName
+     * @return $this
+     */
     public function setSmtpUserName($smtpUserName)
     {
         $this->smtpUserName = $smtpUserName;
@@ -194,6 +306,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a SMTP password.
+     *
+     * @param string $smtpPassword
+     * @return $this
+     */
     public function setSmtpPassword($smtpPassword)
     {
         $this->smtpPassword = $smtpPassword;
@@ -201,6 +319,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Set a Sendmail path.
+     *
+     * @param string $sendmailPath
+     * @return $this
+     */
     public function setSendmailPath($sendmailPath)
     {
         $this->sendmailPath = $sendmailPath;
@@ -208,6 +332,12 @@ class MailSetting extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Indicates whether some other object is equal to this one.
+     *
+     * @param object $object
+     * @return bool
+     */
     public function equals($object)
     {
         return $object == $this;
