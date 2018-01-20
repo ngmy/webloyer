@@ -30,7 +30,7 @@ trait MockeryHelper
         Mockery::close();
     }
 
-    private function createMock(array $args)
+    protected function createMock(array $args)
     {
         $numArgs = count($args);
 
