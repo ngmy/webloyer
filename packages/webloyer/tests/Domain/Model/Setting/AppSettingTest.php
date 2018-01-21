@@ -11,9 +11,9 @@ class AppSettingTest extends TestCase
     {
         $expectedResult = 'http://example.com';
 
-        $appSetting = new AppSetting(
-            'http://example.com'
-        );
+        $appSetting = $this->createAppSetting([
+            'url' => $expectedResult,
+        ]);
 
         $actualResult = $appSetting->url();
 
@@ -23,12 +23,8 @@ class AppSettingTest extends TestCase
     public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
     {
         $this->checkEquals(
-            new AppSetting(
-                'http://example.com'
-            ),
-            new AppSetting(
-                'http://example.com'
-            ),
+            $this->createAppSetting(),
+            $this->createAppSetting(),
             true
         );
     }
@@ -36,20 +32,29 @@ class AppSettingTest extends TestCase
     public function test_Should_EqualsReturnFalse_When_OtherObjectIsNotEqualToThisOne()
     {
         $this->checkEquals(
-            new AppSetting(
-                'http://example.com'
-            ),
-            new AppSetting(
-                'http://example.co.jp'
-            ),
+            $this->createAppSetting(),
+            $this->createAppSetting([
+                'url' => 'http://example.co.jp',
+            ]),
             false
         );
     }
 
-    public function checkEquals($self, $other, $expectedResult)
+    private function checkEquals($self, $other, $expectedResult)
     {
         $actualResult = $self->equals($other);
 
         $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    private function createAppSetting(array $params = [])
+    {
+        $url = '';
+
+        extract($params);
+
+        return new AppSetting(
+           $url
+        );
     }
 }

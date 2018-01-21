@@ -11,13 +11,10 @@ class DbSettingTest extends TestCase
     public function test_Should_GetDriver()
     {
         $expectedResult = 'mysql';
-        $dbSetting = new DbSetting(
-            new DbSettingDriver($expectedResult),
-            'host',
-            'database',
-            'userName',
-            'password'
-        );
+
+        $dbSetting = $this->createDbSetting([
+            'driver' => $expectedResult,
+        ]);
 
         $actualResult = $dbSetting->driver();
 
@@ -26,14 +23,11 @@ class DbSettingTest extends TestCase
 
     public function test_Should_GetHost()
     {
-        $expectedResult = 'host';
-        $dbSetting = new DbSetting(
-            new DbSettingDriver('mysql'),
-            $expectedResult,
-            'database',
-            'userName',
-            'password'
-        );
+        $expectedResult = 'mysql';
+
+        $dbSetting = $this->createDbSetting([
+            'host' => $expectedResult,
+        ]);
 
         $actualResult = $dbSetting->host();
 
@@ -42,14 +36,11 @@ class DbSettingTest extends TestCase
 
     public function test_Should_GetDatabase()
     {
-        $expectedResult = 'database';
-        $dbSetting = new DbSetting(
-            new DbSettingDriver('mysql'),
-            'host',
-            $expectedResult,
-            'userName',
-            'password'
-        );
+        $expectedResult = 'webloyer';
+
+        $dbSetting = $this->createDbSetting([
+            'database' => $expectedResult,
+        ]);
 
         $actualResult = $dbSetting->database();
 
@@ -58,14 +49,11 @@ class DbSettingTest extends TestCase
 
     public function test_Should_GetUserName()
     {
-        $expectedResult = 'userName';
-        $dbSetting = new DbSetting(
-            new DbSettingDriver('mysql'),
-            'host',
-            'database',
-            $expectedResult,
-            'password'
-        );
+        $expectedResult = 'root';
+
+        $dbSetting = $this->createDbSetting([
+            'userName' => $expectedResult,
+        ]);
 
         $actualResult = $dbSetting->userName();
 
@@ -74,14 +62,11 @@ class DbSettingTest extends TestCase
 
     public function test_Should_GetPassword()
     {
-        $expectedResult = 'password';
-        $dbSetting = new DbSetting(
-            new DbSettingDriver('mysql'),
-            'host',
-            'database',
-            'userName',
-            $expectedResult
-        );
+        $expectedResult = 'root';
+
+        $dbSetting = $this->createDbSetting([
+            'password' => $expectedResult,
+        ]);
 
         $actualResult = $dbSetting->password();
 
@@ -91,20 +76,8 @@ class DbSettingTest extends TestCase
     public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
     {
         $this->checkEquals(
-            new DbSetting(
-                new DbSettingDriver('mysql'),
-                'host',
-                'database',
-                'userName',
-                'password'
-            ),
-            new DbSetting(
-                new DbSettingDriver('mysql'),
-                'host',
-                'database',
-                'userName',
-                'password'
-            ),
+            $this->createDbSetting(),
+            $this->createDbSetting(),
             true
         );
     }
@@ -112,20 +85,10 @@ class DbSettingTest extends TestCase
     public function test_Should_EqualsReturnFalse_When_OtherObjectIsNotEqualToThisOne()
     {
         $this->checkEquals(
-            new DbSetting(
-                new DbSettingDriver('mysql'),
-                'host',
-                'database',
-                'userName',
-                'password'
-            ),
-            new DbSetting(
-                new DbSettingDriver('sqlite'),
-                'host',
-                'database',
-                'userName',
-                'password'
-            ),
+            $this->createDbSetting(),
+            $this->createDbSetting([
+                'driver' => 'sqlite',
+            ]),
             false
         );
     }
@@ -135,5 +98,24 @@ class DbSettingTest extends TestCase
         $actualResult = $self->equals($other);
 
         $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    private function createDbSetting(array $params = [])
+    {
+        $driver = 'mysql';
+        $host = '';
+        $database = '';
+        $userName = '';
+        $password = '';
+
+        extract($params);
+
+        return new DbSetting(
+            new DbSettingDriver($driver),
+            $host,
+            $database,
+            $userName,
+            $password
+        );
     }
 }

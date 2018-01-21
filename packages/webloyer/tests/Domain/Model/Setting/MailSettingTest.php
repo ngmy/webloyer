@@ -10,94 +10,354 @@ use TestCase;
 
 class MailSettingTest extends TestCase
 {
-    public function test_Should_SetAndGetDriver()
+    public function test_Should_GetDriver()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = MailSettingDriver::smtp();
 
-        $mailSetting->setDriver('smtp');
+        $mailSetting = $this->createMailSetting([
+            'driver' => $expectedResult->value(),
+        ]);
 
-        $driver = $mailSetting->getDriver();
+        $actualResult = $mailSetting->driver();
 
-        $this->assertEquals('smtp', $driver);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_SetAndGetFrom()
+    public function test_Should_GetDriverValue()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = 'smtp';
 
-        $from['address'] = 'from_address@example.com';
-        $from['name']    = 'from_name';
+        $mailSetting = $this->createMailSetting([
+            'driver' => $expectedResult,
+        ]);
 
-        $mailSetting->setFrom($from);
+        $actualResult = $mailSetting->driverValue();
 
-        $retFrom = $mailSetting->getFrom();
-
-        $this->assertEquals($from, $retFrom);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_SetAndGetSmtpHost()
+    public function test_Should_GetFrom()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = [
+            'address' => 'from_address@example.com',
+            'name'    => 'from_name',
+        ];
 
-        $mailSetting->setSmtpHost('localhost');
+        $mailSetting = $this->createMailSetting([
+            'from' => $expectedResult,
+        ]);
 
-        $smtpHost = $mailSetting->getSmtpHost();
+        $actualResult = $mailSetting->from();
 
-        $this->assertEquals('localhost', $smtpHost);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_SetAndGetSmtpPort()
+    public function test_Should_GetSmtpHost()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = 'localhost';
 
-        $mailSetting->setSmtpPort(587);
+        $mailSetting = $this->createMailSetting([
+            'smtpHost' => $expectedResult,
+        ]);
 
-        $smtpPort = $mailSetting->getSmtpPort();
+        $actualResult = $mailSetting->smtpHost();
 
-        $this->assertEquals(587, $smtpPort);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_SetAndGetSmtpEncryption()
+    public function test_Should_GetSmtpPort()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = '587';
 
-        $mailSetting->setSmtpEncryption('tls');
+        $mailSetting = $this->createMailSetting([
+            'smtpPort' => $expectedResult,
+        ]);
 
-        $smtpEncryption = $mailSetting->getSmtpEncryption();
+        $actualResult = $mailSetting->smtpPort();
 
-        $this->assertEquals('tls', $smtpEncryption);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_SetAndGetSmtpUsername()
+    public function test_Should_GetSmtpEncryption_When_NotNull()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = MailSettingSmtpEncryption::ssl();
 
-        $mailSetting->setSmtpUsername('username@example.com');
+        $mailSetting = $this->createMailSetting([
+            'smtpEncryption' => $expectedResult->value(),
+        ]);
 
-        $smtpUsername = $mailSetting->getSmtpUsername();
+        $actualResult = $mailSetting->smtpEncryption();
 
-        $this->assertEquals('username@example.com', $smtpUsername);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_SetAndGetSmtpPassword()
+    public function test_Should_GetSmtpEncryption_When_Null()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = NullMailSettingSmtpEncryption::getInstance();
 
-        $mailSetting->setSmtpPassword('password');
+        $mailSetting = $this->createMailSetting([
+            'smtpEncryption' => $expectedResult->value(),
+        ]);
 
-        $smtpPassword = $mailSetting->getSmtpPassword();
+        $actualResult = $mailSetting->smtpEncryption();
 
-        $this->assertEquals('password', $smtpPassword);
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_SetAndGetSendmailPath()
+    public function test_Should_GetSmtpEncryptionValue_When_NotNull()
     {
-        $mailSetting = new MailSetting;
+        $expectedResult = 'ssl';
 
-        $mailSetting->setSendmailPath('/usr/sbin/sendmail -bs');
+        $mailSetting = $this->createMailSetting([
+            'smtpEncryption' => $expectedResult,
+        ]);
 
-        $sendmailPath = $mailSetting->getSendmailPath();
+        $actualResult = $mailSetting->smtpEncryptionValue();
 
-        $this->assertEquals('/usr/sbin/sendmail -bs', $sendmailPath);
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_GetSmtpEncryptionValue_When_Null()
+    {
+        $expectedResult = null;
+
+        $mailSetting = $this->createMailSetting([
+            'smtpEncryption' => $expectedResult,
+        ]);
+
+        $actualResult = $mailSetting->smtpEncryptionValue();
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_GetSmtpUserName()
+    {
+        $expectedResult = 'username@example.com';
+
+        $mailSetting = $this->createMailSetting([
+            'smtpUserName' => $expectedResult,
+        ]);
+
+        $actualResult = $mailSetting->smtpUserName();
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_GetSmtpPassword()
+    {
+        $expectedResult = 'password';
+
+        $mailSetting = $this->createMailSetting([
+            'smtpPassword' => $expectedResult,
+        ]);
+
+        $actualResult = $mailSetting->smtpPassword();
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_GetSendmailPath()
+    {
+        $expectedResult = '/usr/sbin/sendmail -bs';
+
+        $mailSetting = $this->createMailSetting([
+            'sendmailPath' => $expectedResult,
+        ]);
+
+        $actualResult = $mailSetting->sendmailPath();
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetDriver()
+    {
+        $driver = MailSettingDriver::php();
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setDriver($driver);
+
+        $expectedResult = $this->createMailSetting([
+            'driver' => $driver->value(),
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetDriverValue()
+    {
+        $driver = 'mail';
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setDriverValue($driver);
+
+        $expectedResult = $this->createMailSetting([
+            'driver' => $driver,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetFrom()
+    {
+        $from = [
+            'address' => 'from_address@example.com',
+            'name'    => 'from_name',
+        ];
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setFrom($from);
+
+        $expectedResult = $this->createMailSetting([
+            'from' => $from,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetSmtpHost()
+    {
+        $smtpHost = 'localhost';
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setSmtpHost($smtpHost);
+
+        $expectedResult = $this->createMailSetting([
+            'smtpHost' => $smtpHost,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetSmtpPort()
+    {
+        $smtpPort = 587;
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setSmtpPort($smtpPort);
+
+        $expectedResult = $this->createMailSetting([
+            'smtpPort' => $smtpPort,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetSmtpEncryption()
+    {
+        $smtpEncryption = MailSettingSmtpEncryption::ssl();
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setSmtpEncryption($smtpEncryption);
+
+        $expectedResult = $this->createMailSetting([
+            'smtpEncryption' => $smtpEncryption->value(),
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetSmtpEncryptionValue()
+    {
+        $smtpEncryption = 'ssl';
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setSmtpEncryptionValue($smtpEncryption);
+
+        $expectedResult = $this->createMailSetting([
+            'smtpEncryption' => $smtpEncryption,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetSmtpUserName()
+    {
+        $smtpUserName = 'username@example.com';
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setSmtpUserName($smtpUserName);
+
+        $expectedResult = $this->createMailSetting([
+            'smtpUserName' => $smtpUserName,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetSmtpPassword()
+    {
+        $smtpPassword = 'password';
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setSmtpPassword($smtpPassword);
+
+        $expectedResult = $this->createMailSetting([
+            'smtpPassword' => $smtpPassword,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function test_Should_SetSendmailPath()
+    {
+        $sendmailPath = '/usr/sbin/sendmail -bs';
+
+        $mailSetting = $this->createMailSetting();
+
+        $actualResult = $mailSetting->setSendmailPath($sendmailPath);
+
+        $expectedResult = $this->createMailSetting([
+            'sendmailPath' => $sendmailPath,
+        ]);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    public function checkEquals($self, $other, $expectedResult)
+    {
+        $actualResult = $self->equals($other);
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
+    private function createMailSetting(array $params = [])
+    {
+        $driver = 'smtp';
+        $from = [
+            'address' => '',
+            'name' => '',
+        ];
+        $smtpHost = '';
+        $smtpPort = 25;
+        $smtpUserName = '';
+        $smtpPassword = '';
+        $sendmailPath = '';
+        $smtpEncryption = 'tls';
+
+        extract($params);
+
+        if (!is_null($smtpEncryption)) {
+            $smtpEncryption = new MailSettingSmtpEncryption($smtpEncryption);
+        }
+
+        return new MailSetting(
+            new MailSettingDriver($driver),
+            $from,
+            $smtpHost,
+            $smtpPort,
+            $smtpUserName,
+            $smtpPassword,
+            $sendmailPath,
+            $smtpEncryption
+        );
     }
 }
