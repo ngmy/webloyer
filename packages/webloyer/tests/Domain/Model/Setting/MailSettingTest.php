@@ -322,6 +322,26 @@ class MailSettingTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
+    public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
+    {
+        $this->checkEquals(
+            $this->createMailSetting(),
+            $this->createMailSetting(),
+            true
+        );
+    }
+
+    public function test_Should_EqualsReturnFalse_When_OtherObjectIsNotEqualToThisOne()
+    {
+        $this->checkEquals(
+            $this->createMailSetting(),
+            $this->createMailSetting([
+                'driver' => 'mail',
+            ]),
+            false
+        );
+    }
+
     public function checkEquals($self, $other, $expectedResult)
     {
         $actualResult = $self->equals($other);
