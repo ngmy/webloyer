@@ -18,9 +18,6 @@ final class DbSettingDriver extends AbstractValueObject
 
     public function displayName()
     {
-        if ($this->isMysql()) {
-            return 'MySQL';
-        }
         if ($this->isPostgres()) {
             return 'Postgres';
         }
@@ -30,6 +27,7 @@ final class DbSettingDriver extends AbstractValueObject
         if ($this->isSqlServer()) {
             return 'SQL Server';
         }
+        return 'MySQL';
     }
 
     public function isMysql()

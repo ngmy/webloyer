@@ -93,7 +93,7 @@ class DbSettingTest extends TestCase
         );
     }
 
-    public function checkEquals($self, $other, $expectedResult)
+    private function checkEquals($self, $other, $expectedResult)
     {
         $actualResult = $self->equals($other);
 
