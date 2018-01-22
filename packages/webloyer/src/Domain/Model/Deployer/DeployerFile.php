@@ -4,9 +4,9 @@ namespace Ngmy\Webloyer\Webloyer\Domain\Model\Deployer;
 
 class DeployerFile
 {
-    protected $baseName;
+    private $baseName;
 
-    protected $fullPath;
+    private $fullPath;
 
     /**
      * Get a base name.
@@ -32,7 +32,7 @@ class DeployerFile
      * Set a base name.
      *
      * @param string Base name
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFile $this
+     * @return $this
      */
     public function setBaseName($baseName)
     {
@@ -45,7 +45,7 @@ class DeployerFile
      * Set a full path.
      *
      * @param string Full path
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFile $this
+     * @return $this
      */
     public function setFullPath($fullPath)
     {

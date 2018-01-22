@@ -2,36 +2,51 @@
 
 namespace Ngmy\Webloyer\Webloyer\Domain\Model\Deployer;
 
-use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Yaml\Dumper;
 use Ngmy\Webloyer\Common\Filesystem\FilesystemInterface;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFile;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFileBuilderInterface;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server;
+use Symfony\Component\Yaml\Dumper as YamlDumper;
+use Symfony\Component\Yaml\Parser as YamlParser;
 
 class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
 {
-    protected $fs;
+    private $fs;
 
-    protected $deployerFile;
+    private $deployerFile;
 
-    protected $yamlParser;
+    private $yamlParser;
 
-    protected $yamlDumper;
+    private $yamlDumper;
 
-    protected $server;
+    private $server;
 
-    protected $project;
+    private $project;
 
-    public function __construct(FilesystemInterface $fs, DeployerFile $deployerFile, Parser $parser, Dumper $dumper)
+    /**
+     * Create a new builder instance.
+     *
+     * @param \Ngmy\Webloyer\Common\Filesystem\FilesystemInterface       $fs
+     * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFile $deployerFile
+     * @param \Symfony\Component\Yaml\Parser                             $yamlParser
+     * @param \Symfony\Component\Yaml\Dumper                             $yamlDumper
+     * @return void
+     */
+    public function __construct(FilesystemInterface $fs, DeployerFile $deployerFile, YamlParser $yamlParser, YamlDumper $yamlDumper)
     {
         $this->fs           = $fs;
         $this->deployerFile = $deployerFile;
-        $this->yamlParser   = $parser;
-        $this->yamlDumper   = $dumper;
+        $this->yamlParser   = $yamlParser;
+        $this->yamlDumper   = $yamlDumper;
     }
 
+    /**
+     * Delete a server list file.
+     *
+     * @access public
+     * @return void
+     */
     public function __destruct()
     {
         $this->fs->delete($this->deployerFile->getFullPath());
@@ -40,7 +55,7 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
     /**
      * Set a server list file path info.
      *
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerServerListFileBuilder $this
+     * @return $this
      */
     public function pathInfo()
     {
@@ -58,7 +73,7 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
     /**
      * Put a server list file.
      *
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerServerListFileBuilder $this
+     * @return $this
      */
     public function put()
     {
@@ -67,11 +82,11 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
 
         // Override settings in a server list file
         $serverList = $this->yamlParser->parse($contents);
-        $projectAttributes = $this->project->attribute();
-        if (!is_null($projectAttributes)) {
+        $projectAttribute = $this->project->attribute();
+        if (!is_null($projectAttribute)) {
             foreach ($serverList as $i => $server) {
-                if (!is_null($projectAttributes->deployPath())) {
-                    $serverList[$i]['deploy_path'] = $projectAttributes->deployPath();
+                if (!is_null($projectAttribute->deployPath())) {
+                    $serverList[$i]['deploy_path'] = $projectAttribute->deployPath();
                 }
             }
         }
@@ -96,7 +111,7 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
      * Set a server model instance.
      *
      * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server $server
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerServerListFileBuilder $this
+     * @return $this
      */
     public function setServer(Server $server)
     {
@@ -109,7 +124,7 @@ class DeployerServerListFileBuilder implements DeployerFileBuilderInterface
      * Set a project model instance.
      *
      * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project $project
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerServerListFileBuilder $this
+     * @return $this
      */
     public function setProject(Project $project)
     {

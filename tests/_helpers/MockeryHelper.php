@@ -34,9 +34,7 @@ trait MockeryHelper
 
     protected function partialMock()
     {
-        $args = func_get_args();
-
-        $mock = $this->mock($args);
+        $mock = call_user_func_array([$this, 'mock'], func_get_args());
 
         return $mock->makePartial();
     }
