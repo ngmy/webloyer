@@ -31,10 +31,11 @@ class DeployerRecipeFileBuilderTest extends TestCase
 
     public function test_Should_BuildDeployerRecipeFile()
     {
-        $expectedBaseNamePattern = '|recipe_[a-zA-Z0-9]{32}.php|';
-        $expectedFullPathPattern = '|'. storage_path('app/recipe_[a-zA-Z0-9]{32}.php') . '|';
+        $expectedRecipeFileBaseNamePattern = '|recipe_[a-zA-Z0-9]{32}.php|';
+        $expectedRecipeFileFullPathPattern = '|'. storage_path('app/recipe_[a-zA-Z0-9]{32}.php') . '|';
 
         $recipeBody = '';
+        $expectedRecipeFileContents = '';
 
         $this->recipe
             ->shouldReceive('body')
@@ -44,24 +45,24 @@ class DeployerRecipeFileBuilderTest extends TestCase
 
         $this->fs
             ->shouldReceive('delete')
-            ->with($expectedFullPathPattern)
+            ->with($expectedRecipeFileFullPathPattern)
             ->once();
         $this->fs
             ->shouldReceive('put')
-            ->with($expectedFullPathPattern, $recipeBody)
+            ->with($expectedRecipeFileFullPathPattern, $expectedRecipeFileContents)
             ->once();
 
-        $recipeFileBuilder = new DeployerRecipeFileBuilder(
+        $deployerRecipeFileBuilder = new DeployerRecipeFileBuilder(
             $this->fs,
             $this->deployerFile
         );
-        $actualResult = $recipeFileBuilder
+        $actualResult = $deployerRecipeFileBuilder
             ->setRecipe($this->recipe)
             ->pathInfo()
             ->put()
             ->getResult();
 
-        $this->assertRegExp($expectedBaseNamePattern, $actualResult->getBaseName());
-        $this->assertRegExp($expectedFullPathPattern, $actualResult->getFullPath());
+        $this->assertRegExp($expectedRecipeFileBaseNamePattern, $actualResult->getBaseName());
+        $this->assertRegExp($expectedRecipeFileFullPathPattern, $actualResult->getFullPath());
     }
 }

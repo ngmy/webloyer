@@ -1,64 +1,96 @@
 <?php
 
-use App\Services\Deployment\DeployerDeploymentFileBuilder;
-use App\Services\Deployment\DeployerFile;
-use App\Services\Filesystem\LaravelFilesystem;
+namespace Ngmy\Webloyer\Webloyer\Domain\Model\Deployer;
+
+use Ngmy\Webloyer\Common\Port\Adapter\Persistence\LaravelFilesystem;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFile;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFileBuilderInterface;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
+use TestCase;
+use Tests\Helpers\MockeryHelper;
 
 class DeployerDeploymentFileBuilderTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
-    protected $mockProjectModel;
+    private $fs;
 
-    protected $mockFilesystem;
+    private $deployerFile;
 
-    protected $mockRecipeFile;
+    private $project;
 
-    protected $mockServerListFile;
+    private $serverListFile;
+
+    private $recipeFile;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
-        $this->mockFilesystem = $this->mock('App\Services\Filesystem\FilesystemInterface');
-        $this->mockRecipeFile = $this->mock('App\Services\Deployment\DeployerFile');
-        $this->mockServerListFile = $this->mock('App\Services\Deployment\DeployerFile');
+        $this->fs = $this->partialMock(new LaravelFilesystem($this->app['files']));
+        $this->deployerFile = $this->partialMock(DeployerFile::class);
+
+        $this->project = $this->mock(Project::class);
+        $this->serverListFile = $this->mock(DeployerFile::class);
+        $this->recipeFile = $this->mock(DeployerFile::class);
     }
 
     public function test_Should_BuildDeployerDeploymentFile()
     {
-        $this->mockFilesystem
+        $expectedDeploymentFileBaseNamePattern = '|deploy_[a-zA-Z0-9]{32}.php|';
+        $expectedDeploymentFileFullPathPattern = '|'. storage_path('app/deploy_[a-zA-Z0-9]{32}.php') . '|';
+
+        $repositoryUrl = 'http://example.com';
+        $serverListFileFullPath = 'server.php';
+        $recipeFileFullPath = 'recipe.php';
+        $expectedDeploymentFileContents = implode(PHP_EOL, [
+            '<?php',
+            'namespace Deployer;',
+            "require '$recipeFileFullPath';",
+            "set('repository', '$repositoryUrl');",
+            "serverList('$serverListFileFullPath');",
+        ]);
+
+        $this->fs
             ->shouldReceive('delete')
+            ->with($expectedDeploymentFileFullPathPattern)
             ->once();
-        $this->mockFilesystem
+        $this->fs
             ->shouldReceive('put')
+            ->with($expectedDeploymentFileFullPathPattern, $expectedDeploymentFileContents)
             ->once();
 
-        $mockRecipeFile = $this->mockRecipeFile
-            ->shouldReceive('getFullPath')
-            ->once()
-            ->mock();
-        $mockRecipeFiles = [$mockRecipeFile];
+        $this->project
+            ->shouldReceive('repositoryUrl')
+            ->withNoArgs()
+            ->andReturn($repositoryUrl)
+            ->once();
 
-        $mockServerListFile = $this->mockServerListFile
+        $this->serverListFile
             ->shouldReceive('getFullPath')
-            ->once()
-            ->mock();
+            ->withNoArgs()
+            ->andReturn($serverListFileFullPath)
+            ->once();
 
-        $deploymentFileBuilder = new DeployerDeploymentFileBuilder(
-            $this->mockFilesystem,
-            new DeployerFile
+        $this->recipeFile
+            ->shouldReceive('getFullPath')
+            ->withNoArgs()
+            ->andReturn($recipeFileFullPath)
+            ->once();
+
+        $deployerDeploymentFileBuilder = new DeployerDeploymentFileBuilder(
+            $this->fs,
+            $this->deployerFile
         );
-        $deploymentFileBuilder->setProject($this->mockProjectModel)
-            ->setServerListFile($mockServerListFile)
-            ->setRecipeFile($mockRecipeFiles);
-        $result = $deploymentFileBuilder
+        $actualResult = $deployerDeploymentFileBuilder
+            ->setProject($this->project)
+            ->setServerListFile($this->serverListFile)
+            ->setRecipeFile([$this->recipeFile])
             ->pathInfo()
             ->put()
             ->getResult();
 
-        $this->assertStringMatchesFormat('deploy_%x.php', $result->getBaseName());
-        $this->assertStringMatchesFormat(storage_path("app/deploy_%x.php"), $result->getFullPath());
+        $this->assertRegExp($expectedDeploymentFileBaseNamePattern, $actualResult->getBaseName());
+        $this->assertRegExp($expectedDeploymentFileFullPathPattern, $actualResult->getFullPath());
     }
 }

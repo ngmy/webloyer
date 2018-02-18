@@ -54,12 +54,12 @@ class DeployerServerListFileBuilderTest extends TestCase
 
     public function test_Should_BuildDeployerServerListFile_When_ProjectAttributeIsNotSpecified()
     {
-        $expectedBaseNamePattern = '|server_[a-zA-Z0-9]{32}.yml|';
-        $expectedFullPathPattern = '|'. storage_path('app/server_[a-zA-Z0-9]{32}.yml') . '|';
+        $expectedServerListFileBaseNamePattern = '|server_[a-zA-Z0-9]{32}.yml|';
+        $expectedServerListFileFullPathPattern = '|'. storage_path('app/server_[a-zA-Z0-9]{32}.yml') . '|';
 
         $serverBody = '';
         $serverList = [];
-        $newServerBody = '';
+        $expectedServerListFileContents = '';
 
         $this->server
             ->shouldReceive('body')
@@ -75,11 +75,11 @@ class DeployerServerListFileBuilderTest extends TestCase
 
         $this->fs
             ->shouldReceive('delete')
-            ->with($expectedFullPathPattern)
+            ->with($expectedServerListFileFullPathPattern)
             ->once();
         $this->fs
             ->shouldReceive('put')
-            ->with($expectedFullPathPattern, $newServerBody)
+            ->with($expectedServerListFileFullPathPattern, $expectedServerListFileContents)
             ->once();
 
         $this->yamlParser
@@ -91,7 +91,7 @@ class DeployerServerListFileBuilderTest extends TestCase
         $this->yamlDumper
             ->shouldReceive('dump')
             ->with($serverList)
-            ->andReturn($newServerBody)
+            ->andReturn($expectedServerListFileContents)
             ->once();
 
         $deployerServerListFileBuilder = new DeployerServerListFileBuilder(
@@ -107,14 +107,14 @@ class DeployerServerListFileBuilderTest extends TestCase
             ->put()
             ->getResult();
 
-        $this->assertRegExp($expectedBaseNamePattern, $actualResult->getBaseName());
-        $this->assertRegExp($expectedFullPathPattern, $actualResult->getFullPath());
+        $this->assertRegExp($expectedServerListFileBaseNamePattern, $actualResult->getBaseName());
+        $this->assertRegExp($expectedServerListFileFullPathPattern, $actualResult->getFullPath());
     }
 
     public function test_Should_OverrideAttributeInDeployerServerListFile_When_ProjectAttributeIsSpecified()
     {
-        $expectedBaseNamePattern = '|server_[a-zA-Z0-9]{32}.yml|';
-        $expectedFullPathPattern = '|'. storage_path('app/server_[a-zA-Z0-9]{32}.yml') . '|';
+        $expectedServerListFileBaseNamePattern = '|server_[a-zA-Z0-9]{32}.yml|';
+        $expectedServerListFileFullPathPattern = '|'. storage_path('app/server_[a-zA-Z0-9]{32}.yml') . '|';
         $expectedServerListFileDeployPath = '/home/www/deploy2';
 
         $fullPath = vfsStream::url('rootDir/server.yml');
@@ -149,11 +149,11 @@ EOF;
 
         $this->deployerFile
             ->shouldReceive('setBaseName')
-            ->with($expectedBaseNamePattern)
+            ->with($expectedServerListFileBaseNamePattern)
             ->once();
         $this->deployerFile
             ->shouldReceive('setFullPath')
-            ->with($expectedFullPathPattern)
+            ->with($expectedServerListFileFullPathPattern)
             ->once();
         $this->deployerFile
             ->shouldReceive('getFullPath')
@@ -184,8 +184,8 @@ EOF;
 
     public function test_Should_AppendAttributeToDeployerServerListFile_When_ProjectAttributeIsSpecified()
     {
-        $expectedBaseNamePattern = '|server_[a-zA-Z0-9]{32}.yml|';
-        $expectedFullPathPattern = '|'. storage_path('app/server_[a-zA-Z0-9]{32}.yml') . '|';
+        $expectedServerListFileBaseNamePattern = '|server_[a-zA-Z0-9]{32}.yml|';
+        $expectedServerListFileFullPathPattern = '|'. storage_path('app/server_[a-zA-Z0-9]{32}.yml') . '|';
         $expectedServerListFileDeployPath = '/home/www/deploy2';
 
         $fullPath = vfsStream::url('rootDir/server.yml');
@@ -219,11 +219,11 @@ EOF;
 
         $this->deployerFile
             ->shouldReceive('setBaseName')
-            ->with($expectedBaseNamePattern)
+            ->with($expectedServerListFileBaseNamePattern)
             ->once();
         $this->deployerFile
             ->shouldReceive('setFullPath')
-            ->with($expectedFullPathPattern)
+            ->with($expectedServerListFileFullPathPattern)
             ->once();
         $this->deployerFile
             ->shouldReceive('getFullPath')
