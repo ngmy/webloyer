@@ -3,7 +3,6 @@
 namespace Ngmy\Webloyer\Webloyer\Domain\Model\Deployer;
 
 use org\bovigo\vfs\vfsStream;
-use Ngmy\Webloyer\Common\Filesystem\FilesystemInterface;
 use Ngmy\Webloyer\Common\Port\Adapter\Persistence\LaravelFilesystem;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFile;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFileBuilderInterface;
@@ -48,9 +47,9 @@ class DeployerServerListFileBuilderTest extends TestCase
 
         $this->rootDir = vfsStream::setup('rootDir');
 
-        $this->project = $this->partialMock(Project::class);
+        $this->project = $this->mock(Project::class);
         $this->projectAttribute = $this->mock(new ProjectAttribute('deploy_path'));
-        $this->server = $this->partialMock(Server::class);
+        $this->server = $this->mock(Server::class);
     }
 
     public function test_Should_BuildDeployerServerListFile_When_ProjectAttributeIsNotSpecified()
