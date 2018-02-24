@@ -24,9 +24,7 @@ class DeploymentPresenter extends Presenter
         if ($this->status()->isFailure()) {
             return '<span class="glyphicon glyphicon-ban-circle red" aria-hidden="true"></span>';
         }
-        if ($this->status()->isRunning()) {
-            return '<span></span>';
-        }
+        return '<span></span>';
     }
 
     public function messageHtml()

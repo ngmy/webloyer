@@ -24,6 +24,13 @@ class DeployerFileDirectorTest extends TestCase
         $this->deployerFileDirector = new DeployerFileDirector($this->fileBuilder);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_ConstructDeployerFileInstance()
     {
         $expectedResult = $this->mock(DeployerFile::class);

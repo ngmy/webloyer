@@ -41,6 +41,13 @@ class RecipeServiceTest extends TestCase
         );
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_GetAllRecipes()
     {
         $expectedResult = true;

@@ -59,6 +59,13 @@ class DeploymentServiceTest extends TestCase
         );
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_GetNextIdentity()
     {
         $projectId = 1;

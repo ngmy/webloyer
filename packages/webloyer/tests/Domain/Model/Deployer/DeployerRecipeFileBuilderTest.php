@@ -29,6 +29,13 @@ class DeployerRecipeFileBuilderTest extends TestCase
         $this->recipe = $this->mock(Recipe::class);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_BuildDeployerRecipeFile()
     {
         $expectedRecipeFileBaseNamePattern = '|recipe_[a-zA-Z0-9]{32}.php|';

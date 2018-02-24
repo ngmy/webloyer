@@ -65,6 +65,13 @@ class SettingServiceTest extends TestCase
         );
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function tests_Should_GetAppSetting()
     {
         $expectedResult = true;

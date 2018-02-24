@@ -41,6 +41,13 @@ class ServerServiceTest extends TestCase
         );
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_GetAllServers()
     {
         $expectedResult = true;

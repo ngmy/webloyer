@@ -53,6 +53,13 @@ class ProjectServiceTest extends TestCase
         $this->projectService = new ProjectService($this->projectRepository);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_GetAllProjects()
     {
         $expectedResult = true;

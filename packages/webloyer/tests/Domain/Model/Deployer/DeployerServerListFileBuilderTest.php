@@ -52,6 +52,13 @@ class DeployerServerListFileBuilderTest extends TestCase
         $this->server = $this->mock(Server::class);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_BuildDeployerServerListFile_When_ProjectAttributeIsNotSpecified()
     {
         $expectedServerListFileBaseNamePattern = '|server_[a-zA-Z0-9]{32}.yml|';

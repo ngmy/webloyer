@@ -35,6 +35,13 @@ class DeployerDeploymentFileBuilderTest extends TestCase
         $this->recipeFile = $this->mock(DeployerFile::class);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_BuildDeployerDeploymentFile()
     {
         $expectedDeploymentFileBaseNamePattern = '|deploy_[a-zA-Z0-9]{32}.php|';
