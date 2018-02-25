@@ -30,6 +30,13 @@ class DeploymentPresenterTest extends TestCase
         );
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_ConvertStatusToIcon_When_StatusIsSuccess()
     {
         $expectedResult = '<span class="glyphicon glyphicon-ok-circle green" aria-hidden="true"></span>';

@@ -10,7 +10,7 @@ interface DeployerDispatcherServiceInterface
      * Give the command to run deployer
      *
      * @param \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment $deployment
-     * @return boolean
+     * @return void
      */
     public function dispatch(Deployment $deployment);
 }

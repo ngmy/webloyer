@@ -68,9 +68,16 @@ class DeployerService
         $this->deployerExecutable = base_path('vendor/bin/dep');
     }
 
+    /**
+     * Dispatch deployer
+     *
+     * @param int $projectId
+     * @param int $deploymentId
+     * @return void
+     */
     public function dispatchDeployer($projectId, $deploymentId)
     {
-        return $this->deployerDispatcherService->dispatch(
+        $this->deployerDispatcherService->dispatch(
             $this->deploymentService->getDeploymentById($projectId, $deploymentId)
         );
     }
