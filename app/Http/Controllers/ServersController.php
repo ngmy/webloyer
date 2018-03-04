@@ -113,7 +113,7 @@ class ServersController extends Controller
         if ($this->serverForm->update($input)) {
             return redirect()->route('servers.index');
         } else {
-            return redirect()->route('servers.edit', [$server])
+            return redirect()->route('servers.edit', [$server->serverId()->id()])
                 ->withInput()
                 ->withErrors($this->serverForm->errors());
         }

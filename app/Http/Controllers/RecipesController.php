@@ -124,7 +124,7 @@ class RecipesController extends Controller
         if ($this->recipeForm->update($input)) {
             return redirect()->route('recipes.index');
         } else {
-            return redirect()->route('recipes.edit', [$recipe])
+            return redirect()->route('recipes.edit', [$recipe->recipeId()->id()])
                 ->withInput()
                 ->withErrors($this->recipeForm->errors());
         }

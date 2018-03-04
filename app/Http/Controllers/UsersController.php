@@ -121,7 +121,7 @@ class UsersController extends Controller
         if ($this->userForm->update($input)) {
             return redirect()->route('users.index');
         } else {
-            return redirect()->route('users.edit', [$user])
+            return redirect()->route('users.edit', [$user->userId()->id()])
                 ->withInput()
                 ->withErrors($this->userForm->errors());
         }
@@ -187,7 +187,7 @@ class UsersController extends Controller
         if ($this->userForm->updateRole($input)) {
             return redirect()->route('users.index');
         } else {
-            return redirect()->route('users.role.edit', [$user])
+            return redirect()->route('users.role.edit', [$user->userId()->id()])
                 ->withInput()
                 ->withErrors($this->userForm->errors());
         }
@@ -219,7 +219,7 @@ class UsersController extends Controller
         if ($this->userForm->regenerateApiToken($input)) {
             return redirect()->route('users.index');
         } else {
-            return redirect()->route('users.api_token.edit', [$user])
+            return redirect()->route('users.api_token.edit', [$user->userId()->id()])
                 ->withInput()
                 ->withErrors($this->userForm->errors());
         }

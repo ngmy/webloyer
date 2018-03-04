@@ -210,7 +210,7 @@ class ProjectsController extends Controller
         if ($this->projectForm->update($input)) {
             return redirect()->route('projects.index');
         } else {
-            return redirect()->route('projects.edit', [$project])
+            return redirect()->route('projects.edit', [$project->projectId()->id()])
                 ->withInput()
                 ->withErrors($this->projectForm->errors());
         }
