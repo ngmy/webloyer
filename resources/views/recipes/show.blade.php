@@ -27,7 +27,7 @@
                         @foreach ($afferentProjects as $i => $afferentProject)
                             <tr>
                                 @if ($i === 0)
-                                    <th rowspan="{{ count($afferentProject) }}">Used By</th>
+                                    <th rowspan="{{ count($afferentProjects) }}">Used By</th>
                                 @endif
                                 <td>{!! link_to_route('projects.show', $afferentProject->name(), $afferentProject->projectId()->id()) !!}</td>
                             </tr>
