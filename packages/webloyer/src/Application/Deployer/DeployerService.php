@@ -17,6 +17,7 @@ use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerRecipeFileBuilder;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerServerListFileBuilder;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Symfony\Component\Process\ProcessBuilder;
+use View;
 
 class DeployerService
 {
@@ -195,7 +196,7 @@ class DeployerService
 
             $deployment = new DeploymentPresenter($deployment, new AnsiToHtmlConverter());
 
-            $message = view('emails.notification')
+            $message = View::make('emails.notification')
                 ->with('project', $project)
                 ->with('deployment', $deployment)
                 ->with('deployedUser', $deployedUser)
