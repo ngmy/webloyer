@@ -85,7 +85,7 @@
     "scripts": {
         "post-install-cmd": [
             "mkdir -p public/js/vendor/ajaxorg",
-            "ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
+            "cp -r $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
             "mkdir -p public/vendor/lou/multi-select",
             "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
             "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
@@ -95,7 +95,7 @@
         ],
         "post-update-cmd": [
             "mkdir -p public/js/vendor/ajaxorg",
-            "ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
+            "cp -r $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
             "mkdir -p public/vendor/lou/multi-select",
             "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
             "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
