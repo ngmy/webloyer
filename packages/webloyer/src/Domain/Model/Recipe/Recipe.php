@@ -2,6 +2,7 @@
 
 namespace Ngmy\Webloyer\Webloyer\Domain\Model\Recipe;
 
+use Carbon\Carbon;
 use Ngmy\Webloyer\Webloyer\Domain\Model\ConcurrencySafeTrait;
 use Ngmy\Webloyer\Webloyer\Domain\Model\AbstractEntity;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
@@ -25,7 +26,7 @@ class Recipe extends AbstractEntity
 
     private $updatedAt;
 
-    public function __construct(RecipeId $recipeId, $name, $description, $body, array $afferentProjectIds, $createdAt, $updatedAt)
+    public function __construct(RecipeId $recipeId, $name, $description, $body, array $afferentProjectIds, Carbon $createdAt = null, Carbon $updatedAt = null)
     {
         $this->setRecipeId($recipeId);
         $this->setName($name);
@@ -123,14 +124,14 @@ class Recipe extends AbstractEntity
         return $this;
     }
 
-    private function setCreatedAt($createdAt)
+    private function setCreatedAt(Carbon $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    private function setUpdatedAt($updatedAt)
+    private function setUpdatedAt(Carbon $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 

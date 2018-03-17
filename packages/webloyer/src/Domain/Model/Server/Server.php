@@ -2,6 +2,7 @@
 
 namespace Ngmy\Webloyer\Webloyer\Domain\Model\Server;
 
+use Carbon\Carbon;
 use Ngmy\Webloyer\Webloyer\Domain\Model\ConcurrencySafeTrait;
 use Ngmy\Webloyer\Webloyer\Domain\Model\AbstractEntity;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerId;
@@ -22,7 +23,7 @@ class Server extends AbstractEntity
 
     private $updatedAt;
 
-    public function __construct(ServerId $serverId, $name, $description, $body, $createdAt, $updatedAt)
+    public function __construct(ServerId $serverId, $name, $description, $body, Carbon $createdAt = null, Carbon $updatedAt = null)
     {
         $this->setServerId($serverId);
         $this->setName($name);
@@ -102,14 +103,14 @@ class Server extends AbstractEntity
         return $this;
     }
 
-    private function setCreatedAt($createdAt)
+    private function setCreatedAt(Carbon $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    private function setUpdatedAt($updatedAt)
+    private function setUpdatedAt(Carbon $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 
