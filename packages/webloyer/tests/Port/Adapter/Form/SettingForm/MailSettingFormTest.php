@@ -50,7 +50,7 @@ class MailSettingFormTest extends TestCase
         $this->closeMock();
     }
 
-    public function test_Should_SucceedToUpdate_When_ValidationPasses()
+    public function test_Should_SucceedToUpdate_When_ValidationPassesAndNotExistsEmptyValue()
     {
         $this->validator
             ->shouldReceive('with->passes')
@@ -59,6 +59,21 @@ class MailSettingFormTest extends TestCase
         $this->settingService
             ->shouldReceive('saveMailSetting');
 
+        $actualResult = $this->mailSettingForm->update($this->inputForUpdate);
+
+        $this->assertTrue($actualResult, 'Expected save to succeed.');
+    }
+
+    public function test_Should_SucceedToUpdate_When_ValidationPassesAndExistsEmptyValue()
+    {
+        $this->validator
+            ->shouldReceive('with->passes')
+            ->andReturn(true);
+
+        $this->settingService
+            ->shouldReceive('saveMailSetting');
+
+        $this->inputForUpdate['driver'] = '';
         $actualResult = $this->mailSettingForm->update($this->inputForUpdate);
 
         $this->assertTrue($actualResult, 'Expected save to succeed.');
