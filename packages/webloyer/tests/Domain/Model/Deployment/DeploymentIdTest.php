@@ -11,11 +11,11 @@ class DeploymentIdTest extends TestCase
     {
         $expectedResult = 1;
 
-        $recipe = $this->createDeploymentId([
+        $deploymentId = $this->createDeploymentId([
             'id' => $expectedResult,
         ]);
 
-        $actualResult = $recipe->id();
+        $actualResult = $deploymentId->id();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -24,9 +24,7 @@ class DeploymentIdTest extends TestCase
     {
         $this->checkEquals(
             $this->createDeploymentId(),
-            $this->createDeploymentId([
-                'id' => 1,
-            ]),
+            $this->createDeploymentId(),
             true
         );
     }

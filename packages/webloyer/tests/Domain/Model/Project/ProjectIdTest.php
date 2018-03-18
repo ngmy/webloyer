@@ -11,11 +11,11 @@ class ProjectIdTest extends TestCase
     {
         $expectedResult = 1;
 
-        $recipe = $this->createProjectId([
+        $projectId = $this->createProjectId([
             'id' => $expectedResult,
         ]);
 
-        $actualResult = $recipe->id();
+        $actualResult = $projectId->id();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -24,9 +24,7 @@ class ProjectIdTest extends TestCase
     {
         $this->checkEquals(
             $this->createProjectId(),
-            $this->createProjectId([
-                'id' => 1,
-            ]),
+            $this->createProjectId(),
             true
         );
     }

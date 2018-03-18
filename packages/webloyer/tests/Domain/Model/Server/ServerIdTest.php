@@ -11,11 +11,11 @@ class ServerIdTest extends TestCase
     {
         $expectedResult = 1;
 
-        $recipe = $this->createServerId([
+        $serverId = $this->createServerId([
             'id' => $expectedResult,
         ]);
 
-        $actualResult = $recipe->id();
+        $actualResult = $serverId->id();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -24,9 +24,7 @@ class ServerIdTest extends TestCase
     {
         $this->checkEquals(
             $this->createServerId(),
-            $this->createServerId([
-                'id' => 1,
-            ]),
+            $this->createServerId(),
             true
         );
     }

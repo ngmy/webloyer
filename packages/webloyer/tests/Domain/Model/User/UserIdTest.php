@@ -11,11 +11,11 @@ class UserIdTest extends TestCase
     {
         $expectedResult = 1;
 
-        $recipe = $this->createUserId([
+        $userId = $this->createUserId([
             'id' => $expectedResult,
         ]);
 
-        $actualResult = $recipe->id();
+        $actualResult = $userId->id();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -24,9 +24,7 @@ class UserIdTest extends TestCase
     {
         $this->checkEquals(
             $this->createUserId(),
-            $this->createUserId([
-                'id' => 1,
-            ]),
+            $this->createUserId(),
             true
         );
     }

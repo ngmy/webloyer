@@ -11,11 +11,11 @@ class RecipeIdTest extends TestCase
     {
         $expectedResult = 1;
 
-        $recipe = $this->createRecipeId([
+        $recipeId = $this->createRecipeId([
             'id' => $expectedResult,
         ]);
 
-        $actualResult = $recipe->id();
+        $actualResult = $recipeId->id();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -25,9 +25,7 @@ class RecipeIdTest extends TestCase
     {
         $this->checkEquals(
             $this->createRecipeId(),
-            $this->createRecipeId([
-                'id' => 1,
-            ]),
+            $this->createRecipeId(),
             true
         );
     }

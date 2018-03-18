@@ -30,11 +30,9 @@ final class Status extends AbstractValueObject
     {
         if ($this->isSuccess()) {
             return 'Success';
-        }
-        if ($this->isFailure()) {
+        } elseif ($this->isFailure()) {
             return 'Failure';
-        }
-        if ($this->isRunning()) {
+        } else {
             return 'Running';
         }
     }

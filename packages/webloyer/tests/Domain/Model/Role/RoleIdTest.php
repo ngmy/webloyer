@@ -11,11 +11,11 @@ class RoleIdTest extends TestCase
     {
         $expectedResult = 1;
 
-        $recipe = $this->createRoleId([
+        $roleId = $this->createRoleId([
             'id' => $expectedResult,
         ]);
 
-        $actualResult = $recipe->id();
+        $actualResult = $roleId->id();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
@@ -24,9 +24,7 @@ class RoleIdTest extends TestCase
     {
         $this->checkEquals(
             $this->createRoleId(),
-            $this->createRoleId([
-                'id' => 1,
-            ]),
+            $this->createRoleId(),
             true
         );
     }
