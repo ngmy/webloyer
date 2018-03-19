@@ -28,9 +28,9 @@ Deploy a project.
 
 #### Arguments
 
-|Name|Type|Description|
-|---|---|---|
-|project_id|integer|Project id.|
+| Name | Type | Description |
+| --- | --- | --- |
+| project_id | integer | Project id. |
 
 #### Example request
 
@@ -50,9 +50,9 @@ Roll back a project to a previous deployment.
 
 #### Arguments
 
-|Name|Type|Description|
-|---|---|---|
-|project_id|integer|Project id.|
+| Name | Type | Description |
+| --- | --- | --- |
+| project_id | integer | Project id. |
 
 #### Example request
 
