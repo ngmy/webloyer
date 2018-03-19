@@ -16,35 +16,35 @@ Webloyer has the following features:
 
 * Project management
 
- * Managing deployment settings on a project-by-project basis
+    * Managing deployment settings on a project-by-project basis
 
 * Deployment management on a project-by-project basis
 
- * 1-click deploying and rolling back
+    * 1-click deploying and rolling back
 
- * Keeping a log of every deployments
+    * Keeping a log of every deployments
 
- * E-mail notifications can be sent when a deployment finishes
+    * E-mail notifications can be sent when a deployment finishes
 
 * Recipe management
 
- * Creating, editing, deleting and listing recipe files
+    * Creating, editing, deleting and listing recipe files
 
 * Server management
 
- * Creating, editing, deleting and listing server list files
+    * Creating, editing, deleting and listing server list files
 
 * User management
 
- * Authentication with e-mail address and password
+    * Authentication with e-mail address and password
 
- * Role-based access control to features
+    * Role-based access control to features
 
 * Web APIs
 
 * Webhooks
 
- * GitHub
+    * GitHub
 
 ## Screenshots
 
@@ -68,36 +68,36 @@ Webloyer has the following requirements:
 
 1. Download the application source code by using the Composer `create-project` command:
 
- ```
- composer create-project ngmy/webloyer
- ```
+   ```
+   composer create-project ngmy/webloyer
+   ```
 
 2. Give write permission to the `storage` directory and the `bootstrap/cache` directory for your web-server user by running the following command:
 
- ```
- chmod -R 777 storage
- chmod -R 777 bootstrap/cache
- ```
+   ```
+   chmod -R 777 storage
+   chmod -R 777 bootstrap/cache
+   ```
 
 3. Run the installer by using the Artisan `webloyer:install` command:
 
- ```
- php artisan webloyer:install
- ```
+   ```
+   php artisan webloyer:install
+   ```
 
 4. Start the queue listener as a background process by using the Artisan `queue:listen` command:
 
- ```
- nohup php artisan queue:listen --timeout=0 &
- ```
+   ```
+   nohup php artisan queue:listen --timeout=0 &
+   ```
 
- **Note:** You must be running this command as your deployment-user.
+   **Note:** You must be running this command as your deployment-user.
 
 5. Add the following Cron entry to your server:
 
- ```
- * * * * * php /path/to/webloyer/artisan schedule:run >> /dev/null 2>&1
- ```
+   ```
+   * * * * * php /path/to/webloyer/artisan schedule:run >> /dev/null 2>&1
+   ```
 
 ## Basic Usage
 
@@ -115,9 +115,9 @@ Webloyer has the following requirements:
 
 2. Enter your project information.
 
- **Note:** For now, Webloyer only supports the `deploy` task and the `rollback` task. Therefore, you must define these tasks in your Deployer recipe file.
+   **Note:** For now, Webloyer only supports the `deploy` task and the `rollback` task. Therefore, you must define these tasks in your Deployer recipe file.
 
- **Note:** If you want to use the e-mail notification, you need to enter your e-mail settings from the E-Mail Settings page.
+   **Note:** If you want to use the e-mail notification, you need to enter your e-mail settings from the E-Mail Settings page.
 
 3. Click the "Store" button to finish project creation process.
 
