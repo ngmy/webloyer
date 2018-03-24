@@ -53,7 +53,7 @@ class OldDeploymentSpecification extends AbstractDeploymentSpecification
             $keepLastDeployment = $this->project->keepLastDeployment();
             $baseDate = $this->currentDate->modify('-' . $daysToKeepDeployments . ' days');
             $pastDaysToKeepDeployments = array_filter($deployments, function ($deployment, $index) use ($baseDate, $keepLastDeployment) {
-                return ($deployment->createdAt() < $baseDate) && !($keepLastDeployment && $index == 0);
+                return ($deployment->createdAt() < $baseDate) && !($keepLastDeployment->isOn() && $index == 0);
             }, ARRAY_FILTER_USE_BOTH);
         }
 
@@ -66,8 +66,14 @@ class OldDeploymentSpecification extends AbstractDeploymentSpecification
         }
 
         $oldDeployments = array_merge($pastDaysToKeepDeployments, $pastNumToKeepDeployments);
-        array_unique($oldDeployments, SORT_REGULAR);
 
-        return $oldDeployments;
+        $finalOldDeployments = [];
+        foreach ($oldDeployments as $oldDeployment) {
+            if (!in_array($oldDeployment, $finalOldDeployments, true)) {
+                $finalOldDeployments[] = $oldDeployment;
+            }
+        }
+
+        return $finalOldDeployments;
     }
 }
