@@ -20,7 +20,6 @@ class RecipeIdTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-
     public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
     {
         $this->checkEquals(

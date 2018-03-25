@@ -120,11 +120,6 @@ class Project extends AbstractEntity
         return $this->keepLastDeployment;
     }
 
-    public function isKeepLastDeployment()
-    {
-        return (boolean) $this->keepLastDeployment;
-    }
-
     public function githubWebhookSecret()
     {
         return $this->githubWebhookSecret;

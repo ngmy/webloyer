@@ -96,26 +96,6 @@ class RecipeTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
-    {
-        $this->checkEquals(
-            $this->createRecipe(),
-            $this->createRecipe(),
-            true
-        );
-    }
-
-    public function test_Should_EqualsReturnFalse_When_OtherObjectIsNotEqualToThisOne()
-    {
-        $this->checkEquals(
-            $this->createRecipe(),
-            $this->createRecipe([
-                'recipeId' => 2,
-            ]),
-            false
-        );
-    }
-
     public function test_Should_GetCreatedAt()
     {
         $expectedResult = new Carbon('2018-03-18 00:00:00');
@@ -142,6 +122,25 @@ class RecipeTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
+    public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
+    {
+        $this->checkEquals(
+            $this->createRecipe(),
+            $this->createRecipe(),
+            true
+        );
+    }
+
+    public function test_Should_EqualsReturnFalse_When_OtherObjectIsNotEqualToThisOne()
+    {
+        $this->checkEquals(
+            $this->createRecipe(),
+            $this->createRecipe([
+                'recipeId' => 2,
+            ]),
+            false
+        );
+    }
 
     private function checkEquals($self, $other, $expectedResult)
     {

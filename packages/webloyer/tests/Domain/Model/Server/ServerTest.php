@@ -60,26 +60,6 @@ class ServerTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
-    {
-        $this->checkEquals(
-            $this->createServer(),
-            $this->createServer(),
-            true
-        );
-    }
-
-    public function test_Should_EqualsReturnFalse_When_OtherObjectIsNotEqualToThisOne()
-    {
-        $this->checkEquals(
-            $this->createServer(),
-            $this->createServer([
-                'serverId' => 2,
-            ]),
-            false
-        );
-    }
-
     public function test_Should_GetCreatedAt()
     {
         $expectedResult = new Carbon('2018-03-18 00:00:00');
@@ -106,6 +86,25 @@ class ServerTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
+    public function test_Should_EqualsReturnTrue_When_OtherObjectIsEqualToThisOne()
+    {
+        $this->checkEquals(
+            $this->createServer(),
+            $this->createServer(),
+            true
+        );
+    }
+
+    public function test_Should_EqualsReturnFalse_When_OtherObjectIsNotEqualToThisOne()
+    {
+        $this->checkEquals(
+            $this->createServer(),
+            $this->createServer([
+                'serverId' => 2,
+            ]),
+            false
+        );
+    }
 
     private function checkEquals($self, $other, $expectedResult)
     {
