@@ -18,8 +18,7 @@ final class KeepLastDeployment extends AbstractValueObject
     {
         if ($this->isOn()) {
             return 'On';
-        }
-        if ($this->isOff()) {
+        } else {
             return 'Off';
         }
     }
