@@ -61,7 +61,7 @@ class DeploymentService
      */
     public function getDeploymentsByPage($projectId, $page = 1, $perPage = 10)
     {
-        $criteria = new DeploymentCriteria($projectId);
+        $criteria = new DeploymentCriteria(new ProjectId($projectId));
         $order = new Order('deployments.created_at', Direction::desc());
         $pagination = new Pagination($page, $perPage);
         $queryObject = new QueryObject();
@@ -94,7 +94,7 @@ class DeploymentService
      */
     public function getLastDeployment($projectId)
     {
-        $criteria = new DeploymentCriteria($projectId);
+        $criteria = new DeploymentCriteria(new ProjectId($projectId));
         $order = new Order('deployments.created_at', Direction::desc());
         $pagination = new Pagination(1, 1);
         $queryObject = new QueryObject();

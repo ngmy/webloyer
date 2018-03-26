@@ -133,7 +133,7 @@ class DeploymentServiceTest extends TestCase
         $this->deploymentRepository
             ->shouldReceive('deployments')
             ->with(Mockery::on(function ($arg) use ($projectId) {
-                $criteria = new DeploymentCriteria($projectId);
+                $criteria = new DeploymentCriteria(new ProjectId($projectId));
                 $order = new Order('deployments.created_at', Direction::desc());
                 $pagination = new Pagination(1, 1);
                 $queryObject = new QueryObject();
@@ -156,7 +156,7 @@ class DeploymentServiceTest extends TestCase
         $this->deploymentRepository
             ->shouldReceive('deployments')
             ->with(Mockery::on(function ($arg) use ($projectId) {
-                $criteria = new DeploymentCriteria($projectId);
+                $criteria = new DeploymentCriteria(new ProjectId($projectId));
                 $order = new Order('deployments.created_at', Direction::desc());
                 $pagination = new Pagination(1, 1);
                 $queryObject = new QueryObject();
@@ -280,7 +280,7 @@ class DeploymentServiceTest extends TestCase
         $this->deploymentRepository
             ->shouldReceive('deployments')
             ->with(Mockery::on(function ($arg) use ($projectId, $expectedPage, $expectedPerPage) {
-                $criteria = new DeploymentCriteria($projectId);
+                $criteria = new DeploymentCriteria(new ProjectId($projectId));
                 $order = new Order('deployments.created_at', Direction::desc());
                 $pagination = new Pagination($expectedPage, $expectedPerPage);
                 $queryObject = new QueryObject();

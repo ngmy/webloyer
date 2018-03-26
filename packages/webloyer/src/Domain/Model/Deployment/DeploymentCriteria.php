@@ -9,7 +9,7 @@ class DeploymentCriteria extends AbstractCriteria
 {
     private $priectId;
 
-    public function __construct($projectId)
+    public function __construct(ProjectId $projectId)
     {
         $this->setProjectId($projectId);
     }
@@ -19,8 +19,8 @@ class DeploymentCriteria extends AbstractCriteria
         return $this->projectId;
     }
 
-    private function setProjectId($projectId)
+    private function setProjectId(ProjectId $projectId)
     {
-        $this->projectId = new ProjectId($projectId);
+        $this->projectId = $projectId;
     }
 }

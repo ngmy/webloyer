@@ -31,7 +31,7 @@ class OldDeploymentSpecification extends AbstractDeploymentSpecification
      */
     public function satisfyingElementsFrom(DeploymentRepositoryInterface $deploymentRepository)
     {
-        $criteria = new DeploymentCriteria($this->project->projectId()->id());
+        $criteria = new DeploymentCriteria($this->project->projectId());
         $order = new Order('deployments.created_at', Direction::desc());
         $queryObject = new QueryObject();
         $queryObject->setCriteria($criteria)

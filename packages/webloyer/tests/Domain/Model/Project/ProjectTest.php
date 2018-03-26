@@ -260,7 +260,7 @@ class ProjectTest extends TestCase
         $maxNumberOfDeploymentsToKeep = 1;
         $keepLastDeployment = 0;
         $githubWebhookSecret = '';
-        $githubWebhookExecuteUserId = '';
+        $githubWebhookExecuteUserId = null;
         $createdAt = '';
         $updatedAt = '';
 

@@ -9,6 +9,7 @@ use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentRepositoryInterface
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\OldDeploymentSpecification;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\KeepLastDeployment;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
 use Tests\Helpers\MockeryHelper;
 use TestCase;
 
@@ -443,11 +444,11 @@ class OldDeploymentSpecificationTest extends TestCase
 
     private function checkSatisfyingElementsFrom($deployments, $daysToKeepDeployments, $keepLastDeployment, $baseDate, $maxNumberOfDeploymentsToKeep, $expectedResult)
     {
-        $projectId = 1;
+        $projectId = new ProjectId(1);
         $deploymentRepository = $this->mock(DeploymentRepositoryInterface::class);
 
         $this->project
-            ->shouldReceive('projectId->id')
+            ->shouldReceive('projectId')
             ->andReturn($projectId)
             ->once();
 

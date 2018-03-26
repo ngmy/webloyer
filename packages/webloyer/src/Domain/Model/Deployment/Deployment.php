@@ -91,11 +91,6 @@ class Deployment extends AbstractEntity
         return $equalObjects;
     }
 
-    public function __toString()
-    {
-
-    }
-
     private function setProjectId(ProjectId $projectId)
     {
         $this->projectId = $projectId;
