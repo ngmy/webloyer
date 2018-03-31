@@ -65,7 +65,7 @@ class DeploymentsController extends Controller
         $deployedUsers = [];
         foreach ($deployments as $deployment) {
             if (!is_null($deployment->deployedUserId()->id())) {
-                $deployedUsers[$deployment->deploymentId()->id()] = $this->userService->getUserOfId($deployment->deployedUserId()->id());
+                $deployedUsers[$deployment->deploymentId()->id()] = $this->userService->getUserById($deployment->deployedUserId()->id());
             }
         }
 
@@ -114,7 +114,7 @@ class DeploymentsController extends Controller
     public function show(Project $project, Deployment $deployment)
     {
         if (!is_null($deployment->deployedUserId()->id())) {
-            $deployedUser = $this->userService->getUserOfId($deployment->deployedUserId()->id());
+            $deployedUser = $this->userService->getUserById($deployment->deployedUserId()->id());
         }
 
         $deployment = new DeploymentPresenter($deployment, new AnsiToHtmlConverter());

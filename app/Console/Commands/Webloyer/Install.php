@@ -133,7 +133,7 @@ class Install extends Command
         $adminHashedPassword = Hash::make($adminPassword);
         $adminApiToken = str_random(60);
 
-        $adminRole = $roleService->getRoleOfSlug(RoleSlug::administrator()->value());
+        $adminRole = $roleService->getRoleBySlug(RoleSlug::administrator()->value());
         $adminRoleIds = [
             $adminRole->roleId()->id(),
         ];

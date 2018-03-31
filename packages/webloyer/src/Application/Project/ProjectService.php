@@ -42,7 +42,7 @@ class ProjectService
      *
      * @param int $page
      * @param int $perPage
-     * @return void
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getProjectsByPage($page = 1, $perPage = 10)
     {

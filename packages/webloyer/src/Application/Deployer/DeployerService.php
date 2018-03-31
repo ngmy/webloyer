@@ -191,7 +191,7 @@ class DeployerService
             $subject = "Deployment of {$project->name()} #{$deployment->deploymentId()->id()} finished: {$status}";
 
             if (!is_null($deployment->deployedUserId()->id())) {
-                $deployedUser = $this->userService->getUserOfId($deployment->deployedUserId()->id());
+                $deployedUser = $this->userService->getUserById($deployment->deployedUserId()->id());
             }
 
             $deployment = new DeploymentPresenter($deployment, new AnsiToHtmlConverter());

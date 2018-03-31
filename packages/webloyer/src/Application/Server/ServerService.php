@@ -37,7 +37,7 @@ class ServerService
      *
      * @param int $page
      * @param int $perPage
-     * @return array
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getServersByPage($page = 1, $perPage = 10)
     {

@@ -439,7 +439,7 @@ class DeployerServiceTest extends TestCase
                 ->once();
 
             $this->userService
-                ->shouldReceive('getUserOfId')
+                ->shouldReceive('getUserById')
                 ->with($iDeployedUserId)
                 ->andReturn($deployedUser)
                 ->once();

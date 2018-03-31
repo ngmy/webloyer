@@ -37,7 +37,7 @@ class RecipeService
      *
      * @param int $page
      * @param int $perPage
-     * @return array
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getRecipesByPage($page = 1, $perPage = 10)
     {

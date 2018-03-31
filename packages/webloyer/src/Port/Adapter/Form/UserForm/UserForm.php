@@ -67,7 +67,7 @@ class UserForm
             return false;
         }
 
-        $user = $this->userService->getUserOfId($input['id']);
+        $user = $this->userService->getUserById($input['id']);
 
         $this->userService->saveUser(
             $input['id'],
@@ -98,7 +98,7 @@ class UserForm
 
         $hashedPassword = Hash::make($input['password']);
 
-        $user = $this->userService->getUserOfId($input['id']);
+        $user = $this->userService->getUserById($input['id']);
 
         $this->userService->saveUser(
             $input['id'],
@@ -131,7 +131,7 @@ class UserForm
             $input['role'] = [];
         }
 
-        $user = $this->userService->getUserOfId($input['id']);
+        $user = $this->userService->getUserById($input['id']);
 
         $this->userService->saveUser(
             $input['id'],
@@ -150,7 +150,7 @@ class UserForm
     {
         $apiToken = str_random(60);
 
-        $user = $this->userService->getUserOfId($input['id']);
+        $user = $this->userService->getUserById($input['id']);
 
         $this->userService->saveUser(
             $input['id'],

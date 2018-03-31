@@ -12,33 +12,67 @@ class UserService
 {
     private $userRepository;
 
+    /**
+     * Create a new application service instance.
+     *
+     * @param \Ngmy\Webloyer\IdentityAccess\Model\User\UserRepositoryInterface $userRepository
+     * @return void
+     */
     public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Get all users.
+     *
+     * @return array
+     */
     public function getAllUsers()
     {
         return $this->userRepository->allUsers();
     }
 
-    public function getUserOfId($id)
-    {
-        $userId = new UserId($id);
-
-        return $this->userRepository->userOfId($userId);
-    }
-
-    public function getUsersOfPage($page, $perPage)
+    /**
+     * Get users by page.
+     *
+     * @param int $page
+     * @param int $perPage
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getUsersByPage($page = 1, $perPage = 10)
     {
         return $this->userRepository->usersOfPage($page, $perPage);
     }
 
-    public function saveUser($id, $name, $email, $password, $apiToken, array $primitiveRoleIds, $concurrencyVersion)
+    /**
+     * Get a user by id.
+     *
+     * @param int $userId
+     * @return \Ngmy\Webloyer\IdentityAccess\Model\User\User
+     */
+    public function getUserById($userId)
     {
-        $user = DB::transaction(function () use ($id, $name, $email, $password, $apiToken, $primitiveRoleIds, $concurrencyVersion) {
-            if (!is_null($id)) {
-                $existsUser = $this->getUserOfId($id);
+        return $this->userRepository->userOfId(new UserId($userId));
+    }
+
+    /**
+     * Create or Update a user.
+     *
+     * @param int|null $userId
+     * @param string   $name
+     * @param string   $email
+     * @param string   $password
+     * @param string   $apiToken
+     * @param int[]    $roleIds
+     * @param string   $concurrencyVersion
+     * @return void
+     */
+    public function saveUser($userId, $name, $email, $password, $apiToken, array $roleIds, $concurrencyVersion)
+    {
+        DB::transaction(function () use ($userId, $name, $email, $password, $apiToken, $roleIds, $concurrencyVersion) {
+            if (!is_null($userId)) {
+                $existsUser = $this->getUserById($userId);
 
                 if (!is_null($existsUser)) {
                     $existsUser->failWhenConcurrencyViolation($concurrencyVersion);
@@ -46,30 +80,30 @@ class UserService
             }
 
             $user = new User(
-                new UserId($id),
+                new UserId($userId),
                 $name,
                 $email,
                 $password,
                 $apiToken,
                 array_map(function ($roleId) {
                     return new RoleId($roleId);
-                }, $primitiveRoleIds),
+                }, $roleIds),
                 null,
                 null
             );
 
-            return $this->userRepository->save($user);
+            $this->userRepository->save($user);
         });
-
-        return $user;
     }
 
-    public function removeUser($id)
+    /**
+     * Remove a user.
+     *
+     * @param int $userId
+     * @return void
+     */
+    public function removeUser($userId)
     {
-        $user = $this->getUserOfId($id);
-
-        $this->userRepository->remomve($user);
-
-        return true;
+        $this->userRepository->remove($this->getUserById($userId));
     }
 }

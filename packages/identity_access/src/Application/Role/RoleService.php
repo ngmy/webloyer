@@ -19,7 +19,7 @@ class RoleService
         return $this->roleRepository->allRoles();
     }
 
-    public function getRoleOfSlug($roleSlug)
+    public function getRoleBySlug($roleSlug)
     {
         return $this->roleRepository->roleOfSlug(new RoleSlug($roleSlug));
     }

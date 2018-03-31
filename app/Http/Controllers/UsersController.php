@@ -48,7 +48,7 @@ class UsersController extends Controller
 
         $perPage = 10;
 
-        $users = $this->userService->getUsersOfPage($page, $perPage);
+        $users = $this->userService->getUsersByPage($page, $perPage);
 
         return view('users.index')->with('users', $users);
     }

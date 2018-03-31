@@ -108,7 +108,7 @@ class UserFormTest extends TestCase
         $roleIds = [new RoleId(1)];
         $user->shouldReceive('roleIds')->andReturn($roleIds);
         $this->userService
-            ->shouldReceive('getUserOfId')
+            ->shouldReceive('getUserById')
             ->andReturn($user);
         $this->userService
             ->shouldReceive('saveUser');
@@ -142,7 +142,7 @@ class UserFormTest extends TestCase
         $roleIds = [new RoleId(1)];
         $user->shouldReceive('roleIds')->andReturn($roleIds);
         $this->userService
-            ->shouldReceive('getUserOfId')
+            ->shouldReceive('getUserById')
             ->andReturn($user);
         $this->userService
             ->shouldReceive('saveUser');
@@ -175,7 +175,7 @@ class UserFormTest extends TestCase
         $user->shouldReceive('password');
         $user->shouldReceive('apiToken');
         $this->userService
-            ->shouldReceive('getUserOfId')
+            ->shouldReceive('getUserById')
             ->andReturn($user);
         $this->userService
             ->shouldReceive('saveUser');
@@ -197,7 +197,7 @@ class UserFormTest extends TestCase
         $user->shouldReceive('password');
         $user->shouldReceive('apiToken');
         $this->userService
-            ->shouldReceive('getUserOfId')
+            ->shouldReceive('getUserById')
             ->andReturn($user);
         $this->userService
             ->shouldReceive('saveUser');
@@ -229,7 +229,7 @@ class UserFormTest extends TestCase
         $roleIds = [new RoleId(1)];
         $user->shouldReceive('roleIds')->andReturn($roleIds);
         $this->userService
-            ->shouldReceive('getUserOfId')
+            ->shouldReceive('getUserById')
             ->andReturn($user);
         $this->userService
             ->shouldReceive('saveUser');

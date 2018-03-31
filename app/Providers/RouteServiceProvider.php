@@ -86,7 +86,7 @@ class RouteServiceProvider extends ServiceProvider
             $userService = $this->app->make(UserService::class);
 
             $useId = $id;
-            $user = $userService->getUserOfId($useId);
+            $user = $userService->getUserById($useId);
 
             if (is_null($user)) {
                 throw new NotFoundHttpException();
