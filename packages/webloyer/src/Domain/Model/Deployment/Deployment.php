@@ -2,6 +2,7 @@
 
 namespace Ngmy\Webloyer\Webloyer\Domain\Model\Deployment;
 
+use Carbon\Carbon;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Status;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Task;
@@ -27,7 +28,7 @@ class Deployment extends AbstractEntity
 
     private $updatedAt;
 
-    public function __construct(ProjectId $projectId, DeploymentId $deploymentId, Task $task, Status $status, $message, UserId $deployedUserId, $createdAt, $updatedAt)
+    public function __construct(ProjectId $projectId, DeploymentId $deploymentId, Task $task, Status $status, $message, UserId $deployedUserId, Carbon $createdAt = null, Carbon $updatedAt = null)
     {
         $this->setProjectId($projectId);
         $this->setDeploymentId($deploymentId);
@@ -133,14 +134,14 @@ class Deployment extends AbstractEntity
         return $this;
     }
 
-    private function setCreatedAt($createdAt)
+    private function setCreatedAt(Carbon $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    private function setUpdatedAt($updatedAt)
+    private function setUpdatedAt(Carbon $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 

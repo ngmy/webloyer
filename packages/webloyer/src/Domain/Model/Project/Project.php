@@ -2,6 +2,7 @@
 
 namespace Ngmy\Webloyer\Webloyer\Domain\Model\Project;
 
+use Carbon\Carbon;
 use Ngmy\Webloyer\Webloyer\Domain\Model\ConcurrencySafeTrait;
 use Ngmy\Webloyer\Webloyer\Domain\Model\AbstractEntity;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\KeepLastDeployment;
@@ -45,7 +46,7 @@ class Project extends AbstractEntity
 
     private $updatedAt;
 
-    public function __construct(ProjectId $projectId, $name, array $recipeIds, ServerId $serverId, $repositoryUrl, $stage, ProjectAttribute $attribute, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, KeepLastDeployment $keepLastDeployment, $githubWebhookSecret, UserId $githubWebhookExecuteUserId, $createdAt, $updatedAt)
+    public function __construct(ProjectId $projectId, $name, array $recipeIds, ServerId $serverId, $repositoryUrl, $stage, ProjectAttribute $attribute, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, KeepLastDeployment $keepLastDeployment, $githubWebhookSecret, UserId $githubWebhookExecuteUserId, Carbon $createdAt = null, Carbon $updatedAt = null)
     {
         $this->setProjectId($projectId);
         $this->setName($name);
@@ -242,14 +243,14 @@ class Project extends AbstractEntity
         return $this;
     }
 
-    private function setCreatedAt($createdAt)
+    private function setCreatedAt(Carbon $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    private function setUpdatedAt($updatedAt)
+    private function setUpdatedAt(Carbon $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 

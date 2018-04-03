@@ -2,6 +2,7 @@
 
 namespace Ngmy\Webloyer\IdentityAccess\Domain\Model\User;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\ConcurrencySafeTrait;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\AbstractEntity;
@@ -33,7 +34,7 @@ class User extends AbstractEntity implements AuthenticatableContract
 
     private $updatedAt;
 
-    public function __construct(UserId $userId, $name, $email, $password, $apiToken, array $roleIds, $createdAt, $updatedAt)
+    public function __construct(UserId $userId, $name, $email, $password, $apiToken, array $roleIds, Carbon $createdAt = null, Carbon $updatedAt = null)
     {
         $this->setUserId($userId);
         $this->setName($name);
@@ -153,14 +154,14 @@ class User extends AbstractEntity implements AuthenticatableContract
         return $this;
     }
 
-    private function setCreatedAt($createdAt)
+    private function setCreatedAt(Carbon $createdAt = null)
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    private function setUpdatedAt($updatedAt)
+    private function setUpdatedAt(Carbon $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 
