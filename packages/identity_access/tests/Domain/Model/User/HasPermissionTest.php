@@ -12,6 +12,13 @@ class HasPermissionTest extends TestCase
 {
     use MockeryHelper;
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     /**
      * @dataProvider canProvider
      */

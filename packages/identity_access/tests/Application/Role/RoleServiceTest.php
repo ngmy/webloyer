@@ -27,6 +27,13 @@ class RoleServiceTest extends TestCase
         $this->roleService = new RoleService($this->roleRepository);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_GetAllRoles()
     {
         $expectedResult = true;

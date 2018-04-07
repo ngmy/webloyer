@@ -42,6 +42,13 @@ class UserServiceTest extends TestCase
         $this->userService = new UserService($this->userRepository);
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_GetAllUsers()
     {
         $expectedResult = true;

@@ -13,6 +13,13 @@ class HasRoleTest extends TestCase
 {
     use MockeryHelper;
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     /**
      * @dataProvider isProvider
      */

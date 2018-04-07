@@ -13,6 +13,13 @@ class AuthenticatableTest extends TestCase
 {
     use MockeryHelper;
 
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
+    }
+
     public function test_Should_GetAuthIdentifierName()
     {
         $user = $this->createUserUsingAuthenticatable();
