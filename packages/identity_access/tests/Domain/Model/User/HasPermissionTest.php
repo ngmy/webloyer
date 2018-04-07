@@ -13,7 +13,7 @@ class HasPermissionTest extends TestCase
     use MockeryHelper;
 
     /**
-     * @dataProvider isProvider
+     * @dataProvider canProvider
      */
     public function test_Should_VerifyUserIsSpecifiedPermission_When_($permission, $operator)
     {
@@ -33,7 +33,7 @@ class HasPermissionTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-    public function isProvider()
+    public function canProvider()
     {
         return [
             ['some permission', null],
