@@ -8,10 +8,11 @@ use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\RecipeForm\RecipeForm;
 use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
 use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\Factory;
 use Tests\Helpers\MockeryHelper;
 
 class RecipesControllerTest extends TestCase
@@ -85,212 +86,252 @@ class RecipesControllerTest extends TestCase
         $this->assertViewHas('recipes');
     }
 
-//    public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
-//    {
-//        $this->get('recipes/create');
-//
-//        $this->assertResponseOk();
-//    }
-//
-//    public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
-//    {
-//        $this->recipeForm
-//            ->shouldReceive('save')
-//            ->once()
-//            ->andReturn(true);
-//
-//        $this->post('recipes');
-//
-//        $this->assertRedirectedToRoute('recipes.index');
-//    }
-//
-//    public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
-//    {
-//        $this->recipeForm
-//            ->shouldReceive('save')
-//            ->once()
-//            ->andReturn(false);
-//
-//        $this->recipeForm
-//            ->shouldReceive('errors')
-//            ->once()
-//            ->andReturn([]);
-//
-//        $this->post('recipes');
-//
-//        $this->assertRedirectedToRoute('recipes.create');
-//        $this->assertSessionHasErrors();
-//    }
-//
-//    public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
-//    {
-//        $recipe = $this->recipe
-//            ->shouldReceive('getProjects')
-//            ->once()
-//            ->andReturn(new Illuminate\Database\Eloquent\Collection)
-//            ->mock();
-//
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn($recipe);
-//
-//        $this->get('recipes/1');
-//
-//        $this->assertResponseOk();
-//        $this->assertViewHas('recipe');
-//    }
-//
-//    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
-//    {
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn(null);
-//
-//        $this->get('recipes/1');
-//
-//        $this->assertResponseStatus(404);
-//    }
-//
-//    public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
-//    {
-//        $recipe = Factory::build('App\Models\Recipe', [
-//            'id'          => 1,
-//            'name'        => 'Recipe 1',
-//            'description' => '',
-//            'body'        => '',
-//            'created_at'  => new Carbon\Carbon,
-//            'updated_at'  => new Carbon\Carbon,
-//        ]);
-//
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn($recipe);
-//
-//        $this->get('recipes/1/edit');
-//
-//        $this->assertResponseOk();
-//        $this->assertViewHas('recipe');
-//    }
-//
-//    public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
-//    {
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn(null);
-//
-//        $this->get('recipes/1/edit');
-//
-//        $this->assertResponseStatus(404);
-//    }
-//
-//    public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
-//    {
-//        $recipe = Factory::build('App\Models\Recipe', [
-//            'id'          => 1,
-//            'name'        => 'Recipe 1',
-//            'description' => '',
-//            'body'        => '',
-//            'created_at'  => new Carbon\Carbon,
-//            'updated_at'  => new Carbon\Carbon,
-//        ]);
-//
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn($recipe);
-//
-//        $this->recipeForm
-//            ->shouldReceive('update')
-//            ->once()
-//            ->andReturn(true);
-//
-//        $this->put('recipes/1');
-//
-//        $this->assertRedirectedToRoute('recipes.index');
-//    }
-//
-//    public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
-//    {
-//        $recipe = Factory::build('App\Models\Recipe', [
-//            'id'          => 1,
-//            'name'        => 'Recipe 1',
-//            'description' => '',
-//            'body'        => '',
-//            'created_at'  => new Carbon\Carbon,
-//            'updated_at'  => new Carbon\Carbon,
-//        ]);
-//
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn($recipe);
-//
-//        $this->recipeForm
-//            ->shouldReceive('update')
-//            ->once()
-//            ->andReturn(false);
-//
-//        $this->recipeForm
-//            ->shouldReceive('errors')
-//            ->once()
-//            ->andReturn([]);
-//
-//        $this->put('recipes/1');
-//
-//        $this->assertRedirectedToRoute('recipes.edit', [$recipe]);
-//        $this->assertSessionHasErrors();
-//    }
-//
-//    public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
-//    {
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn(null);
-//
-//        $this->put('recipes/1');
-//
-//        $this->assertResponseStatus(404);
-//    }
-//
-//    public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
-//    {
-//        $recipe = Factory::build('App\Models\Recipe', [
-//            'id'          => 1,
-//            'name'        => 'Recipe 1',
-//            'description' => '',
-//            'body'        => '',
-//            'created_at'  => new Carbon\Carbon,
-//            'updated_at'  => new Carbon\Carbon,
-//        ]);
-//
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn($recipe);
-//
-//        $this->recipeRepository
-//            ->shouldReceive('delete')
-//            ->once();
-//
-//        $this->delete('recipes/1');
-//
-//        $this->assertRedirectedToRoute('recipes.index');
-//    }
-//
-//    public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
-//    {
-//        $this->recipeRepository
-//            ->shouldReceive('byId')
-//            ->once()
-//            ->andReturn(null);
-//
-//        $this->delete('recipes/1');
-//
-//        $this->assertResponseStatus(404);
-//    }
+    public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
+    {
+        $this->get('recipes/create');
+
+        $this->assertResponseOk();
+    }
+
+    public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
+    {
+        $this->recipeForm
+            ->shouldReceive('save')
+            ->andReturn(true)
+            ->once();
+
+        $this->post('recipes');
+
+        $this->assertRedirectedToRoute('recipes.index');
+    }
+
+    public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
+    {
+        $this->recipeForm
+            ->shouldReceive('save')
+            ->andReturn(false)
+            ->once();
+
+        $this->recipeForm
+            ->shouldReceive('errors')
+            ->andReturn([])
+            ->once();
+
+        $this->post('recipes');
+
+        $this->assertRedirectedToRoute('recipes.create');
+        $this->assertSessionHasErrors();
+    }
+
+    public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
+    {
+        $recipeId = 1;
+        $recipe = $this->mock(Recipe::class);
+
+        $projectId = new ProjectId(1);
+        $afferentProjectIds = [$projectId];
+
+        $project = $this->mock(Project::class);
+        $project->shouldReceive('projectId')->andReturn($projectId);
+        $project->shouldReceive('name');
+
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($projectId->id())
+            ->andReturn($project)
+            ->once();
+
+        $recipe->shouldReceive('afferentProjectIds')->andReturn($afferentProjectIds);
+        $recipe->shouldReceive('name');
+        $recipe->shouldReceive('description');
+        $recipe->shouldReceive('body');
+        $recipe->shouldReceive('afferentProjectsCount')->andReturn(count($afferentProjectIds));
+        $recipe->shouldReceive('recipeId->id');
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->with($recipeId)
+            ->andReturn($recipe)
+            ->once();
+
+        $this->get("recipes/$recipeId");
+
+        $this->assertResponseOk();
+        $this->assertViewHas('recipe');
+        $this->assertViewHas('afferentProjects');
+    }
+
+    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
+    {
+        $projectId = 1;
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->with($projectId)
+            ->andReturn(null)
+            ->once();
+
+        $this->get("recipes/$projectId");
+
+        $this->assertResponseStatus(404);
+    }
+
+    public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
+    {
+        $recipeId = 1;
+        $recipe = $this->mock(Recipe::class);
+
+        $recipe->shouldReceive('afferentProjectIds');
+        $recipe->shouldReceive('name');
+        $recipe->shouldReceive('description');
+        $recipe->shouldReceive('body');
+        $recipe->shouldReceive('afferentProjectsCount');
+        $recipe->shouldReceive('recipeId->id');
+        $recipe->shouldReceive('concurrencyVersion');
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->with($recipeId)
+            ->andReturn($recipe)
+            ->once();
+
+        $this->get("recipes/$recipeId/edit");
+
+        $this->assertResponseOk();
+        $this->assertViewHas('recipe');
+    }
+
+    public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
+    {
+        $recipeId = 1;
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->andReturn(null)
+            ->once();
+
+        $this->get("recipes/$recipeId/edit");
+
+        $this->assertResponseStatus(404);
+    }
+
+    public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
+    {
+        $recipeId = 1;
+        $recipe = $this->mock(Recipe::class);
+
+        $recipe->shouldReceive('afferentProjectIds');
+        $recipe->shouldReceive('name');
+        $recipe->shouldReceive('description');
+        $recipe->shouldReceive('body');
+        $recipe->shouldReceive('afferentProjectsCount');
+        $recipe->shouldReceive('recipeId->id');
+        $recipe->shouldReceive('concurrencyVersion');
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->with($recipeId)
+            ->andReturn($recipe)
+            ->once();
+
+        $this->recipeForm
+            ->shouldReceive('update')
+            ->once()
+            ->andReturn(true);
+
+        $this->put("recipes/$recipeId");
+
+        $this->assertRedirectedToRoute('recipes.index');
+    }
+
+    public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
+    {
+        $recipeId = 1;
+        $recipe = $this->mock(Recipe::class);
+
+        $recipe->shouldReceive('afferentProjectIds');
+        $recipe->shouldReceive('name');
+        $recipe->shouldReceive('description');
+        $recipe->shouldReceive('body');
+        $recipe->shouldReceive('afferentProjectsCount');
+        $recipe->shouldReceive('recipeId->id')->andReturn($recipeId);
+        $recipe->shouldReceive('concurrencyVersion');
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->with($recipeId)
+            ->andReturn($recipe)
+            ->once();
+
+        $this->recipeForm
+            ->shouldReceive('update')
+            ->once()
+            ->andReturn(false);
+
+        $this->recipeForm
+            ->shouldReceive('errors')
+            ->once()
+            ->andReturn([]);
+
+        $this->put("recipes/$recipeId");
+
+        $this->assertRedirectedToRoute('recipes.edit', [$recipeId]);
+        $this->assertSessionHasErrors();
+    }
+
+    public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
+    {
+        $recipeId = 1;
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->andReturn(null)
+            ->once();
+
+        $this->put("recipes/$recipeId");
+
+        $this->assertResponseStatus(404);
+    }
+
+    public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
+    {
+        $recipeId = 1;
+        $recipe = $this->mock(Recipe::class);
+
+        $recipe->shouldReceive('afferentProjectIds');
+        $recipe->shouldReceive('name');
+        $recipe->shouldReceive('description');
+        $recipe->shouldReceive('body');
+        $recipe->shouldReceive('afferentProjectsCount');
+        $recipe->shouldReceive('recipeId->id');
+        $recipe->shouldReceive('concurrencyVersion');
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->with($recipeId)
+            ->andReturn($recipe)
+            ->once();
+
+        $this->recipeService
+            ->shouldReceive('removeRecipe')
+            ->once();
+
+        $this->delete("recipes/$recipeId");
+
+        $this->assertRedirectedToRoute('recipes.index');
+    }
+
+    public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
+    {
+        $recipeId = 1;
+
+        $this->recipeService
+            ->shouldReceive('getRecipeById')
+            ->andReturn(null)
+            ->once();
+
+        $this->delete("recipes/$recipeId");
+
+        $this->assertResponseStatus(404);
+    }
 }

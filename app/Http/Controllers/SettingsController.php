@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\SettingForm\MailSettingForm;
 

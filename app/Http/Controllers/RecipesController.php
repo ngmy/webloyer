@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
 use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe;
@@ -95,7 +94,8 @@ class RecipesController extends Controller
             $afferentProjects[] = $this->projectService->getProjectById($afferentProjectId->id());
         }
 
-        return view('recipes.show')->with('recipe', $recipe)
+        return view('recipes.show')
+            ->with('recipe', $recipe)
             ->with('afferentProjects', $afferentProjects);
     }
 
