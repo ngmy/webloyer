@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ApplySettings;
+use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -11,6 +12,7 @@ use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeId;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\MockeryHelper;
@@ -51,18 +53,12 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $recipe = $this->mock(Recipe::class);
+        $recipe = $this->createRecipe();
         $recipes = new Collection([
             $recipe,
         ]);
         $page = 1;
         $perPage = 10;
-
-        $recipe->shouldReceive('name');
-        $recipe->shouldReceive('afferentProjectsCount');
-        $recipe->shouldReceive('createdAt');
-        $recipe->shouldReceive('updatedAt');
-        $recipe->shouldReceive('recipeId->id');
 
         $this->recipeService
             ->shouldReceive('getRecipesByPage')
@@ -125,36 +121,28 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $recipeId = 1;
-        $recipe = $this->mock(Recipe::class);
+        $recipe = $this->createRecipe([
+            'afferentProjectIds' => [1, 2],
+        ]);
 
-        $projectId = new ProjectId(1);
-        $afferentProjectIds = [$projectId];
-
-        $project = $this->mock(Project::class);
-        $project->shouldReceive('projectId')->andReturn($projectId);
-        $project->shouldReceive('name');
-
-        $this->projectService
-            ->shouldReceive('getProjectById')
-            ->with($projectId->id())
-            ->andReturn($project)
-            ->once();
-
-        $recipe->shouldReceive('afferentProjectIds')->andReturn($afferentProjectIds);
-        $recipe->shouldReceive('name');
-        $recipe->shouldReceive('description');
-        $recipe->shouldReceive('body');
-        $recipe->shouldReceive('afferentProjectsCount')->andReturn(count($afferentProjectIds));
-        $recipe->shouldReceive('recipeId->id');
+        foreach ($recipe->afferentProjectIds() as $afferentProjectId) {
+            $project = $this->createProject([
+                'projectId' => $afferentProjectId->id(),
+            ]);
+            $this->projectService
+                ->shouldReceive('getProjectById')
+                ->with($project->projectId()->id())
+                ->andReturn($project)
+                ->once();
+        }
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
-            ->with($recipeId)
+            ->with($recipe->recipeId()->id())
             ->andReturn($recipe)
             ->once();
 
-        $this->get("recipes/$recipeId");
+        $this->get("recipes/{$recipe->recipeId()->id()}");
 
         $this->assertResponseOk();
         $this->assertViewHas('recipe');
@@ -163,39 +151,30 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
     {
-        $projectId = 1;
+        $recipeId = 1;
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
-            ->with($projectId)
+            ->with($recipeId)
             ->andReturn(null)
             ->once();
 
-        $this->get("recipes/$projectId");
+        $this->get("recipes/$recipeId");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $recipeId = 1;
-        $recipe = $this->mock(Recipe::class);
-
-        $recipe->shouldReceive('afferentProjectIds');
-        $recipe->shouldReceive('name');
-        $recipe->shouldReceive('description');
-        $recipe->shouldReceive('body');
-        $recipe->shouldReceive('afferentProjectsCount');
-        $recipe->shouldReceive('recipeId->id');
-        $recipe->shouldReceive('concurrencyVersion');
+        $recipe = $this->createRecipe();
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
-            ->with($recipeId)
+            ->with($recipe->recipeId()->id())
             ->andReturn($recipe)
             ->once();
 
-        $this->get("recipes/$recipeId/edit");
+        $this->get("recipes/{$recipe->recipeId()->id()}/edit");
 
         $this->assertResponseOk();
         $this->assertViewHas('recipe');
@@ -207,6 +186,7 @@ class RecipesControllerTest extends TestCase
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
+            ->with($recipeId)
             ->andReturn(null)
             ->once();
 
@@ -217,20 +197,11 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $recipeId = 1;
-        $recipe = $this->mock(Recipe::class);
-
-        $recipe->shouldReceive('afferentProjectIds');
-        $recipe->shouldReceive('name');
-        $recipe->shouldReceive('description');
-        $recipe->shouldReceive('body');
-        $recipe->shouldReceive('afferentProjectsCount');
-        $recipe->shouldReceive('recipeId->id');
-        $recipe->shouldReceive('concurrencyVersion');
+        $recipe = $this->createRecipe();
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
-            ->with($recipeId)
+            ->with($recipe->recipeId()->id())
             ->andReturn($recipe)
             ->once();
 
@@ -239,27 +210,18 @@ class RecipesControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->put("recipes/$recipeId");
+        $this->put("recipes/{$recipe->recipeId()->id()}");
 
         $this->assertRedirectedToRoute('recipes.index');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $recipeId = 1;
-        $recipe = $this->mock(Recipe::class);
-
-        $recipe->shouldReceive('afferentProjectIds');
-        $recipe->shouldReceive('name');
-        $recipe->shouldReceive('description');
-        $recipe->shouldReceive('body');
-        $recipe->shouldReceive('afferentProjectsCount');
-        $recipe->shouldReceive('recipeId->id')->andReturn($recipeId);
-        $recipe->shouldReceive('concurrencyVersion');
+        $recipe = $this->createRecipe();
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
-            ->with($recipeId)
+            ->with($recipe->recipeId()->id())
             ->andReturn($recipe)
             ->once();
 
@@ -273,9 +235,9 @@ class RecipesControllerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $this->put("recipes/$recipeId");
+        $this->put("recipes/{$recipe->recipeId()->id()}");
 
-        $this->assertRedirectedToRoute('recipes.edit', [$recipeId]);
+        $this->assertRedirectedToRoute('recipes.edit', [$recipe->recipeId()->id()]);
         $this->assertSessionHasErrors();
     }
 
@@ -285,6 +247,7 @@ class RecipesControllerTest extends TestCase
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
+            ->with($recipeId)
             ->andReturn(null)
             ->once();
 
@@ -295,20 +258,11 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $recipeId = 1;
-        $recipe = $this->mock(Recipe::class);
-
-        $recipe->shouldReceive('afferentProjectIds');
-        $recipe->shouldReceive('name');
-        $recipe->shouldReceive('description');
-        $recipe->shouldReceive('body');
-        $recipe->shouldReceive('afferentProjectsCount');
-        $recipe->shouldReceive('recipeId->id');
-        $recipe->shouldReceive('concurrencyVersion');
+        $recipe = $this->createRecipe();
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
-            ->with($recipeId)
+            ->with($recipe->recipeId()->id())
             ->andReturn($recipe)
             ->once();
 
@@ -316,7 +270,7 @@ class RecipesControllerTest extends TestCase
             ->shouldReceive('removeRecipe')
             ->once();
 
-        $this->delete("recipes/$recipeId");
+        $this->delete("recipes/{$recipe->recipeId()->id()}");
 
         $this->assertRedirectedToRoute('recipes.index');
     }
@@ -327,11 +281,57 @@ class RecipesControllerTest extends TestCase
 
         $this->recipeService
             ->shouldReceive('getRecipeById')
+            ->with($recipeId)
             ->andReturn(null)
             ->once();
 
         $this->delete("recipes/$recipeId");
 
         $this->assertResponseStatus(404);
+    }
+
+    private function createRecipe(array $params = [])
+    {
+        $recipeId = 1;
+        $name = '';
+        $description = '';
+        $body = '';
+        $afferentProjectIds = [1];
+        $createdAt = null;
+        $updatedAt = null;
+        $concurrencyVersion = '';
+
+        extract($params);
+
+        $recipe = $this->mock(Recipe::class);
+
+        $recipe->shouldReceive('recipeId')->andReturn(new RecipeId($recipeId));
+        $recipe->shouldReceive('name')->andReturn($name);
+        $recipe->shouldReceive('description')->andReturn($description);
+        $recipe->shouldReceive('body')->andReturn($body);
+        $recipe->shouldReceive('afferentProjectIds')->andReturn(array_map(function ($afferentProjectId) {
+            return new ProjectId($afferentProjectId);
+        }, $afferentProjectIds));
+        $recipe->shouldReceive('afferentProjectsCount')->andReturn(count($afferentProjectIds));
+        $recipe->shouldReceive('createdAt')->andReturn(new Carbon($createdAt));
+        $recipe->shouldReceive('updatedAt')->andReturn(new Carbon($updatedAt));
+        $recipe->shouldReceive('concurrencyVersion')->andReturn($concurrencyVersion);
+
+        return $recipe;
+    }
+
+    private function createProject(array $params)
+    {
+        $projectId = 1;
+        $name = '';
+
+        extract($params);
+
+        $project = $this->mock(Project::class);
+
+        $project->shouldReceive('projectId')->andReturn(new ProjectId($projectId));
+        $project->shouldReceive('name')->andReturn($name);
+
+        return $project;
     }
 }
