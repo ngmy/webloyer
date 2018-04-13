@@ -1,49 +1,84 @@
 <?php
 
-use Tests\Helpers\Factory;
+namespace App\Http\Controllers;
+
+use App\Http\Middleware\ApplySettings;
+use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
+use Ngmy\Webloyer\Webloyer\Application\Server\ServerService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerId;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\ServerForm\ServerForm;
+use Session;
+use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
+use Tests\Helpers\MockeryHelper;
+use TestCase;
 
 class ServersControllerTest extends TestCase
 {
-    use Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
-    protected $mockServerRepository;
+    private $serverForm;
 
-    protected $mockServerForm;
+    private $serverService;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
-        $user->shouldReceive('can')
-            ->andReturn(true);
+        $user = $this->mock(User::class);
+        $user->shouldReceive('can')->andReturn(true);
+        $user->shouldReceive('name');
         $this->auth($user);
 
-        $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
-        $this->mockServerForm = $this->mock('App\Services\Form\Server\ServerForm');
+        $this->serverForm = $this->mock(ServerForm::class);
+        $this->serverService = $this->mock(ServerService::class);
+
+        $this->app->instance(ServerForm::class, $this->serverForm);
+        $this->app->instance(ServerService::class, $this->serverService);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $servers = Factory::buildList('App\Models\Server', [
-            ['id' => 1, 'name' => 'Server 1', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-            ['id' => 2, 'name' => 'Server 2', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-            ['id' => 3, 'name' => 'Server 3', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
+        $server = $this->createServer();
+        $servers = new Collection([
+            $server,
         ]);
-
+        $page = 1;
         $perPage = 10;
 
-        $this->mockServerRepository
-            ->shouldReceive('byPage')
-            ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($servers, $perPage));
+        $this->serverService
+            ->shouldReceive('getServersByPage')
+            ->with($page, $perPage)
+            ->andReturn(
+                new LengthAwarePaginator(
+                    $servers,
+                    $servers->count(),
+                    $perPage,
+                    $page,
+                    [
+                        'path' => Paginator::resolveCurrentPath(),
+                    ]
+                )
+            )
+            ->once();
 
         $this->get('servers');
 
@@ -60,10 +95,10 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
     {
-        $this->mockServerForm
+        $this->serverForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
         $this->post('servers');
 
@@ -72,15 +107,15 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
     {
-        $this->mockServerForm
+        $this->serverForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockServerForm
+        $this->serverForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->andReturn([])
+            ->once();
 
         $this->post('servers');
 
@@ -90,21 +125,15 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $server = Factory::build('App\Models\Server', [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
-        ]);
+        $server = $this->createServer();
 
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($server);
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($server->serverId()->id())
+            ->andReturn($server)
+            ->once();
 
-        $this->get('servers/1');
+        $this->get("servers/{$server->serverId()->id()}");
 
         $this->assertResponseOk();
         $this->assertViewHas('server');
@@ -112,33 +141,29 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
-            ->shouldReceive('byId')
+        $serverId = 1;
+
+        $this->serverService
+            ->shouldReceive('getServerById')
             ->once()
             ->andReturn(null);
 
-        $this->get('servers/1');
+        $this->get("servers/$serverId");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $server = Factory::build('App\Models\Server', [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
-        ]);
+        $server = $this->createServer();
 
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($server);
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($server->serverId()->id())
+            ->andReturn($server)
+            ->once();
 
-        $this->get('servers/1/edit');
+        $this->get("servers/{$server->serverId()->id()}/edit");
 
         $this->assertResponseOk();
         $this->assertViewHas('server');
@@ -146,120 +171,136 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $serverId = 1;
 
-        $this->get('servers/1/edit');
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($serverId)
+            ->andReturn(null)
+            ->once();
+
+        $this->get("servers/$serverId/edit");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $server = Factory::build('App\Models\Server', [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
-        ]);
+        $server = $this->createServer();
 
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($server);
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($server->serverId()->id())
+            ->andReturn($server)
+            ->once();
 
-        $this->mockServerForm
+        $this->serverForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
-        $this->put('servers/1');
+        $this->put("servers/{$server->serverId()->id()}");
 
         $this->assertRedirectedToRoute('servers.index');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $server = Factory::build('App\Models\Server', [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
-        ]);
+        $server = $this->createServer();
 
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($server);
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($server->serverId()->id())
+            ->andReturn($server)
+            ->once();
 
-        $this->mockServerForm
+        $this->serverForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockServerForm
+        $this->serverForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->andReturn([])
+            ->once();
 
-        $this->put('servers/1');
+        $this->put("servers/{$server->serverId()->id()}");
 
-        $this->assertRedirectedToRoute('servers.edit', [$server]);
+        $this->assertRedirectedToRoute('servers.edit', [$server->serverId()->id()]);
         $this->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $serverId = 1;
 
-        $this->put('servers/1');
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($serverId)
+            ->andReturn(null)
+            ->once();
+
+        $this->put("servers/$serverId");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $server = Factory::build('App\Models\Server', [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
-        ]);
+        $server = $this->createServer();
 
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($server);
-
-        $this->mockServerRepository
-            ->shouldReceive('delete')
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($server->serverId()->id())
+            ->andReturn($server)
             ->once();
 
-        $this->delete('servers/1');
+        $this->serverService
+            ->shouldReceive('removeServer')
+            ->once();
+
+        $this->delete("servers/{$server->serverId()->id()}");
 
         $this->assertRedirectedToRoute('servers.index');
     }
 
     public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $serverId = 1;
 
-        $this->delete('servers/1');
+        $this->serverService
+            ->shouldReceive('getServerById')
+            ->with($serverId)
+            ->andReturn(null)
+            ->once();
+
+        $this->delete("servers/$serverId");
 
         $this->assertResponseStatus(404);
+    }
+
+    private function createServer(array $params = [])
+    {
+        $serverId = 1;
+        $name = '';
+        $description = '';
+        $body = '';
+        $createdAt = null;
+        $updatedAt = null;
+        $concurrencyVersion = '';
+
+        extract($params);
+
+        $server = $this->mock(Server::class);
+
+        $server->shouldReceive('serverId')->andReturn(new ServerId($serverId));
+        $server->shouldReceive('name')->andReturn($name);
+        $server->shouldReceive('description')->andReturn($description);
+        $server->shouldReceive('body')->andReturn($body);
+        $server->shouldReceive('createdAt')->andReturn(new Carbon($createdAt));
+        $server->shouldReceive('updatedAt')->andReturn(new Carbon($updatedAt));
+        $server->shouldReceive('concurrencyVersion')->andReturn($concurrencyVersion);
+
+        return $server;
     }
 }

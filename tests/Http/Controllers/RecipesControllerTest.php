@@ -1,21 +1,25 @@
 <?php
 
+namespace App\Http\Controllers;
+
 use App\Http\Middleware\ApplySettings;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;;
-use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\RecipeForm\RecipeForm;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
 use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeId;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\RecipeForm\RecipeForm;
+use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\MockeryHelper;
+use TestCase;
 
 class RecipesControllerTest extends TestCase
 {
@@ -33,7 +37,7 @@ class RecipesControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance(ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
@@ -49,6 +53,13 @@ class RecipesControllerTest extends TestCase
         $this->app->instance(RecipeForm::class, $this->recipeForm);
         $this->app->instance(RecipeService::class, $this->recipeService);
         $this->app->instance(ProjectService::class, $this->projectService);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
@@ -207,8 +218,8 @@ class RecipesControllerTest extends TestCase
 
         $this->recipeForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
         $this->put("recipes/{$recipe->recipeId()->id()}");
 
@@ -227,13 +238,13 @@ class RecipesControllerTest extends TestCase
 
         $this->recipeForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
         $this->recipeForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->andReturn([])
+            ->once();
 
         $this->put("recipes/{$recipe->recipeId()->id()}");
 
