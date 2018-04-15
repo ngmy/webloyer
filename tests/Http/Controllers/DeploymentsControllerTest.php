@@ -1,177 +1,309 @@
 <?php
 
-use Tests\Helpers\Factory;
+namespace App\Http\Controllers;
+
+use App\Http\Middleware\ApplySettings;
+use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\UserId as IdentityAccessUserId;
+use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService;
+use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentId;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Status;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Task;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
+use Ngmy\Webloyer\Webloyer\Domain\Model\User\UserId;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\DeploymentForm\DeploymentForm;
+use Illuminate\Support\Collection;
+use Session;
+use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
+use Tests\Helpers\MockeryHelper;
+use TestCase;
 
 class DeploymentsControllerTest extends TestCase
 {
-    use Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
-    protected $mockProjectRepository;
+    private $deploymentForm;
 
-    protected $mockDeploymentForm;
+    private $deploymentService;
 
-    protected $mockProjectModel;
+    private $userService;
 
-    protected $mockDeploymentModel;
+    private $projectService;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
-        $user->shouldReceive('can')
-            ->andReturn(true);
+        $user = $this->mock(User::class);
+        $user->shouldReceive('can')->andReturn(true);
+        $user->shouldReceive('name');
+        $user->shouldReceive('userId')->andReturn(new IdentityAccessUserId(1));
         $this->auth($user);
 
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockDeploymentForm = $this->mock('App\Services\Form\Deployment\DeploymentForm');
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
-        $this->mockDeploymentModel = $this->mockPartial('App\Models\Deployment');
+        $this->deploymentForm = $this->mock(DeploymentForm::class);
+        $this->deploymentService = $this->mock(DeploymentService::class);
+        $this->userService = $this->mock(UserService::class);
+        $this->projectService = $this->mock(ProjectService::class);
+
+        $this->app->instance(DeploymentForm::class, $this->deploymentForm);
+        $this->app->instance(DeploymentService::class, $this->deploymentService);
+        $this->app->instance(UserService::class, $this->userService);
+        $this->app->instance(ProjectService::class, $this->projectService);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $deployments = Factory::buildList('App\Models\Deployment', [
-            ['id' => 1, 'project_id' => 1, 'number' => 1, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
-            ['id' => 2, 'project_id' => 1, 'number' => 2, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
-            ['id' => 3, 'project_id' => 1, 'number' => 3, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
+        $project = $this->createProject();
+        $deployment = $this->createDeployment([
+            'projectId' => $project->projectId()->id(),
         ]);
-
+        $deployments = new Collection([
+            $deployment,
+        ]);
+        $page = 1;
         $perPage = 10;
 
-        $project = $this->mockProjectModel
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
+            ->andReturn($project)
+            ->once();
+
+        $this->deploymentService
             ->shouldReceive('getDeploymentsByPage')
-            ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($deployments, $perPage))
-            ->mock();
+            ->with($project->projectId()->id(), $page, $perPage)
+            ->andReturn(
+                new LengthAwarePaginator(
+                    $deployments,
+                    $deployments->count(),
+                    $perPage,
+                    $page,
+                    [
+                        'path' => Paginator::resolveCurrentPath(),
+                    ]
+                )
+            )
+            ->once();
 
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
+        foreach ($deployments as $deployment) {
+            $user = $this->createUser([
+                'userId' => $deployment->deployedUserId()->id(),
+            ]);
+            $this->userService
+                ->shouldReceive('getUserById')
+                ->with($deployment->deployedUserId()->id())
+                ->andReturn($user)
+                ->once();
+        }
 
-        $this->get('projects/1/deployments');
+        $this->get("projects/{$project->projectId()->id()}/deployments");
 
         $this->assertResponseOk();
         $this->assertViewHas('deployments');
         $this->assertViewHas('project');
+        $this->assertViewHas('deployedUsers');
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
     {
-        $project = $this->mockProjectModel
+        $project = $this->createProject();
+
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
+            ->andReturn($project)
+            ->once();
+
+        $this->deploymentService
             ->shouldReceive('getLastDeployment')
-            ->once()
-            ->andReturn($this->mockDeploymentModel)
-            ->mock();
+            ->with($project->projectId()->id())
+            ->andReturn($this->createDeployment())
+            ->once();
 
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
-
-        $this->mockDeploymentForm
+        $this->deploymentForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
-        $params = [
-            'project_id' => 1,
-            'user_id'    => 1,
-        ];
+        $this->post("projects/{$project->projectId()->id()}/deployments");
 
-        $this->post('projects/1/deployments', $params);
-
-        $this->assertRedirectedToRoute('projects.deployments.index', [$project]);
+        $this->assertRedirectedToRoute('projects.deployments.index', [$project->projectId()->id()]);
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessFails()
     {
-        $project = Factory::build('App\Models\Project', [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $project = $this->createProject();
 
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
+            ->andReturn($project)
+            ->once();
 
-        $this->mockDeploymentForm
+        $this->deploymentForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockDeploymentForm
+        $this->deploymentForm
             ->shouldReceive('errors')
             ->once()
             ->andReturn([]);
 
-        $params = [
-            'project_id' => 1,
-            'user_id'    => 1,
-        ];
+        $this->post("projects/{$project->projectId()->id()}/deployments");
 
-        $this->post('projects/1/deployments', $params);
-
-        $this->assertRedirectedToRoute('projects.deployments.index', [$project]);
+        $this->assertRedirectedToRoute('projects.deployments.index', [$project->projectId()->id()]);
         $this->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+        $project = $this->createProject();
+        $deployment = $this->createDeployment([
+            'projectId' => $project->projectId()->id(),
         ]);
 
-        $project = $this->mockProjectModel
-            ->shouldReceive('getDeploymentByNumber')
-            ->once()
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
+            ->andReturn($project)
+            ->once();
+
+        $this->deploymentService
+            ->shouldReceive('getDeploymentById')
+            ->with($project->projectId()->id(), $deployment->deploymentId()->id())
             ->andReturn($deployment)
-            ->mock();
+            ->once();
 
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($deployment->deployedUserId()->id())
+            ->andReturn($this->createUser([
+                'userId' => $deployment->deployedUserId()->id(),
+            ]))
+            ->once();
 
-        $this->get('projects/1/deployments/1');
+        $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
 
         $this->assertResponseOk();
         $this->assertViewHas('deployment');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
+    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndProjectIsNotFound()
     {
-        $project = $this->mockProjectModel
-            ->shouldReceive('getDeploymentByNumber')
-            ->once()
+        $project = $this->createProject();
+        $deployment = $this->createDeployment();
+
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
             ->andReturn(null)
-            ->mock();
+            ->once();
 
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
-
-        $this->get('projects/1/deployments/1');
+        $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
 
         $this->assertResponseStatus(404);
+    }
+
+    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndDeploymentIsNotFound()
+    {
+        $project = $this->createProject();
+        $deployment = $this->createDeployment();
+
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
+            ->andReturn($project)
+            ->once();
+
+        $this->deploymentService
+            ->shouldReceive('getDeploymentById')
+            ->with($project->projectId()->id(), $deployment->deploymentId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
+
+        $this->assertResponseStatus(404);
+    }
+
+    private function createDeployment(array $params = [])
+    {
+        $projectId = 1;
+        $deploymentId = 1;
+        $task = 'deploy';
+        $status = 2;
+        $message = null;
+        $deployedUserId = 1;
+        $createdAt = null;
+        $updatedAt = null;
+
+        extract($params);
+
+        $deployment = $this->mock(Deployment::class);
+
+        $deployment->shouldReceive('projectId')->andReturn(new ProjectId($projectId));
+        $deployment->shouldReceive('deploymentId')->andReturn(new DeploymentId($deploymentId));
+        $deployment->shouldReceive('task')->andReturn(new Task($task));
+        $deployment->shouldReceive('status')->andReturn(new Status($status));
+        $deployment->shouldReceive('message')->andReturn($message);
+        $deployment->shouldReceive('deployedUserId')->andReturn(new UserId($deployedUserId));
+        $deployment->shouldReceive('createdAt')->andReturn(new Carbon($createdAt));
+        $deployment->shouldReceive('updatedAt')->andReturn(new Carbon($updatedAt));
+
+        return $deployment;
+    }
+
+    private function createProject(array $params = [])
+    {
+        $projectId = 1;
+        $name = '';
+
+        extract($params);
+
+        $project = $this->mock(Project::class);
+
+        $project->shouldReceive('projectId')->andReturn(new ProjectId($projectId));
+        $project->shouldReceive('name')->andReturn($name);
+
+        return $project;
+    }
+
+    private function createUser(array $params = [])
+    {
+        $userId = 1;
+        $name = '';
+        $email = '';
+
+        extract($params);
+
+        $user = $this->mock(User::class);
+
+        $user->shouldReceive('userId')->andReturn(new IdentityAccessUserId($userId));
+        $user->shouldReceive('name')->andReturn($name);
+        $user->shouldReceive('email')->andReturn($email);
+
+        return $user;
     }
 }

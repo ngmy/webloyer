@@ -331,7 +331,7 @@ class RecipesControllerTest extends TestCase
         return $recipe;
     }
 
-    private function createProject(array $params)
+    private function createProject(array $params = [])
     {
         $projectId = 1;
         $name = '';
