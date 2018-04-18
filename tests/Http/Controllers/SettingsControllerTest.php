@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\ApplySettings;
+use Illuminate\Support\MessageBag;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingDriver;
@@ -89,8 +90,9 @@ class SettingsControllerTest extends TestCase
 
         $this->mailSettingForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
 
         $this->post('settings/email');
 

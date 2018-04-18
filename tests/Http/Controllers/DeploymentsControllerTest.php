@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\ApplySettings;
 use Carbon\Carbon;
+use Illuminate\Support\MessageBag;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
@@ -168,8 +169,9 @@ class DeploymentsControllerTest extends TestCase
 
         $this->deploymentForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
 
         $this->post("projects/{$project->projectId()->id()}/deployments");
 

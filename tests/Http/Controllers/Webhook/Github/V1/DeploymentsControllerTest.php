@@ -2,92 +2,155 @@
 
 namespace Tests\Http\Controllers\Webhook\Github\V1;
 
-use Tests\Helpers\Factory;
+use App\Http\Middleware\ApplySettings;
+use App\Http\Middleware\VerifyGithubWebhookSecret;
+use Carbon\Carbon;
+use Illuminate\Support\MessageBag;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
+use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService;
+use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentId;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Status;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Task;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
+use Ngmy\Webloyer\Webloyer\Domain\Model\User\UserId;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\DeploymentForm\DeploymentForm;
+use Session;
+use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
+use Tests\Helpers\MockeryHelper;
+use TestCase;
 
-class DeploymentsControllerTest extends \TestCase
+class DeploymentsControllerTest extends TestCase
 {
-    use \Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use \Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
-    protected $mockProjectRepository;
+    private $deploymentForm;
 
-    protected $mockDeploymentForm;
-
-    protected $mockProjectModel;
-
-    protected $mockDeploymentModel;
+    private $deploymentService;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
+        $this->app->instance(VerifyGithubWebhookSecret::class, new DummyMiddleware());
 
-        \Session::start();
+        Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
-        $user->shouldReceive('can')
-            ->andReturn(true);
+        $user = $this->mock(User::class);
+        $user->shouldReceive('can')->andReturn(true);
+        $user->shouldReceive('name');
         $this->auth($user);
 
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockDeploymentForm = $this->mock('App\Services\Form\Deployment\DeploymentForm');
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
-        $this->mockDeploymentModel = $this->mockPartial('App\Models\Deployment');
+        $this->deploymentForm = $this->mock(DeploymentForm::class);
+        $this->deploymentService = $this->mock(DeploymentService::class);
+        $this->projectService = $this->mock(ProjectService::class);
+
+        $this->app->instance(DeploymentForm::class, $this->deploymentForm);
+        $this->app->instance(DeploymentService::class, $this->deploymentService);
+        $this->app->instance(ProjectService::class, $this->projectService);
     }
 
     public function test_Should_ReturnStatusCode200_When_StoreProcessSucceeds()
     {
-        $project = $this->mockProjectModel
+        $project = $this->createProject();
+
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
+            ->andReturn($project)
+            ->once();
+
+        $this->deploymentService
             ->shouldReceive('getLastDeployment')
-            ->once()
-            ->andReturn($this->mockDeploymentModel)
-            ->mock();
+            ->with($project->projectId()->id())
+            ->andReturn($this->createDeployment())
+            ->once();
 
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
-
-        $this->mockDeploymentForm
+        $this->deploymentForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
-        $this->post('webhook/github/v1/projects/1/deployments');
+        $this->post("webhook/github/v1/projects/{$project->projectId()->id()}/deployments");
 
         $this->assertResponseOK();
     }
 
     public function test_Should_ReturnStatusCode400_When_StoreProcessFails()
     {
-        $project = Factory::build('App\Models\Project', [
-            'id'                     => 1,
-            'name'                   => 'Project 1',
-            'github_webhook_user_id' => 1,
-            'created_at'             => new \Carbon\Carbon,
-            'updated_at'             => new \Carbon\Carbon,
-        ]);
+        $project = $this->createProject();
 
-        $this->mockProjectRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($project);
+        $this->projectService
+            ->shouldReceive('getProjectById')
+            ->with($project->projectId()->id())
+            ->andReturn($project)
+            ->once();
 
-        $this->mockDeploymentForm
+        $this->deploymentForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockDeploymentForm
+        $this->deploymentForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn(new \Illuminate\Support\MessageBag);
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
 
-        $this->post('webhook/github/v1/projects/1/deployments');
+        $this->post("webhook/github/v1/projects/{$project->projectId()->id()}/deployments");
 
         $this->assertResponseStatus(400);
+    }
+
+    private function createDeployment(array $params = [])
+    {
+        $projectId = 1;
+        $deploymentId = 1;
+        $task = 'deploy';
+        $status = 2;
+        $message = null;
+        $deployedUserId = 1;
+        $createdAt = null;
+        $updatedAt = null;
+
+        extract($params);
+
+        $deployment = $this->mock(Deployment::class);
+
+        $deployment->shouldReceive('projectId')->andReturn(new ProjectId($projectId));
+        $deployment->shouldReceive('deploymentId')->andReturn(new DeploymentId($deploymentId));
+        $deployment->shouldReceive('task')->andReturn(new Task($task));
+        $deployment->shouldReceive('status')->andReturn(new Status($status));
+        $deployment->shouldReceive('message')->andReturn($message);
+        $deployment->shouldReceive('deployedUserId')->andReturn(new UserId($deployedUserId));
+        $deployment->shouldReceive('createdAt')->andReturn(new Carbon($createdAt));
+        $deployment->shouldReceive('updatedAt')->andReturn(new Carbon($updatedAt));
+
+        return $deployment;
+    }
+
+    private function createProject(array $params = [])
+    {
+        $projectId = 1;
+        $name = '';
+        $githubWebhookExecuteUserId = 1;
+        $githubWebhooKSecret = '';
+
+        extract($params);
+
+        $project = $this->mock(Project::class);
+
+        $project->shouldReceive('projectId')->andReturn(new ProjectId($projectId));
+        $project->shouldReceive('name')->andReturn($name);
+        $project->shouldReceive('githubWebhookExecuteUserId')->andReturn(new UserId($githubWebhookExecuteUserId));
+        $project->shouldReceive('githubWebhookSecret')->andReturn($githubWebhooKSecret);
+
+        return $project;
     }
 }

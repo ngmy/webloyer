@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 use Ngmy\Webloyer\Webloyer\Application\Server\ServerService;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server;
@@ -114,7 +115,8 @@ class ServersControllerTest extends TestCase
 
         $this->serverForm
             ->shouldReceive('errors')
-            ->andReturn([])
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
             ->once();
 
         $this->post('servers');
@@ -221,7 +223,8 @@ class ServersControllerTest extends TestCase
 
         $this->serverForm
             ->shouldReceive('errors')
-            ->andReturn([])
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
             ->once();
 
         $this->put("servers/{$server->serverId()->id()}");

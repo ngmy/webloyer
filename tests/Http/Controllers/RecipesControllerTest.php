@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
 use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
@@ -121,7 +122,8 @@ class RecipesControllerTest extends TestCase
 
         $this->recipeForm
             ->shouldReceive('errors')
-            ->andReturn([])
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
             ->once();
 
         $this->post('recipes');
@@ -243,7 +245,8 @@ class RecipesControllerTest extends TestCase
 
         $this->recipeForm
             ->shouldReceive('errors')
-            ->andReturn([])
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
             ->once();
 
         $this->put("recipes/{$recipe->recipeId()->id()}");
