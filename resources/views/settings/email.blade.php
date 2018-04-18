@@ -76,7 +76,7 @@
                         <div class="form-group">
                             <label for="smtp_username" class="col-md-4 control-label">SMTP Username</label>
                             <div class="col-md-6">
-                                {!! Form::text('smtp_username', $mailSetting->smtpUsername(), ['class' => 'form-control', 'id' => 'smtp_username']) !!}
+                                {!! Form::text('smtp_username', $mailSetting->smtpUserName(), ['class' => 'form-control', 'id' => 'smtp_username']) !!}
                             </div>
                         </div>
                         <div class="form-group">

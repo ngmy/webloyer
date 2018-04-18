@@ -1,78 +1,79 @@
 <?php
 
+namespace App\Http\Controllers;
+
+use App\Http\Middleware\ApplySettings;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
+use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingDriver;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\NullMailSettingSmtpEncryption;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingSmtpEncryption;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\SettingForm\MailSettingForm;
+use Session;
+use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
+use Tests\Helpers\MockeryHelper;
+use TestCase;
 
 class SettingsControllerTest extends TestCase
 {
-    use Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
-    protected $mockSettingRepository;
+    private $settingService;
 
-    protected $mockMailSettingForm;
-
-    protected $mockMailSettingEntity;
+    private $mailSettingForm;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
-        $user->shouldReceive('can')
-            ->andReturn(true);
+        $user = $this->mock(User::class);
+        $user->shouldReceive('can')->andReturn(true);
+        $user->shouldReceive('name');
         $this->auth($user);
 
-        $this->mockSettingRepository = $this->mock('App\Repositories\Setting\SettingInterface');
-        $this->mockMailSettingForm = $this->mock('App\Services\Form\Setting\MailSettingForm');
-        $this->mockSettingModel = $this->mockPartial('App\Models\Setting');
-        $this->mockMailSettingEntity = $this->mock('App\Entities\Setting\MailSettingEntity');
+        $this->settingService = $this->mock(SettingService::class);
+        $this->mailSettingForm = $this->mock(MailSettingForm::class);
+
+        $this->app->instance(SettingService::class, $this->settingService);
+        $this->app->instance(MailSettingForm::class, $this->mailSettingForm);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
     }
 
     public function test_Should_DisplayEmailSettingPage()
     {
-        $this->mockMailSettingEntity
-            ->shouldReceive('getDriver')
-            ->once()
-            ->shouldReceive('getFrom')
-            ->twice()
-            ->shouldReceive('getSmtpHost')
-            ->once()
-            ->shouldReceive('getSmtpPort')
-            ->once()
-            ->shouldReceive('getSmtpEncryption')
-            ->once()
-            ->shouldReceive('getSmtpUsername')
-            ->once()
-            ->shouldReceive('getSmtpPassword')
-            ->once()
-            ->shouldReceive('getSendmailPath')
+        $mailSetting = $this->createMailSetting();
+
+        $this->settingService
+            ->shouldReceive('getMailSetting')
+            ->withNoArgs()
+            ->andReturn($mailSetting)
             ->once();
-        $this->mockSettingModel
-            ->shouldReceive('getAttribute')
-            ->with('attributes')
-            ->andReturn($this->mockMailSettingEntity);
-        $this->mockSettingRepository
-            ->shouldReceive('byType')
-            ->once()
-            ->andReturn($this->mockSettingModel);
 
         $this->get('settings/email');
 
         $this->assertResponseOk();
-        $this->assertViewHas('settings');
+        $this->assertViewHas('mailSetting');
     }
 
     public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessSucceeds()
     {
-        $this->mockMailSettingForm
+        $this->mailSettingForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
         $this->post('settings/email');
 
@@ -81,12 +82,12 @@ class SettingsControllerTest extends TestCase
 
     public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessFails()
     {
-        $this->mockMailSettingForm
+        $this->mailSettingForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockMailSettingForm
+        $this->mailSettingForm
             ->shouldReceive('errors')
             ->once()
             ->andReturn([]);
@@ -94,5 +95,35 @@ class SettingsControllerTest extends TestCase
         $this->post('settings/email');
 
         $this->assertRedirectedToRoute('settings.email');
+    }
+
+    private function createMailSetting(array $params = [])
+    {
+        $driver = 'smtp';
+        $from = [
+            'address' => '',
+            'name' => '',
+        ];
+        $smtpHost = '';
+        $smtpPort = 25;
+        $smtpEncryption = 'tls';
+        $smtpUserName = '';
+        $smtpPassword = '';
+        $sendmailPath = '';
+
+        extract($params);
+
+        $mailSetting = $this->mock(MailSetting::class);
+
+        $mailSetting->shouldReceive('driver')->andReturn(new MailSettingDriver($driver));
+        $mailSetting->shouldReceive('from')->andReturn($from);
+        $mailSetting->shouldReceive('smtpHost')->andReturn($smtpHost);
+        $mailSetting->shouldReceive('smtpPort')->andReturn($smtpPort);
+        $mailSetting->shouldReceive('smtpEncryption')->andReturn(new MailSettingSmtpEncryption($smtpEncryption));
+        $mailSetting->shouldReceive('smtpUserName')->andReturn($smtpUserName);
+        $mailSetting->shouldReceive('smtpPassword')->andReturn($smtpPassword);
+        $mailSetting->shouldReceive('sendmailPath')->andReturn($sendmailPath);
+
+        return $mailSetting;
     }
 }
