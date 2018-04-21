@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\ApplySettings;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -20,7 +21,6 @@ use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\User\UserId;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\DeploymentForm\DeploymentForm;
-use Illuminate\Support\Collection;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
