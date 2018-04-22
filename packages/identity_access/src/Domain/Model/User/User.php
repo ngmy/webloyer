@@ -41,7 +41,7 @@ class User extends AbstractEntity implements AuthenticatableContract
         $this->setEmail($email);
         $this->setPassword($password);
         $this->setApiToken($apiToken);
-        array_map([$this, 'addRoleId'], $roleIds);
+        array_walk($roleIds, [$this, 'addRoleId']);
         $this->setCreatedAt($createdAt);
         $this->setUpdatedAt($updatedAt);
         $this->setConcurrencyVersion(md5(serialize($this)));

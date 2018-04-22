@@ -1,52 +1,92 @@
 <?php
 
-use Tests\Helpers\Factory;
+namespace App\Http\Controllers;
+
+use App\Http\Middleware\ApplySettings;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
+use Ngmy\Webloyer\IdentityAccess\Application\Role\RoleService;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\UserId;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\Role;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleId;
+use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleSlug;
+use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\UserForm\UserForm;
+use Session;
+use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
+use Tests\Helpers\MockeryHelper;
+use TestCase;
 
 class UsersControllerTest extends TestCase
 {
-    use Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
-    protected $mockUserRepository;
+    private $userForm;
 
-    protected $mockRoleRepository;
+    private $userService;
 
-    protected $mockUserForm;
+    private $roleService;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
-        $user->shouldReceive('can')
-            ->andReturn(true);
+        $user = $this->mock(User::class);
+        $user->shouldReceive('can')->andReturn(true);
+        $user->shouldReceive('name');
         $this->auth($user);
 
-        $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
-        $this->mockRoleRepsitory = $this->mock('App\Repositories\Role\RoleInterface');
-        $this->mockUserForm = $this->mock('App\Services\Form\User\UserForm');
+        $this->userForm = $this->mock(UserForm::class);
+        $this->userService = $this->mock(UserService::class);
+        $this->roleService = $this->mock(RoleService::class);
+
+        $this->app->instance(UserForm::class, $this->userForm);
+        $this->app->instance(UserService::class, $this->userService);
+        $this->app->instance(RoleService::class, $this->roleService);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->closeMock();
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $users = Factory::buildList('App\Models\User', [
-            ['id' => 1, 'name' => 'User 1', 'email' => 'user1@example.com', 'password' => '12345678', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-            ['id' => 2, 'name' => 'User 2', 'email' => 'user2@example.com', 'password' => '12345678', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-            ['id' => 3, 'name' => 'User 3', 'email' => 'user3@example.com', 'password' => '12345678', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
+        $user = $this->createUser();
+        $users = new Collection([
+            $user,
         ]);
-
+        $page = 1;
         $perPage = 10;
 
-        $this->mockUserRepository
-            ->shouldReceive('byPage')
-            ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($users, $perPage));
+        $this->userService
+            ->shouldReceive('getUsersByPage')
+            ->with($page, $perPage)
+            ->andReturn(
+                new LengthAwarePaginator(
+                    $users,
+                    $users->count(),
+                    $perPage,
+                    $page,
+                    [
+                        'path' => Paginator::resolveCurrentPath(),
+                    ]
+                )
+            )
+            ->once();
 
         $this->get('users');
 
@@ -56,22 +96,29 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
     {
-        $this->mockRoleRepsitory
-            ->shouldReceive('all')
-            ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+        $role = $this->createRole();
+        $roles = new Collection([
+            $role,
+        ]);
+
+        $this->roleService
+            ->shouldReceive('getAllRoles')
+            ->withNoArgs()
+            ->andReturn($roles)
+            ->once();
 
         $this->get('users/create');
 
         $this->assertResponseOk();
+        $this->assertViewHas('roles');
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
     {
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
         $this->post('users');
 
@@ -80,15 +127,16 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
     {
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('save')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
 
         $this->post('users');
 
@@ -98,54 +146,45 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->get('users/1');
+        $this->get("users/{$user->userId()->id()}");
 
-        $this->assertRedirectedToRoute('users.edit', [$user]);
+        $this->assertRedirectedToRoute('users.edit', [$user->userId()->id()]);
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->get('users/1');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->get("users/{$user->userId()->id()}");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->get('users/1/edit');
+        $this->get("users/{$user->userId()->id()}/edit");
 
         $this->assertResponseOk();
         $this->assertViewHas('user');
@@ -153,103 +192,92 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->get('users/1/edit');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->get("users/{$user->userId()->id()}/edit");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
-        $this->put('users/1');
+        $this->put("users/{$user->userId()->id()}");
 
         $this->assertRedirectedToRoute('users.index');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('update')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
 
-        $this->put('users/1');
+        $this->put("users/{$user->userId()->id()}");
 
-        $this->assertRedirectedToRoute('users.edit', [$user]);
+        $this->assertRedirectedToRoute('users.edit', [$user->userId()->id()]);
         $this->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->put('users/1');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->put("users/{$user->userId()->id()}");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_DisplayPasswordChangePage_When_PasswordChangePageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->get('users/1/password/change');
+        $this->get("users/{$user->userId()->id()}/password/change");
 
         $this->assertResponseOk();
         $this->assertViewHas('user');
@@ -257,229 +285,364 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayNotFoundPage_When_PasswordChangePageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->get('users/1/password/change');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->get("users/{$user->userId()->id()}/password/change");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_PasswordUpdateProcessSucceeds()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('updatePassword')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
-        $this->put('users/1/password');
+        $this->put("users/{$user->userId()->id()}/password");
 
         $this->assertRedirectedToRoute('users.index');
     }
 
     public function test_Should_RedirectToPasswordChangePage_When_PasswordUpdateProcessFails()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('updatePassword')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
 
-        $this->put('users/1/password');
+        $this->put("users/{$user->userId()->id()}/password");
 
-        $this->assertRedirectedToRoute('users.password.change', [$user]);
+        $this->assertRedirectedToRoute('users.password.change', [$user->userId()->id()]);
         $this->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_PasswordUpdateProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->put('users/1/password');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->put("users/{$user->userId()->id()}/password");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_DisplayEditRolePage_When_EditRolePageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+        $user = $this->createUser();
+        $role = $this->createRole();
+        $roles = new Collection([
+            $role,
         ]);
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
+        $this->roleService
+            ->shouldReceive('getAllRoles')
+            ->withNoArgs()
+            ->andReturn($roles)
+            ->once();
 
-        $this->mockRoleRepsitory
-            ->shouldReceive('all')
-            ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
-
-        $this->get('users/1/role/edit');
+        $this->get("users/{$user->userId()->id()}/role/edit");
 
         $this->assertResponseOk();
         $this->assertViewHas('user');
+        $this->assertViewHas('roles');
     }
 
     public function test_Should_DisplayNotFoundPage_When_EditRolePageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->get('users/1/role/edit');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->get("users/{$user->userId()->id()}/role/edit");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_RoleUpdateProcessSucceeds()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('updateRole')
-            ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->once();
 
-        $this->put('users/1/role');
+        $this->put("users/{$user->userId()->id()}/role");
 
         $this->assertRedirectedToRoute('users.index');
     }
 
     public function test_Should_RedirectToEditRolePage_When_EditUpdateProcessFails()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('updateRole')
-            ->once()
-            ->andReturn(false);
+            ->andReturn(false)
+            ->once();
 
-        $this->mockUserForm
+        $this->userForm
             ->shouldReceive('errors')
-            ->once()
-            ->andReturn([]);
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
 
-        $this->put('users/1/role');
+        $this->put("users/{$user->userId()->id()}/role");
 
-        $this->assertRedirectedToRoute('users.role.edit', [$user]);
+        $this->assertRedirectedToRoute('users.role.edit', [$user->userId()->id()]);
         $this->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_RoleUpdateProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->put('users/1/role');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->put("users/{$user->userId()->id()}/role");
+
+        $this->assertResponseStatus(404);
+    }
+
+    public function test_Should_DisplayEditApiTokenPage_When_EditApiTokenPageIsRequestedAndResourceIsFound()
+    {
+        $user = $this->createUser();
+
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
+
+        $this->get("users/{$user->userId()->id()}/api_token/edit");
+
+        $this->assertResponseOk();
+        $this->assertViewHas('user');
+    }
+
+    public function test_Should_DisplayNotFoundPage_When_EditApiTokenPageIsRequestedAndResourceIsNotFound()
+    {
+        $user = $this->createUser();
+
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->get("users/{$user->userId()->id()}/api_token/edit");
+
+        $this->assertResponseStatus(404);
+    }
+
+    public function test_Should_RedirectToIndexPage_When_ApiTokenRegenerateProcessSucceeds()
+    {
+        $user = $this->createUser();
+
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
+
+        $this->userForm
+            ->shouldReceive('regenerateApiToken')
+            ->andReturn(true)
+            ->once();
+
+        $this->put("users/{$user->userId()->id()}/api_token");
+
+        $this->assertRedirectedToRoute('users.index');
+    }
+
+    public function test_Should_RedirectToRegenerateApiTokenPage_When_ApiTokenRegenerateProcessFails()
+    {
+        $user = $this->createUser();
+
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
+            ->once();
+
+        $this->userForm
+            ->shouldReceive('regenerateApiToken')
+            ->andReturn(false)
+            ->once();
+
+        $this->userForm
+            ->shouldReceive('errors')
+            ->withNoArgs()
+            ->andReturn(new MessageBag())
+            ->once();
+
+        $this->put("users/{$user->userId()->id()}/api_token");
+
+        $this->assertRedirectedToRoute('users.api_token.edit', [$user->userId()->id()]);
+        $this->assertSessionHasErrors();
+    }
+
+    public function test_Should_DisplayNotFoundPage_When_ApiTokenRegenerateProcessIsRequestedAndResourceIsNotFound()
+    {
+        $user = $this->createUser();
+
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->put("users/{$user->userId()->id()}/api_token");
 
         $this->assertResponseStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $user = Factory::build('App\Models\User', [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-        ]);
+        $user = $this->createUser();
 
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn($user);
-
-        $this->mockUserRepository
-            ->shouldReceive('delete')
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn($user)
             ->once();
 
-        $this->delete('users/1');
+        $this->userService
+            ->shouldReceive('removeUser')
+            ->with($user->userId()->id())
+            ->once();
+
+        $this->delete("users/{$user->userId()->id()}");
 
         $this->assertRedirectedToRoute('users.index');
     }
 
     public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockUserRepository
-            ->shouldReceive('byId')
-            ->once()
-            ->andReturn(null);
+        $user = $this->createUser();
 
-        $this->delete('users/1');
+        $this->userService
+            ->shouldReceive('getUserById')
+            ->with($user->userId()->id())
+            ->andReturn(null)
+            ->once();
+
+        $this->delete("users/{$user->userId()->id()}");
 
         $this->assertResponseStatus(404);
+    }
+
+    private function createUser(array $params = [])
+    {
+        $userId = 1;
+        $name = '';
+        $email = '';
+        $password = '';
+        $apiToken = '';
+        $roleIds = [1];
+        $createdAt = null;
+        $updatedAt = null;
+        $concurrencyVersion = '';
+
+        extract($params);
+
+        $user = $this->mock(User::class);
+
+        $user->shouldReceive('userId')->andReturn(new UserId($userId));
+        $user->shouldReceive('name')->andReturn($name);
+        $user->shouldReceive('email')->andReturn($email);
+        $user->shouldReceive('password')->andReturn($password);
+        $user->shouldReceive('apiToken')->andReturn($apiToken);
+        $user->shouldReceive('roleIds')->andReturn(array_map(function ($roleId) {
+            return new RoleId($roleId);
+        }, $roleIds));
+        $user->shouldReceive('createdAt')->andReturn(new Carbon($createdAt));
+        $user->shouldReceive('updatedAt')->andReturn(new Carbon($updatedAt));
+        $user->shouldReceive('concurrencyVersion')->andReturn($concurrencyVersion);
+
+        $user->shouldReceive('hasRoleId')->andReturn(false)->byDefault();
+        foreach ($roleIds as $roleId) {
+            $user->shouldReceive('hasRoleId')->with(\Hamcrest\Matchers::equalTo(new RoleId($roleId)))->andReturn(true);
+        }
+
+        return $user;
+    }
+
+    private function createRole(array $params = [])
+    {
+        $roleId = 1;
+        $name = '';
+        $slug = 'administrator';
+        $description = '';
+
+        extract($params);
+
+        $role = $this->mock(Role::class);
+
+        $role->shouldReceive('roleId')->andReturn(new RoleId($roleId));
+        $role->shouldReceive('name')->andReturn($name);
+        $role->shouldReceive('slug')->andReturn(new RoleSlug($slug));
+        $role->shouldReceive('description')->andReturn($description);
+
+        return $role;
     }
 }
