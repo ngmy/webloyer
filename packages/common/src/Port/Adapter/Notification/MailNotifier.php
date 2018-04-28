@@ -12,14 +12,14 @@ class MailNotifier implements NotifierInterface
      *
      * @var string
      */
-    protected $to;
+    private $to;
 
     /**
      * Sender of notification.
      *
      * @var string
      */
-    protected $from;
+    private $from;
 
     /**
      * Recipient of notification.

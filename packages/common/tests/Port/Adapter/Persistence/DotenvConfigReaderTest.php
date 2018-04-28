@@ -1,13 +1,15 @@
 <?php
 
-use App\Services\Config\DotenvReader;
-use App\Services\Filesystem\LaravelFilesystem;
+namespace Ngmy\Webloyer\Common\Port\Adapter\Persistence;
 
+use Ngmy\Webloyer\Common\Port\Adapter\Persistence\DotenvConfigReader;
+use Ngmy\Webloyer\Common\Port\Adapter\Persistence\LaravelFilesystem;
 use org\bovigo\vfs\vfsStream;
+use TestCase;
 
-class DotenvReaderTest extends TestCase
+class DotenvConfigReaderTest extends TestCase
 {
-    protected $rootDir;
+    private $rootDir;
 
     public function setUp()
     {
@@ -27,14 +29,13 @@ NAME4=
 EOF;
 
         $dotenv = vfsStream::newFile('.env')->at($this->rootDir)->setContent($contents);
+        $expectedResult = 'value1';
 
-        $dotenvReader = new DotenvReader(
-            new LaravelFilesystem($this->app['files']),
-            vfsStream::url('rootDir/.env')
-        );
-        $value = $dotenvReader->getConfig('NAME1');
+        $dotenvConfigReader = $this->createDotenvConfigReader();
 
-        $this->assertEquals('value1', $value);
+        $actualResult = $dotenvConfigReader->getConfig('NAME1');
+
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_GetConfigValue_When_ConfigExistsAndValueIsSingleQuoted()
@@ -48,14 +49,13 @@ NAME4=
 EOF;
 
         $dotenv = vfsStream::newFile('.env')->at($this->rootDir)->setContent($contents);
+        $expectedResult = "'value2'";
 
-        $dotenvReader = new DotenvReader(
-            new LaravelFilesystem($this->app['files']),
-            vfsStream::url('rootDir/.env')
-        );
-        $value = $dotenvReader->getConfig('NAME2');
+        $dotenvConfigReader = $this->createDotenvConfigReader();
 
-        $this->assertEquals("'value2'", $value);
+        $actualResult = $dotenvConfigReader->getConfig('NAME2');
+
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_GetConfigValue_When_ConfigExistsAndValueHasWhitespaces()
@@ -69,14 +69,13 @@ NAME4=
 EOF;
 
         $dotenv = vfsStream::newFile('.env')->at($this->rootDir)->setContent($contents);
+        $expectedResult = ' v a l u e 3 ';
 
-        $dotenvReader = new DotenvReader(
-            new LaravelFilesystem($this->app['files']),
-            vfsStream::url('rootDir/.env')
-        );
-        $value = $dotenvReader->getConfig('NAME3');
+        $dotenvConfigReader = $this->createDotenvConfigReader();
 
-        $this->assertEquals(' v a l u e 3 ', $value);
+        $actualResult = $dotenvConfigReader->getConfig('NAME3');
+
+        $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_GetNull_When_ConfigExistsAndValueIsEmpty()
@@ -91,13 +90,11 @@ EOF;
 
         $dotenv = vfsStream::newFile('.env')->at($this->rootDir)->setContent($contents);
 
-        $dotenvReader = new DotenvReader(
-            new LaravelFilesystem($this->app['files']),
-            vfsStream::url('rootDir/.env')
-        );
-        $value = $dotenvReader->getConfig('NAME4');
+        $dotenvConfigReader = $this->createDotenvConfigReader();
 
-        $this->assertNull($value);
+        $actualResult = $dotenvConfigReader->getConfig('NAME4');
+
+        $this->assertNull($actualResult);
     }
 
     public function test_Should_GetNull_When_ConfigDoesNotExist()
@@ -112,12 +109,20 @@ EOF;
 
         $dotenv = vfsStream::newFile('.env')->at($this->rootDir)->setContent($contents);
 
-        $dotenvReader = new DotenvReader(
+        $dotenvConfigReader = $this->createDotenvConfigReader();
+
+        $actualResult = $dotenvConfigReader->getConfig('NAME5');
+
+        $this->assertNull($actualResult);
+    }
+
+    private function createDotenvConfigReader(array $params = [])
+    {
+        extract($params);
+
+        return new DotenvConfigReader(
             new LaravelFilesystem($this->app['files']),
             vfsStream::url('rootDir/.env')
         );
-        $value = $dotenvReader->getConfig('NAME5');
-
-        $this->assertNull($value);
     }
 }
