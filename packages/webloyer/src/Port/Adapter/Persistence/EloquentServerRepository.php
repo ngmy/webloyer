@@ -2,12 +2,12 @@
 
 namespace Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerRepositoryInterface;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Server as EloquentServer;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class EloquentServerRepository implements ServerRepositoryInterface
 {
@@ -49,7 +49,7 @@ class EloquentServerRepository implements ServerRepositoryInterface
 
         return new LengthAwarePaginator(
             $servers,
-            $eloquentServers->count(),
+            $servers->count(),
             $limit,
             $page,
             [
@@ -89,7 +89,7 @@ class EloquentServerRepository implements ServerRepositoryInterface
         return $server;
     }
 
-    private function toEntity(EloquentServer $eloquentServer)
+    public function toEntity(EloquentServer $eloquentServer)
     {
         $serverId = new ServerId($eloquentServer->id);
         $name = $eloquentServer->name;
@@ -110,7 +110,7 @@ class EloquentServerRepository implements ServerRepositoryInterface
         return $server;
     }
 
-    private function toEloquent(Server $server)
+    public function toEloquent(Server $server)
     {
         $primaryKey = $server->serverId()->id();
 
