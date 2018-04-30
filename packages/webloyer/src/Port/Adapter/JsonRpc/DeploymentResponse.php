@@ -37,7 +37,7 @@ class DeploymentResponse
         $deploymentResponse['project_id'] = $this->deployment->projectId()->id();
         $deploymentResponse['deployment_id'] = $this->deployment->deploymentId()->id();
         $deploymentResponse['task'] = $this->deployment->task()->value();
-        $deploymentResponse['status'] = $this->deployment->status();
+        $deploymentResponse['status'] = $this->deployment->status()->value();
         $deploymentResponse['message'] = $this->deployment->message();
         $deploymentResponse['deployed_user_id'] = $this->deployment->deploymentId()->id();
 
