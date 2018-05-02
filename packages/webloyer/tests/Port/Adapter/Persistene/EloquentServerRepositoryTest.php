@@ -40,6 +40,59 @@ class EloquentServerRepositoryTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
+    public function test_Should_GetAllServers()
+    {
+        $servers = [
+            $this->createServer([
+                'name'      => 'Server 1',
+                'createdAt' => '2018-04-30 12:00:00',
+                'updatedAt' => '2018-04-30 12:00:00',
+            ]),
+            $this->createServer([
+                'name'      => 'Server 2',
+                'createdAt' => '2018-04-30 12:00:00',
+                'updatedAt' => '2018-04-30 12:00:00',
+            ]),
+            $this->createServer([
+                'name'      => 'Server 3',
+                'createdAt' => '2018-04-30 12:00:00',
+                'updatedAt' => '2018-04-30 12:00:00',
+            ]),
+            $this->createServer([
+                'name'      => 'Server 4',
+                'createdAt' => '2018-04-30 12:00:00',
+                'updatedAt' => '2018-04-30 12:00:00',
+            ]),
+            $this->createServer([
+                'name'      => 'Server 5',
+                'createdAt' => '2018-04-30 12:00:00',
+                'updatedAt' => '2018-04-30 12:00:00',
+            ]),
+        ];
+        $page = 1;
+        $limit = 10;
+
+        $createdEloquentServers = EloquentFactory::createList(EloquentServer::class, array_map(function ($server) {
+            return [
+                'name'        => $server->name(),
+                'description' => $server->description(),
+                'body'        => $server->body(),
+                'created_at'  => $server->createdAt(),
+                'updated_at'  => $server->updatedAt(),
+            ];
+        }, $servers));
+
+        $eloquentServerRepository = $this->createEloquentServerRepository();
+
+        $expectedResult = (new Collection(array_map(function ($eloquentServer) use ($eloquentServerRepository) {
+                return $eloquentServerRepository->toEntity($eloquentServer);
+            }, $createdEloquentServers)))->all();
+
+        $actualResult = $eloquentServerRepository->allServers();
+
+        $this->assertEquals($expectedResult, $actualResult);
+    }
+
     public function test_Should_GetServersOfPage()
     {
         $servers = [
@@ -103,66 +156,80 @@ class EloquentServerRepositoryTest extends TestCase
         $this->assertEquals($expectedResult, $actualResult);
     }
 
-//    public function test_Should_CreateNewServer()
-//    {
-//        $eloquentServerRepository = new EloquentServer(new App\Models\Server);
-//
-//        $returnedServer = $eloquentServerRepository->create([
-//            'name'        => 'Server 1',
-//            'description' => '',
-//            'body'        => '',
-//        ]);
-//
-//        $server = new App\Models\Server;
-//        $createdServer = $server->find($returnedServer->id);
-//
-//        $this->assertEquals('Server 1', $createdServer->name);
-//        $this->assertEquals('', $createdServer->description);
-//        $this->assertEquals('', $createdServer->body);
-//    }
-//
-//    public function test_Should_UpdateExistingServer()
-//    {
-//        $arrangedServer = EloquentFactory::create(EloquentServer::class, [
-//            'name'        => 'Server 1',
-//            'description' => '',
-//            'body'        => '',
-//        ]);
-//
-//        $eloquentServerRepository = $this->createEloquentServerRepository();
-//
-//        $eloquentServerRepository->update([
-//            'id'          => $arrangedServer->id,
-//            'name'        => 'Server 2',
-//            'description' => 'Description',
-//            'body'        => '<?php $x = 1;',
-//        ]);
-//
-//        $server = new App\Models\Server;
-//        $updatedServer = $server->find($arrangedServer->id);
-//
-//        $this->assertEquals('Server 2', $updatedServer->name);
-//        $this->assertEquals('Description', $updatedServer->description);
-//        $this->assertEquals('<?php $x = 1;', $updatedServer->body);
-//    }
-//
-//    public function test_Should_DeleteExistingServer()
-//    {
-//        $arrangedServer = EloquentFactory::create(EloquentServer::class, [
-//            'name'        => 'Server 1',
-//            'description' => '',
-//            'body'        => '',
-//        ]);
-//
-//        $eloquentServerRepository = $this->createEloquentServerRepository();
-//
-//        $eloquentServerRepository->delete($arrangedServer->id);
-//
-//        $server = new App\Models\Server;
-//        $deletedServer = $server->find($arrangedServer->id);
-//
-//        $this->assertNull($deletedServer);
-//    }
+    public function test_Should_CreateNewServer()
+    {
+        $newServer = $this->createServer([
+            'name' => 'some name',
+            'description' => 'some desctiption.',
+            'body' => 'some body.',
+        ]);
+        $eloquentServerRepository = $this->createEloquentServerRepository();
+
+        $returnedServer = $eloquentServerRepository->save($newServer);
+
+        $createdEloquentServer = EloquentServer::find($returnedServer->ServerId()->id());
+
+        $this->assertEquals($newServer->name(), $createdEloquentServer->name);
+        $this->assertEquals($newServer->description(), $createdEloquentServer->description);
+        $this->assertEquals($newServer->body(), $createdEloquentServer->body);
+
+        $this->assertEquals($newServer->name(), $returnedServer->name());
+        $this->assertEquals($newServer->description(), $returnedServer->description());
+        $this->assertEquals($newServer->body(), $returnedServer->body());
+
+        $this->assertEquals($createdEloquentServer->created_at, $returnedServer->createdAt());
+        $this->assertEquals($createdEloquentServer->updated_at, $returnedServer->createdAt());
+    }
+
+    public function test_Should_UpdateExistingServer()
+    {
+        $eloquentServerShouldBeUpdated = EloquentFactory::create(EloquentServer::class, [
+            'name'        => 'some name 1',
+            'description' => 'some description 1',
+            'body'        => 'some body 1',
+        ]);
+
+        $eloquentServerRepository = $this->createEloquentServerRepository();
+
+        $newServer = $this->createServer([
+            'serverId' => $eloquentServerShouldBeUpdated->id,
+            'name'        => 'some name 2',
+            'description' => 'some description 2',
+            'body'        => 'some body 2',
+        ]);
+
+        $returnedServer = $eloquentServerRepository->save($newServer);
+
+        $updatedEloquentServer = EloquentServer::find($eloquentServerShouldBeUpdated->id);
+
+        $this->assertEquals($newServer->name(), $updatedEloquentServer->name);
+        $this->assertEquals($newServer->description(), $updatedEloquentServer->description);
+        $this->assertEquals($newServer->body(), $updatedEloquentServer->body);
+
+        $this->assertEquals($newServer->name(), $returnedServer->name());
+        $this->assertEquals($newServer->description(), $returnedServer->description());
+        $this->assertEquals($newServer->body(), $returnedServer->body());
+
+        $this->assertEquals($updatedEloquentServer->created_at, $returnedServer->createdAt());
+        $this->assertEquals($updatedEloquentServer->updated_at, $returnedServer->createdAt());
+    }
+
+    public function test_Should_DeleteExistingServer()
+    {
+        $eloquentServerShouldBeDeleted = EloquentFactory::create(EloquentServer::class, [
+            'name'        => 'some name',
+            'description' => 'some description',
+            'body'        => 'some body',
+        ]);
+
+        $eloquentServerRepository = $this->createEloquentServerRepository();
+
+        $eloquentServerRepository->remove($eloquentServerRepository->toEntity($eloquentServerShouldBeDeleted));
+
+        $deletedEloquentServer = EloquentServer::find($eloquentServerShouldBeDeleted->id);
+
+        $this->assertNull($deletedEloquentServer);
+    }
 
     private function createServer(array $params = [])
     {
