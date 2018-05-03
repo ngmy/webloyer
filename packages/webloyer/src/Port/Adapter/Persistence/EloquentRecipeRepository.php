@@ -90,7 +90,7 @@ class EloquentRecipeRepository implements RecipeRepositoryInterface
         return $recipe;
     }
 
-    private function toEntity(EloquentRecipe $eloquentRecipe)
+    public function toEntity(EloquentRecipe $eloquentRecipe)
     {
         $recipeId = new RecipeId($eloquentRecipe->id);
         $name = $eloquentRecipe->name;
@@ -117,7 +117,7 @@ class EloquentRecipeRepository implements RecipeRepositoryInterface
         return $recipe;
     }
 
-    private function toEloquent(Recipe $recipe)
+    public function toEloquent(Recipe $recipe)
     {
         $primaryKey = $recipe->recipeId()->id();
 
