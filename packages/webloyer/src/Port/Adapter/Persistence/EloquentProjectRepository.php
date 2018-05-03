@@ -101,7 +101,7 @@ class EloquentProjectRepository implements ProjectRepositoryInterface
         return $project;
     }
 
-    private function toEntity(EloquentProject $eloquentProject)
+    public function toEntity(EloquentProject $eloquentProject)
     {
         $projectId = new ProjectId($eloquentProject->id);
         $name = $eloquentProject->name;
