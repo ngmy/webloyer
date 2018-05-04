@@ -29,7 +29,7 @@ class EloquentServerRepository implements ServerRepositoryInterface
         $eloquentServers = $this->eloquentServer->all();
 
         $servers = $eloquentServers->map(function ($eloquentServer, $key) {
-            return $this->toEntity($eloquentServer);
+            return $eloquentServer->toEntity();
         })->all();
 
         return $servers;
@@ -44,7 +44,7 @@ class EloquentServerRepository implements ServerRepositoryInterface
         $servers = $eloquentServers
             ->slice($limit * ($page - 1), $limit)
             ->map(function ($eloquentServer, $key) {
-                return $this->toEntity($eloquentServer);
+                return $eloquentServer->toEntity();
             });
 
         return new LengthAwarePaginator(
@@ -64,7 +64,7 @@ class EloquentServerRepository implements ServerRepositoryInterface
 
         $eloquentServer = $this->eloquentServer->find($primaryKey);
 
-        $server = $this->toEntity($eloquentServer);
+        $server = $eloquentServer->toEntity();
 
         return $server;
     }
@@ -84,28 +84,7 @@ class EloquentServerRepository implements ServerRepositoryInterface
 
         $eloquentServer->save();
 
-        $server = $this->toEntity($eloquentServer);
-
-        return $server;
-    }
-
-    public function toEntity(EloquentServer $eloquentServer)
-    {
-        $serverId = new ServerId($eloquentServer->id);
-        $name = $eloquentServer->name;
-        $description = $eloquentServer->description;
-        $body = $eloquentServer->body;
-        $createdAt = $eloquentServer->created_at;
-        $updatedAt = $eloquentServer->updated_at;
-
-        $server = new Server(
-            $serverId,
-            $name,
-            $description,
-            $body,
-            $createdAt,
-            $updatedAt
-        );
+        $server = $eloquentServer->toEntity();
 
         return $server;
     }
