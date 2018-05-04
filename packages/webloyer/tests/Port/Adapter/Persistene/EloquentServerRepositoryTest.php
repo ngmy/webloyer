@@ -135,7 +135,7 @@ class EloquentServerRepositoryTest extends TestCase
         $this->assertEquals($newServer->body(), $returnedServer->body());
 
         $this->assertEquals($updatedEloquentServer->created_at, $returnedServer->createdAt());
-        $this->assertEquals($updatedEloquentServer->updated_at, $returnedServer->createdAt());
+        $this->assertEquals($updatedEloquentServer->updated_at, $returnedServer->updatedAt());
     }
 
     public function test_Should_DeleteExistingServer()

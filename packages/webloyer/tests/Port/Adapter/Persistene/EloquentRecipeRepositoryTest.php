@@ -20,128 +20,63 @@ class EloquentRecipeRepositoryTest extends TestCase
 
     public function test_Should_GetRecipeOfId()
     {
-        $recipe = $this->createRecipe([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
         $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => $recipe->name(),
-            'description' => $recipe->description(),
-            'body'        => $recipe->body(),
-            'created_at'  => $recipe->createdAt(),
-            'updated_at'  => $recipe->updatedAt(),
+            'created_at' => '2018-04-30 12:00:00',
+            'updated_at' => '2018-04-30 12:00:00',
         ]);
+        $expectedResult = $createdEloquentRecipe->toEntity();
 
-        $eloquentRecipeRepository = $this->createEloquentRecipeRepository();
-        $expectedResult = $eloquentRecipeRepository->toEntity($createdEloquentRecipe);
-
-        $actualResult = $eloquentRecipeRepository->recipeOfId($expectedResult->recipeId());
+        $actualResult = $this->createEloquentRecipeRepository()->recipeOfId($expectedResult->recipeId());
 
         $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_GetAllRecipes()
     {
-        $recipes = [
-            $this->createRecipe([
-                'name'      => 'Recipe 1',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 2',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 3',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 4',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 5',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-        ];
-        $page = 1;
-        $limit = 10;
+        $createdEloquentRecipes = EloquentFactory::createList(EloquentRecipe::class, [
+            [
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+        ]);
+        $expectedResult = (new Collection(array_map(function ($eloquentRecipe) {
+            return $eloquentRecipe->toEntity();
+        }, $createdEloquentRecipes)))->all();
 
-        $createdEloquentRecipes = EloquentFactory::createList(EloquentRecipe::class, array_map(function ($recipe) {
-            return [
-                'name'        => $recipe->name(),
-                'description' => $recipe->description(),
-                'body'        => $recipe->body(),
-                'created_at'  => $recipe->createdAt(),
-                'updated_at'  => $recipe->updatedAt(),
-            ];
-        }, $recipes));
-
-        $eloquentRecipeRepository = $this->createEloquentRecipeRepository();
-
-        $expectedResult = (new Collection(array_map(function ($eloquentRecipe) use ($eloquentRecipeRepository) {
-                return $eloquentRecipeRepository->toEntity($eloquentRecipe);
-            }, $createdEloquentRecipes)))->all();
-
-        $actualResult = $eloquentRecipeRepository->allRecipes();
+        $actualResult = $this->createEloquentRecipeRepository()->allRecipes();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_GetRecipesOfPage()
     {
-        $recipes = [
-            $this->createRecipe([
-                'name'      => 'Recipe 1',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 2',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 3',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 4',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createRecipe([
-                'name'      => 'Recipe 5',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-        ];
+        $createdEloquentRecipes = EloquentFactory::createList(EloquentRecipe::class, [
+            [
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+        ]);
+        $createdRecipes = new Collection(array_map(function ($eloquentRecipe) {
+            return $eloquentRecipe->toEntity();
+        }, $createdEloquentRecipes));
         $page = 1;
         $limit = 10;
-
-        $createdEloquentRecipes = EloquentFactory::createList(EloquentRecipe::class, array_map(function ($recipe) {
-            return [
-                'name'        => $recipe->name(),
-                'description' => $recipe->description(),
-                'body'        => $recipe->body(),
-                'created_at'  => $recipe->createdAt(),
-                'updated_at'  => $recipe->updatedAt(),
-            ];
-        }, $recipes));
-
-        $eloquentRecipeRepository = $this->createEloquentRecipeRepository();
-
-        $createdRecipes = new Collection(array_map(function ($eloquentRecipe) use ($eloquentRecipeRepository) {
-                return $eloquentRecipeRepository->toEntity($eloquentRecipe);
-            }, $createdEloquentRecipes));
-
         $expectedResult = new LengthAwarePaginator(
             $createdRecipes,
             $createdRecipes->count(),
@@ -152,21 +87,16 @@ class EloquentRecipeRepositoryTest extends TestCase
             ]
         );
 
-        $actualResult = $eloquentRecipeRepository->recipesOfPage();
+        $actualResult = $this->createEloquentRecipeRepository()->recipesOfPage();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_CreateNewRecipe()
     {
-        $newRecipe = $this->createRecipe([
-            'name' => 'some name',
-            'description' => 'some desctiption.',
-            'body' => 'some body.',
-        ]);
-        $eloquentRecipeRepository = $this->createEloquentRecipeRepository();
+        $newRecipe = $this->createRecipe();
 
-        $returnedRecipe = $eloquentRecipeRepository->save($newRecipe);
+        $returnedRecipe = $this->createEloquentRecipeRepository()->save($newRecipe);
 
         $createdEloquentRecipe = EloquentRecipe::find($returnedRecipe->RecipeId()->id());
 
@@ -184,22 +114,16 @@ class EloquentRecipeRepositoryTest extends TestCase
 
     public function test_Should_UpdateExistingRecipe()
     {
-        $eloquentRecipeShouldBeUpdated = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => 'some name 1',
-            'description' => 'some description 1',
-            'body'        => 'some body 1',
-        ]);
-
-        $eloquentRecipeRepository = $this->createEloquentRecipeRepository();
+        $eloquentRecipeShouldBeUpdated = EloquentFactory::create(EloquentRecipe::class);
 
         $newRecipe = $this->createRecipe([
-            'recipeId' => $eloquentRecipeShouldBeUpdated->id,
-            'name'        => 'some name 2',
-            'description' => 'some description 2',
-            'body'        => 'some body 2',
+            'recipeId'    => $eloquentRecipeShouldBeUpdated->id,
+            'name'        => 'new name',
+            'description' => 'new description',
+            'body'        => 'new body',
         ]);
 
-        $returnedRecipe = $eloquentRecipeRepository->save($newRecipe);
+        $returnedRecipe = $this->createEloquentRecipeRepository()->save($newRecipe);
 
         $updatedEloquentRecipe = EloquentRecipe::find($eloquentRecipeShouldBeUpdated->id);
 
@@ -212,20 +136,14 @@ class EloquentRecipeRepositoryTest extends TestCase
         $this->assertEquals($newRecipe->body(), $returnedRecipe->body());
 
         $this->assertEquals($updatedEloquentRecipe->created_at, $returnedRecipe->createdAt());
-        $this->assertEquals($updatedEloquentRecipe->updated_at, $returnedRecipe->createdAt());
+        $this->assertEquals($updatedEloquentRecipe->updated_at, $returnedRecipe->updatedAt());
     }
 
     public function test_Should_DeleteExistingRecipe()
     {
-        $eloquentRecipeShouldBeDeleted = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => 'some name',
-            'description' => 'some description',
-            'body'        => 'some body',
-        ]);
+        $eloquentRecipeShouldBeDeleted = EloquentFactory::create(EloquentRecipe::class);
 
-        $eloquentRecipeRepository = $this->createEloquentRecipeRepository();
-
-        $eloquentRecipeRepository->remove($eloquentRecipeRepository->toEntity($eloquentRecipeShouldBeDeleted));
+        $this->createEloquentRecipeRepository()->remove($eloquentRecipeShouldBeDeleted->toEntity());
 
         $deletedEloquentRecipe = EloquentRecipe::find($eloquentRecipeShouldBeDeleted->id);
 

@@ -7,7 +7,6 @@ use Illuminate\Pagination\Paginator;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\Recipe;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeRepositoryInterface;
-use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Recipe as EloquentRecipe;
 
 class EloquentRecipeRepository implements RecipeRepositoryInterface
@@ -30,7 +29,7 @@ class EloquentRecipeRepository implements RecipeRepositoryInterface
         $eloquentRecipes = $this->eloquentRecipe->all();
 
         $recipes = $eloquentRecipes->map(function ($eloquentRecipe, $key) {
-            return $this->toEntity($eloquentRecipe);
+            return $eloquentRecipe->toEntity();
         })->all();
 
         return $recipes;
@@ -45,7 +44,7 @@ class EloquentRecipeRepository implements RecipeRepositoryInterface
         $recipes = $eloquentRecipes
             ->slice($limit * ($page - 1), $limit)
             ->map(function ($eloquentRecipe, $key) {
-                return $this->toEntity($eloquentRecipe);
+                return $eloquentRecipe->toEntity();
             });
 
         return new LengthAwarePaginator(
@@ -65,7 +64,7 @@ class EloquentRecipeRepository implements RecipeRepositoryInterface
 
         $eloquentRecipe = $this->eloquentRecipe->find($primaryKey);
 
-        $recipe = $this->toEntity($eloquentRecipe);
+        $recipe = $eloquentRecipe->toEntity();
 
         return $recipe;
     }
@@ -85,34 +84,7 @@ class EloquentRecipeRepository implements RecipeRepositoryInterface
 
         $eloquentRecipe->save();
 
-        $recipe = $this->toEntity($eloquentRecipe);
-
-        return $recipe;
-    }
-
-    public function toEntity(EloquentRecipe $eloquentRecipe)
-    {
-        $recipeId = new RecipeId($eloquentRecipe->id);
-        $name = $eloquentRecipe->name;
-        $description = $eloquentRecipe->description;
-        $body = $eloquentRecipe->body;
-        $eloquentProjects = $eloquentRecipe->projects;
-        $afferentProjectIds = [];
-        foreach ($eloquentProjects as $eloquentProject) {
-            $afferentProjectIds[] = new ProjectId($eloquentProject->id);
-        }
-        $createdAt = $eloquentRecipe->created_at;
-        $updatedAt = $eloquentRecipe->updated_at;
-
-        $recipe = new Recipe(
-            $recipeId,
-            $name,
-            $description,
-            $body,
-            $afferentProjectIds,
-            $createdAt,
-            $updatedAt
-        );
+        $recipe = $eloquentRecipe->toEntity();
 
         return $recipe;
     }
