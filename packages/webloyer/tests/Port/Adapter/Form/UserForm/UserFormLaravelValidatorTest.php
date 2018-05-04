@@ -3,7 +3,7 @@
 namespace Ngmy\Webloyer\Webloyer\Port\Adapter\Form\UserForm;
 
 use Illuminate\Support\MessageBag;
-use Kodeine\Acl\Models\Eloquent\Role as EloquentRole;
+use Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\Role as EloquentRole;
 use Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\User as EloquentUser;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Form\UserForm\UserFormLaravelValidator;
 use Tests\Helpers\EloquentFactory;

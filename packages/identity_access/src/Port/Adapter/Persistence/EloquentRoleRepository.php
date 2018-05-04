@@ -2,11 +2,10 @@
 
 namespace Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence;
 
-use Kodeine\Acl\Models\Eloquent\Role as EloquentRole;
-use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\Role;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleId;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleSlug;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleRepositoryInterface;
+use Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\Role as EloquentRole;
 
 class EloquentRoleRepository implements RoleRepositoryInterface
 {
@@ -28,7 +27,7 @@ class EloquentRoleRepository implements RoleRepositoryInterface
         $eloquentRoles = $this->eloquentRole->all();
 
         $roles = $eloquentRoles->map(function ($eloquentRole, $key) {
-            return $this->toEntity($eloquentRole);
+            return $eloquentRole->toEntity();
         })->all();
 
         return $roles;
@@ -40,7 +39,7 @@ class EloquentRoleRepository implements RoleRepositoryInterface
 
         $eloquentRole = $this->eloquentRole->find($primaryKey);
 
-        $role = $this->toEntity($eloquentRole);
+        $role = $eloquentRole->toEntity();
 
         return $role;
     }
@@ -49,46 +48,8 @@ class EloquentRoleRepository implements RoleRepositoryInterface
     {
         $eloquentRole = $this->eloquentRole->where('slug', $roleSlug->value())->first();
 
-        $role = $this->toEntity($eloquentRole);
+        $role = $eloquentRole->toEntity();
 
         return $role;
-    }
-
-    private function toEntity(EloquentRole $eloquentRole)
-    {
-        $roleId = new RoleId($eloquentRole->id);
-        $name = $eloquentRole->name;
-        $roleSlug = new RoleSlug($eloquentRole->slug);
-        $description = $eloquentRole->description;
-        $createdAt = $eloquentRole->created_at;
-        $updatedAt = $eloquentRole->updated_at;
-
-        $role = new Role(
-            $roleId,
-            $name,
-            $roleSlug,
-            $description,
-            $createdAt,
-            $updatedAt
-        );
-
-        return $role;
-    }
-
-    private function toEloquent(Role $role)
-    {
-        $primaryKey = $role->roleId()->id();
-
-        if (is_null($primaryKey)) {
-            $eloquentRole = new EloquentRole();
-        } else {
-            $eloquentRole = $this->eloquentRole->find($primaryKey);
-        }
-
-        $eloquentRole->name = $role->name();
-        $eloquentRole->slug = $role->slug()->value();
-        $eloquentRole->description = $role->description();
-
-        return $eloquentRole;
     }
 }

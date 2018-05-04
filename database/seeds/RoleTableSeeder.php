@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Kodeine\Acl\Models\Eloquent\Role;
+use Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\Role;
 
 class RoleTableSeeder extends Seeder
 {
