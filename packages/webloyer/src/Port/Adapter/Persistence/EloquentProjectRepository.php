@@ -4,13 +4,9 @@ namespace Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
-use Ngmy\Webloyer\Webloyer\Domain\Model\Project\KeepLastDeployment;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectRepositoryInterface;
-use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeId;
-use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerId;
-use Ngmy\Webloyer\Webloyer\Domain\Model\User\UserId;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Project as EloquentProject;
 
 class EloquentProjectRepository implements ProjectRepositoryInterface
@@ -36,7 +32,7 @@ class EloquentProjectRepository implements ProjectRepositoryInterface
 
         $projects = $eloquentProjects
             ->map(function ($eloquentProject, $key) {
-                return $this->toEntity($eloquentProject);
+                return $eloquentProject->toEntity();
             })->all();
 
         return $projects;
@@ -51,7 +47,7 @@ class EloquentProjectRepository implements ProjectRepositoryInterface
         $projects = $eloquentProjects
             ->slice($limit * ($page - 1), $limit)
             ->map(function ($eloquentProject, $key) {
-                return $this->toEntity($eloquentProject);
+                return $eloquentProject->toEntity();
             });
 
         return new LengthAwarePaginator(
@@ -71,7 +67,7 @@ class EloquentProjectRepository implements ProjectRepositoryInterface
 
         $eloquentProject = $this->eloquentProject->find($primaryKey);
 
-        $project = $this->toEntity($eloquentProject);
+        $project = $eloquentProject->toEntity();
 
         return $project;
     }
@@ -96,50 +92,7 @@ class EloquentProjectRepository implements ProjectRepositoryInterface
         }
         $eloquentProject->syncRecipes($recipeIds);
 
-        $project = $this->toEntity($eloquentProject);
-
-        return $project;
-    }
-
-    public function toEntity(EloquentProject $eloquentProject)
-    {
-        $projectId = new ProjectId($eloquentProject->id);
-        $name = $eloquentProject->name;
-        $eloquentRecipes = $eloquentProject->recipes()->orderBy('recipe_order')->get();
-        $recipeIds = [];
-        foreach ($eloquentRecipes as $eloquentRecipe) {
-            $recipeIds[] = new RecipeId($eloquentRecipe->id);
-        }
-        $serverId = new ServerId($eloquentProject->server_id);
-        $repositoryUrl = $eloquentProject->repository;
-        $stage = $eloquentProject->stage;
-        $attribute = $eloquentProject->attributes;
-        $emailNotificationRecipient = $eloquentProject->email_notification_recipient;
-        $daysToKeepDeployments = $eloquentProject->days_to_keep_deployments;
-        $maxNumberOfDeploymentsToKeep = $eloquentProject->max_number_of_deployments_to_keep;
-        $keepLastDeployment = new KeepLastDeployment($eloquentProject->keep_last_deployment);
-        $githubWebhookSecret = $eloquentProject->github_webhook_secret;
-        $githubWebhookExecuteUserId = new UserId($eloquentProject->github_webhook_user_id);
-        $createdAt = $eloquentProject->created_at;
-        $updatedAt = $eloquentProject->updated_at;
-
-        $project = new Project(
-            $projectId,
-            $name,
-            $recipeIds,
-            $serverId,
-            $repositoryUrl,
-            $stage,
-            $attribute,
-            $emailNotificationRecipient,
-            $daysToKeepDeployments,
-            $maxNumberOfDeploymentsToKeep,
-            $keepLastDeployment,
-            $githubWebhookSecret,
-            $githubWebhookExecuteUserId,
-            $createdAt,
-            $updatedAt
-        );
+        $project = $eloquentProject->toEntity();
 
         return $project;
     }

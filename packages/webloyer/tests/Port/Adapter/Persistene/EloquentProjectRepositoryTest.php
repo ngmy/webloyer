@@ -28,227 +28,80 @@ class EloquentProjectRepositoryTest extends TestCase
 
     public function test_Should_GetProjectOfId()
     {
-        $recipe = $this->createRecipe([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => $recipe->name(),
-            'description' => $recipe->description(),
-            'body'        => $recipe->body(),
-            'created_at'  => $recipe->createdAt(),
-            'updated_at'  => $recipe->updatedAt(),
-        ]);
-
-        $server = $this->createServer([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentServer = EloquentFactory::create(EloquentServer::class, [
-            'name'        => $server->name(),
-            'description' => $server->description(),
-            'body'        => $server->body(),
-            'created_at'  => $server->createdAt(),
-            'updated_at'  => $server->updatedAt(),
-        ]);
-
-        $project = $this->createProject([
-            'recipeIds' => [$createdEloquentRecipe->id],
-            'serverId'  => $createdEloquentServer->id,
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
+        $createdEloquentServer = EloquentFactory::create(EloquentServer::class);
         $createdEloquentProject = EloquentFactory::create(EloquentProject::class, [
-            'server_id'   => $project->serverId()->id(),
-            'attributes'  => $project->attribute(),
-            'name'        => $project->name(),
-            'created_at'  => $project->createdAt(),
-            'updated_at'  => $project->updatedAt(),
+            'server_id'  => $createdEloquentServer->id,
+            'attributes' => new ProjectAttribute('deploy_path'),
+            'created_at' => '2018-04-30 12:00:00',
+            'updated_at' => '2018-04-30 12:00:00',
         ]);
+        $expectedResult = $createdEloquentProject->toEntity();
 
-        $eloquentProjectRepository = $this->createEloquentProjectRepository();
-        $expectedResult = $eloquentProjectRepository->toEntity($createdEloquentProject);
-
-        $actualResult = $eloquentProjectRepository->projectOfId($expectedResult->projectId());
+        $actualResult = $this->createEloquentProjectRepository()->projectOfId($expectedResult->projectId());
 
         $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_GetAllProjects()
     {
-        $recipe = $this->createRecipe([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
+        $createdEloquentServer = EloquentFactory::create(EloquentServer::class);
+        $createdEloquentProjects = EloquentFactory::createList(EloquentProject::class, [
+            [
+                'server_id'  => $createdEloquentServer->id,
+                'attributes' => new ProjectAttribute('deploy_path'),
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'server_id'  => $createdEloquentServer->id,
+                'attributes' => new ProjectAttribute('deploy_path'),
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'server_id'  => $createdEloquentServer->id,
+                'attributes' => new ProjectAttribute('deploy_path'),
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
         ]);
+        $expectedResult = (new Collection(array_map(function ($eloquentProject) {
+            return $eloquentProject->toEntity();
+        }, $createdEloquentProjects)))->all();
 
-        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => $recipe->name(),
-            'description' => $recipe->description(),
-            'body'        => $recipe->body(),
-            'created_at'  => $recipe->createdAt(),
-            'updated_at'  => $recipe->updatedAt(),
-        ]);
-
-        $server = $this->createServer([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentServer = EloquentFactory::create(EloquentServer::class, [
-            'name'        => $server->name(),
-            'description' => $server->description(),
-            'body'        => $server->body(),
-            'created_at'  => $server->createdAt(),
-            'updated_at'  => $server->updatedAt(),
-        ]);
-        $projects = [
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 1',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 2',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 3',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 4',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 5',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-        ];
-        $page = 1;
-        $limit = 10;
-
-        $createdEloquentProjects = EloquentFactory::createList(EloquentProject::class, array_map(function ($project) {
-            return [
-                'server_id'   => $project->serverId()->id(),
-                'attributes'  => $project->attribute(),
-                'name'        => $project->name(),
-                'created_at'  => $project->createdAt(),
-                'updated_at'  => $project->updatedAt(),
-            ];
-        }, $projects));
-
-        $eloquentProjectRepository = $this->createEloquentProjectRepository();
-
-        $expectedResult = (new Collection(array_map(function ($eloquentProject) use ($eloquentProjectRepository) {
-                return $eloquentProjectRepository->toEntity($eloquentProject);
-            }, $createdEloquentProjects)))->all();
-
-        $actualResult = $eloquentProjectRepository->allProjects();
+        $actualResult = $this->createEloquentProjectRepository()->allProjects();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_GetProjectsOfPage()
     {
-        $recipe = $this->createRecipe([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
+        $createdEloquentServer = EloquentFactory::create(EloquentServer::class);
+        $createdEloquentProjects = EloquentFactory::createList(EloquentProject::class, [
+            [
+                'server_id'  => $createdEloquentServer->id,
+                'attributes' => new ProjectAttribute('deploy_path'),
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'server_id'  => $createdEloquentServer->id,
+                'attributes' => new ProjectAttribute('deploy_path'),
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
+            [
+                'server_id'  => $createdEloquentServer->id,
+                'attributes' => new ProjectAttribute('deploy_path'),
+                'created_at' => '2018-04-30 12:00:00',
+                'updated_at' => '2018-04-30 12:00:00',
+            ],
         ]);
-
-        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => $recipe->name(),
-            'description' => $recipe->description(),
-            'body'        => $recipe->body(),
-            'created_at'  => $recipe->createdAt(),
-            'updated_at'  => $recipe->updatedAt(),
-        ]);
-
-        $server = $this->createServer([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentServer = EloquentFactory::create(EloquentServer::class, [
-            'name'        => $server->name(),
-            'description' => $server->description(),
-            'body'        => $server->body(),
-            'created_at'  => $server->createdAt(),
-            'updated_at'  => $server->updatedAt(),
-        ]);
-
-        $projects = [
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 1',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 2',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 3',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 4',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-            $this->createProject([
-                'recipeIds' => [$createdEloquentRecipe->id],
-                'serverId'  => $createdEloquentServer->id,
-                'name'      => 'Project 5',
-                'createdAt' => '2018-04-30 12:00:00',
-                'updatedAt' => '2018-04-30 12:00:00',
-            ]),
-        ];
+        $createdProjects = new Collection(array_map(function ($eloquentProject) {
+            return $eloquentProject->toEntity();
+        }, $createdEloquentProjects));
         $page = 1;
         $limit = 10;
-
-        $createdEloquentProjects = EloquentFactory::createList(EloquentProject::class, array_map(function ($project) {
-            return [
-                'server_id'   => $project->serverId()->id(),
-                'attributes'  => $project->attribute(),
-                'name'        => $project->name(),
-                'created_at'  => $project->createdAt(),
-                'updated_at'  => $project->updatedAt(),
-            ];
-        }, $projects));
-
-        $eloquentProjectRepository = $this->createEloquentProjectRepository();
-
-        $createdProjects = new Collection(array_map(function ($eloquentProject) use ($eloquentProjectRepository) {
-                return $eloquentProjectRepository->toEntity($eloquentProject);
-            }, $createdEloquentProjects));
-
         $expectedResult = new LengthAwarePaginator(
             $createdProjects,
             $createdProjects->count(),
@@ -259,47 +112,21 @@ class EloquentProjectRepositoryTest extends TestCase
             ]
         );
 
-        $actualResult = $eloquentProjectRepository->projectsOfPage();
+        $actualResult = $this->createEloquentProjectRepository()->projectsOfPage();
 
         $this->assertEquals($expectedResult, $actualResult);
     }
 
     public function test_Should_CreateNewProject()
     {
-        $recipe = $this->createRecipe([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => $recipe->name(),
-            'description' => $recipe->description(),
-            'body'        => $recipe->body(),
-            'created_at'  => $recipe->createdAt(),
-            'updated_at'  => $recipe->updatedAt(),
-        ]);
-
-        $server = $this->createServer([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentServer = EloquentFactory::create(EloquentServer::class, [
-            'name'        => $server->name(),
-            'description' => $server->description(),
-            'body'        => $server->body(),
-            'created_at'  => $server->createdAt(),
-            'updated_at'  => $server->updatedAt(),
-        ]);
-
+        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class);
+        $createdEloquentServer = EloquentFactory::create(EloquentServer::class);
         $newProject = $this->createProject([
             'recipeIds' => [$createdEloquentRecipe->id],
             'serverId'  => $createdEloquentServer->id,
-            'name'      => 'some name',
         ]);
-        $eloquentProjectRepository = $this->createEloquentProjectRepository();
 
-        $returnedProject = $eloquentProjectRepository->save($newProject);
+        $returnedProject = $this->createEloquentProjectRepository()->save($newProject);
 
         $createdEloquentProject = EloquentProject::find($returnedProject->ProjectId()->id());
 
@@ -308,51 +135,24 @@ class EloquentProjectRepositoryTest extends TestCase
         $this->assertEquals($newProject->name(), $returnedProject->name());
 
         $this->assertEquals($createdEloquentProject->created_at, $returnedProject->createdAt());
-        $this->assertEquals($createdEloquentProject->updated_at, $returnedProject->createdAt());
+        $this->assertEquals($createdEloquentProject->updated_at, $returnedProject->updatedAt());
     }
 
     public function test_Should_UpdateExistingProject()
     {
-        $recipe = $this->createRecipe([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => $recipe->name(),
-            'description' => $recipe->description(),
-            'body'        => $recipe->body(),
-            'created_at'  => $recipe->createdAt(),
-            'updated_at'  => $recipe->updatedAt(),
-        ]);
-
-        $server = $this->createServer([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentServer = EloquentFactory::create(EloquentServer::class, [
-            'name'        => $server->name(),
-            'description' => $server->description(),
-            'body'        => $server->body(),
-            'created_at'  => $server->createdAt(),
-            'updated_at'  => $server->updatedAt(),
-        ]);
+        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class);
+        $createdEloquentServer = EloquentFactory::create(EloquentServer::class);
         $eloquentProjectShouldBeUpdated = EloquentFactory::create(EloquentProject::class, [
             'server_id' => $createdEloquentServer->id,
-            'name'      => 'some name 1',
         ]);
-
-        $eloquentProjectRepository = $this->createEloquentProjectRepository();
-
         $newProject = $this->createProject([
             'recipeIds' => [$createdEloquentRecipe->id],
             'serverId'  => $createdEloquentServer->id,
             'projectId' => $eloquentProjectShouldBeUpdated->id,
-            'name'      => 'some name 2',
+            'name'      => 'new name',
         ]);
 
-        $returnedProject = $eloquentProjectRepository->save($newProject);
+        $returnedProject = $this->createEloquentProjectRepository()->save($newProject);
 
         $updatedEloquentProject = EloquentProject::find($eloquentProjectShouldBeUpdated->id);
 
@@ -366,41 +166,13 @@ class EloquentProjectRepositoryTest extends TestCase
 
     public function test_Should_DeleteExistingProject()
     {
-        $recipe = $this->createRecipe([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentRecipe = EloquentFactory::create(EloquentRecipe::class, [
-            'name'        => $recipe->name(),
-            'description' => $recipe->description(),
-            'body'        => $recipe->body(),
-            'created_at'  => $recipe->createdAt(),
-            'updated_at'  => $recipe->updatedAt(),
-        ]);
-
-        $server = $this->createServer([
-            'createdAt' => '2018-04-30 12:00:00',
-            'updatedAt' => '2018-04-30 12:00:00',
-        ]);
-
-        $createdEloquentServer = EloquentFactory::create(EloquentServer::class, [
-            'name'        => $server->name(),
-            'description' => $server->description(),
-            'body'        => $server->body(),
-            'created_at'  => $server->createdAt(),
-            'updated_at'  => $server->updatedAt(),
-        ]);
-
+        $createdEloquentServer = EloquentFactory::create(EloquentServer::class);
         $eloquentProjectShouldBeDeleted = EloquentFactory::create(EloquentProject::class, [
             'server_id'  => $createdEloquentServer->id,
-            'attributes' => new ProjectAttribute(''),
-            'name'       => 'some name',
+            'attributes' => new ProjectAttribute('deploy_path'),
         ]);
 
-        $eloquentProjectRepository = $this->createEloquentProjectRepository();
-
-        $eloquentProjectRepository->remove($eloquentProjectRepository->toEntity($eloquentProjectShouldBeDeleted));
+        $this->createEloquentProjectRepository()->remove($eloquentProjectShouldBeDeleted->toEntity());
 
         $deletedEloquentProject = EloquentProject::find($eloquentProjectShouldBeDeleted->id);
 
@@ -411,8 +183,8 @@ class EloquentProjectRepositoryTest extends TestCase
     {
         $projectId = null;
         $name = '';
-        $recipeIds = [1];
-        $serverId = 1;
+        $recipeIds = [];
+        $serverId = null;
         $repositoryUrl = '';
         $stage = '';
         $attribute = [
@@ -445,52 +217,6 @@ class EloquentProjectRepositoryTest extends TestCase
             new KeepLastDeployment($keepLastDeployment),
             $githubWebhookSecret,
             new UserId($githubWebhookExecuteUserId),
-            new Carbon($createdAt),
-            new Carbon($updatedAt)
-        );
-    }
-
-    private function createRecipe(array $params = [])
-    {
-        $recipeId = null;
-        $name = '';
-        $description = '';
-        $body = '';
-        $afferentProjectIds = [];
-        $createdAt = null;
-        $updatedAt = null;
-
-        extract($params);
-
-        return new Recipe(
-            new RecipeId($recipeId),
-            $name,
-            $description,
-            $body,
-            array_map(function ($projectId) {
-                return new ProjectId($projectId);
-            }, $afferentProjectIds),
-            new Carbon($createdAt),
-            new Carbon($updatedAt)
-        );
-    }
-
-    private function createServer(array $params = [])
-    {
-        $serverId = null;
-        $name = '';
-        $description = '';
-        $body = '';
-        $createdAt = null;
-        $updatedAt = null;
-
-        extract($params);
-
-        return new Server(
-            new ServerId($serverId),
-            $name,
-            $description,
-            $body,
             new Carbon($createdAt),
             new Carbon($updatedAt)
         );

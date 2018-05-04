@@ -4,7 +4,13 @@ namespace Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent;
 
 use Ngmy\EloquentSerializedLob\SerializedLobTrait;
 use Ngmy\EloquentSerializedLob\Serializer\JsonSerializer;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\KeepLastDeployment;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project as EntityProject;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectAttribute;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectId;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeId;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerId;
+use Ngmy\Webloyer\Webloyer\Domain\Model\User\UserId;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\AbstractBaseEloquent;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Deployment;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\MaxDeployment;
@@ -88,6 +94,34 @@ class Project extends AbstractBaseEloquent
         }
 
         return $this->recipes()->sync($syncRecipeIds);
+    }
+
+    /**
+     * Convert an Eloquent object into an entity.
+     *
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project
+     */
+    public function toEntity()
+    {
+        return new EntityProject(
+            new ProjectId($this->id),
+            $this->name,
+            $this->recipes()->orderBy('recipe_order')->get()->map(function ($recipe) {
+                return new RecipeId($recipe->id);
+            })->all(),
+            new ServerId($this->server_id),
+            $this->repository,
+            $this->stage,
+            $this->getAttribute('attributes'),
+            $this->email_notification_recipient,
+            $this->days_to_keep_deployments,
+            $this->max_number_of_deployments_to_keep,
+            new KeepLastDeployment($this->keep_last_deployment),
+            $this->github_webhook_secret,
+            new UserId($this->github_webhook_user_id),
+            $this->created_at,
+            $this->updated_at
+        );
     }
 
     protected function serializedLobColumn()
