@@ -3,8 +3,6 @@
 namespace Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent;
 
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\AbstractBaseEloquent;
-use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Project;
-use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\User;
 
 class Deployment extends AbstractBaseEloquent
 {

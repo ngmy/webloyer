@@ -15,7 +15,6 @@ use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\AbstractBaseEloquen
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Deployment;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\MaxDeployment;
 use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\Recipe;
-use Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence\Eloquent\User;
 
 class Project extends AbstractBaseEloquent
 {
@@ -80,11 +79,6 @@ class Project extends AbstractBaseEloquent
     public function recipes()
     {
         return $this->belongsToMany(Recipe::class);
-    }
-
-    public function githubWebhookUser()
-    {
-        return $this->belongsTo(User::class, 'github_webhook_user_id');
     }
 
     public function syncRecipes(array $data)
