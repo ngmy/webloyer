@@ -7,7 +7,6 @@ use Illuminate\Pagination\Paginator;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\UserId;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\UserRepositoryInterface;
-use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleId;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\Role\RoleSlug;
 use Ngmy\Webloyer\IdentityAccess\Port\Adapter\Persistence\Eloquent\User as EloquentUser;
 
@@ -31,7 +30,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         $eloquentUsers = $this->eloquentUser->all();
 
         $users = $eloquentUsers->map(function ($eloquentUser, $key) {
-            return $this->toEntity($eloquentUser);
+            return $eloquentUser->toEntity();
         })->all();
 
         return $users;
@@ -46,7 +45,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         $users = $eloquentUsers
             ->slice($limit * ($page - 1), $limit)
             ->map(function ($eloquentUser, $key) {
-                return $this->toEntity($eloquentUser);
+                return $eloquentUser->toEntity();
             });
 
         return new LengthAwarePaginator(
@@ -66,7 +65,7 @@ class EloquentUserRepository implements UserRepositoryInterface
 
         $eloquentUser = $this->eloquentUser->find($primaryKey);
 
-        $user = $this->toEntity($eloquentUser);
+        $user = $eloquentUser->toEntity();
 
         return $user;
     }
@@ -75,7 +74,7 @@ class EloquentUserRepository implements UserRepositoryInterface
     {
         $eloquentUser = $this->eloquentUser->where('email', $email)->first();
 
-        $user = $this->toEntity($eloquentUser);
+        $user = $eloquentUser->toEntity();
 
         return $user;
     }
@@ -98,14 +97,12 @@ class EloquentUserRepository implements UserRepositoryInterface
         $eloquentUser->revokeAllRoles();
         $roleIds = $user->roleIds();
         if (!empty($roleIds)) {
-            $roleIdIds = [];
-            foreach ($roleIds as $roleId) {
-                $roleIdIds[] = $roleId->id();
-            }
-            $eloquentUser->assignRole($roleIdIds);
+            $eloquentUser->assignRole(array_map(function ($roleId) {
+                return $roleId->id();
+            }, $roleIds));
         }
 
-        $user = $this->toEntity($eloquentUser);
+        $user = $eloquentUser->toEntity();
 
         return $user;
     }
@@ -132,35 +129,6 @@ class EloquentUserRepository implements UserRepositoryInterface
     public function rememberTokenName()
     {
         return 'remember_token';
-    }
-
-    public function toEntity(EloquentUser $eloquentUser)
-    {
-        $userId = new UserId($eloquentUser->id);
-        $name = $eloquentUser->name;
-        $email = $eloquentUser->email;
-        $password = $eloquentUser->password;
-        $apiToken = $eloquentUser->api_token;
-        $eloquentRoles = $eloquentUser->roles;
-        $roleIds = [];
-        foreach ($eloquentRoles as $eloquentRole) {
-            $roleIds[] = new RoleId($eloquentRole->id);
-        }
-        $createdAt = $eloquentUser->created_at;
-        $updatedAt = $eloquentUser->updated_at;
-
-        $user = new User(
-            $userId,
-            $name,
-            $email,
-            $password,
-            $apiToken,
-            $roleIds,
-            $createdAt,
-            $updatedAt
-        );
-
-        return $user;
     }
 
     public function toEloquent(User $user)

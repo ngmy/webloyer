@@ -34,7 +34,7 @@ class EloquentUserProvider extends LaravelEloquentUserProvider
     {
         $eloquentUser = parent::retrieveById($identifier);
 
-        $user = $this->userRepository->toEntity($eloquentUser);
+        $user = $eloquentUser->toEntity();
 
         return $user;
     }
@@ -48,7 +48,7 @@ class EloquentUserProvider extends LaravelEloquentUserProvider
     {
         $eloquentUser = parent::retrieveByToken($identifier, $token);
 
-        $user = $this->userRepository->toEntity($eloquentUser);
+        $user = $eloquentUser->toEntity();
 
         return $user;
     }
@@ -77,7 +77,7 @@ class EloquentUserProvider extends LaravelEloquentUserProvider
     {
         $eloquentUser = parent::retrieveByCredentials($credentials);
 
-        $user = $this->userRepository->toEntity($eloquentUser);
+        $user = $eloquentUser->toEntity();
 
         return $user;
     }
