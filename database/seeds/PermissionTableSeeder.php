@@ -10,7 +10,7 @@ class PermissionTableSeeder extends Seeder
         Permission::orderBy('inherit_id', 'desc')->delete();
 
         // project
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionProject = $permission->create([
             'name'        => 'project',
             'slug'        => [
@@ -22,7 +22,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Manage project permissions.',
         ]);
 
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionProjectOperator = $permission->create([
             'name'        => 'project.operator',
             'slug'        => [
@@ -35,7 +35,7 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         // deployment
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionDeployment = $permission->create([
             'name'        => 'deployment',
             'slug'        => [
@@ -48,7 +48,7 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         // recipe
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionRecipe = $permission->create([
             'name'        => 'recipe',
             'slug'        => [
@@ -60,7 +60,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Manage recipe permissions.',
         ]);
 
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionRecipeOperator = $permission->create([
             'name'        => 'recipe.operator',
             'slug'        => [
@@ -73,7 +73,7 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         // server
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionServer = $permission->create([
             'name'        => 'server',
             'slug'        => [
@@ -85,7 +85,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Manage server permissions.',
         ]);
 
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionServerOperator = $permission->create([
             'name'        => 'server.operator',
             'slug'        => [
@@ -98,7 +98,7 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         // user
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionUser = $permission->create([
             'name'        => 'user',
             'slug'        => [
@@ -110,7 +110,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Manage user permissions.',
         ]);
 
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionUserDeveloper = $permission->create([
             'name'        => 'user.developer',
             'slug'        => [
@@ -123,7 +123,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Developer user permissions.',
         ]);
 
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionUserOperator = $permission->create([
             'name'        => 'user.operator',
             'slug'        => [
@@ -137,7 +137,7 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         // setting
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionSetting = $permission->create([
             'name'        => 'setting',
             'slug'        => [
@@ -149,7 +149,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Manage setting permissions.',
         ]);
 
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionSettingDeveloper = $permission->create([
             'name'        => 'setting.developer',
             'slug'        => [
@@ -162,7 +162,7 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Developer setting permissions.',
         ]);
 
-        $permission = new Permission;
+        $permission = new Permission();
         $permissionSettingOperator = $permission->create([
             'name'        => 'setting.operator',
             'slug'        => [
