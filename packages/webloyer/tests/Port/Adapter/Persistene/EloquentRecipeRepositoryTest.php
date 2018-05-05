@@ -109,7 +109,7 @@ class EloquentRecipeRepositoryTest extends TestCase
         $this->assertEquals($newRecipe->body(), $returnedRecipe->body());
 
         $this->assertEquals($createdEloquentRecipe->created_at, $returnedRecipe->createdAt());
-        $this->assertEquals($createdEloquentRecipe->updated_at, $returnedRecipe->createdAt());
+        $this->assertEquals($createdEloquentRecipe->updated_at, $returnedRecipe->updatedAt());
     }
 
     public function test_Should_UpdateExistingRecipe()

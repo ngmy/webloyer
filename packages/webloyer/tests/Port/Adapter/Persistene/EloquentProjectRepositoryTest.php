@@ -161,7 +161,7 @@ class EloquentProjectRepositoryTest extends TestCase
         $this->assertEquals($newProject->name(), $returnedProject->name());
 
         $this->assertEquals($updatedEloquentProject->created_at, $returnedProject->createdAt());
-        $this->assertEquals($updatedEloquentProject->updated_at, $returnedProject->createdAt());
+        $this->assertEquals($updatedEloquentProject->updated_at, $returnedProject->updatedAt());
     }
 
     public function test_Should_DeleteExistingProject()

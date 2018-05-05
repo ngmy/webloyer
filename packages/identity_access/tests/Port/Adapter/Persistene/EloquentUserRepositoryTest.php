@@ -179,7 +179,7 @@ class EloquentUserRepositoryTest extends TestCase
         $this->assertEquals($newUser->email(), $returnedUser->email());
 
         $this->assertEquals($createdEloquentUser->created_at, $returnedUser->createdAt());
-        $this->assertEquals($createdEloquentUser->updated_at, $returnedUser->createdAt());
+        $this->assertEquals($createdEloquentUser->updated_at, $returnedUser->updatedAt());
     }
 
     public function test_Should_UpdateExistingUser()
