@@ -54,7 +54,7 @@ See [screenshots](/SCREENSHOTS.md).
 
 Webloyer has the following requirements:
 
-* PHP >= 5.6.0
+* PHP >= 7.0.0
 
 * OpenSSL PHP Extension
 
