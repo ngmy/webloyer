@@ -83,29 +83,33 @@
         }
     },
     "scripts": {
-        "post-install-cmd": [
-            "mkdir -p public/js/vendor/ajaxorg",
-            "cp -r $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
-            "mkdir -p public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select",
-            "php artisan clear-compiled",
-            "php artisan optimize"
-        ],
-        "post-update-cmd": [
-            "mkdir -p public/js/vendor/ajaxorg",
-            "cp -r $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
-            "mkdir -p public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select",
-            "php artisan clear-compiled",
-            "php artisan optimize"
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "php -r \"copy('.env.example', '.env');\"",
-            "php artisan key:generate"
+            "@php artisan key:generate"
+        ],
+        "post-install-cmd": [
+            "@distributeAjaxorgAce",
+            "@distributeLouMultiSelect",
+            "Illuminate\\Foundation\\ComposerScripts::postInstall",
+            "@php artisan optimize"
+        ],
+        "post-update-cmd": [
+            "@distributeAjaxorgAce",
+            "@distributeLouMultiSelect",
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "@php artisan optimize"
+        ],
+        "distributeAjaxorgAce": [
+            "mkdir -p public/js/vendor/ajaxorg",
+            "cp -RfT vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace"
+        ],
+        "distributeLouMultiSelect": [
+            "mkdir -p public/vendor/lou/multi-select",
+            "cp -RfT vendor/lou/multi-select/js public/vendor/lou/multi-select/js",
+            "cp -RfT vendor/lou/multi-select/css public/vendor/lou/multi-select/css",
+            "cp -RfT vendor/lou/multi-select/img public/vendor/lou/multi-select/img"
         ]
     },
     "config": {
