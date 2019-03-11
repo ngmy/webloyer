@@ -34,6 +34,10 @@
                     "reference": "0.9.12"
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/matasarei/JsonRPC.git"
         }
     ],
     "require": {
@@ -48,7 +52,7 @@
         "sensiolabs/ansi-to-html": "~1.0",
         "symfony/yaml": "~3.0",
         "ngmy/eloquent-serialized-lob": "^0.1.0",
-        "fguillot/json-rpc": "@stable",
+        "fguillot/json-rpc": "v1.2.1",
         "deployer/deployer": "^4.0"
     },
     "require-dev": {
