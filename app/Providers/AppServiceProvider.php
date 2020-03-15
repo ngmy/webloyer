@@ -38,7 +38,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // HACK `artisan optimize` and `phpunit` doesn't work with PHP 7.4 due to ErrorException.
+        $isArtisanOptimize = isset($_SERVER['argv']) && $_SERVER['argv'][0] == 'artisan' && in_array('optimize', $_SERVER['argv']);
+        if (version_compare(phpversion(), '7.4.0', '>=') && ($isArtisanOptimize || $this->app->runningUnitTests())) {
+            error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+        }
     }
 
     /**
