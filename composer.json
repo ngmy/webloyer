@@ -60,8 +60,8 @@
         "symfony/dom-crawler": "~3.0",
         "symfony/css-selector": "~3.0",
         "mockery/mockery": "dev-master",
-        "satooshi/php-coveralls": "dev-master",
-        "mikey179/vfsstream": "~1"
+        "mikey179/vfsstream": "~1",
+        "php-coveralls/php-coveralls": "^2.2"
     },
     "autoload": {
         "classmap": [
