@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb7be20edb61fadd335368cbc11ae623",
+    "content-hash": "2a05c7834342e5af7723090c6c4041a8",
     "packages": [
         {
             "name": "ajaxorg/ace-builds",
