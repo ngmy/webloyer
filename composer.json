@@ -62,7 +62,7 @@
         "symfony/css-selector": "~3.0",
         "mockery/mockery": "dev-master",
         "satooshi/php-coveralls": "dev-master",
-        "mikey179/vfsStream": "~1"
+        "mikey179/vfsstream": "~1"
     },
     "autoload": {
         "classmap": [
