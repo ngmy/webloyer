@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca5376067829c7810c866bef315bb938",
+    "content-hash": "fb7be20edb61fadd335368cbc11ae623",
     "packages": [
         {
             "name": "ajaxorg/ace-builds",
@@ -551,6 +551,7 @@
                 }
             ],
             "description": "Pure PHP key-value storage",
+            "abandoned": true,
             "time": "2016-03-19T14:26:03+00:00"
         },
         {
@@ -867,7 +868,7 @@
                 "semantic",
                 "version"
             ],
-            "abandoned": true,
+            "abandoned": "kherge/semver",
             "time": "2014-05-27T05:29:25+00:00"
         },
         {
@@ -1698,6 +1699,7 @@
                 "cron",
                 "schedule"
             ],
+            "abandoned": "dragonmantank/cron-expression",
             "time": "2016-01-26T21:23:30+00:00"
         },
         {
@@ -2619,12 +2621,12 @@
             "version": "v0.4.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/reactphp/react.git",
+                "url": "https://github.com/reactphp/reactphp.git",
                 "reference": "457b6b8a16a37c11278cac0870d6d2ff911c5765"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/react/zipball/457b6b8a16a37c11278cac0870d6d2ff911c5765",
+                "url": "https://api.github.com/repos/reactphp/reactphp/zipball/457b6b8a16a37c11278cac0870d6d2ff911c5765",
                 "reference": "457b6b8a16a37c11278cac0870d6d2ff911c5765",
                 "shasum": ""
             },
@@ -4143,16 +4145,16 @@
             "time": "2016-01-20T08:20:44+00:00"
         },
         {
-            "name": "mikey179/vfsStream",
+            "name": "mikey179/vfsstream",
             "version": "v1.6.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikey179/vfsStream.git",
+                "url": "https://github.com/bovigo/vfsStream.git",
                 "reference": "0247f57b2245e8ad2e689d7cee754b45fbabd592"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/0247f57b2245e8ad2e689d7cee754b45fbabd592",
+                "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/0247f57b2245e8ad2e689d7cee754b45fbabd592",
                 "reference": "0247f57b2245e8ad2e689d7cee754b45fbabd592",
                 "shasum": ""
             },
@@ -5702,5 +5704,6 @@
     "platform": {
         "php": ">=5.6.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
