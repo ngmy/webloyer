@@ -15,8 +15,8 @@ class CreateProjectRecipeTable extends Migration
     {
         Schema::create('project_recipe', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('project_id')->unsigned();
-            $table->integer('recipe_id')->unsigned();
+            $table->bigInteger('project_id')->unsigned();
+            $table->bigInteger('recipe_id')->unsigned();
             $table->tinyInteger('recipe_order')->unsigned();
 
             $table->foreign('project_id')

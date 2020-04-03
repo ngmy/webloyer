@@ -15,7 +15,7 @@ class CreateMaxDeploymentsTable extends Migration
     {
         Schema::create('max_deployments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('project_id')->unsigned();
+            $table->bigInteger('project_id')->unsigned();
             $table->integer('number')->unsigned()->default(0);
             $table->timestamps();
 

@@ -15,12 +15,12 @@ class CreateDeploymentsTable extends Migration
     {
         Schema::create('deployments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('project_id')->unsigned();
+            $table->bigInteger('project_id')->unsigned();
             $table->integer('number')->unsigned();
             $table->string('task');
             $table->tinyInteger('status')->unsigned()->nullable();
             $table->text('message')->nullable();
-            $table->integer('user_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('project_id')
