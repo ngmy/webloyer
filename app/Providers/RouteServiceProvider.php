@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::bind('projects', function ($id) {
+        Route::bind('project', function ($id) {
             $projectRepository = $this->app->make('App\Repositories\Project\ProjectInterface');
 
             $project = $projectRepository->byId($id);
@@ -43,8 +43,8 @@ class RouteServiceProvider extends ServiceProvider
             return $project;
         });
 
-        Route::bind('deployments', function ($num, $route) {
-            $project = $route->parameter('projects');
+        Route::bind('deployment', function ($num, $route) {
+            $project = $route->parameter('project');
 
             $deployment = $project->getDeploymentByNumber($num);
 
@@ -55,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
             return $deployment;
         });
 
-        Route::bind('recipes', function ($id) {
+        Route::bind('recipe', function ($id) {
             $recipeRepository = $this->app->make('App\Repositories\Recipe\RecipeInterface');
 
             $recipe = $recipeRepository->byId($id);
@@ -67,7 +67,7 @@ class RouteServiceProvider extends ServiceProvider
             return $recipe;
         });
 
-        Route::bind('servers', function ($id) {
+        Route::bind('server', function ($id) {
             $serverRepository = $this->app->make('App\Repositories\Server\ServerInterface');
 
             $server = $serverRepository->byId($id);
@@ -79,7 +79,7 @@ class RouteServiceProvider extends ServiceProvider
             return $server;
         });
 
-        Route::bind('users', function ($id) {
+        Route::bind('user', function ($id) {
             $userRepository = $this->app->make('App\Repositories\User\UserInterface');
 
             $user = $userRepository->byId($id);
