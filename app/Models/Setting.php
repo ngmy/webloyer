@@ -15,17 +15,17 @@ class Setting extends BaseModel
         'attributes',
     ];
 
-    protected function serializedLobColumn()
+    protected function getSerializationColumn(): string
     {
         return 'attributes';
     }
 
-    protected function serializedLobSerializer()
+    protected function getSerializationType(): string
     {
         return \Ngmy\EloquentSerializedLob\Serializer\JsonSerializer::class;
     }
 
-    protected function serializedLobDeserializeType()
+    protected function getDeserializationType(): string
     {
         if ($this->type === 'mail') {
             return \App\Entities\Setting\MailSettingEntity::class;
