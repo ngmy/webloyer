@@ -131,6 +131,15 @@
             "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
             "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
             "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select"
+        ],
+        "test": [
+            "@php vendor/bin/phpunit --colors=always"
+        ],
+        "lint": [
+            "@php vendor/bin/phpcs --colors"
+        ],
+        "findbug": [
+            "@php vendor/bin/phpstan analyse --ansi"
         ]
     }
 }
