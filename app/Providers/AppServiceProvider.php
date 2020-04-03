@@ -32,25 +32,7 @@ use Symfony\Component\Yaml\Dumper;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        // HACK `artisan optimize` and `phpunit` doesn't work with PHP 7.4 due to ErrorException.
-        $isArtisanOptimize = php_sapi_name() == 'cli' && $_SERVER['argv'][0] == 'artisan' && in_array('optimize', $_SERVER['argv']);
-        if (version_compare(phpversion(), '7.4.0', '>=') && ($isArtisanOptimize || $this->app->runningUnitTests())) {
-            error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-        }
-    }
-
-    /**
      * Register any application services.
-     *
-     * This service provider is a great spot to register your various container
-     * bindings with the application. As you can see, we are registering our
-     * "Registrar" implementation here. You can add your own bindings too!
      *
      * @return void
      */
@@ -159,5 +141,19 @@ class AppServiceProvider extends ServiceProvider
                 $app->make('App\Services\Form\Deployment\DeploymentForm')
             );
         });
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // HACK `artisan optimize` and `phpunit` doesn't work with PHP 7.4 due to ErrorException.
+        $isArtisanOptimize = php_sapi_name() == 'cli' && $_SERVER['argv'][0] == 'artisan' && in_array('optimize', $_SERVER['argv']);
+        if (version_compare(phpversion(), '7.4.0', '>=') && ($isArtisanOptimize || $this->app->runningUnitTests())) {
+            error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
+        }
     }
 }
