@@ -15,15 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::controller('auth', 'Auth\AuthController', [
-    'getRegister' => 'auth.register',
-    'getLogin'    => 'auth.login',
-]);
+Route::get('auth.register', 'Auth\AuthController@getRegister');
+Route::get('auth.login', 'Auth\AuthController@getLogin');
 
-Route::controller('password', 'Auth\PasswordController', [
-    'getEmail' => 'password.email',
-    'getReset' => 'password.reset',
-]);
+Route::get('password.email', 'Auth\PasswordController@getEmail');
+Route::get('password.reset', 'Auth\PasswordController@getReset');
 
 Route::group([
     'protect_alias' => 'project',
@@ -84,7 +80,5 @@ Route::group([
 Route::group([
     'protect_alias' => 'setting'
 ], function () {
-    Route::controller('settings', 'SettingsController', [
-        'getEmail' => 'settings.email'
-    ]);
+    Route::get('settings.email', 'SettingsController@getEmail');
 });
