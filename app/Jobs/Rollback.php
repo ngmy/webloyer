@@ -2,21 +2,21 @@
 
 namespace App\Jobs;
 
-use App\Jobs\Job;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Server\ServerInterface;
 use App\Repositories\Setting\SettingInterface;
 use App\Services\Notification\NotifierInterface;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Symfony\Component\Process\ProcessBuilder;
 
-class Rollback extends Job implements ShouldQueue
+class Rollback implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $deployment;
 

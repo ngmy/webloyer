@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateDeploymentsTable extends Migration
 {
@@ -13,7 +14,7 @@ class CreateDeploymentsTable extends Migration
     public function up()
     {
         Schema::create('deployments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('project_id')->unsigned();
             $table->integer('number')->unsigned();
             $table->string('task');
@@ -38,6 +39,6 @@ class CreateDeploymentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('deployments');
+        Schema::dropIfExists('deployments');
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateProjectRecipeTable extends Migration
 {
@@ -13,7 +14,7 @@ class CreateProjectRecipeTable extends Migration
     public function up()
     {
         Schema::create('project_recipe', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('project_id')->unsigned();
             $table->integer('recipe_id')->unsigned();
             $table->tinyInteger('recipe_order')->unsigned();
@@ -38,6 +39,6 @@ class CreateProjectRecipeTable extends Migration
      */
     public function down()
     {
-        Schema::drop('project_recipe');
+        Schema::dropIfExists('project_recipe');
     }
 }

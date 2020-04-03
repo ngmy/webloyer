@@ -4,7 +4,7 @@
  * Laravel - A PHP Framework For Web Artisans
  *
  * @package  Laravel
- * @author   Taylor Otwell <taylorotwell@gmail.com>
+ * @author   Taylor Otwell <taylor@laravel.com>
  */
 
 $uri = urldecode(
@@ -14,7 +14,7 @@ $uri = urldecode(
 // This file allows us to emulate Apache's "mod_rewrite" functionality from the
 // built-in PHP web server. This provides a convenient way to test a Laravel
 // application without having installed a "real" web server software here.
-if ($uri !== '/' and file_exists(__DIR__.'/public'.$uri)) {
+if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
     return false;
 }
 
