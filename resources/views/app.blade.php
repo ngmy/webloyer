@@ -59,7 +59,11 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
+                                <li>
+                                    <a href="javascript:document.getElementById('form-logout').submit()">Logout</a>
+                                    {!! Form::open(['url' => url('/logout'), 'id' => 'form-logout']) !!}
+                                    {!! Form::close() !!}
+                                </li>
                             </ul>
                         </li>
                     @endif

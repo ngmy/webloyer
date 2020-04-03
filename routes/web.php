@@ -15,11 +15,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('auth.register', 'Auth\AuthController@getRegister');
-Route::get('auth.login', 'Auth\AuthController@getLogin');
-
-Route::get('password.email', 'Auth\PasswordController@getEmail');
-Route::get('password.reset', 'Auth\PasswordController@getReset');
+Auth::routes();
+Route::get('register', [
+    'as'   => 'register',
+    'uses' => function () {
+        abort(404);
+    }
+]);
+Route::post('register', function () {
+    abort(404);
+});
+Route::get('password/reset', [
+    'as'   => 'password.forgot',
+    'uses' => 'Auth\ForgotPasswordController@showLinkRequestForm'
+]);
+Route::get('password/reset/{token}', [
+    'as'   => 'password.reset',
+    'uses' => 'Auth\ResetPasswordController@showResetForm'
+]);
 
 Route::group([
     'protect_alias' => 'project',
