@@ -10,6 +10,7 @@ use App\Repositories\Setting\DbSettingInterface;
 use App\Repositories\User\UserInterface;
 
 use Illuminate\Console\Command;
+use Str;
 
 class Install extends Command
 {
@@ -111,7 +112,7 @@ class Install extends Command
 
         // Create admin user
         $config['admin']['password'] = Hash::make($config['admin']['password']);
-        $config['admin']['api_token'] = str_random(60);
+        $config['admin']['api_token'] = Str::random(60);
 
         $user = $userRepository->create($config['admin']);
         $user->assignRole('administrator');
