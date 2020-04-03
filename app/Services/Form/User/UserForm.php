@@ -6,7 +6,7 @@ use DB;
 use Hash;
 use App\Services\Validation\ValidableInterface;
 use App\Repositories\User\UserInterface;
-use Str;
+use Illuminate\Support\Str;
 
 class UserForm
 {

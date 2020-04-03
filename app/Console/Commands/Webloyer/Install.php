@@ -10,7 +10,7 @@ use App\Repositories\Setting\DbSettingInterface;
 use App\Repositories\User\UserInterface;
 
 use Illuminate\Console\Command;
-use Str;
+use Illuminate\Support\Str;
 
 class Install extends Command
 {
