@@ -157,12 +157,6 @@ return [
 
         App\Providers\RepositoryServiceProvider::class,
 
-        Collective\Html\HtmlServiceProvider::class,
-        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
-        Robbo\Presenter\PresenterServiceProvider::class,
-        Kodeine\Acl\AclServiceProvider::class,
-        Ngmy\EloquentSerializedLob\SerializedLobTraitServiceProvider::class,
-
     ],
 
     /*
@@ -211,10 +205,6 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
-
-        'Form'        => Collective\Html\FormFacade::class,
-        'Html'        => Collective\Html\HtmlFacade::class,
-        'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
 
     ],
 
