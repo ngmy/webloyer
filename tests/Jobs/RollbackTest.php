@@ -38,7 +38,7 @@ class RollbackTest extends \TestCase
 
     protected $mockSettingModel;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

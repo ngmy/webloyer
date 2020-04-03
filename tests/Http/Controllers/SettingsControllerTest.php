@@ -14,7 +14,7 @@ class SettingsControllerTest extends TestCase
 
     protected $mockMailSettingEntity;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

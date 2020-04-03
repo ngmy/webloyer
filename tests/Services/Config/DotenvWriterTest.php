@@ -9,7 +9,7 @@ class DotenvWriterTest extends TestCase
 {
     protected $rootDir;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

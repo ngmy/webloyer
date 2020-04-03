@@ -16,7 +16,7 @@ class DeployerDeploymentFileBuilderTest extends TestCase
 
     protected $mockServerListFile;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

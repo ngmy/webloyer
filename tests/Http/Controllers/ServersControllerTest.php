@@ -13,7 +13,7 @@ class ServersControllerTest extends TestCase
 
     protected $mockServerForm;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

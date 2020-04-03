@@ -23,7 +23,7 @@ class ProjectsControllerTest extends TestCase
 
     protected $mockProjectAttributeEntity;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

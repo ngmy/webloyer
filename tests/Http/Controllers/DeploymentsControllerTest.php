@@ -17,7 +17,7 @@ class DeploymentsControllerTest extends TestCase
 
     protected $mockDeploymentModel;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

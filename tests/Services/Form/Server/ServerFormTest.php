@@ -10,7 +10,7 @@ class ServerFormTest extends TestCase
 
     protected $mockServerRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

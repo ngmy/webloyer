@@ -10,7 +10,7 @@ class MailSettingFormTest extends TestCase
 
     protected $mockSettingRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

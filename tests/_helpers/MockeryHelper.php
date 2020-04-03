@@ -6,7 +6,7 @@ use Mockery as m;
 
 trait MockeryHelper
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 

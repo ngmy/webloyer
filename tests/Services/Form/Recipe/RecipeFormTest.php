@@ -10,7 +10,7 @@ class RecipeFormTest extends TestCase
 
     protected $mockRecipeRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

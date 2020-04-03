@@ -15,7 +15,7 @@ class DeploymentFormTest extends TestCase
 
     protected $mockProjectModel;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

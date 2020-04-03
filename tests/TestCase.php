@@ -10,7 +10,7 @@ abstract class TestCase extends BaseTestCase
 
     protected $useDatabase = false;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->useDatabase) {
             Artisan::call('migrate:reset');

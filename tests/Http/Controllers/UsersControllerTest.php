@@ -15,7 +15,7 @@ class UsersControllerTest extends TestCase
 
     protected $mockUserForm;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

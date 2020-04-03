@@ -12,7 +12,7 @@ class UserFormTest extends TestCase
 
     protected $mockUserModel;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
