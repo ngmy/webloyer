@@ -2,15 +2,15 @@
 
 namespace Tests\Unit\app\Services\Form\User;
 
+use App\Models\User;
+use App\Repositories\User\UserInterface;
 use App\Services\Form\User\UserForm;
+use App\Services\Validation\ValidableInterface;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class UserFormTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockValidator;
 
     protected $mockUserRepository;
@@ -21,9 +21,9 @@ class UserFormTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
-        $this->mockUserModel = $this->mockPartial('App\Models\User');
+        $this->mockValidator = $this->mock(ValidableInterface::class);
+        $this->mockUserRepository = $this->mock(UserInterface::class);
+        $this->mockUserModel = $this->partialMock(User::class);
     }
 
     public function test_Should_SucceedToSave_When_ValidationPassesAndRoleFieldIsNotSpecified()

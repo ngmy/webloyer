@@ -2,9 +2,16 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Entities\ProjectAttribute\ProjectAttributeEntity;
+use App\Http\Middleware\ApplySettings;
 use App\Models\Project;
 use App\Models\Server;
 use App\Models\User;
+use App\Repositories\Project\ProjectInterface;
+use App\Repositories\Recipe\RecipeInterface;
+use App\Repositories\Server\ServerInterface;
+use App\Repositories\User\UserInterface;
+use App\Services\Form\Project\ProjectForm;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\Paginator;
@@ -12,14 +19,11 @@ use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class ProjectsControllerTest extends TestCase
 {
     use ControllerTestHelper;
-
-    use MockeryHelper;
 
     protected $mockProjectRepository;
 
@@ -39,22 +43,22 @@ class ProjectsControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
-        $user = $this->mockPartial(User::class);
+        $user = $this->partialMock(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockProjectForm = $this->mock('App\Services\Form\Project\ProjectForm');
-        $this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
-        $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
-        $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
-        $this->mockProjectModel = $this->mockPartial(Project::class);
-        $this->mockProjectAttributeEntity = $this->mock('App\Entities\ProjectAttribute\ProjectAttributeEntity');
+        $this->mockProjectRepository = $this->mock(ProjectInterface::class);
+        $this->mockProjectForm = $this->mock(ProjectForm::class);
+        $this->mockRecipeRepository = $this->mock(RecipeInterface::class);
+        $this->mockServerRepository = $this->mock(ServerInterface::class);
+        $this->mockUserRepository = $this->mock(UserInterface::class);
+        $this->mockProjectModel = $this->partialMock(Project::class);
+        $this->mockProjectAttributeEntity = $this->mock(ProjectAttributeEntity::class);
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()

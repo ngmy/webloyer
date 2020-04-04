@@ -2,15 +2,15 @@
 
 namespace Tests\Unit\app\Services\Form\Project;
 
+use App\Models\Project;
+use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Project\ProjectForm;
+use App\Services\Validation\ValidableInterface;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class ProjectFormTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockValidator;
 
     protected $mockProjectRepository;
@@ -21,9 +21,9 @@ class ProjectFormTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockValidator = $this->mock(ValidableInterface::class);
+        $this->mockProjectRepository = $this->mock(ProjectInterface::class);
+        $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
     public function test_Should_SucceedToSaveAndNotAddProjectAttribute_When_ValidationPassesAndDeployPathFieldIsNotSpecified()

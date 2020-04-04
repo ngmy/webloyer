@@ -14,14 +14,11 @@ use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class UsersControllerTest extends TestCase
 {
     use ControllerTestHelper;
-
-    use MockeryHelper;
 
     protected $mockUserRepository;
 
@@ -37,7 +34,7 @@ class UsersControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial(User::class);
+        $user = $this->partialMock(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);

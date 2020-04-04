@@ -2,16 +2,16 @@
 
 namespace Tests\Unit\app\Services\Deployment;
 
+
+use App\Models\Project;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerFile;
+use App\Services\Filesystem\FilesystemInterface;
 use App\Services\Filesystem\LaravelFilesystem;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeployerDeploymentFileBuilderTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockProjectModel;
 
     protected $mockFilesystem;
@@ -24,10 +24,10 @@ class DeployerDeploymentFileBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
-        $this->mockFilesystem = $this->mock('App\Services\Filesystem\FilesystemInterface');
-        $this->mockRecipeFile = $this->mock('App\Services\Deployment\DeployerFile');
-        $this->mockServerListFile = $this->mock('App\Services\Deployment\DeployerFile');
+        $this->mockProjectModel = $this->partialMock(Project::class);
+        $this->mockFilesystem = $this->mock(FilesystemInterface::class);
+        $this->mockRecipeFile = $this->mock(DeployerFile::class);
+        $this->mockServerListFile = $this->mock(DeployerFile::class);
     }
 
     public function test_Should_BuildDeployerDeploymentFile()

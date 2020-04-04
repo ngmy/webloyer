@@ -5,20 +5,19 @@ namespace Tests\Feature\app\Http\Controllers;
 use App\Http\Middleware\ApplySettings;
 use App\Models\Server;
 use App\Models\User;
+use App\Repositories\Server\ServerInterface;
+use App\Services\Form\Server\ServerForm;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class ServersControllerTest extends TestCase
 {
     use ControllerTestHelper;
-
-    use MockeryHelper;
 
     protected $mockServerRepository;
 
@@ -32,13 +31,13 @@ class ServersControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial(User::class);
+        $user = $this->partialMock(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
-        $this->mockServerForm = $this->mock('App\Services\Form\Server\ServerForm');
+        $this->mockServerRepository = $this->mock(ServerInterface::class);
+        $this->mockServerForm = $this->mock(ServerForm::class);
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()

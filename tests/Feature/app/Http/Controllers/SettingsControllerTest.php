@@ -2,18 +2,20 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Entities\Setting\MailSettingEntity;
 use App\Http\Middleware\ApplySettings;
+use App\Models\Setting;
+use App\Models\User;
+use App\Repositories\Setting\SettingInterface;
+use App\Services\Form\Setting\MailSettingForm;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class SettingsControllerTest extends TestCase
 {
     use ControllerTestHelper;
-
-    use MockeryHelper;
 
     protected $mockSettingRepository;
 
@@ -29,15 +31,15 @@ class SettingsControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
+        $user = $this->partialMock(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockSettingRepository = $this->mock('App\Repositories\Setting\SettingInterface');
-        $this->mockMailSettingForm = $this->mock('App\Services\Form\Setting\MailSettingForm');
-        $this->mockSettingModel = $this->mockPartial('App\Models\Setting');
-        $this->mockMailSettingEntity = $this->mock('App\Entities\Setting\MailSettingEntity');
+        $this->mockSettingRepository = $this->mock(SettingInterface::class);
+        $this->mockMailSettingForm = $this->mock(MailSettingForm::class);
+        $this->mockSettingModel = $this->partialMock(Setting::class);
+        $this->mockMailSettingEntity = $this->mock(MailSettingEntity::class);
     }
 
     public function test_Should_DisplayEmailSettingPage()

@@ -3,21 +3,30 @@
 namespace Tests\Feature\app\Jobs;
 
 use App\Jobs\Deploy;
+use App\Entities\Setting\MailSettingEntity;
 use App\Models\Deployment;
 use App\Models\Project;
 use App\Models\Recipe;
 use App\Models\Server;
 use App\Models\Setting;
 use App\Models\User;
+use App\Repositories\Project\ProjectInterface;
+use App\Repositories\Server\ServerInterface;
+use App\Repositories\Setting\SettingInterface;
+use App\Services\Deployment\DeployerDeploymentFileBuilder;
+use App\Services\Deployment\DeployerFile;
+use App\Services\Deployment\DeployerFileDirector;
+use App\Services\Deployment\DeployerRecipeFileBuilder;
+use App\Services\Deployment\DeployerServerListFileBuilder;
+use App\Services\Notification\NotifierInterface;
 use Carbon\Carbon;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 use Tests\Helpers\Factory;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeployTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockProjectRepository;
 
     protected $mockServerRepository;
@@ -50,20 +59,20 @@ class DeployTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
-        $this->mockProcessBuilder = $this->mock('Symfony\Component\Process\ProcessBuilder');
-        $this->mockProcess = $this->mockPartial('Symfony\Component\Process\Process');
-        $this->mockDeployerFileDirector = $this->mock('App\Services\Deployment\DeployerFileDirector');
-        $this->mockServerListFileBuilder = $this->mock('App\Services\Deployment\DeployerServerListFileBuilder');
-        $this->mockRecipeFileBuilder = $this->mock('App\Services\Deployment\DeployerRecipeFileBuilder');
-        $this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
-        $this->mockNotifier = $this->mock('App\Services\Notification\NotifierInterface');
-        $this->mockProjectModel = $this->mockPartial(Project::class);
-        $this->mockServerModel = $this->mockPartial(Server::class);
-        $this->mockSettingRepositroy = $this->mock('App\Repositories\Setting\SettingInterface');
-        $this->mockMailSettingEntity = $this->mock('App\Entities\Setting\MailSettingEntity');
-        $this->mockSettingModel = $this->mockPartial(Setting::class);
+        $this->mockProjectRepository = $this->mock(ProjectInterface::class);
+        $this->mockServerRepository = $this->mock(ServerInterface::class);
+        $this->mockProcessBuilder = $this->mock(ProcessBuilder::class);
+        $this->mockProcess = $this->partialMock(Process::class);
+        $this->mockDeployerFileDirector = $this->mock(DeployerFileDirector::class);
+        $this->mockServerListFileBuilder = $this->mock(DeployerServerListFileBuilder::class);
+        $this->mockRecipeFileBuilder = $this->mock(DeployerRecipeFileBuilder::class);
+        $this->mockDeploymentFileBuilder = $this->mock(DeployerDeploymentFileBuilder::class);
+        $this->mockNotifier = $this->mock(NotifierInterface::class);
+        $this->mockProjectModel = $this->partialMock(Project::class);
+        $this->mockServerModel = $this->partialMock(Server::class);
+        $this->mockSettingRepositroy = $this->mock(SettingInterface::class);
+        $this->mockMailSettingEntity = $this->mock(MailSettingEntity::class);
+        $this->mockSettingModel = $this->partialMock(Setting::class);
     }
 
     public function test_Should_Work_When_DeployerIsNormalEnd()
@@ -106,7 +115,7 @@ class DeployTest extends TestCase
             ->once()
             ->andReturn($this->mockServerModel);
 
-        $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
+        $mockDeployerFile = $this->mock(DeployerFile::class)
             ->shouldReceive('getFullPath')
             ->once()
             ->mock();

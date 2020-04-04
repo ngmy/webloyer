@@ -4,20 +4,20 @@ namespace Tests\Unit\app\Services\Api;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Repositories\Project\ProjectInterface;
 use App\Services\Api\JsonRpc;
+use App\Services\Form\Deployment\DeploymentForm;
 use Auth;
 use Exception;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\MessageBag;
 use InvalidArgumentException;
 use Tests\Helpers\ControllerTestHelper;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class JsonRpcTest extends TestCase
 {
     use ControllerTestHelper;
-
-    use MockeryHelper;
 
     protected $mockProjectRepository;
 
@@ -31,10 +31,10 @@ class JsonRpcTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockDeploymentForm = $this->mock('App\Services\Form\Deployment\DeploymentForm');
-        $this->mockAuthGuard = $this->mock('Illuminate\Contracts\Auth\Guard');
-        $this->mockProjectModel = $this->mockPartial(Project::class);
+        $this->mockProjectRepository = $this->mock(ProjectInterface::class);
+        $this->mockDeploymentForm = $this->mock(DeploymentForm::class);
+        $this->mockAuthGuard = $this->mock(Guard::class);
+        $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
     public function test_Should_NotThrowWException_When_DeployProcedureSucceeds()

@@ -2,15 +2,14 @@
 
 namespace Tests\Unit\app\Services\Form\Setting;
 
+use App\Repositories\Setting\SettingInterface;
 use App\Services\Form\Setting\MailSettingForm;
+use App\Services\Validation\ValidableInterface;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class MailSettingFormTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockValidator;
 
     protected $mockSettingRepository;
@@ -19,8 +18,8 @@ class MailSettingFormTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockSettingRepository = $this->mock('App\Repositories\Setting\SettingInterface');
+        $this->mockValidator = $this->mock(ValidableInterface::class);
+        $this->mockSettingRepository = $this->mock(SettingInterface::class);
     }
 
     public function test_Should_SucceedToUpdate_When_ValidationPasses()

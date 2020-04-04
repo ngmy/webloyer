@@ -2,15 +2,14 @@
 
 namespace Tests\Unit\app\Services\Form\Server;
 
+use App\Repositories\Server\ServerInterface;
 use App\Services\Form\Server\ServerForm;
+use App\Services\Validation\ValidableInterface;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class ServerFormTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockValidator;
 
     protected $mockServerRepository;
@@ -19,8 +18,8 @@ class ServerFormTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
+        $this->mockValidator = $this->mock(ValidableInterface::class);
+        $this->mockServerRepository = $this->mock(ServerInterface::class);
     }
 
     public function test_Should_SucceedToSave_When_ValidationPasses()

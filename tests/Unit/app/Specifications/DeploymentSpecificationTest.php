@@ -2,31 +2,30 @@
 
 namespace Tests\Unit\app\Specifications;
 
+use App\Models\Deployment;
+use App\Models\Project;
 use App\Specifications\DeploymentSpecification;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeploymentSpecificationTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockProjectModel;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
     public function test_Should_GetSatisfyingElements()
     {
         $spec = new DeploymentSpecification;
 
-        $deployment1 = $this->mockPartial('App\Models\Deployment');
-        $deployment2 = $this->mockPartial('App\Models\Deployment');
-        $deployment3 = $this->mockPartial('App\Models\Deployment');
-        $deployment4 = $this->mockPartial('App\Models\Deployment');
+        $deployment1 = $this->partialMock(Deployment::class);
+        $deployment2 = $this->partialMock(Deployment::class);
+        $deployment3 = $this->partialMock(Deployment::class);
+        $deployment4 = $this->partialMock(Deployment::class);
 
         $deployments = collect([
             $deployment4,

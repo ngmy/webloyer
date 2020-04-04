@@ -5,6 +5,8 @@ namespace Tests\Feature\app\Http\Controllers;
 use App\Http\Middleware\ApplySettings;
 use App\Models\Recipe;
 use App\Models\User;
+use App\Repositories\Recipe\RecipeInterface;
+use App\Services\Form\Recipe\RecipeForm;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\Paginator;
@@ -12,14 +14,11 @@ use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class RecipesControllerTest extends TestCase
 {
     use ControllerTestHelper;
-
-    use MockeryHelper;
 
     protected $mockRecipeRepository;
 
@@ -33,14 +32,14 @@ class RecipesControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial(User::class);
+        $user = $this->partialMock(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
-        $this->mockRecipeForm = $this->mock('App\Services\Form\Recipe\RecipeForm');
-        $this->mockRecipeModel = $this->mockPartial(Recipe::class);
+        $this->mockRecipeRepository = $this->mock(RecipeInterface::class);
+        $this->mockRecipeForm = $this->mock(RecipeForm::class);
+        $this->mockRecipeModel = $this->partialMock(Recipe::class);
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()

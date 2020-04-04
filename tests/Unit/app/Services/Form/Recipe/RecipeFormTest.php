@@ -2,15 +2,14 @@
 
 namespace Tests\Unit\app\Services\Form\Recipe;
 
+use App\Repositories\Recipe\RecipeInterface;
 use App\Services\Form\Recipe\RecipeForm;
+use App\Services\Validation\ValidableInterface;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class RecipeFormTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockValidator;
 
     protected $mockRecipeRepository;
@@ -19,8 +18,8 @@ class RecipeFormTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
+        $this->mockValidator = $this->mock(ValidableInterface::class);
+        $this->mockRecipeRepository = $this->mock(RecipeInterface::class);
     }
 
     public function test_Should_SucceedToSave_When_ValidationPasses()

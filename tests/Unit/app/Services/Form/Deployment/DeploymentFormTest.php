@@ -2,17 +2,18 @@
 
 namespace Tests\Unit\app\Services\Form\Deployment;
 
+use App\Models\Project;
+use App\Repositories\Project\ProjectInterface;
+use App\Services\Deployment\DeployCommanderInterface;
 use App\Services\Form\Deployment\DeploymentForm;
+use App\Services\Validation\ValidableInterface;
 use Carbon\Carbon;
 use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeploymentFormTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockValidator;
 
     protected $mockProjectRepository;
@@ -25,10 +26,10 @@ class DeploymentFormTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockValidator = $this->mock('App\Services\Validation\ValidableInterface');
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockDeployCommander = $this->mock('App\Services\Deployment\DeployCommanderInterface');
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockValidator = $this->mock(ValidableInterface::class);
+        $this->mockProjectRepository = $this->mock(ProjectInterface::class);
+        $this->mockDeployCommander = $this->mock(DeployCommanderInterface::class);
+        $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
     public function test_Should_SucceedToSave_When_ValidationPasses()

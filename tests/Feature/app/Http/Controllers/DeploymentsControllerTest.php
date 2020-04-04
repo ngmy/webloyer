@@ -6,20 +6,19 @@ use App\Http\Middleware\ApplySettings;
 use App\Models\Deployment;
 use App\Models\Project;
 use App\Models\User;
+use App\Repositories\Project\ProjectInterface;
+use App\Services\Form\Deployment\DeploymentForm;
 use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeploymentsControllerTest extends TestCase
 {
     use ControllerTestHelper;
-
-    use MockeryHelper;
 
     protected $mockProjectRepository;
 
@@ -37,15 +36,15 @@ class DeploymentsControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial(User::class);
+        $user = $this->partialMock(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
-        $this->mockDeploymentForm = $this->mock('App\Services\Form\Deployment\DeploymentForm');
-        $this->mockProjectModel = $this->mockPartial(Project::class);
-        $this->mockDeploymentModel = $this->mockPartial(Deployment::class);
+        $this->mockProjectRepository = $this->mock(ProjectInterface::class);
+        $this->mockDeploymentForm = $this->mock(DeploymentForm::class);
+        $this->mockProjectModel = $this->partialMock(Project::class);
+        $this->mockDeploymentModel = $this->partialMock(Deployment::class);
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()

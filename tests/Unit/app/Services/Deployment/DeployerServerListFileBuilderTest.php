@@ -2,20 +2,21 @@
 
 namespace Tests\Unit\app\Services\Deployment;
 
+use App\Entities\ProjectAttribute\ProjectAttributeEntity;
+use App\Models\Project;
+use App\Models\Server;
 use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Deployment\DeployerFile;
+use App\Services\Filesystem\FilesystemInterface;
 use App\Services\Filesystem\LaravelFilesystem;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
-use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeployerServerListFileBuilderTest extends TestCase
 {
-    use MockeryHelper;
-
     protected $mockProjectModel;
 
     protected $mockProjectAttributeEntity;
@@ -36,13 +37,13 @@ class DeployerServerListFileBuilderTest extends TestCase
     {
         parent::setUp();
 
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
-        $this->mockProjectAttributeEntity = $this->mock('App\Entities\ProjectAttribute\ProjectAttributeEntity');
-        $this->mockServerModel = $this->mockPartial('App\Models\Server');
-        $this->mockFilesystem = $this->mock('App\Services\Filesystem\FilesystemInterface');
-        $this->mockYamlParser = $this->mock('Symfony\Component\Yaml\Parser');
-        $this->mockYamlDumper = $this->mock('Symfony\Component\Yaml\Dumper');
-        $this->mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile');
+        $this->mockProjectModel = $this->partialMock(Project::class);
+        $this->mockProjectAttributeEntity = $this->mock(ProjectAttributeEntity::class);
+        $this->mockServerModel = $this->partialMock(Server::class);
+        $this->mockFilesystem = $this->mock(FilesystemInterface::class);
+        $this->mockYamlParser = $this->mock(Parser::class);
+        $this->mockYamlDumper = $this->mock(Dumper::clas);
+        $this->mockDeployerFile = $this->mock(DeployerFile::class);
 
         $this->rootDir = vfsStream::setup('rootDir');
     }
