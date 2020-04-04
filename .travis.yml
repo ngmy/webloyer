@@ -10,6 +10,7 @@ before_install:
 
 install:
   - composer install --dev --no-interaction
+  - php artisan key:generate
 
 before_script:
   - mkdir -p build/logs
