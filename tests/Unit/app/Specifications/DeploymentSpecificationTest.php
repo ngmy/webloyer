@@ -3,11 +3,12 @@
 namespace Tests\Unit\app\Specifications;
 
 use App\Specifications\DeploymentSpecification;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeploymentSpecificationTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockProjectModel;
 

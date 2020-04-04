@@ -3,11 +3,12 @@
 namespace Tests\Unit\app\Services\Form\Recipe;
 
 use App\Services\Form\Recipe\RecipeForm;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class RecipeFormTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockValidator;
 

@@ -3,13 +3,13 @@
 namespace Tests\Feature\app\Jobs;
 
 use App\Jobs\Deploy;
-
 use Tests\Helpers\Factory;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
-class DeployTest extends \TestCase
+class DeployTest extends TestCase
 {
-    use \Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockProjectRepository;
 

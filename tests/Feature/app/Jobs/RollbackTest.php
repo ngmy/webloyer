@@ -3,13 +3,13 @@
 namespace Tests\Feature\app\Jobs;
 
 use App\Jobs\Rollback;
-
 use Tests\Helpers\Factory;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
-class RollbackTest extends \TestCase
+class RollbackTest extends TestCase
 {
-    use \Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockProjectRepository;
 

@@ -2,14 +2,16 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class SettingsControllerTest extends TestCase
 {
-    use Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockSettingRepository;
 

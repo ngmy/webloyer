@@ -3,11 +3,12 @@
 namespace Tests\Unit\app\Services\Notification;
 
 use App\Services\Notification\MailNotifier;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class MailNotifierTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     public function test_Should_SetFromAddressAndReturnThis()
     {

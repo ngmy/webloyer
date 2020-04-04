@@ -3,11 +3,12 @@
 namespace Tests\Unit\app\Services\Form\User;
 
 use App\Services\Form\User\UserForm;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class UserFormTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockValidator;
 

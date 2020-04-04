@@ -2,15 +2,17 @@
 
 namespace Tests\Feature\app\Http\Controllers\Webhook\Github\V1;
 
-use Tests\Helpers\Factory;
+use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
+use Tests\Helpers\Factory;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeploymentsControllerTest extends \TestCase
 {
-    use \Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use \Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockProjectRepository;
 

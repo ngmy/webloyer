@@ -5,11 +5,12 @@ namespace Tests\Unit\app\Services\Deployment;
 use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerFile;
 use App\Services\Filesystem\LaravelFilesystem;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeployerRecipeFileBuilderTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockRecipeModel;
 

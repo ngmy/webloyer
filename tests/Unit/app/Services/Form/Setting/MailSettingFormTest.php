@@ -3,11 +3,12 @@
 namespace Tests\Unit\app\Services\Form\Setting;
 
 use App\Services\Form\Setting\MailSettingForm;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class MailSettingFormTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockValidator;
 

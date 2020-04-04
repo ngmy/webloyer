@@ -3,13 +3,15 @@
 namespace Tests\Unit\app\Services\Api;
 
 use App\Services\Api\JsonRpc;
+use Tests\Helpers\ControllerTestHelper;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class JsonRpcTest extends TestCase
 {
-    use Tests\Helpers\ControllerTestHelper;
+    use ControllerTestHelper;
 
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockProjectRepository;
 

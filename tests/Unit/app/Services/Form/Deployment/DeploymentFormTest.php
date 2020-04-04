@@ -4,11 +4,12 @@ namespace Tests\Unit\app\Services\Form\Deployment;
 
 use App\Services\Form\Deployment\DeploymentForm;
 use Tests\Helpers\Factory;
+use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
 class DeploymentFormTest extends TestCase
 {
-    use Tests\Helpers\MockeryHelper;
+    use MockeryHelper;
 
     protected $mockValidator;
 
