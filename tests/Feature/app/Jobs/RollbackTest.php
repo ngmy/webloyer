@@ -328,7 +328,7 @@ class RollbackTest extends TestCase
             'status'     => 0,
         ]);
 
-        $recipe = factory::build('app\models\recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'recipe 1',
             'desctiption' => '',

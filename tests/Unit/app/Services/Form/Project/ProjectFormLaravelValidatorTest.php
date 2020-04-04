@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\app\Services\Form\Project;
 
+use App\Models\Recipe;
+use App\Models\Server;
 use App\Services\Form\Project\ProjectFormLaravelValidator;
 use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
@@ -13,7 +15,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_RecipeIdFieldIsMissing()
     {
-        Factory::create('App\Models\Server', [
+        Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
@@ -36,13 +38,13 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_NameFieldIsMissing()
     {
-        Factory::create('App\Models\Recipe', [
+        Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Server', [
+        Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
@@ -66,7 +68,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_ServerIdFieldIsMissing()
     {
-        Factory::create('App\Models\Recipe', [
+        Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
@@ -90,13 +92,13 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_RepositoryFieldIsMissing()
     {
-        Factory::create('App\Models\Recipe', [
+        Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Server', [
+        Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
@@ -125,13 +127,13 @@ class ProjectFormLaravelValidatorTest extends TestCase
             $this->markTestIncomplete("Laravel 5.2 URL validation doesn't work with PHP 7.3 due to preg_match() error.");
         }
 
-        Factory::create('App\Models\Recipe', [
+        Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Server', [
+        Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
@@ -156,13 +158,13 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_StageFieldIsMissing()
     {
-        Factory::create('App\Models\Recipe', [
+        Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Server', [
+        Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
@@ -186,13 +188,13 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_NameFieldAndRecipeIdFieldAndServerIdFieldAndRepositoryFieldAndStageFieldAreValid()
     {
-        Factory::create('App\Models\Recipe', [
+        Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Server', [
+        Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',

@@ -72,7 +72,7 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_ReturnStatusCode400_When_StoreProcessFails()
     {
-        $project = Factory::build('App\Models\Project', [
+        $project = Factory::build(Project::class, [
             'id'                     => 1,
             'name'                   => 'Project 1',
             'github_webhook_user_id' => 1,

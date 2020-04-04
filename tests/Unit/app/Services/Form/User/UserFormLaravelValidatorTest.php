@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\app\Services\Form\User;
 
+use App\Models\User;
 use App\Services\Form\User\UserFormLaravelValidator;
 use Illuminate\Support\MessageBag;
+use Kodeine\Acl\Models\Eloquent\Role;
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -106,13 +108,13 @@ class UserFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_RoleFieldIsValid()
     {
-        Factory::create('Kodeine\Acl\Models\Eloquent\Role', [
+        Factory::create(Role::class, [
             'name'        => 'Role 1',
             'slug'        => 'role_1',
             'description' => '',
         ]);
 
-        Factory::create('Kodeine\Acl\Models\Eloquent\Role', [
+        Factory::create(Role::class, [
             'name'        => 'Role 2',
             'slug'        => 'role_2',
             'description' => '',
@@ -148,7 +150,7 @@ class UserFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsNotSpecified()
     {
-        Factory::create('App\Models\User', [
+        Factory::create(User::class, [
             'email' => 'user1@example.com',
         ]);
 
@@ -167,7 +169,7 @@ class UserFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsSpecified()
     {
-        $arrangedUser = Factory::create('App\Models\User', [
+        $arrangedUser = Factory::create(User::class, [
             'email' => 'user1@example.com',
         ]);
 

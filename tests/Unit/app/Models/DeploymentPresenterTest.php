@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\app\Models;
 
+use App\Models\Deployment;
 use App\Models\DeploymentPresenter;
 use App\Models\User;
 use Carbon\Carbon;
@@ -13,7 +14,7 @@ class DeploymentPresenterTest extends TestCase
 {
     public function test_Should_ConvertStatusToHtmlSnippet_When_StatusIsOK()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
@@ -35,7 +36,7 @@ class DeploymentPresenterTest extends TestCase
 
     public function test_Should_ConvertStatusToHtmlSnippet_When_StatusIsNg()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
@@ -57,7 +58,7 @@ class DeploymentPresenterTest extends TestCase
 
     public function test_Should_ConvertStatusToHtmlSnippet_When_StatusIsUnknown()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
@@ -79,7 +80,7 @@ class DeploymentPresenterTest extends TestCase
 
     public function test_Should_ConvertStatusToText_When_StatusIsOK()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
@@ -101,7 +102,7 @@ class DeploymentPresenterTest extends TestCase
 
     public function test_Should_ConvertStatusToText_When_StatusIsNg()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
@@ -123,7 +124,7 @@ class DeploymentPresenterTest extends TestCase
 
     public function test_Should_ConvertStatusToText_When_StatusIsNotDetermined()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
@@ -145,7 +146,7 @@ class DeploymentPresenterTest extends TestCase
 
     public function test_Should_ConvertMessageToHtmlSnippet()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
@@ -168,7 +169,7 @@ class DeploymentPresenterTest extends TestCase
 
     public function test_Should_ConvertMessageToText()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,

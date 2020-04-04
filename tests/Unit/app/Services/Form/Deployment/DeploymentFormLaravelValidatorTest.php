@@ -2,6 +2,9 @@
 
 namespace Tests\Unit\app\Services\Form\Deployment;
 
+use App\Models\Project;
+use App\Models\Server;
+use App\Models\User;
 use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
 use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
@@ -13,7 +16,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_ProjectIdFieldIsMissing()
     {
-        Factory::create('App\Models\User', [
+        Factory::create(User::class, [
             'email'     => 'user@example.com',
             'password'  => '0123456789',
             'api_token' => '0123456789',
@@ -34,7 +37,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_ProjectIdFieldIsInvalid()
     {
-        Factory::create('App\Models\User', [
+        Factory::create(User::class, [
             'email'     => 'user@example.com',
             'password'  => '0123456789',
             'api_token' => '0123456789',
@@ -57,19 +60,19 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_TaskFieldIsMissing()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Project', [
+        Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
         ]);
 
-        Factory::create('App\Models\User', [
+        Factory::create(User::class, [
             'email'     => 'user@example.com',
             'password'  => '0123456789',
             'api_token' => '0123456789',
@@ -91,19 +94,19 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_TaskFieldIsInvalid()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Project', [
+        Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
         ]);
 
-        Factory::create('App\Models\User', [
+        Factory::create(User::class, [
             'email'     => 'user@example.com',
             'password'  => '0123456789',
             'api_token' => '0123456789',
@@ -126,13 +129,13 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_UserIdFieldIsMissing()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Project', [
+        Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
@@ -153,13 +156,13 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_UserIdFieldIsInvalid()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Project', [
+        Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
@@ -182,19 +185,19 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_ProjectIdFieldAndTaskFieldAndUserIdFieldAreValid()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        Factory::create('App\Models\Project', [
+        Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
         ]);
 
-        Factory::create('App\Models\User', [
+        Factory::create(User::class, [
             'email'     => 'user@example.com',
             'password'  => '0123456789',
             'api_token' => '0123456789',

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\app\Services\Form\Deployment;
 
+use App\Models\MaxDeployment;
 use App\Models\Project;
 use App\Repositories\Project\ProjectInterface;
 use App\Services\Deployment\DeployCommanderInterface;
@@ -44,7 +45,7 @@ class DeploymentFormTest extends TestCase
             ->andReturn(true);
 
         $project = $this->mockProjectModel;
-        $maxDeployment = Factory::build('App\Models\MaxDeployment', [
+        $maxDeployment = Factory::build(MaxDeployment::class, [
             'id'         => 1,
             'project_id' => $project->id,
             'number'     => 1,
@@ -97,7 +98,7 @@ class DeploymentFormTest extends TestCase
             ->andReturn(true);
 
         $project = $this->mockProjectModel;
-        $maxDeployment = Factory::build('App\Models\MaxDeployment', [
+        $maxDeployment = Factory::build(MaxDeployment::class, [
             'id'         => 1,
             'project_id' => $project->id,
             'number'     => 1,
@@ -150,7 +151,7 @@ class DeploymentFormTest extends TestCase
             ->andReturn(true);
 
         $project = $this->mockProjectModel;
-        $maxDeployment = Factory::build('App\Models\MaxDeployment', [
+        $maxDeployment = Factory::build(MaxDeployment::class, [
             'id'         => 1,
             'project_id' => $project->id,
             'number'     => 1,

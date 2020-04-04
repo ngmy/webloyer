@@ -229,7 +229,7 @@ class DeployTest extends TestCase
             ->once()
             ->andReturn($this->mockServerModel);
 
-        $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
+        $mockDeployerFile = $this->mock(DeployerFile::class)
             ->shouldReceive('getFullPath')
             ->once()
             ->mock();
@@ -359,7 +359,7 @@ class DeployTest extends TestCase
             ->once()
             ->andReturn($this->mockServerModel);
 
-        $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
+        $mockDeployerFile = $this->mock(DeployerFile::class)
             ->shouldReceive('getFullPath')
             ->once()
             ->mock();
@@ -524,7 +524,7 @@ class DeployTest extends TestCase
             ->once()
             ->andReturn($this->mockServerModel);
 
-        $mockDeployerFile = $this->mock('App\Services\Deployment\DeployerFile')
+        $mockDeployerFile = $this->mock(DeployerFile::class)
             ->shouldReceive('getFullPath')
             ->once()
             ->mock();
