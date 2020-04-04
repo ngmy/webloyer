@@ -6,6 +6,8 @@ use App\Models\Project;
 use App\Models\Server;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
@@ -72,7 +74,7 @@ class ProjectsControllerTest extends TestCase
         $this->mockProjectRepository
             ->shouldReceive('byPage')
             ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($projects, $perPage));
+            ->andReturn(new Paginator($projects, $perPage));
 
         $this->get('projects');
 
@@ -85,17 +87,17 @@ class ProjectsControllerTest extends TestCase
         $this->mockRecipeRepository
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->mockServerRepository
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->mockUserRepository
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->get('projects/create');
 
@@ -141,7 +143,7 @@ class ProjectsControllerTest extends TestCase
         $project = $this->mockProjectModel;
         $project->shouldReceive('getRecipes')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
         $project->shouldReceive('getGithubWebhookUser')
             ->twice()
             ->andReturn(new User());
@@ -195,7 +197,7 @@ class ProjectsControllerTest extends TestCase
         $project = $this->mockProjectModel
             ->shouldReceive('getRecipes')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection)
+            ->andReturn(new Collection())
             ->mock();
         $project->shouldReceive('getAttribute')
             ->with('attributes')
@@ -209,17 +211,17 @@ class ProjectsControllerTest extends TestCase
         $this->mockRecipeRepository
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->mockServerRepository
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->mockUserRepository
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->get('projects/1/edit');
 

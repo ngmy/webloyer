@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Http\Middleware\ApplySettings;
 use App\Models\Recipe;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
@@ -26,7 +29,7 @@ class RecipesControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
@@ -45,12 +48,12 @@ class RecipesControllerTest extends TestCase
         $recipes[] = $this->mockRecipeModel
             ->shouldReceive('getProjects')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection)
+            ->andReturn(new Collection())
             ->mock();
         $recipes[] = $this->mockRecipeModel
             ->shouldReceive('getProjects')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection)
+            ->andReturn(new Collection())
             ->mock();
 
         $perPage = 10;
@@ -58,7 +61,7 @@ class RecipesControllerTest extends TestCase
         $this->mockRecipeRepository
             ->shouldReceive('byPage')
             ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($recipes, $perPage));
+            ->andReturn(new Paginator($recipes, $perPage));
 
         $this->get('recipes');
 
@@ -108,7 +111,7 @@ class RecipesControllerTest extends TestCase
         $recipe = $this->mockRecipeModel
             ->shouldReceive('getProjects')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection)
+            ->andReturn(new Collection())
             ->mock();
 
         $this->mockRecipeRepository

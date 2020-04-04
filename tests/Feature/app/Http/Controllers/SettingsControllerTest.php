@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Http\Middleware\ApplySettings;
+use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\MockeryHelper;
@@ -23,7 +25,7 @@ class SettingsControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 

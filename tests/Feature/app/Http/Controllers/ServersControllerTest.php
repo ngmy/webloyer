@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Http\Middleware\ApplySettings;
 use App\Models\Server;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Pagination\Paginator;
+use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
@@ -25,7 +28,7 @@ class ServersControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
@@ -51,7 +54,7 @@ class ServersControllerTest extends TestCase
         $this->mockServerRepository
             ->shouldReceive('byPage')
             ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($servers, $perPage));
+            ->andReturn(new Paginator($servers, $perPage));
 
         $this->get('servers');
 
