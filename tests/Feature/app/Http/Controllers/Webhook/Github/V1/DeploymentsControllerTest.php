@@ -8,7 +8,7 @@ use Tests\Helpers\Factory;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
-class DeploymentsControllerTest extends \TestCase
+class DeploymentsControllerTest extends TestCase
 {
     use ControllerTestHelper;
 
