@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Http\Middleware\ApplySettings;
 use App\Models\Deployment;
 use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
@@ -31,7 +33,7 @@ class DeploymentsControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
@@ -59,7 +61,7 @@ class DeploymentsControllerTest extends TestCase
         $project = $this->mockProjectModel
             ->shouldReceive('getDeploymentsByPage')
             ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($deployments, $perPage))
+            ->andReturn(new Paginator($deployments, $perPage))
             ->mock();
 
         $this->mockProjectRepository
