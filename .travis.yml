@@ -10,6 +10,7 @@ before_install:
 
 install:
   - composer install --dev --no-interaction
+  - cp .env.travis .env
   - php artisan key:generate
 
 before_script:
