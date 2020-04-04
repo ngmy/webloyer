@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\app\Http\Controllers\Webhook\Github\V1;
 
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
@@ -87,7 +88,7 @@ class DeploymentsControllerTest extends TestCase
         $this->mockDeploymentForm
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new \Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $this->post('webhook/github/v1/projects/1/deployments');
 

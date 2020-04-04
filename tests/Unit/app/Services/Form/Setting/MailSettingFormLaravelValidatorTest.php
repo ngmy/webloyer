@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Setting;
 
 use App\Services\Form\Setting\MailSettingFormLaravelValidator;
+use Illuminate\Support\MessageBag;
 use Tests\TestCase;
 
 class MailSettingFormLaravelValidatorTest extends TestCase
@@ -49,7 +50,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_DriverFieldIsInvalid()
@@ -72,7 +73,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_FromAddressFieldIsMissing()
@@ -94,7 +95,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_FromAddressFieldIsInvalid()
@@ -117,7 +118,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_PassToValidate_When_SmtpPortFieldIsEqualToMin()
@@ -186,7 +187,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_SmtpPortFieldIsGreaterThanMax()
@@ -209,7 +210,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_SmtpEncryptionFieldIsInvalid()
@@ -232,6 +233,6 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 }

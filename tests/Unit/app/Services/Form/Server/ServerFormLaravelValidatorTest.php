@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Server;
 
 use App\Services\Form\Server\ServerFormLaravelValidator;
+use Illuminate\Support\MessageBag;
 use Tests\TestCase;
 
 class ServerFormLaravelValidatorTest extends TestCase
@@ -19,7 +20,7 @@ class ServerFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_BodyFieldIsMissing()
@@ -35,7 +36,7 @@ class ServerFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_PassToValidate_When_NameFieldAndBodyFieldAreValid()

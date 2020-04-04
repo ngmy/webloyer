@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Deployment;
 
 use App\Services\Form\Deployment\DeploymentForm;
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
@@ -209,7 +210,7 @@ class DeploymentFormTest extends TestCase
         $this->mockValidator
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $form = new DeploymentForm(
             $this->mockValidator,

@@ -3,7 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Project;
 
 use App\Services\Form\Project\ProjectFormLaravelValidator;
-
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -31,7 +31,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_NameFieldIsMissing()
@@ -61,7 +61,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_ServerIdFieldIsMissing()
@@ -85,7 +85,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_RepositoryFieldIsMissing()
@@ -115,7 +115,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_RepositoryFieldIsInvalidUrl()
@@ -151,7 +151,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_StageFieldIsMissing()
@@ -181,7 +181,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_PassToValidate_When_NameFieldAndRecipeIdFieldAndServerIdFieldAndRepositoryFieldAndStageFieldAreValid()

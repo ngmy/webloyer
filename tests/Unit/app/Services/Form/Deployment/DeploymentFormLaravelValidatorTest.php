@@ -3,7 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Deployment;
 
 use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
-
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -29,7 +29,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_ProjectIdFieldIsInvalid()
@@ -52,7 +52,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_TaskFieldIsMissing()
@@ -86,7 +86,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_TaskFieldIsInvalid()
@@ -121,7 +121,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_UserIdFieldIsMissing()
@@ -148,7 +148,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_UserIdFieldIsInvalid()
@@ -177,7 +177,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_PassToValidate_When_ProjectIdFieldAndTaskFieldAndUserIdFieldAreValid()

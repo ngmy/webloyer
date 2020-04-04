@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Recipe;
 
 use App\Services\Form\Recipe\RecipeForm;
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
@@ -105,7 +106,7 @@ class RecipeFormTest extends TestCase
         $this->mockValidator
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $form = new RecipeForm($this->mockValidator, $this->mockRecipeRepository);
         $result = $form->errors();

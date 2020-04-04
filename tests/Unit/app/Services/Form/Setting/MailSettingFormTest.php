@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Setting;
 
 use App\Services\Form\Setting\MailSettingForm;
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
@@ -76,7 +77,7 @@ class MailSettingFormTest extends TestCase
         $this->mockValidator
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $form = new MailSettingForm($this->mockValidator, $this->mockSettingRepository);
         $result = $form->errors();

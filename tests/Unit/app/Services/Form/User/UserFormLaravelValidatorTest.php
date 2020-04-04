@@ -3,7 +3,7 @@
 namespace Tests\Unit\app\Services\Form\User;
 
 use App\Services\Form\User\UserFormLaravelValidator;
-
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -53,7 +53,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_PassToValidate_When_PasswordFieldAndPasswordConfirmationFieldAreValid()
@@ -85,7 +85,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_PasswordFieldAndPasswordConfirmationFieldAreDifferent()
@@ -101,7 +101,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_PassToValidate_When_RoleFieldIsValid()
@@ -143,7 +143,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_FailToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsNotSpecified()
@@ -162,7 +162,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $errors = $form->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
-        $this->assertInstanceOf('Illuminate\Support\MessageBag', $errors);
+        $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
     public function test_Should_PassToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsSpecified()

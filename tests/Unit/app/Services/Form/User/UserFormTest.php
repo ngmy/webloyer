@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\User;
 
 use App\Services\Form\User\UserForm;
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
@@ -211,7 +212,7 @@ class UserFormTest extends TestCase
         $this->mockValidator
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $form = new UserForm($this->mockValidator, $this->mockUserRepository);
         $result = $form->errors();

@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Server;
 
 use App\Services\Form\Server\ServerForm;
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
@@ -105,7 +106,7 @@ class ServerFormTest extends TestCase
         $this->mockValidator
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $form = new ServerForm($this->mockValidator, $this->mockServerRepository);
         $result = $form->errors();

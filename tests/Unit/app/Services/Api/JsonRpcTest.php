@@ -2,7 +2,10 @@
 
 namespace Tests\Unit\app\Services\Api;
 
+use App\Models\User;
 use App\Services\Api\JsonRpc;
+use Illuminate\Support\MessageBag;
+use InvalidArgumentException;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
@@ -36,7 +39,7 @@ class JsonRpcTest extends TestCase
         try {
             $this->mockAuthGuard
                 ->shouldReceive('user')
-                ->andReturn(new App\Models\User);
+                ->andReturn(new User());
 
             Auth::shouldReceive('guard')
                 ->andReturn($this->mockAuthGuard);
@@ -72,7 +75,7 @@ class JsonRpcTest extends TestCase
     {
         $this->mockAuthGuard
             ->shouldReceive('user')
-            ->andReturn(new App\Models\User);
+            ->andReturn(new User());
 
         Auth::shouldReceive('guard')
             ->andReturn($this->mockAuthGuard);
@@ -85,7 +88,7 @@ class JsonRpcTest extends TestCase
         $this->mockDeploymentForm
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $jsonRpc = new JsonRpc(
             $this->mockProjectRepository,
@@ -100,7 +103,7 @@ class JsonRpcTest extends TestCase
         try {
             $this->mockAuthGuard
                 ->shouldReceive('user')
-                ->andReturn(new App\Models\User);
+                ->andReturn(new User());
 
             Auth::shouldReceive('guard')
                 ->andReturn($this->mockAuthGuard);
@@ -136,7 +139,7 @@ class JsonRpcTest extends TestCase
     {
         $this->mockAuthGuard
             ->shouldReceive('user')
-            ->andReturn(new App\Models\User);
+            ->andReturn(new User());
 
         Auth::shouldReceive('guard')
             ->andReturn($this->mockAuthGuard);
@@ -149,7 +152,7 @@ class JsonRpcTest extends TestCase
         $this->mockDeploymentForm
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $jsonRpc = new JsonRpc(
             $this->mockProjectRepository,

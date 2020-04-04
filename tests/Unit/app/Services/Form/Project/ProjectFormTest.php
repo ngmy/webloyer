@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Project;
 
 use App\Services\Form\Project\ProjectForm;
+use Illuminate\Support\MessageBag;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
 
@@ -212,7 +213,7 @@ class ProjectFormTest extends TestCase
         $this->mockValidator
             ->shouldReceive('errors')
             ->once()
-            ->andReturn(new Illuminate\Support\MessageBag);
+            ->andReturn(new MessageBag());
 
         $form = new ProjectForm($this->mockValidator, $this->mockProjectRepository);
         $result = $form->errors();
