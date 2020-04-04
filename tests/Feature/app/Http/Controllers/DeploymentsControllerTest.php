@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Models\Deployment;
+use App\Models\Project;
+use App\Models\User;
+use Carbon\Carbon;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
@@ -30,23 +34,23 @@ class DeploymentsControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
+        $user = $this->mockPartial(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
 
         $this->mockProjectRepository = $this->mock('App\Repositories\Project\ProjectInterface');
         $this->mockDeploymentForm = $this->mock('App\Services\Form\Deployment\DeploymentForm');
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
-        $this->mockDeploymentModel = $this->mockPartial('App\Models\Deployment');
+        $this->mockProjectModel = $this->mockPartial(Project::class);
+        $this->mockDeploymentModel = $this->mockPartial(Deployment::class);
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $deployments = Factory::buildList('App\Models\Deployment', [
-            ['id' => 1, 'project_id' => 1, 'number' => 1, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
-            ['id' => 2, 'project_id' => 1, 'number' => 2, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
-            ['id' => 3, 'project_id' => 1, 'number' => 3, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon, 'user' => new App\Models\User],
+        $deployments = Factory::buildList(Deployment::class, [
+            ['id' => 1, 'project_id' => 1, 'number' => 1, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon(), 'updated_at' => new Carbon(), 'user' => new User()],
+            ['id' => 2, 'project_id' => 1, 'number' => 2, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon(), 'updated_at' => new Carbon(), 'user' => new User()],
+            ['id' => 3, 'project_id' => 1, 'number' => 3, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon(), 'updated_at' => new Carbon(), 'user' => new User()],
         ]);
 
         $perPage = 10;
@@ -99,11 +103,11 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessFails()
     {
-        $project = Factory::build('App\Models\Project', [
+        $project = Factory::build(Project::class, [
             'id'         => 1,
             'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
         ]);
 
         $this->mockProjectRepository
@@ -134,15 +138,15 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $project = $this->mockProjectModel

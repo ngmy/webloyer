@@ -3,9 +3,8 @@
 namespace Tests\Unit\app\Models;
 
 use App\Models\Project;
-
-use Tests\Helpers\Factory;
 use Carbon\Carbon;
+use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class ProjectTest extends TestCase

@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Models\Server;
+use App\Models\User;
+use Carbon\Carbon;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
@@ -26,7 +29,7 @@ class ServersControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
+        $user = $this->mockPartial(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
@@ -37,10 +40,10 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $servers = Factory::buildList('App\Models\Server', [
-            ['id' => 1, 'name' => 'Server 1', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-            ['id' => 2, 'name' => 'Server 2', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
-            ['id' => 3, 'name' => 'Server 3', 'description' => '', 'body' => '', 'created_at' => new Carbon\Carbon, 'updated_at' => new Carbon\Carbon],
+        $servers = Factory::buildList(Server::class, [
+            ['id' => 1, 'name' => 'Server 1', 'description' => '', 'body' => '', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
+            ['id' => 2, 'name' => 'Server 2', 'description' => '', 'body' => '', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
+            ['id' => 3, 'name' => 'Server 3', 'description' => '', 'body' => '', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
         ]);
 
         $perPage = 10;
@@ -95,13 +98,13 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $server = Factory::build('App\Models\Server', [
+        $server = Factory::build(Server::class, [
             'id'          => 1,
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockServerRepository
@@ -129,13 +132,13 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $server = Factory::build('App\Models\Server', [
+        $server = Factory::build(Server::class, [
             'id'          => 1,
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockServerRepository
@@ -163,13 +166,13 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $server = Factory::build('App\Models\Server', [
+        $server = Factory::build(Server::class, [
             'id'          => 1,
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockServerRepository
@@ -189,13 +192,13 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $server = Factory::build('App\Models\Server', [
+        $server = Factory::build(Server::class, [
             'id'          => 1,
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockServerRepository
@@ -233,13 +236,13 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $server = Factory::build('App\Models\Server', [
+        $server = Factory::build(Server::class, [
             'id'          => 1,
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockServerRepository

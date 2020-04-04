@@ -3,6 +3,13 @@
 namespace Tests\Feature\app\Jobs;
 
 use App\Jobs\Rollback;
+use App\Models\Deployment;
+use App\Models\Project;
+use App\Models\Recipe;
+use App\Models\Server;
+use App\Models\Setting;
+use App\Models\User;
+use Carbon\Carbon;
 use Tests\Helpers\Factory;
 use Tests\Helpers\MockeryHelper;
 use Tests\TestCase;
@@ -52,27 +59,27 @@ class RollbackTest extends TestCase
         $this->mockRecipeFileBuilder = $this->mock('App\Services\Deployment\DeployerRecipeFileBuilder');
         $this->mockDeploymentFileBuilder = $this->mock('App\Services\Deployment\DeployerDeploymentFileBuilder');
         $this->mockNotifier = $this->mock('App\Services\Notification\NotifierInterface');
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
-        $this->mockServerModel = $this->mockPartial('App\Models\Server');
+        $this->mockProjectModel = $this->mockPartial(Project::class);
+        $this->mockServerModel = $this->mockPartial(Server::class);
         $this->mockSettingRepositroy = $this->mock('App\Repositories\Setting\SettingInterface');
         $this->mockMailSettingEntity = $this->mock('App\Entities\Setting\MailSettingEntity');
-        $this->mockSettingModel = $this->mockPartial('App\Models\Setting');
+        $this->mockSettingModel = $this->mockPartial(Setting::class);
     }
 
     public function test_Should_Work_When_DeployerIsNormalEnd()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'user'       => new \App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
-        $recipe = Factory::build('App\Models\Recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'recipe 1',
             'desctiption' => '',
@@ -175,18 +182,18 @@ class RollbackTest extends TestCase
 
     public function test_Should_Work_When_DeployerIsAbnormalEnd()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'user'       => new \App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
-        $recipe = Factory::build('App\Models\Recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'Recipe 1',
             'desctiption' => '',
@@ -289,26 +296,26 @@ class RollbackTest extends TestCase
 
     public function test_Should_WorkAndSendNotification_When_DeployerIsNormalEndAndEmailNotificationRecipientIsSet()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'user'       => new \App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
-        $updatedDeployment = Factory::build('App\Models\Deployment', [
+        $updatedDeployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'user'       => new \App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
             'status'     => 0,
         ]);
 
@@ -454,30 +461,30 @@ class RollbackTest extends TestCase
 
     public function test_Should_WorkAndSendNotification_When_DeployerIsAbnormalEndAndEmailNotificationRecipientIsSet()
     {
-        $deployment = Factory::build('App\Models\Deployment', [
+        $deployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'user'       => new \App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
-        $updatedDeployment = Factory::build('App\Models\Deployment', [
+        $updatedDeployment = Factory::build(Deployment::class, [
             'id'         => 1,
             'project_id' => 1,
             'number'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new \Carbon\Carbon,
-            'updated_at' => new \Carbon\Carbon,
-            'user'       => new \App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
             'stauts'     => 1,
         ]);
 
-        $recipe = Factory::build('App\Models\Recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'Recipe 1',
             'desctiption' => '',

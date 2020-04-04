@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Deployment;
 
 use App\Services\Form\Deployment\DeploymentForm;
+use Carbon\Carbon;
 use Illuminate\Support\MessageBag;
 use Tests\Helpers\Factory;
 use Tests\Helpers\MockeryHelper;
@@ -46,8 +47,8 @@ class DeploymentFormTest extends TestCase
             'id'         => 1,
             'project_id' => $project->id,
             'number'     => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
         ]);
         $project->shouldReceive('getMaxDeployment')
             ->once()
@@ -99,8 +100,8 @@ class DeploymentFormTest extends TestCase
             'id'         => 1,
             'project_id' => $project->id,
             'number'     => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
         ]);
         $project->shouldReceive('getMaxDeployment')
             ->once()
@@ -152,8 +153,8 @@ class DeploymentFormTest extends TestCase
             'id'         => 1,
             'project_id' => $project->id,
             'number'     => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
         ]);
         $project->shouldReceive('getMaxDeployment')
             ->once()

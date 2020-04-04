@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Models\Project;
+use App\Models\Server;
+use App\Models\User;
+use Carbon\Carbon;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
@@ -36,7 +40,7 @@ class ProjectsControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
+        $user = $this->mockPartial(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
@@ -46,7 +50,7 @@ class ProjectsControllerTest extends TestCase
         $this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
         $this->mockServerRepository = $this->mock('App\Repositories\Server\ServerInterface');
         $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
-        $this->mockProjectModel = $this->mockPartial('App\Models\Project');
+        $this->mockProjectModel = $this->mockPartial(Project::class);
         $this->mockProjectAttributeEntity = $this->mock('App\Entities\ProjectAttribute\ProjectAttributeEntity');
     }
 
@@ -139,18 +143,18 @@ class ProjectsControllerTest extends TestCase
             ->andReturn(new Illuminate\Database\Eloquent\Collection);
         $project->shouldReceive('getGithubWebhookUser')
             ->twice()
-            ->andReturn(new App\Models\User);
+            ->andReturn(new User());
         $project->shouldReceive('getAttribute')
             ->with('attributes')
             ->andReturn($this->mockProjectAttributeEntity);
 
-        $server = Factory::build('App\Models\Server', [
+        $server = Factory::build(Server::class, [
             'id'          => 1,
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockProjectRepository
@@ -236,11 +240,11 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $project = Factory::build('App\Models\Project', [
+        $project = Factory::build(Project::class, [
             'id'         => 1,
             'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
         ]);
 
         $this->mockProjectRepository
@@ -260,11 +264,11 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $project = Factory::build('App\Models\Project', [
+        $project = Factory::build(Project::class, [
             'id'         => 1,
             'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
         ]);
 
         $this->mockProjectRepository
@@ -302,11 +306,11 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $project = Factory::build('App\Models\Project', [
+        $project = Factory::build(Project::class, [
             'id'         => 1,
             'name'       => 'Project 1',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
         ]);
 
         $this->mockProjectRepository

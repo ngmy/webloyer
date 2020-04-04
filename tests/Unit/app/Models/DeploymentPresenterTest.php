@@ -3,8 +3,9 @@
 namespace Tests\Unit\app\Models;
 
 use App\Models\DeploymentPresenter;
+use App\Models\User;
+use Carbon\Carbon;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
-
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -19,9 +20,9 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 0,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;
@@ -41,9 +42,9 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;
@@ -63,9 +64,9 @@ class DeploymentPresenterTest extends TestCase
             'status'     => null,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;
@@ -85,9 +86,9 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 0,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;
@@ -107,9 +108,9 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 1,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;
@@ -129,9 +130,9 @@ class DeploymentPresenterTest extends TestCase
             'status'     => null,
             'task'       => 'deploy',
             'user_id'    => 1,
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;
@@ -152,9 +153,9 @@ class DeploymentPresenterTest extends TestCase
             'task'       => 'deploy',
             'user_id'    => 1,
             'message'    => 'Message',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;
@@ -175,9 +176,9 @@ class DeploymentPresenterTest extends TestCase
             'task'       => 'deploy',
             'user_id'    => 1,
             'message'    => 'Message',
-            'created_at' => new Carbon\Carbon,
-            'updated_at' => new Carbon\Carbon,
-            'user'       => new App\Models\User,
+            'created_at' => new Carbon(),
+            'updated_at' => new Carbon(),
+            'user'       => new User(),
         ]);
 
         $converter = new AnsiToHtmlConverter;

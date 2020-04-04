@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\app\Http\Controllers\Webhook\Github\V1;
 
+use Carbon\Carbon;
 use Illuminate\Support\MessageBag;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
@@ -71,8 +72,8 @@ class DeploymentsControllerTest extends TestCase
             'id'                     => 1,
             'name'                   => 'Project 1',
             'github_webhook_user_id' => 1,
-            'created_at'             => new \Carbon\Carbon,
-            'updated_at'             => new \Carbon\Carbon,
+            'created_at'             => new Carbon(),
+            'updated_at'             => new Carbon(),
         ]);
 
         $this->mockProjectRepository

@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Models\Recipe;
+use App\Models\User;
+use Carbon\Carbon;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
@@ -26,14 +29,14 @@ class RecipesControllerTest extends TestCase
 
         Session::start();
 
-        $user = $this->mockPartial('App\Models\User');
+        $user = $this->mockPartial(User::class);
         $user->shouldReceive('can')
             ->andReturn(true);
         $this->auth($user);
 
         $this->mockRecipeRepository = $this->mock('App\Repositories\Recipe\RecipeInterface');
         $this->mockRecipeForm = $this->mock('App\Services\Form\Recipe\RecipeForm');
-        $this->mockRecipeModel = $this->mockPartial('App\Models\Recipe');
+        $this->mockRecipeModel = $this->mockPartial(Recipe::class);
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
@@ -132,13 +135,13 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $recipe = Factory::build('App\Models\Recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockRecipeRepository
@@ -166,13 +169,13 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $recipe = Factory::build('App\Models\Recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockRecipeRepository
@@ -192,13 +195,13 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $recipe = Factory::build('App\Models\Recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockRecipeRepository
@@ -236,13 +239,13 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $recipe = Factory::build('App\Models\Recipe', [
+        $recipe = Factory::build(Recipe::class, [
             'id'          => 1,
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
-            'created_at'  => new Carbon\Carbon,
-            'updated_at'  => new Carbon\Carbon,
+            'created_at'  => new Carbon(),
+            'updated_at'  => new Carbon(),
         ]);
 
         $this->mockRecipeRepository
