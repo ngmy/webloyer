@@ -3,7 +3,7 @@
 namespace Tests\Unit\app\Repositories\Role;
 
 use App\Repositories\Role\EloquentRole;
-
+use Kodeine\Acl\Models\Eloquent\Role;
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -13,13 +13,13 @@ class EloquentRoleTest extends TestCase
 
     public function test_Should_GetRoleById()
     {
-        $arrangedRole = Factory::create('Kodeine\Acl\Models\Eloquent\Role', [
+        $arrangedRole = Factory::create(Role::class, [
             'name'        => 'Role 1',
             'slug'        => 'role_1',
             'description' => '',
         ]);
 
-        $serverRepository = new EloquentRole(new Kodeine\Acl\Models\Eloquent\Role);
+        $serverRepository = new EloquentRole(new Role());
 
         $foundRole = $serverRepository->byId($arrangedRole->id);
 
@@ -30,7 +30,7 @@ class EloquentRoleTest extends TestCase
 
     public function test_Should_GetRolesByPage()
     {
-        Factory::createList('Kodeine\Acl\Models\Eloquent\Role', [
+        Factory::createList(Role::class, [
             ['name' => 'Role 1', 'slug' => 'role_1', 'description' => ''],
             ['name' => 'Role 2', 'slug' => 'role_2', 'description' => ''],
             ['name' => 'Role 3', 'slug' => 'role_3', 'description' => ''],
@@ -38,7 +38,7 @@ class EloquentRoleTest extends TestCase
             ['name' => 'Role 5', 'slug' => 'role_5', 'description' => ''],
         ]);
 
-        $serverRepository = new EloquentRole(new Kodeine\Acl\Models\Eloquent\Role);
+        $serverRepository = new EloquentRole(new Role());
 
         $foundRoles = $serverRepository->byPage();
 
@@ -47,7 +47,7 @@ class EloquentRoleTest extends TestCase
 
     public function test_Should_CreateNewRole()
     {
-        $serverRepository = new EloquentRole(new Kodeine\Acl\Models\Eloquent\Role);
+        $serverRepository = new EloquentRole(new Role());
 
         $returnedRole = $serverRepository->create([
             'name'        => 'Role 1',
@@ -55,7 +55,7 @@ class EloquentRoleTest extends TestCase
             'description' => '',
         ]);
 
-        $server = new Kodeine\Acl\Models\Eloquent\Role;
+        $server = new Role();
         $createdRole = $server->find($returnedRole->id);
 
         $this->assertEquals('Role 1', $createdRole->name);
@@ -65,13 +65,13 @@ class EloquentRoleTest extends TestCase
 
     public function test_Should_UpdateExistingRole()
     {
-        $arrangedRole = Factory::create('Kodeine\Acl\Models\Eloquent\Role', [
+        $arrangedRole = Factory::create(Role::class, [
             'name'        => 'Role 1',
             'slug'        => 'role_1',
             'description' => '',
         ]);
 
-        $serverRepository = new EloquentRole(new Kodeine\Acl\Models\Eloquent\Role);
+        $serverRepository = new EloquentRole(new Role());
 
         $serverRepository->update([
             'id'          => $arrangedRole->id,
@@ -80,7 +80,7 @@ class EloquentRoleTest extends TestCase
             'description' => 'Role 2.',
         ]);
 
-        $server = new Kodeine\Acl\Models\Eloquent\Role;
+        $server = new Role();
         $updatedRole = $server->find($arrangedRole->id);
 
         $this->assertEquals('Role 2', $updatedRole->name);
@@ -90,17 +90,17 @@ class EloquentRoleTest extends TestCase
 
     public function test_Should_DeleteExistingRole()
     {
-        $arrangedRole = Factory::create('Kodeine\Acl\Models\Eloquent\Role', [
+        $arrangedRole = Factory::create(Role::class, [
             'name'        => 'Role 1',
             'slug'        => 'role_1',
             'description' => '',
         ]);
 
-        $serverRepository = new EloquentRole(new Kodeine\Acl\Models\Eloquent\Role);
+        $serverRepository = new EloquentRole(new Role());
 
         $serverRepository->delete($arrangedRole->id);
 
-        $server = new Kodeine\Acl\Models\Eloquent\Role;
+        $server = new Role();
         $deletedRole = $server->find($arrangedRole->id);
 
         $this->assertNull($deletedRole);

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\app\Repositories\Recipe;
 
+use App\Models\Recipe;
 use App\Repositories\Recipe\EloquentRecipe;
-
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -13,7 +13,7 @@ class EloquentRecipeTest extends TestCase
 
     public function test_Should_GetRecipeById()
     {
-        $arrangedRecipe = Factory::create('App\Models\Recipe', [
+        $arrangedRecipe = Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
@@ -30,7 +30,7 @@ class EloquentRecipeTest extends TestCase
 
     public function test_Should_GetRecipesByPage()
     {
-        Factory::createList('App\Models\Recipe', [
+        Factory::createList(Recipe::class, [
             ['name' => 'Recipe 1', 'description' => '', 'body' => ''],
             ['name' => 'Recipe 2', 'description' => '', 'body' => ''],
             ['name' => 'Recipe 3', 'description' => '', 'body' => ''],
@@ -65,7 +65,7 @@ class EloquentRecipeTest extends TestCase
 
     public function test_Should_UpdateExistingRecipe()
     {
-        $arrangedRecipe = Factory::create('App\Models\Recipe', [
+        $arrangedRecipe = Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
@@ -90,7 +90,7 @@ class EloquentRecipeTest extends TestCase
 
     public function test_Should_DeleteExistingRecipe()
     {
-        $arrangedRecipe = Factory::create('App\Models\Recipe', [
+        $arrangedRecipe = Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',

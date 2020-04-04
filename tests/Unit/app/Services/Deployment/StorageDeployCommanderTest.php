@@ -2,7 +2,9 @@
 
 namespace Tests\Unit\app\Services\Deployment;
 
+use App\Models\Deployment;
 use App\Services\Deployment\StorageDeployCommander;
+use Storage;
 use Tests\TestCase;
 
 class StorageDeployCommanderTest extends TestCase
@@ -14,7 +16,7 @@ class StorageDeployCommanderTest extends TestCase
             ->andReturn(1);
 
         $deployCommander = new StorageDeployCommander;
-        $result = $deployCommander->deploy(new App\Models\Deployment);
+        $result = $deployCommander->deploy(new Deployment());
 
         $this->assertTrue($result, 'Expected deploy command to succeed.');
     }
@@ -26,7 +28,7 @@ class StorageDeployCommanderTest extends TestCase
             ->andReturn(0);
 
         $deployCommander = new StorageDeployCommander;
-        $result = $deployCommander->deploy(new App\Models\Deployment);
+        $result = $deployCommander->deploy(new Deployment());
 
         $this->assertFalse($result, 'Expected deploy command to fail.');
     }
@@ -38,7 +40,7 @@ class StorageDeployCommanderTest extends TestCase
             ->andReturn(1);
 
         $deployCommander = new StorageDeployCommander;
-        $result = $deployCommander->rollback(new App\Models\Deployment);
+        $result = $deployCommander->rollback(new Deployment());
 
         $this->assertTrue($result, 'Expected rollback command to succeed.');
     }
@@ -50,7 +52,7 @@ class StorageDeployCommanderTest extends TestCase
             ->andReturn(0);
 
         $deployCommander = new StorageDeployCommander;
-        $result = $deployCommander->rollback(new App\Models\Deployment);
+        $result = $deployCommander->rollback(new Deployment());
 
         $this->assertFalse($result, 'Expected rollback command to fail.');
     }

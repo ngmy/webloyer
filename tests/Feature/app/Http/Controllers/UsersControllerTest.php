@@ -2,8 +2,13 @@
 
 namespace Tests\Feature\app\Http\Controllers;
 
+use App\Http\Middleware\ApplySettings;
 use App\Models\User;
+use App\Repositories\Role\RoleInterface;
+use App\Repositories\User\UserInterface;
+use App\Services\Form\User\UserForm;
 use Carbon\Carbon;
+use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;
@@ -26,7 +31,7 @@ class UsersControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance(\App\Http\Middleware\ApplySettings::class, new DummyMiddleware);
+        $this->app->instance(ApplySettings::class, new DummyMiddleware());
 
         Session::start();
 
@@ -35,9 +40,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockUserRepository = $this->mock('App\Repositories\User\UserInterface');
-        $this->mockRoleRepsitory = $this->mock('App\Repositories\Role\RoleInterface');
-        $this->mockUserForm = $this->mock('App\Services\Form\User\UserForm');
+        $this->mockUserRepository = $this->mock(UserInterface::class);
+        $this->mockRoleRepsitory = $this->mock(RoleInterface::class);
+        $this->mockUserForm = $this->mock(UserForm::class);
     }
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()

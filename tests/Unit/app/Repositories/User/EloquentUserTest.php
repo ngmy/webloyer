@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\app\Repositories\User;
 
+use App\Models\User;
 use App\Repositories\User\EloquentUser;
-
-use Tests\Helpers\Factory;
 use Kodeine\Acl\Models\Eloquent\Role;
+use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class EloquentUserTest extends TestCase
@@ -18,19 +18,19 @@ class EloquentUserTest extends TestCase
     {
         parent::setUp();
 
-        $this->role = new Role;
+        $this->role = new Role();
     }
 
     public function test_Should_GetUserById()
     {
-        $arrangedUser = Factory::create('App\Models\User', [
+        $arrangedUser = Factory::create(User::class, [
             'name'      => 'User 1',
             'email'     => 'user1@example.com',
             'password'  => '12345678',
             'api_token' => '12345678',
         ]);
 
-        $userRepository = new EloquentUser(new App\Models\User);
+        $userRepository = new EloquentUser(new User());
 
         $foundUser = $userRepository->byId($arrangedUser->id);
 
@@ -42,7 +42,7 @@ class EloquentUserTest extends TestCase
 
     public function test_Should_GetUsersByPage()
     {
-        Factory::createList('App\Models\User', [
+        Factory::createList(User::class, [
             ['name' => 'User 1', 'email' => 'user1@example.com', 'password' => '12345678', 'api_token' => '12345678'],
             ['name' => 'User 2', 'email' => 'user2@example.com', 'password' => '23456789', 'api_token' => '23456789'],
             ['name' => 'User 3', 'email' => 'user3@example.com', 'password' => '34567890', 'api_token' => '34567890'],
@@ -50,7 +50,7 @@ class EloquentUserTest extends TestCase
             ['name' => 'User 5', 'email' => 'user5@example.com', 'password' => '567890ab', 'api_token' => '56789012'],
         ]);
 
-        $userRepository = new EloquentUser(new App\Models\User);
+        $userRepository = new EloquentUser(new User());
 
         $foundUsers = $userRepository->byPage();
 
@@ -59,7 +59,7 @@ class EloquentUserTest extends TestCase
 
     public function test_Should_CreateNewUser()
     {
-        $userRepository = new EloquentUser(new App\Models\User);
+        $userRepository = new EloquentUser(new User());
 
         $returnedUser = $userRepository->create([
             'name'      => 'User 1',
@@ -68,7 +68,7 @@ class EloquentUserTest extends TestCase
             'api_token' => '12345678',
         ]);
 
-        $user = new App\Models\User;
+        $user = new User();
         $createdUser = $user->find($returnedUser->id);
 
         $this->assertEquals('User 1', $createdUser->name);
@@ -79,14 +79,14 @@ class EloquentUserTest extends TestCase
 
     public function test_Should_UpdateExistingUser()
     {
-        $arrangedUser = Factory::create('App\Models\User', [
+        $arrangedUser = Factory::create(User::class, [
             'name'      => 'User 1',
             'email'     => 'user1@example.com',
             'password'  => '12345678',
             'api_token' => '12345678',
         ]);
 
-        $userRepository = new EloquentUser(new App\Models\User);
+        $userRepository = new EloquentUser(new User());
 
         $userRepository->update([
             'id'        => $arrangedUser->id,
@@ -96,7 +96,7 @@ class EloquentUserTest extends TestCase
             'api_token' => '23456789',
         ]);
 
-        $user = new App\Models\User;
+        $user = new User();
         $updatedUser = $user->find($arrangedUser->id);
 
         $this->assertEquals('User 2', $updatedUser->name);
@@ -112,7 +112,7 @@ class EloquentUserTest extends TestCase
             'slug' => 'role1',
         ]);
 
-        $arrangedUser = Factory::create('App\Models\User', [
+        $arrangedUser = Factory::create(User::class, [
             'name'      => 'User 1',
             'email'     => 'user1@example.com',
             'password'  => '12345678',
@@ -121,7 +121,7 @@ class EloquentUserTest extends TestCase
 
         $arrangedUser->assignRole('role1');
 
-        $userRepository = new EloquentUser(new App\Models\User);
+        $userRepository = new EloquentUser(new User());
 
         $userRepository->update([
             'id'        => $arrangedUser->id,
@@ -131,7 +131,7 @@ class EloquentUserTest extends TestCase
             'api_token' => '23456789',
         ]);
 
-        $user = new App\Models\User;
+        $user = new User();
         $updatedUser = $user->find($arrangedUser->id);
 
         $this->assertEquals('User 2', $updatedUser->name);
@@ -148,7 +148,7 @@ class EloquentUserTest extends TestCase
             'slug' => 'role1',
         ]);
 
-        $arrangedUser = Factory::create('App\Models\User', [
+        $arrangedUser = Factory::create(User::class, [
             'name'      => 'User 1',
             'email'     => 'user1@example.com',
             'password'  => '12345678',
@@ -157,7 +157,7 @@ class EloquentUserTest extends TestCase
 
         $arrangedUser->assignRole('role1');
 
-        $userRepository = new EloquentUser(new App\Models\User);
+        $userRepository = new EloquentUser(new User());
 
         $userRepository->update([
             'id'        => $arrangedUser->id,
@@ -167,7 +167,7 @@ class EloquentUserTest extends TestCase
             'api_token' => '23456789',
         ]);
 
-        $user = new App\Models\User;
+        $user = new User();
         $updatedUser = $user->find($arrangedUser->id);
 
         $this->assertEquals('User 2', $updatedUser->name);
@@ -179,18 +179,18 @@ class EloquentUserTest extends TestCase
 
     public function test_Should_DeleteExistingUser()
     {
-        $arrangedUser = Factory::create('App\Models\User', [
+        $arrangedUser = Factory::create(User::class, [
             'name'      => 'User 1',
             'email'     => 'user1@example.com',
             'password'  => '12345678',
             'api_token' => '12345678',
         ]);
 
-        $userRepository = new EloquentUser(new App\Models\User);
+        $userRepository = new EloquentUser(new User());
 
         $userRepository->delete($arrangedUser->id);
 
-        $user = new App\Models\User;
+        $user = new User();
         $deletedUser = $user->find($arrangedUser->id);
 
         $this->assertNull($deletedUser);
