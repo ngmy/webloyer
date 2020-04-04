@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Repositories\Recipe;
 use App\Repositories\Recipe\EloquentRecipe;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class EloquentRecipeTest extends TestCase
 {

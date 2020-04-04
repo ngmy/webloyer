@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Entities\Setting;
 
 use App\Entities\Setting\MailSettingEntity;
+use Tests\TestCase;
 
 class MailSettingEntityTest extends TestCase
 {

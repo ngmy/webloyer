@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Recipe;
 
 use App\Services\Form\Recipe\RecipeForm;
+use Tests\TestCase;
 
 class RecipeFormTest extends TestCase
 {

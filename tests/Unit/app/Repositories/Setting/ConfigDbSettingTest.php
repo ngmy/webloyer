@@ -8,6 +8,7 @@ use App\Services\Config\DotenvWriter;
 use App\Services\Filesystem\LaravelFilesystem;
 
 use org\bovigo\vfs\vfsStream;
+use Tests\TestCase;
 
 class ConfigDbSettingTest extends TestCase
 {

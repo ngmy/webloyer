@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Repositories\Project;
 use App\Repositories\Project\EloquentProject;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class EloquentProjectTest extends TestCase
 {

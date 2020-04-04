@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Repositories\Server;
 use App\Repositories\Server\EloquentServer;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class EloquentServerTest extends TestCase
 {

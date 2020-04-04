@@ -5,6 +5,7 @@ namespace Tests\Feature\app\Jobs;
 use App\Jobs\Rollback;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class RollbackTest extends \TestCase
 {

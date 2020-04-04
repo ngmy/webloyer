@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\User;
 
 use App\Services\Form\User\UserForm;
+use Tests\TestCase;
 
 class UserFormTest extends TestCase
 {

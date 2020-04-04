@@ -3,6 +3,7 @@
 namespace Tests\Feature\app\Http\Controllers;
 
 use Tests\Helpers\DummyMiddleware;
+use Tests\TestCase;
 
 class SettingsControllerTest extends TestCase
 {

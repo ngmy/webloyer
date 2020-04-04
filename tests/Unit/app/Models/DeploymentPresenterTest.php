@@ -6,6 +6,7 @@ use App\Models\DeploymentPresenter;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class DeploymentPresenterTest extends TestCase
 {

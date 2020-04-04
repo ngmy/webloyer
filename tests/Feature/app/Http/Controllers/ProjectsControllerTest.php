@@ -4,6 +4,7 @@ namespace Tests\Feature\app\Http\Controllers;
 
 use Tests\Helpers\Factory;
 use Tests\Helpers\DummyMiddleware;
+use Tests\TestCase;
 
 class ProjectsControllerTest extends TestCase
 {

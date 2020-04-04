@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Repositories\Role;
 use App\Repositories\Role\EloquentRole;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class EloquentRoleTest extends TestCase
 {

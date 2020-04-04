@@ -4,6 +4,7 @@ namespace Tests\Unit\app\Services\Form\Deployment;
 
 use App\Services\Form\Deployment\DeploymentForm;
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class DeploymentFormTest extends TestCase
 {

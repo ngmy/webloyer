@@ -5,6 +5,7 @@ namespace Tests\Feature\app\Jobs;
 use App\Jobs\Deploy;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class DeployTest extends \TestCase
 {

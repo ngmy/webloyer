@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Api;
 
 use App\Services\Api\JsonRpc;
+use Tests\TestCase;
 
 class JsonRpcTest extends TestCase
 {

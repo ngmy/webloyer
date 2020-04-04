@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Services\Form\Deployment;
 use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class DeploymentFormLaravelValidatorTest extends TestCase
 {

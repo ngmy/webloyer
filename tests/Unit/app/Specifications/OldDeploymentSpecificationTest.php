@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Specifications;
 
 use App\Specifications\OldDeploymentSpecification;
+use Tests\TestCase;
 
 class OldDeploymentSpecificationTest extends TestCase
 {

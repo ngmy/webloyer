@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Setting;
 
 use App\Services\Form\Setting\MailSettingFormLaravelValidator;
+use Tests\TestCase;
 
 class MailSettingFormLaravelValidatorTest extends TestCase
 {

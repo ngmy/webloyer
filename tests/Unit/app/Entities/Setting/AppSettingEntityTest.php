@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Entities\Setting;
 
 use App\Entities\Setting\AppSettingEntity;
+use Tests\TestCase;
 
 class AppSettingEntityTest extends TestCase
 {

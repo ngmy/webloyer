@@ -4,6 +4,7 @@ namespace Tests\Feature\app\Http\Controllers\Webhook\Github\V1;
 
 use Tests\Helpers\Factory;
 use Tests\Helpers\DummyMiddleware;
+use Tests\TestCase;
 
 class DeploymentsControllerTest extends \TestCase
 {

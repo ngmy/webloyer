@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Notification;
 
 use App\Services\Notification\MailNotifier;
+use Tests\TestCase;
 
 class MailNotifierTest extends TestCase
 {

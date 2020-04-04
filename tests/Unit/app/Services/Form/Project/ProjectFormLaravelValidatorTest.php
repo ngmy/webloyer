@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Services\Form\Project;
 use App\Services\Form\Project\ProjectFormLaravelValidator;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class ProjectFormLaravelValidatorTest extends TestCase
 {

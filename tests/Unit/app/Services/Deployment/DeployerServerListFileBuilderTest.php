@@ -9,6 +9,7 @@ use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
+use Tests\TestCase;
 
 class DeployerServerListFileBuilderTest extends TestCase
 {

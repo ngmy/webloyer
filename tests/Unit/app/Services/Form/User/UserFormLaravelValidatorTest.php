@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Services\Form\User;
 use App\Services\Form\User\UserFormLaravelValidator;
 
 use Tests\Helpers\Factory;
+use Tests\TestCase;
 
 class UserFormLaravelValidatorTest extends TestCase
 {

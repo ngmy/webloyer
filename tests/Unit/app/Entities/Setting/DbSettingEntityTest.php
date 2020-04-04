@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Entities\Setting;
 
 use App\Entities\Setting\DbSettingEntity;
+use Tests\TestCase;
 
 class DbSettingEntityTest extends TestCase
 {

@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Recipe;
 
 use App\Services\Form\Recipe\RecipeFormLaravelValidator;
+use Tests\TestCase;
 
 class RecipeFormLaravelValidatorTest extends TestCase
 {

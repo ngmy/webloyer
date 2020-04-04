@@ -6,6 +6,7 @@ use App\Models\Project;
 
 use Tests\Helpers\Factory;
 use Carbon\Carbon;
+use Tests\TestCase;
 
 class ProjectTest extends TestCase
 {

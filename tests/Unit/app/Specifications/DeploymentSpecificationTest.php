@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Specifications;
 
 use App\Specifications\DeploymentSpecification;
+use Tests\TestCase;
 
 class DeploymentSpecificationTest extends TestCase
 {

@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Setting;
 
 use App\Services\Form\Setting\MailSettingForm;
+use Tests\TestCase;
 
 class MailSettingFormTest extends TestCase
 {

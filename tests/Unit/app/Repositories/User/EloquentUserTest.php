@@ -6,6 +6,7 @@ use App\Repositories\User\EloquentUser;
 
 use Tests\Helpers\Factory;
 use Kodeine\Acl\Models\Eloquent\Role;
+use Tests\TestCase;
 
 class EloquentUserTest extends TestCase
 {

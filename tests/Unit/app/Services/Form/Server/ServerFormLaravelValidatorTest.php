@@ -3,6 +3,7 @@
 namespace Tests\Unit\app\Services\Form\Server;
 
 use App\Services\Form\Server\ServerFormLaravelValidator;
+use Tests\TestCase;
 
 class ServerFormLaravelValidatorTest extends TestCase
 {
