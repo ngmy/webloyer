@@ -71,11 +71,10 @@ class JsonRpcTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function test_Should_ThrowWException_When_DeployProcedureFails()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->mockAuthGuard
             ->shouldReceive('user')
             ->andReturn(new User());
@@ -135,11 +134,10 @@ class JsonRpcTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function test_Should_ThrowWException_When_RollbackProcedureFails()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->mockAuthGuard
             ->shouldReceive('user')
             ->andReturn(new User());
