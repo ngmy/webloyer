@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\app\Repositories\Server;
 
+use App\Models\Server;
 use App\Repositories\Server\EloquentServer;
-
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -13,13 +13,13 @@ class EloquentServerTest extends TestCase
 
     public function test_Should_GetServerById()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        $serverRepository = new EloquentServer(new App\Models\Server);
+        $serverRepository = new EloquentServer(new Server());
 
         $foundServer = $serverRepository->byId($arrangedServer->id);
 
@@ -30,7 +30,7 @@ class EloquentServerTest extends TestCase
 
     public function test_Should_GetServersByPage()
     {
-        Factory::createList('App\Models\Server', [
+        Factory::createList(Server::class, [
             ['name' => 'Server 1', 'description' => '', 'body' => ''],
             ['name' => 'Server 2', 'description' => '', 'body' => ''],
             ['name' => 'Server 3', 'description' => '', 'body' => ''],
@@ -38,7 +38,7 @@ class EloquentServerTest extends TestCase
             ['name' => 'Server 5', 'description' => '', 'body' => ''],
         ]);
 
-        $serverRepository = new EloquentServer(new App\Models\Server);
+        $serverRepository = new EloquentServer(new Server());
 
         $foundServers = $serverRepository->byPage();
 
@@ -47,7 +47,7 @@ class EloquentServerTest extends TestCase
 
     public function test_Should_CreateNewServer()
     {
-        $serverRepository = new EloquentServer(new App\Models\Server);
+        $serverRepository = new EloquentServer(new Server());
 
         $returnedServer = $serverRepository->create([
             'name'        => 'Server 1',
@@ -55,7 +55,7 @@ class EloquentServerTest extends TestCase
             'body'        => '',
         ]);
 
-        $server = new App\Models\Server;
+        $server = new Server();
         $createdServer = $server->find($returnedServer->id);
 
         $this->assertEquals('Server 1', $createdServer->name);
@@ -65,13 +65,13 @@ class EloquentServerTest extends TestCase
 
     public function test_Should_UpdateExistingServer()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        $serverRepository = new EloquentServer(new App\Models\Server);
+        $serverRepository = new EloquentServer(new Server());
 
         $serverRepository->update([
             'id'          => $arrangedServer->id,
@@ -80,7 +80,7 @@ class EloquentServerTest extends TestCase
             'body'        => '<?php $x = 1;',
         ]);
 
-        $server = new App\Models\Server;
+        $server = new Server();
         $updatedServer = $server->find($arrangedServer->id);
 
         $this->assertEquals('Server 2', $updatedServer->name);
@@ -90,17 +90,17 @@ class EloquentServerTest extends TestCase
 
     public function test_Should_DeleteExistingServer()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        $serverRepository = new EloquentServer(new App\Models\Server);
+        $serverRepository = new EloquentServer(new Server());
 
         $serverRepository->delete($arrangedServer->id);
 
-        $server = new App\Models\Server;
+        $server = new Server();
         $deletedServer = $server->find($arrangedServer->id);
 
         $this->assertNull($deletedServer);

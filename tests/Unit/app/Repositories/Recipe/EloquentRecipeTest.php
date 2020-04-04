@@ -19,7 +19,7 @@ class EloquentRecipeTest extends TestCase
             'body'        => '',
         ]);
 
-        $recipeRepository = new EloquentRecipe(new App\Models\Recipe);
+        $recipeRepository = new EloquentRecipe(new Recipe());
 
         $foundRecipe = $recipeRepository->byId($arrangedRecipe->id);
 
@@ -38,7 +38,7 @@ class EloquentRecipeTest extends TestCase
             ['name' => 'Recipe 5', 'description' => '', 'body' => ''],
         ]);
 
-        $recipeRepository = new EloquentRecipe(new App\Models\Recipe);
+        $recipeRepository = new EloquentRecipe(new Recipe());
 
         $foundRecipes = $recipeRepository->byPage();
 
@@ -47,7 +47,7 @@ class EloquentRecipeTest extends TestCase
 
     public function test_Should_CreateNewRecipe()
     {
-        $recipeRepository = new EloquentRecipe(new App\Models\Recipe);
+        $recipeRepository = new EloquentRecipe(new Recipe());
 
         $returnedRecipe = $recipeRepository->create([
             'name'        => 'Recipe 1',
@@ -55,7 +55,7 @@ class EloquentRecipeTest extends TestCase
             'body'        => '',
         ]);
 
-        $recipe = new App\Models\Recipe;
+        $recipe = new Recipe();
         $createdRecipe = $recipe->find($returnedRecipe->id);
 
         $this->assertEquals('Recipe 1', $createdRecipe->name);
@@ -71,7 +71,7 @@ class EloquentRecipeTest extends TestCase
             'body'        => '',
         ]);
 
-        $recipeRepository = new EloquentRecipe(new App\Models\Recipe);
+        $recipeRepository = new EloquentRecipe(new Recipe());
 
         $recipeRepository->update([
             'id'          => $arrangedRecipe->id,
@@ -80,7 +80,7 @@ class EloquentRecipeTest extends TestCase
             'body'        => '<?php $x = 1;',
         ]);
 
-        $recipe = new App\Models\Recipe;
+        $recipe = new Recipe();
         $updatedRecipe = $recipe->find($arrangedRecipe->id);
 
         $this->assertEquals('Recipe 2', $updatedRecipe->name);
@@ -96,11 +96,11 @@ class EloquentRecipeTest extends TestCase
             'body'        => '',
         ]);
 
-        $recipeRepository = new EloquentRecipe(new App\Models\Recipe);
+        $recipeRepository = new EloquentRecipe(new Recipe());
 
         $recipeRepository->delete($arrangedRecipe->id);
 
-        $recipe = new App\Models\Recipe;
+        $recipe = new Recipe();
         $deletedRecipe = $recipe->find($arrangedRecipe->id);
 
         $this->assertNull($deletedRecipe);

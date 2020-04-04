@@ -6,6 +6,7 @@ use App\Models\Deployment;
 use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
+use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;

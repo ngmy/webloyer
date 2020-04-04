@@ -5,6 +5,7 @@ namespace Tests\Feature\app\Http\Controllers;
 use App\Models\Recipe;
 use App\Models\User;
 use Carbon\Carbon;
+use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\Helpers\Factory;

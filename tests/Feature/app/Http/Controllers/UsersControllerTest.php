@@ -8,6 +8,8 @@ use App\Repositories\Role\RoleInterface;
 use App\Repositories\User\UserInterface;
 use App\Services\Form\User\UserForm;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
@@ -58,7 +60,7 @@ class UsersControllerTest extends TestCase
         $this->mockUserRepository
             ->shouldReceive('byPage')
             ->once()
-            ->andReturn(new Illuminate\Pagination\Paginator($users, $perPage));
+            ->andReturn(new Paginator($users, $perPage));
 
         $this->get('users');
 
@@ -71,7 +73,7 @@ class UsersControllerTest extends TestCase
         $this->mockRoleRepsitory
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->get('users/create');
 
@@ -368,7 +370,7 @@ class UsersControllerTest extends TestCase
         $this->mockRoleRepsitory
             ->shouldReceive('all')
             ->once()
-            ->andReturn(new Illuminate\Database\Eloquent\Collection);
+            ->andReturn(new Collection());
 
         $this->get('users/1/role/edit');
 

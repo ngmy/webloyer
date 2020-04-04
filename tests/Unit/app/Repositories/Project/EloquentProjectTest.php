@@ -2,8 +2,11 @@
 
 namespace Tests\Unit\app\Repositories\Project;
 
+use App\Models\MaxDeployment;
+use App\Models\Project;
+use App\Models\Recipe;
+use App\Models\Server;
 use App\Repositories\Project\EloquentProject;
-
 use Tests\Helpers\Factory;
 use Tests\TestCase;
 
@@ -13,20 +16,20 @@ class EloquentProjectTest extends TestCase
 
     public function test_Should_GetProjectById()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
-        $arrangedProject = Factory::create('App\Models\Project', [
+        $arrangedProject = Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
         ]);
 
         $projectRepository = new EloquentProject(
-            new App\Models\Project,
-            new App\Models\MaxDeployment
+            new Project(),
+            new MaxDeployment()
         );
 
         $foundProject = $projectRepository->byId($arrangedProject->id);
@@ -38,12 +41,12 @@ class EloquentProjectTest extends TestCase
 
     public function test_Should_GetProjectsByPage()
     {
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
-        Factory::createList('App\Models\Project', [
+        Factory::createList(Project::class, [
             ['name' => 'Project 1', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
             ['name' => 'Project 2', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
             ['name' => 'Project 3', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
@@ -52,8 +55,8 @@ class EloquentProjectTest extends TestCase
         ]);
 
         $projectRepository = new EloquentProject(
-            new App\Models\Project,
-            new App\Models\MaxDeployment
+            new Project(),
+            new MaxDeployment()
         );
 
         $foundProjects = $projectRepository->byPage();
@@ -64,11 +67,11 @@ class EloquentProjectTest extends TestCase
     public function test_Should_CreateNewProject()
     {
         $projectRepository = new EloquentProject(
-            new App\Models\Project,
-            new App\Models\MaxDeployment
+            new Project(),
+            new MaxDeployment()
         );
 
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
@@ -79,7 +82,7 @@ class EloquentProjectTest extends TestCase
             'stage'     => 'staging',
         ]);
 
-        $project = new App\Models\Project;
+        $project = new Project();
         $createdProject = $project->find($returnedProject->id);
 
         $this->assertEquals('Project 1', $createdProject->name);
@@ -89,17 +92,17 @@ class EloquentProjectTest extends TestCase
 
     public function test_Should_UpdateExistingProject()
     {
-        $arrangedRecipe = Factory::create('App\Models\Recipe', [
+        $arrangedRecipe = Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
-        $arrangedProject = Factory::create('App\Models\Project', [
+        $arrangedProject = Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
@@ -111,10 +114,10 @@ class EloquentProjectTest extends TestCase
         ]);
 
         $projectRepository = new EloquentProject(
-            new App\Models\Project,
-            new App\Models\MaxDeployment
+            new Project(),
+            new MaxDeployment()
         );
-        $arrangedServer2 = Factory::create('App\Models\Server', [
+        $arrangedServer2 = Factory::create(Server::class, [
             'name'        => 'Server 2 ',
             'description' => '',
             'body'        => '',
@@ -126,7 +129,7 @@ class EloquentProjectTest extends TestCase
             'stage'     => 'production',
         ]);
 
-        $project = new App\Models\Project;
+        $project = new Project();
         $updatedProject = $project->find($arrangedProject->id);
 
         $this->assertEquals('Project 2', $updatedProject->name);
@@ -137,17 +140,17 @@ class EloquentProjectTest extends TestCase
 
     public function test_Should_DeleteExistingProject()
     {
-        $arrangedRecipe = Factory::create('App\Models\Recipe', [
+        $arrangedRecipe = Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
-        $arrangedServer = Factory::create('App\Models\Server', [
+        $arrangedServer = Factory::create(Server::class, [
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
-        $arrangedProject = Factory::create('App\Models\Project', [
+        $arrangedProject = Factory::create(Project::class, [
             'name'      => 'Project 1',
             'server_id' => $arrangedServer->id,
             'stage'     => 'staging',
@@ -159,12 +162,12 @@ class EloquentProjectTest extends TestCase
         ]);
 
         $projectRepository = new EloquentProject(
-            new App\Models\Project,
-            new App\Models\MaxDeployment
+            new Project(),
+            new MaxDeployment()
         );
         $projectRepository->delete($arrangedProject->id);
 
-        $project = new App\Models\Project;
+        $project = new Project();
         $deletedProject = $project->find($arrangedProject->id);
 
         $this->assertNull($deletedProject);
