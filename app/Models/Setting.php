@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entities\Setting\MailSettingEntity;
 use Ngmy\EloquentSerializedLob\SerializedLobTrait;
 
 class Setting extends BaseModel
@@ -22,13 +23,13 @@ class Setting extends BaseModel
 
     protected function getSerializationType(): string
     {
-        return \Ngmy\EloquentSerializedLob\Serializer\JsonSerializer::class;
+        return 'json';
     }
 
     protected function getDeserializationType(): string
     {
-        if ($this->type === 'mail') {
-            return \App\Entities\Setting\MailSettingEntity::class;
+        if ($this->type == 'mail') {
+            return MailSettingEntity::class;
         }
     }
 }

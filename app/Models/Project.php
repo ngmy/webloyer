@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Entities\ProjectAttribute\ProjectAttributeEntity;
 use App\Specifications\DeploymentSpecification;
-use Ngmy\EloquentSerializedLob\SerializedLobTrait;
-use Illuminate\Support\Collection;
 use DateTime;
+use Illuminate\Support\Collection;
+use Ngmy\EloquentSerializedLob\SerializedLobTrait;
 
 class Project extends BaseModel
 {
@@ -186,11 +187,11 @@ class Project extends BaseModel
 
     protected function getSerializationType(): string
     {
-        return \Ngmy\EloquentSerializedLob\Serializer\JsonSerializer::class;
+        return 'json';
     }
 
     protected function getDeserializationType(): string
     {
-        return \App\Entities\ProjectAttribute\ProjectAttributeEntity::class;
+        return ProjectAttributeEntity::class;
     }
 }
