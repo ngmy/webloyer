@@ -63,27 +63,27 @@ Route::group([
 Route::group([
     'protect_alias' => 'user',
 ], function () {
-    Route::get('users/{users}/password/change', [
+    Route::get('users/{user}/password/change', [
         'as'   => 'users.password.change',
         'uses' => 'UsersController@changePassword',
     ]);
-    Route::put('users/{users}/password', [
+    Route::put('users/{user}/password', [
         'as'   => 'users.password.update',
         'uses' => 'UsersController@updatePassword'
     ]);
-    Route::get('users/{users}/role/edit', [
+    Route::get('users/{user}/role/edit', [
         'as'   => 'users.role.edit',
         'uses' => 'UsersController@editRole',
     ]);
-    Route::put('users/{users}/role', [
+    Route::put('users/{user}/role', [
         'as'   => 'users.role.update',
         'uses' => 'UsersController@updateRole'
     ]);
-    Route::get('users/{users}/api_token/edit', [
+    Route::get('users/{user}/api_token/edit', [
         'as'   => 'users.api_token.edit',
         'uses' => 'UsersController@editApiToken',
     ]);
-    Route::put('users/{users}/api_token', [
+    Route::put('users/{user}/api_token', [
         'as'   => 'users.api_token.regenerate',
         'uses' => 'UsersController@regenerateApiToken'
     ]);
@@ -93,5 +93,5 @@ Route::group([
 Route::group([
     'protect_alias' => 'setting'
 ], function () {
-    Route::get('settings.email', 'SettingsController@getEmail');
+    Route::get('settings/email', 'SettingsController@getEmail');
 });
