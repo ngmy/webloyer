@@ -80,10 +80,10 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(new Paginator($projects, $perPage));
 
-        $this->get('projects');
+        $response = $this->get('projects');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('projects');
+        $response->assertStatus(200);
+        $response->assertViewHas('projects');
     }
 
     public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
@@ -103,9 +103,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(new Collection());
 
-        $this->get('projects/create');
+        $response = $this->get('projects/create');
 
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
@@ -115,9 +115,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->post('projects');
+        $response = $this->post('projects');
 
-        $this->assertRedirectedToRoute('projects.index');
+        $response->assertRedirect('projects');
     }
 
     public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
@@ -132,10 +132,10 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $this->post('projects');
+        $response = $this->post('projects');
 
-        $this->assertRedirectedToRoute('projects.create');
-        $this->assertSessionHasErrors();
+        $response->assertRedirect('projects/create');
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
@@ -174,10 +174,10 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn($server);
 
-        $this->get('projects/1');
+        $response = $this->get('projects/' . $project->id);
 
-        $this->assertResponseOk();
-        $this->assertViewHas('project');
+        $response->assertStatus(200);
+        $response->assertViewHas('project');
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
@@ -187,9 +187,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->get('projects/1');
+        $response = $this->get('projects/' . $project->id);
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
@@ -227,10 +227,10 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(new Collection());
 
-        $this->get('projects/1/edit');
+        $response = $this->get('projects/' . $project->id . '/edit');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('project');
+        $response->assertStatus(200);
+        $response->assertViewHas('project');
     }
 
     public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
@@ -240,9 +240,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->get('projects/1/edit');
+        $response = $this->get('projects/' . $project->id . '/edit');
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
@@ -264,9 +264,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->put('projects/1');
+        $response = $this->put('projects/' . $project->id);
 
-        $this->assertRedirectedToRoute('projects.index');
+        $this->assertRedirect('projects');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
@@ -293,10 +293,10 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $this->put('projects/1');
+        $response = $this->put('projects/' . $project->id);
 
-        $this->assertRedirectedToRoute('projects.edit', [$project]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect('projects/' . $project->id . '/edit');
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
@@ -306,9 +306,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->put('projects/1');
+        $response = $this->put('projects/' . $project->id);
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
@@ -329,9 +329,9 @@ class ProjectsControllerTest extends TestCase
             ->shouldReceive('delete')
             ->once();
 
-        $this->delete('projects/1');
+        $response = $this->delete('projects/' . $project->id);
 
-        $this->assertRedirectedToRoute('projects.index');
+        $response->assertRedirect('projects');
     }
 
     public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
@@ -341,8 +341,8 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->delete('projects/1');
+        $response = $this->delete('projects/' . $project->id);
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 }

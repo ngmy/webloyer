@@ -2,43 +2,45 @@
 
 namespace Tests\Helpers;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\TestResponse;
 use Session;
 
 trait ControllerTestHelper
 {
-    public function post($uri, array $data = [], array $headers = [])
+    public function post($uri, array $data = [], array $headers = []): TestResponse
     {
         $data = array_merge($data, ['_token' => Session::token()]);
 
-        parent::post($uri, $data, $headers);
+        $response = parent::post($uri, $data, $headers);
 
-        return $this;
+        return $response;
     }
 
-    public function put($uri, array $data = [], array $headers = [])
+    public function put($uri, array $data = [], array $headers = []): TestResponse
     {
         $data = array_merge($data, ['_token' => Session::token()]);
 
-        parent::put($uri, $data, $headers);
+        $response = parent::put($uri, $data, $headers);
 
-        return $this;
+        return $response;
     }
 
-    public function delete($uri, array $data = [], array $headers = [])
+    public function delete($uri, array $data = [], array $headers = []): TestResponse
     {
         $data = array_merge($data, ['_token' => Session::token()]);
 
-        parent::delete($uri, $data, $headers);
+        $response = parent::delete($uri, $data, $headers);
 
-        return $this;
+        return $response;
     }
 
-    protected function auth($obj = null, $data = [])
+    protected function auth($obj = null, $data = []): void
     {
         if (isset($obj)) {
             $user = $obj;
         } else {
-            $user = new \App\Models\User;
+            $user = new User();
         }
 
         foreach ($data as $key => $val) {
