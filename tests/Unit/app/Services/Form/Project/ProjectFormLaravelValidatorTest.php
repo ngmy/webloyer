@@ -122,11 +122,6 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_RepositoryFieldIsInvalidUrl()
     {
-        // HACK Laravel 5.2 URL validation doesn't work with PHP 7.3 due to preg_match() error.
-        if (version_compare(phpversion(), '7.3.0', '>=')) {
-            $this->markTestIncomplete("Laravel 5.2 URL validation doesn't work with PHP 7.3 due to preg_match() error.");
-        }
-
         Factory::create(Recipe::class, [
             'name'        => 'Recipe 1',
             'description' => '',
