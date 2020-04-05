@@ -94,7 +94,7 @@ class ServersControllerTest extends TestCase
 
         $response = $this->post('servers');
 
-        $response->assertRedirect('servers');
+        $response->assertRedirect('servers/create');
         $response->assertSessionHasErrors();
     }
 
@@ -220,7 +220,7 @@ class ServersControllerTest extends TestCase
 
         $response = $this->put('servers/1');
 
-        $response->assertRedirect('servers1/1/edit');
+        $response->assertRedirect('servers/1/edit');
         $response->assertSessionHasErrors();
     }
 
