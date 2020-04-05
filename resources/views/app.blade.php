@@ -37,16 +37,16 @@
                 @if (!Auth::guest())
                     <ul class="nav navbar-nav">
                         <li><a href="{{ url('/projects') }}">Projects</a></li>
-                        @if (Auth::user()->can('view.recipe'))
+                        @if (Auth::user()->hasPermission('view.recipe'))
                             <li><a href="{{ url('/recipes') }}">Recipes</a></li>
                         @endif
-                        @if (Auth::user()->can('view.server'))
+                        @if (Auth::user()->hasPermission('view.server'))
                             <li><a href="{{ url('/servers') }}">Servers</a></li>
                         @endif
-                        @if (Auth::user()->can('view.user'))
+                        @if (Auth::user()->hasPermission('view.user'))
                             <li><a href="{{ url('/users') }}">Users</a></li>
                         @endif
-                        @if (Auth::user()->can('view.setting'))
+                        @if (Auth::user()->hasPermission('view.setting'))
                             <li><a href="{{ url('/settings/email') }}">Settings</a></li>
                         @endif
                     </ul>

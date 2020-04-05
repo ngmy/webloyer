@@ -37,7 +37,7 @@ class DeploymentsControllerTest extends TestCase
         Session::start();
 
         $user = $this->partialMock(User::class);
-        $user->shouldReceive('can')
+        $user->shouldReceive('hasPermission')
             ->andReturn(true);
         $this->auth($user);
 

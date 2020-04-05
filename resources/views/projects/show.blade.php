@@ -61,7 +61,7 @@
                 </tbody>
             </table>
             {!! link_to_route('projects.index', 'Back', [], ['class' => 'btn btn-danger']) !!}
-            @if (Auth::user()->can('update.project'))
+            @if (Auth::user()->hasPermission('update.project'))
                 {!! link_to_route('projects.edit', 'Edit', [$project->id], ['class' => 'btn btn-primary']) !!}
             @endif
         </div>

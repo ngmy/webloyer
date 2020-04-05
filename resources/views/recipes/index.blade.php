@@ -6,7 +6,7 @@
         <div class="col-md-8 col-md-offset-2">
             <h1 class="page-header">Recipes</h1>
 
-            @if (Auth::user()->can('create.recipe'))
+            @if (Auth::user()->hasPermission('create.recipe'))
                 <div class="pull-right margin-bottom-lg">
                     {!! link_to_route('recipes.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
                 </div>
@@ -31,10 +31,10 @@
                             <td>{{ $recipe->updated_at }}</td>
                             <td>
                                 {!! link_to_route('recipes.show', 'Show', [$recipe->id], ['class' => 'btn btn-default']) !!}
-                                @if (Auth::user()->can('update.recipe'))
+                                @if (Auth::user()->hasPermission('update.recipe'))
                                     {!! link_to_route('recipes.edit', 'Edit', [$recipe->id], ['class' => 'btn btn-default']) !!}
                                 @endif
-                                @if (Auth::user()->can('delete.recipe'))
+                                @if (Auth::user()->hasPermission('delete.recipe'))
                                     {!! Form::open(['route' => ['recipes.destroy', $recipe->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
                                     {!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
                                     {!! Form::close() !!}
