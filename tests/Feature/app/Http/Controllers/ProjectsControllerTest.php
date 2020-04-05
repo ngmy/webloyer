@@ -174,7 +174,7 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn($server);
 
-        $response = $this->get('projects/' . $project->id);
+        $response = $this->get('projects/1');
 
         $response->assertStatus(200);
         $response->assertViewHas('project');
@@ -227,7 +227,7 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(new Collection());
 
-        $response = $this->get('projects/' . $project->id . '/edit');
+        $response = $this->get('projects/1/edit');
 
         $response->assertStatus(200);
         $response->assertViewHas('project');
@@ -264,9 +264,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $response = $this->put('projects/' . $project->id);
+        $response = $this->put('projects/1');
 
-        $this->assertRedirect('projects');
+        $response->assertRedirect('projects');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
@@ -293,9 +293,9 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $response = $this->put('projects/' . $project->id);
+        $response = $this->put('projects/1');
 
-        $response->assertRedirect('projects/' . $project->id . '/edit');
+        $response->assertRedirect('projects/1/edit');
         $response->assertSessionHasErrors();
     }
 
@@ -329,7 +329,7 @@ class ProjectsControllerTest extends TestCase
             ->shouldReceive('delete')
             ->once();
 
-        $response = $this->delete('projects/' . $project->id);
+        $response = $this->delete('projects/1');
 
         $response->assertRedirect('projects');
     }

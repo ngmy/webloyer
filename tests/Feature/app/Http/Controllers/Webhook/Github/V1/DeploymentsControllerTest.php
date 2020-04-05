@@ -65,9 +65,9 @@ class DeploymentsControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->post('webhook/github/v1/projects/1/deployments');
+        $response = $this->post('webhook/github/v1/projects/1/deployments');
 
-        $this->assertResponseOK();
+        $response->assertStatus(200);
     }
 
     public function test_Should_ReturnStatusCode400_When_StoreProcessFails()
@@ -95,8 +95,8 @@ class DeploymentsControllerTest extends TestCase
             ->once()
             ->andReturn(new MessageBag());
 
-        $this->post('webhook/github/v1/projects/1/deployments');
+        $response = $this->post('webhook/github/v1/projects/1/deployments');
 
-        $this->assertResponseStatus(400);
+        $response->assertStatus(400);
     }
 }

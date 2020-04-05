@@ -70,10 +70,10 @@ class SettingsControllerTest extends TestCase
             ->once()
             ->andReturn($this->mockSettingModel);
 
-        $this->get('settings/email');
+        $response = $this->get('settings/email');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('settings');
+        $response->assertStatus(200);
+        $response->assertViewHas('settings');
     }
 
     public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessSucceeds()
@@ -83,9 +83,9 @@ class SettingsControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->post('settings/email');
+        $response = $this->post('settings/email');
 
-        $this->assertRedirectedToRoute('settings.email');
+        $response->assertRedirect('settings/email');
     }
 
     public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessFails()
@@ -100,8 +100,8 @@ class SettingsControllerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $this->post('settings/email');
+        $response = $this->post('settings/email');
 
-        $this->assertRedirectedToRoute('settings.email');
+        $response->assertRedirect('settings/email');
     }
 }

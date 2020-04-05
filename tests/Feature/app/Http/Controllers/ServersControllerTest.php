@@ -55,17 +55,17 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn(new Paginator($servers, $perPage));
 
-        $this->get('servers');
+        $response = $this->get('servers');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('servers');
+        $response->assertStatus(200);
+        $response->assertViewHas('servers');
     }
 
     public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
     {
-        $this->get('servers/create');
+        $response = $this->get('servers/create');
 
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
@@ -75,9 +75,9 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->post('servers');
+        $response = $this->post('servers');
 
-        $this->assertRedirectedToRoute('servers.index');
+        $response->assertRedirect('servers');
     }
 
     public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
@@ -92,10 +92,10 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $this->post('servers');
+        $response = $this->post('servers');
 
-        $this->assertRedirectedToRoute('servers.create');
-        $this->assertSessionHasErrors();
+        $response->assertRedirect('servers');
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
@@ -114,10 +114,10 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn($server);
 
-        $this->get('servers/1');
+        $response = $this->get('servers/1');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('server');
+        $response->assertStatus(200);
+        $response->assertViewHas('server');
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
@@ -127,9 +127,9 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->get('servers/1');
+        $response = $this->get('servers/1');
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
@@ -148,10 +148,10 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn($server);
 
-        $this->get('servers/1/edit');
+        $response = $this->get('servers/1/edit');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('server');
+        $response->assertStatus(200);
+        $response->assertViewHas('server');
     }
 
     public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
@@ -161,9 +161,9 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->get('servers/1/edit');
+        $response = $this->get('servers/1/edit');
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
@@ -187,9 +187,9 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn(true);
 
-        $this->put('servers/1');
+        $response = $this->put('servers/1');
 
-        $this->assertRedirectedToRoute('servers.index');
+        $response->assertRedirect('servers');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
@@ -218,10 +218,10 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $this->put('servers/1');
+        $response = $this->put('servers/1');
 
-        $this->assertRedirectedToRoute('servers.edit', [$server]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect('servers1/1/edit');
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
@@ -231,9 +231,9 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->put('servers/1');
+        $response = $this->put('servers/1');
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
@@ -256,9 +256,9 @@ class ServersControllerTest extends TestCase
             ->shouldReceive('delete')
             ->once();
 
-        $this->delete('servers/1');
+        $response = $this->delete('servers/1');
 
-        $this->assertRedirectedToRoute('servers.index');
+        $response->assertRedirect('servers');
     }
 
     public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
@@ -268,8 +268,8 @@ class ServersControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $this->delete('servers/1');
+        $response = $this->delete('servers/1');
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 }

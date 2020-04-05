@@ -68,11 +68,11 @@ class DeploymentsControllerTest extends TestCase
             ->once()
             ->andReturn($project);
 
-        $this->get('projects/1/deployments');
+        $response = $this->get('projects/1/deployments');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('deployments');
-        $this->assertViewHas('project');
+        $response->assertStatus(200);
+        $response->assertViewHas('deployments');
+        $response->assertViewHas('project');
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
@@ -98,9 +98,9 @@ class DeploymentsControllerTest extends TestCase
             'user_id'    => 1,
         ];
 
-        $this->post('projects/1/deployments', $params);
+        $response = $this->post('projects/1/deployments', $params);
 
-        $this->assertRedirectedToRoute('projects.deployments.index', [$project]);
+        $response->assertRedirect('projects/1/deployments');
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessFails()
@@ -132,10 +132,10 @@ class DeploymentsControllerTest extends TestCase
             'user_id'    => 1,
         ];
 
-        $this->post('projects/1/deployments', $params);
+        $response = $this->post('projects/1/deployments', $params);
 
-        $this->assertRedirectedToRoute('projects.deployments.index', [$project]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect('projects/1/deployments');
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
@@ -162,10 +162,10 @@ class DeploymentsControllerTest extends TestCase
             ->once()
             ->andReturn($project);
 
-        $this->get('projects/1/deployments/1');
+        $response = $this->get('projects/1/deployments/1');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('deployment');
+        $response->assertStatus(200);
+        $response->assertViewHas('deployment');
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
@@ -181,8 +181,8 @@ class DeploymentsControllerTest extends TestCase
             ->once()
             ->andReturn($project);
 
-        $this->get('projects/1/deployments/1');
+        $response = $this->get('projects/1/deployments/1');
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 }
