@@ -187,7 +187,7 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $response = $this->get('projects/' . $project->id);
+        $response = $this->get('projects/1');
 
         $response->assertStatus(404);
     }
@@ -240,7 +240,7 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $response = $this->get('projects/' . $project->id . '/edit');
+        $response = $this->get('projects/1/edit');
 
         $response->assertStatus(404);
     }
@@ -306,7 +306,7 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $response = $this->put('projects/' . $project->id);
+        $response = $this->put('projects/1');
 
         $response->assertStatus(404);
     }
@@ -341,7 +341,7 @@ class ProjectsControllerTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $response = $this->delete('projects/' . $project->id);
+        $response = $this->delete('projects/1');
 
         $response->assertStatus(404);
     }
