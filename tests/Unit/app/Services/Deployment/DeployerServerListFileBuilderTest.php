@@ -42,7 +42,7 @@ class DeployerServerListFileBuilderTest extends TestCase
         $this->mockServerModel = $this->partialMock(Server::class);
         $this->mockFilesystem = $this->mock(FilesystemInterface::class);
         $this->mockYamlParser = $this->mock(Parser::class);
-        $this->mockYamlDumper = $this->mock(Dumper::clas);
+        $this->mockYamlDumper = $this->mock(Dumper::class);
         $this->mockDeployerFile = $this->mock(DeployerFile::class);
 
         $this->rootDir = vfsStream::setup('rootDir');
