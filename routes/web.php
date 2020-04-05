@@ -20,18 +20,18 @@ Route::get('register', [
     'as'   => 'register',
     'uses' => function () {
         abort(404);
-    }
+    },
 ]);
 Route::post('register', function () {
     abort(404);
 });
 Route::get('password/reset', [
     'as'   => 'password.forgot',
-    'uses' => 'Auth\ForgotPasswordController@showLinkRequestForm'
+    'uses' => 'Auth\ForgotPasswordController@showLinkRequestForm',
 ]);
 Route::get('password/reset/{token}', [
     'as'   => 'password.reset',
-    'uses' => 'Auth\ResetPasswordController@showResetForm'
+    'uses' => 'Auth\ResetPasswordController@showResetForm',
 ]);
 
 Route::group([
@@ -69,7 +69,7 @@ Route::group([
     ]);
     Route::put('users/{user}/password', [
         'as'   => 'users.password.update',
-        'uses' => 'UsersController@updatePassword'
+        'uses' => 'UsersController@updatePassword',
     ]);
     Route::get('users/{user}/role/edit', [
         'as'   => 'users.role.edit',
@@ -77,7 +77,7 @@ Route::group([
     ]);
     Route::put('users/{user}/role', [
         'as'   => 'users.role.update',
-        'uses' => 'UsersController@updateRole'
+        'uses' => 'UsersController@updateRole',
     ]);
     Route::get('users/{user}/api_token/edit', [
         'as'   => 'users.api_token.edit',
@@ -85,7 +85,7 @@ Route::group([
     ]);
     Route::put('users/{user}/api_token', [
         'as'   => 'users.api_token.regenerate',
-        'uses' => 'UsersController@regenerateApiToken'
+        'uses' => 'UsersController@regenerateApiToken',
     ]);
     Route::resource('users', 'UsersController');
 });
@@ -93,5 +93,8 @@ Route::group([
 Route::group([
     'protect_alias' => 'setting'
 ], function () {
-    Route::get('settings/email', 'SettingsController@getEmail');
+    Route::get('settings/email', [
+        'as'   => 'settings.email',
+        'uses' => 'SettingsController@getEmail',
+    ]);
 });
