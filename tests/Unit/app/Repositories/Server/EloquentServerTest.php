@@ -4,105 +4,77 @@ namespace Tests\Unit\app\Repositories\Server;
 
 use App\Models\Server;
 use App\Repositories\Server\EloquentServer;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class EloquentServerTest extends TestCase
 {
     protected $useDatabase = true;
 
+    /** @var EloquentServer */
+    private $sut;
+
     public function test_Should_GetServerById()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $server = factory(Server::class)->create();
 
-        $serverRepository = new EloquentServer(new Server());
+        $actual = $this->sut->byId($server->id);
 
-        $foundServer = $serverRepository->byId($arrangedServer->id);
-
-        $this->assertEquals('Server 1', $foundServer->name);
-        $this->assertEquals('', $foundServer->description);
-        $this->assertEquals('', $foundServer->body);
+        $this->assertTrue($server->is($actual));
     }
 
     public function test_Should_GetServersByPage()
     {
-        Factory::createList(Server::class, [
-            ['name' => 'Server 1', 'description' => '', 'body' => ''],
-            ['name' => 'Server 2', 'description' => '', 'body' => ''],
-            ['name' => 'Server 3', 'description' => '', 'body' => ''],
-            ['name' => 'Server 4', 'description' => '', 'body' => ''],
-            ['name' => 'Server 5', 'description' => '', 'body' => ''],
-        ]);
+        $servers = factory(Server::class, 5)->create();
 
-        $serverRepository = new EloquentServer(new Server());
+        $actual = $this->sut->byPage();
 
-        $foundServers = $serverRepository->byPage();
-
-        $this->assertCount(5, $foundServers->items());
+        $this->assertCount(5, $actual->items());
     }
 
     public function test_Should_CreateNewServer()
     {
-        $serverRepository = new EloquentServer(new Server());
-
-        $returnedServer = $serverRepository->create([
+        $actual = $this->sut->create([
             'name'        => 'Server 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        $server = new Server();
-        $createdServer = $server->find($returnedServer->id);
-
-        $this->assertEquals('Server 1', $createdServer->name);
-        $this->assertEquals('', $createdServer->description);
-        $this->assertEquals('', $createdServer->body);
+        $this->assertDatabaseHas('servers', $actual->toArray());
     }
 
     public function test_Should_UpdateExistingServer()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $server = factory(Server::class)->create();
 
-        $serverRepository = new EloquentServer(new Server());
-
-        $serverRepository->update([
-            'id'          => $arrangedServer->id,
+        $this->sut->update([
+            'id'          => $server->id,
             'name'        => 'Server 2',
             'description' => 'Description',
             'body'        => '<?php $x = 1;',
         ]);
 
-        $server = new Server();
-        $updatedServer = $server->find($arrangedServer->id);
-
-        $this->assertEquals('Server 2', $updatedServer->name);
-        $this->assertEquals('Description', $updatedServer->description);
-        $this->assertEquals('<?php $x = 1;', $updatedServer->body);
+        $this->assertDatabaseHas('servers', [
+            'id'          => $server->id,
+            'name'        => 'Server 2',
+            'description' => 'Description',
+            'body'        => '<?php $x = 1;',
+        ]);
     }
 
     public function test_Should_DeleteExistingServer()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $server = factory(Server::class)->create();
 
-        $serverRepository = new EloquentServer(new Server());
+        $this->sut->delete($server->id);
 
-        $serverRepository->delete($arrangedServer->id);
+        $this->assertDatabaseMissing('servers', ['id' => $server->id]);
+    }
 
-        $server = new Server();
-        $deletedServer = $server->find($arrangedServer->id);
-
-        $this->assertNull($deletedServer);
+    /**
+     * @before
+     */
+    public function setUpSut(): void
+    {
+        $this->sut = new EloquentServer(new Server());
     }
 }

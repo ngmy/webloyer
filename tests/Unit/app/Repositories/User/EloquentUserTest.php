@@ -5,194 +5,128 @@ namespace Tests\Unit\app\Repositories\User;
 use App\Models\User;
 use App\Repositories\User\EloquentUser;
 use Kodeine\Acl\Models\Eloquent\Role;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class EloquentUserTest extends TestCase
 {
     protected $useDatabase = true;
 
-    protected $role;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->role = new Role();
-    }
+    /** @var EloquentUser */
+    private $sut;
 
     public function test_Should_GetUserById()
     {
-        $arrangedUser = Factory::create(User::class, [
-            'name'      => 'User 1',
-            'email'     => 'user1@example.com',
-            'password'  => '12345678',
-            'api_token' => '12345678',
-        ]);
+        $user = factory(User::class)->create();
 
-        $userRepository = new EloquentUser(new User());
+        $actual = $this->sut->byId($user->id);
 
-        $foundUser = $userRepository->byId($arrangedUser->id);
-
-        $this->assertEquals('User 1', $foundUser->name);
-        $this->assertEquals('user1@example.com', $foundUser->email);
-        $this->assertEquals('12345678', $foundUser->password);
-        $this->assertEquals('12345678', $foundUser->api_token);
+        $this->assertTrue($user->is($actual));
     }
 
     public function test_Should_GetUsersByPage()
     {
-        Factory::createList(User::class, [
-            ['name' => 'User 1', 'email' => 'user1@example.com', 'password' => '12345678', 'api_token' => '12345678'],
-            ['name' => 'User 2', 'email' => 'user2@example.com', 'password' => '23456789', 'api_token' => '23456789'],
-            ['name' => 'User 3', 'email' => 'user3@example.com', 'password' => '34567890', 'api_token' => '34567890'],
-            ['name' => 'User 4', 'email' => 'user4@example.com', 'password' => '4567890a', 'api_token' => '45678901'],
-            ['name' => 'User 5', 'email' => 'user5@example.com', 'password' => '567890ab', 'api_token' => '56789012'],
-        ]);
+        $users = factory(User::class, 5)->create();
 
-        $userRepository = new EloquentUser(new User());
+        $actual = $this->sut->byPage();
 
-        $foundUsers = $userRepository->byPage();
-
-        $this->assertCount(5, $foundUsers->items());
+        $this->assertCount(5, $actual->items());
     }
 
     public function test_Should_CreateNewUser()
     {
-        $userRepository = new EloquentUser(new User());
-
-        $returnedUser = $userRepository->create([
+        $actual = $this->sut->create([
             'name'      => 'User 1',
             'email'     => 'user1@example.com',
             'password'  => '12345678',
             'api_token' => '12345678',
         ]);
 
-        $user = new User();
-        $createdUser = $user->find($returnedUser->id);
-
-        $this->assertEquals('User 1', $createdUser->name);
-        $this->assertEquals('user1@example.com', $createdUser->email);
-        $this->assertEquals('12345678', $createdUser->password);
-        $this->assertEquals('12345678', $createdUser->api_token);
+        $this->assertDatabaseHas('users', $actual->toArray());
     }
 
     public function test_Should_UpdateExistingUser()
     {
-        $arrangedUser = Factory::create(User::class, [
-            'name'      => 'User 1',
-            'email'     => 'user1@example.com',
-            'password'  => '12345678',
-            'api_token' => '12345678',
-        ]);
+        $user = factory(User::class)->create();
 
-        $userRepository = new EloquentUser(new User());
-
-        $userRepository->update([
-            'id'        => $arrangedUser->id,
+        $this->sut->update([
+            'id'        => $user->id,
             'name'      => 'User 2',
             'email'     => 'user2@example.com',
             'password'  => '23456789',
             'api_token' => '23456789',
         ]);
 
-        $user = new User();
-        $updatedUser = $user->find($arrangedUser->id);
-
-        $this->assertEquals('User 2', $updatedUser->name);
-        $this->assertEquals('user2@example.com', $updatedUser->email);
-        $this->assertEquals('23456789', $updatedUser->password);
-        $this->assertEquals('23456789', $updatedUser->api_token);
+        $this->assertDatabaseHas('users', [
+            'id'        => $user->id,
+            'name'      => 'User 2',
+            'email'     => 'user2@example.com',
+            'password'  => '23456789',
+            'api_token' => '23456789',
+        ]);
     }
 
     public function test_Should_UpdateExistingUser_When_RoleIsSpecified()
     {
-        $role = $this->role->create([
-            'name' => 'Role 1',
-            'slug' => 'role1',
-        ]);
+        $role = factory(Role::class)->create();
+        $user = factory(User::class)->create();
+        $user->assignRole($role->slug);
 
-        $arrangedUser = Factory::create(User::class, [
-            'name'      => 'User 1',
-            'email'     => 'user1@example.com',
-            'password'  => '12345678',
-            'api_token' => '12345678',
-        ]);
-
-        $arrangedUser->assignRole('role1');
-
-        $userRepository = new EloquentUser(new User());
-
-        $userRepository->update([
-            'id'        => $arrangedUser->id,
+        $this->sut->update([
+            'id'        => $user->id,
             'name'      => 'User 2',
             'email'     => 'user2@example.com',
             'password'  => '23456789',
             'api_token' => '23456789',
         ]);
 
-        $user = new User();
-        $updatedUser = $user->find($arrangedUser->id);
-
-        $this->assertEquals('User 2', $updatedUser->name);
-        $this->assertEquals('user2@example.com', $updatedUser->email);
-        $this->assertEquals('23456789', $updatedUser->password);
-        $this->assertEquals('23456789', $updatedUser->api_token);
-        $this->assertEquals('role1', $updatedUser->getRoles()[$role->id]);
+        $this->assertDatabaseHas('users', [
+            'id'        => $user->id,
+            'name'      => 'User 2',
+            'email'     => 'user2@example.com',
+            'password'  => '23456789',
+            'api_token' => '23456789',
+        ]);
+        $this->assertDatabaseHas('role_user', ['role_id' => $role->id, 'user_id' => $user->id]);
     }
 
     public function test_Should_UpdateExistingUser_When_RoleIsEmpty()
     {
-        $role = $this->role->create([
-            'name' => 'Role 1',
-            'slug' => 'role1',
-        ]);
+        $role = factory(Role::class)->create();
+        $user = factory(User::class)->create();
+        $user->assignRole($role->slug);
 
-        $arrangedUser = Factory::create(User::class, [
-            'name'      => 'User 1',
-            'email'     => 'user1@example.com',
-            'password'  => '12345678',
-            'api_token' => '12345678',
-        ]);
-
-        $arrangedUser->assignRole('role1');
-
-        $userRepository = new EloquentUser(new User());
-
-        $userRepository->update([
-            'id'        => $arrangedUser->id,
+        $this->sut->update([
+            'id'        => $user->id,
             'name'      => 'User 2',
             'email'     => 'user2@example.com',
             'password'  => '23456789',
             'api_token' => '23456789',
         ]);
 
-        $user = new User();
-        $updatedUser = $user->find($arrangedUser->id);
-
-        $this->assertEquals('User 2', $updatedUser->name);
-        $this->assertEquals('user2@example.com', $updatedUser->email);
-        $this->assertEquals('23456789', $updatedUser->password);
-        $this->assertEquals('23456789', $updatedUser->api_token);
-        $this->assertEquals('role1', $updatedUser->getRoles()[$role->id]);
+        $this->assertDatabaseHas('users', [
+            'id'        => $user->id,
+            'name'      => 'User 2',
+            'email'     => 'user2@example.com',
+            'password'  => '23456789',
+            'api_token' => '23456789',
+        ]);
+        $this->assertDatabaseHas('role_user', ['role_id' => $role->id, 'user_id' => $user->id]);
     }
 
     public function test_Should_DeleteExistingUser()
     {
-        $arrangedUser = Factory::create(User::class, [
-            'name'      => 'User 1',
-            'email'     => 'user1@example.com',
-            'password'  => '12345678',
-            'api_token' => '12345678',
-        ]);
+        $user = factory(User::class)->create();
 
-        $userRepository = new EloquentUser(new User());
+        $this->sut->delete($user->id);
 
-        $userRepository->delete($arrangedUser->id);
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
 
-        $user = new User();
-        $deletedUser = $user->find($arrangedUser->id);
-
-        $this->assertNull($deletedUser);
+    /**
+     * @before
+     */
+    public function setUpSet(): void
+    {
+        $this->sut = new EloquentUser(new User());
     }
 }

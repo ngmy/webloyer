@@ -4,105 +4,77 @@ namespace Tests\Unit\app\Repositories\Recipe;
 
 use App\Models\Recipe;
 use App\Repositories\Recipe\EloquentRecipe;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class EloquentRecipeTest extends TestCase
 {
     protected $useDatabase = true;
 
+    /** @var EloquentRecipe */
+    private $sut;
+
     public function test_Should_GetRecipeById()
     {
-        $arrangedRecipe = Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
 
-        $recipeRepository = new EloquentRecipe(new Recipe());
+        $actual = $this->sut->byId($recipe->id);
 
-        $foundRecipe = $recipeRepository->byId($arrangedRecipe->id);
-
-        $this->assertEquals('Recipe 1', $foundRecipe->name);
-        $this->assertEquals('', $foundRecipe->description);
-        $this->assertEquals('', $foundRecipe->body);
+        $this->assertTrue($recipe->is($actual));
     }
 
     public function test_Should_GetRecipesByPage()
     {
-        Factory::createList(Recipe::class, [
-            ['name' => 'Recipe 1', 'description' => '', 'body' => ''],
-            ['name' => 'Recipe 2', 'description' => '', 'body' => ''],
-            ['name' => 'Recipe 3', 'description' => '', 'body' => ''],
-            ['name' => 'Recipe 4', 'description' => '', 'body' => ''],
-            ['name' => 'Recipe 5', 'description' => '', 'body' => ''],
-        ]);
+        $recipes = factory(Recipe::class, 5)->create();
 
-        $recipeRepository = new EloquentRecipe(new Recipe());
+        $actual = $this->sut->byPage();
 
-        $foundRecipes = $recipeRepository->byPage();
-
-        $this->assertCount(5, $foundRecipes->items());
+        $this->assertCount(5, $actual->items());
     }
 
     public function test_Should_CreateNewRecipe()
     {
-        $recipeRepository = new EloquentRecipe(new Recipe());
-
-        $returnedRecipe = $recipeRepository->create([
+        $actual = $this->sut->create([
             'name'        => 'Recipe 1',
             'description' => '',
             'body'        => '',
         ]);
 
-        $recipe = new Recipe();
-        $createdRecipe = $recipe->find($returnedRecipe->id);
-
-        $this->assertEquals('Recipe 1', $createdRecipe->name);
-        $this->assertEquals('', $createdRecipe->description);
-        $this->assertEquals('', $createdRecipe->body);
+        $this->assertDatabaseHas('recipes', $actual->toArray());
     }
 
     public function test_Should_UpdateExistingRecipe()
     {
-        $arrangedRecipe = Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
 
-        $recipeRepository = new EloquentRecipe(new Recipe());
-
-        $recipeRepository->update([
-            'id'          => $arrangedRecipe->id,
+        $this->sut->update([
+            'id'          => $recipe->id,
             'name'        => 'Recipe 2',
             'description' => 'Description',
             'body'        => '<?php $x = 1;',
         ]);
 
-        $recipe = new Recipe();
-        $updatedRecipe = $recipe->find($arrangedRecipe->id);
-
-        $this->assertEquals('Recipe 2', $updatedRecipe->name);
-        $this->assertEquals('Description', $updatedRecipe->description);
-        $this->assertEquals('<?php $x = 1;', $updatedRecipe->body);
+        $this->assertDatabaseHas('recipes', [
+            'id'          => $recipe->id,
+            'name'        => 'Recipe 2',
+            'description' => 'Description',
+            'body'        => '<?php $x = 1;',
+        ]);
     }
 
     public function test_Should_DeleteExistingRecipe()
     {
-        $arrangedRecipe = Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
 
-        $recipeRepository = new EloquentRecipe(new Recipe());
+        $this->sut->delete($recipe->id);
 
-        $recipeRepository->delete($arrangedRecipe->id);
+        $this->assertDatabaseMissing('recipes', ['id' => $recipe->id]);
+    }
 
-        $recipe = new Recipe();
-        $deletedRecipe = $recipe->find($arrangedRecipe->id);
-
-        $this->assertNull($deletedRecipe);
+    /**
+     * @before
+     */
+    public function setUpSut(): void
+    {
+        $this->sut = new EloquentRecipe(new Recipe());
     }
 }
