@@ -19,10 +19,10 @@ class UserFormLaravelValidatorTest extends TestCase
             'name' => 'User 1',
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertTrue($result, 'Expected validation to succeed.');
         $this->assertEmpty($errors);
@@ -34,10 +34,10 @@ class UserFormLaravelValidatorTest extends TestCase
             'email' => 'user1@example.com',
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertTrue($result, 'Expected validation to succeed.');
         $this->assertEmpty($errors);
@@ -49,10 +49,10 @@ class UserFormLaravelValidatorTest extends TestCase
             'email' => 'invalid',
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -65,10 +65,10 @@ class UserFormLaravelValidatorTest extends TestCase
             'password_confirmation' => '12345678',
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertTrue($result, 'Expected validation to succeed.');
         $this->assertEmpty($errors);
@@ -81,10 +81,10 @@ class UserFormLaravelValidatorTest extends TestCase
             'password_confirmation' => '1234567',
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -97,10 +97,10 @@ class UserFormLaravelValidatorTest extends TestCase
             'password_confirmation' => '23456789',
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -108,26 +108,17 @@ class UserFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_RoleFieldIsValid()
     {
-        Factory::create(Role::class, [
-            'name'        => 'Role 1',
-            'slug'        => 'role_1',
-            'description' => '',
-        ]);
-
-        Factory::create(Role::class, [
-            'name'        => 'Role 2',
-            'slug'        => 'role_2',
-            'description' => '',
-        ]);
+        $role1 = factory(Role::class)->create();
+        $role2 = factory(Role::class)->create();
 
         $input = [
-            'role' => [1, 2],
+            'role' => [$role1->id, $role2->id],
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertTrue($result, 'Expected validation to succeed.');
         $this->assertEmpty($errors);
@@ -139,10 +130,10 @@ class UserFormLaravelValidatorTest extends TestCase
             'role' => [1],
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -150,18 +141,16 @@ class UserFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsNotSpecified()
     {
-        Factory::create(User::class, [
-            'email' => 'user1@example.com',
-        ]);
+        $user = factory(User::class)->create();
 
         $input = [
-            'email' => 'user1@example.com',
+            'email' => $user->email,
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -169,21 +158,24 @@ class UserFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsSpecified()
     {
-        $arrangedUser = Factory::create(User::class, [
-            'email' => 'user1@example.com',
-        ]);
+        $user = factory(User::class)->create();
 
         $input = [
-            'id'    => $arrangedUser->id,
-            'email' => 'user1@example.com',
+            'id'    => $user->id,
+            'email' => $user->email,
         ];
 
-        $form = new UserFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertTrue($result, 'Expected validation to succeed.');
         $this->assertEmpty($errors);
+    }
+
+    public function makeSut(): UserFormLaravelValidator
+    {
+        return new UserFormLaravelValidator($this->app['validator']);
     }
 }
