@@ -38,11 +38,16 @@ See [screenshots](/SCREENSHOTS.md).
 
 Webloyer has the following requirements:
 
-* PHP >= 5.6.0
+* PHP >= 7.2.0
+* BCMath PHP Extension
+* Ctype PHP Extension
+* Fileinfo PHP extension
+* JSON PHP Extension
+* Mbstring PHP Extension
 * OpenSSL PHP Extension
 * PDO PHP Extension
-* Mbstring PHP Extension
 * Tokenizer PHP Extension
+* XML PHP Extension
 
 ## Installation
 
@@ -64,12 +69,12 @@ Webloyer has the following requirements:
    **Note:** You must be running this command as your web server user.
 4. Start the queue listener as a background process by using the Artisan `queue:listen` command:
    ```
-   nohup php artisan queue:listen --timeout=0 &
+   nohup php artisan queue:work --timeout=0 &
    ```
    **Note:** You must be running this command as your web server user.
 5. Add the following Cron entry to your server:
    ```
-   * * * * * php /path/to/webloyer/artisan schedule:run >> /dev/null 2>&1
+   * * * * * cd /path-to-webloyer && php artisan schedule:run >> /dev/null 2>&1
    ```
    **Note:** You must be running this Cron entry as your web server user.
 
