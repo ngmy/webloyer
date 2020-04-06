@@ -5,6 +5,7 @@ namespace Tests\Unit\app\Models;
 use App\Models\Deployment;
 use App\Models\Project;
 use App\Models\Server;
+use App\Models\User;
 use Carbon\Carbon;
 use Tests\Helpers\Factory;
 use Tests\TestCase;
@@ -15,67 +16,73 @@ class ProjectTest extends TestCase
 
     public function test_Should_GetDeploymentsWhereCreatedAtBefore()
     {
-        $arrangedServer = Factory::create(Server::class);
-
-        $arrangedProject = Factory::create(Project::class, [
-            'server_id' => $arrangedServer->id,
+        $user = factory(User::class)->create();
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
-
-        $arrangedDeployments1 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment1 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 1,
+            'user_id'    => $user->id,
             'created_at' => Carbon::create(2016, 8, 16, 0, 0, 0),
         ]);
-        $arrangedDeployments2 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment2 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 2,
+            'user_id'    => $user->id,
             'created_at' => Carbon::create(2016, 8, 16, 23, 59, 59),
         ]);
-        $arrangedDeployments3 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment3 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 3,
+            'user_id'    => $user->id,
             'created_at' => Carbon::create(2016, 8, 17, 0, 0, 0),
         ]);
-        $arrangedDeployments4 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment4 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 4,
+            'user_id'    => $user->id,
             'created_at' => Carbon::create(2016, 8, 17, 23, 59, 59),
         ]);
 
-        $foundDeployments = $arrangedProject->getDeploymentsWhereCreatedAtBefore(Carbon::create(2016, 8, 17, 0, 0, 0));
+        $actual = $project->getDeploymentsWhereCreatedAtBefore(Carbon::create(2016, 8, 17, 0, 0, 0));
 
-        $this->assertEquals($arrangedDeployments2, $foundDeployments[0]);
-        $this->assertEquals($arrangedDeployments1, $foundDeployments[1]);
+        $this->assertTrue($actual[0]->is($deployment2));
+        $this->assertTrue($actual[1]->is($deployment1));
     }
 
     public function test_Should_GetDeploymentsWhereNumberBefore()
     {
-        $arrangedServer = Factory::create(Server::class);
-
-        $arrangedProject = Factory::create(Project::class, [
-            'server_id' => $arrangedServer->id,
+        $user = factory(User::class)->create();
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
-
-        $arrangedDeployments1 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment1 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 1,
+            'user_id'    => $user->id,
         ]);
-        $arrangedDeployments2 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment2 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 2,
+            'user_id'    => $user->id,
         ]);
-        $arrangedDeployments3 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment3 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 3,
+            'user_id'    => $user->id,
         ]);
-        $arrangedDeployments4 = Factory::create(Deployment::class, [
-            'project_id' => $arrangedProject->id,
+        $deployment4 = factory(Deployment::class)->create([
+            'project_id' => $project->id,
             'number'     => 4,
+            'user_id'    => $user->id,
         ]);
 
-        $foundDeployments = $arrangedProject->getDeploymentsWhereNumberBefore(3);
+        $actual = $project->getDeploymentsWhereNumberBefore(3);
 
-        $this->assertEquals($arrangedDeployments2, $foundDeployments[0]);
-        $this->assertEquals($arrangedDeployments1, $foundDeployments[1]);
+        $this->assertTrue($actual[0]->is($deployment2));
+        $this->assertTrue($actual[1]->is($deployment1));
     }
 }

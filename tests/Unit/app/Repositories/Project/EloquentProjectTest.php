@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\app\Repositories\Project;
 
+use App\Entities\ProjectAttribute\ProjectAttributeEntity;
 use App\Models\MaxDeployment;
 use App\Models\Project;
 use App\Models\Recipe;
@@ -14,166 +15,103 @@ class EloquentProjectTest extends TestCase
 {
     protected $useDatabase = true;
 
+    /** @var EloquentProject */
+    private $sut;
+
     public function test_Should_GetProjectById()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-        $arrangedProject = Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
 
-        $projectRepository = new EloquentProject(
-            new Project(),
-            new MaxDeployment()
-        );
+        $actual = $this->sut->byId($project->id);
 
-        $foundProject = $projectRepository->byId($arrangedProject->id);
-
-        $this->assertEquals('Project 1', $foundProject->name);
-        $this->assertEquals($arrangedProject->server_id, $foundProject->server_id);
-        $this->assertEquals('staging', $foundProject->stage);
+        $this->assertTrue($project->is($actual));
     }
 
     public function test_Should_GetProjectsByPage()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-        Factory::createList(Project::class, [
-            ['name' => 'Project 1', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
-            ['name' => 'Project 2', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
-            ['name' => 'Project 3', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
-            ['name' => 'Project 4', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
-            ['name' => 'Project 5', 'server_id' => $arrangedServer->id, 'stage' => 'staging'],
-        ]);
+        $server = factory(Server::class)->create();
+        $i = 1;
+        $projects = factory(Project::class, 5)->make([
+            'server_id' => $server->id,
+        ])->each(function (Project $project) use ($i) {
+            $project->name = 'project' . $i++;
+            $project->save();
+        });
 
-        $projectRepository = new EloquentProject(
-            new Project(),
-            new MaxDeployment()
-        );
+        $actual = $this->sut->byPage();
 
-        $foundProjects = $projectRepository->byPage();
-
-        $this->assertCount(5, $foundProjects->items());
+        $this->assertCount(5, $actual->items());
+        $this->assertTrue($projects[0]->is($actual[0]));
+        $this->assertTrue($projects[1]->is($actual[1]));
+        $this->assertTrue($projects[2]->is($actual[2]));
+        $this->assertTrue($projects[3]->is($actual[3]));
+        $this->assertTrue($projects[4]->is($actual[4]));
     }
 
     public function test_Should_CreateNewProject()
     {
-        $projectRepository = new EloquentProject(
-            new Project(),
-            new MaxDeployment()
-        );
+        $server = factory(Server::class)->create();
 
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-        $returnedProject = $projectRepository->create([
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
+        $actual = $this->sut->create([
+            'name'                 => 'project1',
+            'server_id'            => $server->id,
+            'repository'           => 'https://github.com/USERNAME/REPOSITORY.git',
+            'attributes'           => new ProjectAttributeEntity(),
+            'keep_last_deployment' => false,
         ]);
 
-        $project = new Project();
-        $createdProject = $project->find($returnedProject->id);
-
-        $this->assertEquals('Project 1', $createdProject->name);
-        $this->assertEquals($arrangedServer->id, $createdProject->server_id);
-        $this->assertEquals('staging', $createdProject->stage);
+        $this->assertDatabaseHas('projects', $actual->toArray());
     }
 
     public function test_Should_UpdateExistingProject()
     {
-        $arrangedRecipe = Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-        $arrangedProject = Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
-        ]);
-        $arrangedProject->recipes()->sync([
-            $arrangedRecipe->id => [
-                'recipe_order' => 1,
-            ]
+        $server1 = factory(Server::class)->create();
+        $server2 = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server1->id,
         ]);
 
-        $projectRepository = new EloquentProject(
-            new Project(),
-            new MaxDeployment()
-        );
-        $arrangedServer2 = Factory::create(Server::class, [
-            'name'        => 'Server 2 ',
-            'description' => '',
-            'body'        => '',
-        ]);
-        $projectRepository->update([
-            'id'        => $arrangedProject->id,
-            'name'      => 'Project 2',
-            'server_id' => $arrangedServer2->id,
-            'stage'     => 'production',
+        $this->sut->update([
+            'id'        => $project->id,
+            'server_id' => $server2->id,
         ]);
 
-        $project = new Project();
-        $updatedProject = $project->find($arrangedProject->id);
-
-        $this->assertEquals('Project 2', $updatedProject->name);
-        $this->assertEquals($arrangedRecipe->id, $updatedProject->recipes->first()->id);
-        $this->assertEquals($arrangedServer2->id, $updatedProject->server_id);
-        $this->assertEquals('production', $updatedProject->stage);
+        $this->assertDatabaseHas('projects', [
+            'id'        => $project->id,
+            'server_id' => $server2->id,
+        ]);
     }
 
     public function test_Should_DeleteExistingProject()
     {
-        $arrangedRecipe = Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
+        $recipe = factory(Recipe::class)->create();
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-        $arrangedProject = Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
-        ]);
-        $arrangedProject->recipes()->sync([
-            $arrangedRecipe->id => [
+        $project->recipes()->sync([
+            $recipe->id => [
                 'recipe_order' => 1,
             ]
         ]);
 
-        $projectRepository = new EloquentProject(
+        $this->sut->delete($project->id);
+
+        $this->assertDatabaseMissing('projects', ['id' => $project->id]);
+        $this->assertDatabaseMissing('project_recipe', ['project_id' => $project->id]);
+    }
+
+    /**
+     * @before
+     */
+    public function setUpSut(): void
+    {
+        $this->sut = new EloquentProject(
             new Project(),
             new MaxDeployment()
         );
-        $projectRepository->delete($arrangedProject->id);
-
-        $project = new Project();
-        $deletedProject = $project->find($arrangedProject->id);
-
-        $this->assertNull($deletedProject);
-
-        $updatedProjectRecipes = $arrangedProject->recipes;
-
-        $this->assertEmpty($updatedProjectRecipes);
     }
 }
