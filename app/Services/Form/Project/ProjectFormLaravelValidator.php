@@ -12,12 +12,12 @@ class ProjectFormLaravelValidator extends AbstractLaravelValidator
         'recipe_id'                         => 'required',
         'server_id'                         => 'required|exists:servers,id',
         'repository'                        => 'required|url',
-        'deploy_path'                       => 'string',
-        'email_notification_recipient'      => 'email',
-        'days_to_keep_deployments'          => 'integer|min:1',
-        'max_number_of_deployments_to_keep' => 'integer|min:1',
-        'keep_last_deployment'              => 'boolean',
-        'github_webhook_secret'             => 'string',
+        'deploy_path'                       => 'nullable|string',
+        'email_notification_recipient'      => 'nullable|email',
+        'days_to_keep_deployments'          => 'nullable|integer|min:1',
+        'max_number_of_deployments_to_keep' => 'nullable|integer|min:1',
+        'keep_last_deployment'              => 'nullable|boolean',
+        'github_webhook_secret'             => 'nullable|string',
     ];
 
     protected function rules()
