@@ -8,7 +8,6 @@ use App\Models\Project;
 use App\Models\Recipe;
 use App\Models\Server;
 use App\Repositories\Project\EloquentProject;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class EloquentProjectTest extends TestCase

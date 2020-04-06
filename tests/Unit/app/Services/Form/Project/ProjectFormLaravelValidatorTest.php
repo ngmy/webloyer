@@ -6,7 +6,6 @@ use App\Models\Recipe;
 use App\Models\Server;
 use App\Services\Form\Project\ProjectFormLaravelValidator;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class ProjectFormLaravelValidatorTest extends TestCase
@@ -15,22 +14,19 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_RecipeIdFieldIsMissing()
     {
-        Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $server = factory(Server::class)->create();
 
         $input = [
             'name'       => 'Project 1',
-            'server_id'  => 1,
+            'server_id'  => $server->id,
             'repository' => 'http://example.com',
             'stage'      => 'staging',
         ];
 
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $sut = $this->makeSut();
+
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -38,29 +34,20 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_NameFieldIsMissing()
     {
-        Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
+        $server = factory(Server::class)->create();
 
         $input = [
-            'recipe_id'  => [1],
-            'server_id'  => 1,
+            'recipe_id'  => [$recipe->id],
+            'server_id'  => $server->id,
             'repository' => 'http://example.com',
             'stage'      => 'staging',
         ];
 
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -68,23 +55,19 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_ServerIdFieldIsMissing()
     {
-        Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
 
         $input = [
             'name'       => 'Project 1',
-            'recipe_id'  => [1],
+            'recipe_id'  => [$recipe->id],
             'repository' => 'http://example.com',
             'stage'      => 'staging',
         ];
 
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -92,29 +75,20 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_RepositoryFieldIsMissing()
     {
-        Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
+        $server = factory(Server::class)->create();
 
         $input = [
             'name'      => 'Project 1',
-            'recipe_id' => [1],
-            'server_id' => 1,
+            'recipe_id' => [$recipe->id],
+            'server_id' => $server->id,
             'stage'     => 'staging',
         ];
 
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -122,30 +96,21 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_RepositoryFieldIsInvalidUrl()
     {
-        Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
+        $server = factory(Server::class)->create();
 
         $input = [
             'name'       => 'Project 1',
-            'recipe_id'  => [1],
-            'server_id'  => 1,
+            'recipe_id'  => [$recipe->id],
+            'server_id'  => $server->id,
             'repository' => 'invalid_url',
             'stage'      => 'staging',
         ];
 
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -153,29 +118,20 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_StageFieldIsMissing()
     {
-        Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
+        $server = factory(Server::class)->create();
 
         $input = [
             'name'       => 'Project 1',
-            'recipe_id'  => [1],
-            'server_id'  => 1,
+            'recipe_id'  => [$recipe->id],
+            'server_id'  => $server->id,
             'repository' => 'http://example.com',
         ];
 
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -183,32 +139,28 @@ class ProjectFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_NameFieldAndRecipeIdFieldAndServerIdFieldAndRepositoryFieldAndStageFieldAreValid()
     {
-        Factory::create(Recipe::class, [
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->create();
+        $server = factory(Server::class)->create();
 
         $input = [
             'name'       => 'Project 1',
-            'recipe_id'  => [1],
-            'server_id'  => 1,
+            'recipe_id'  => [$recipe->id],
+            'server_id'  => $server->id,
             'repository' => 'http://example.com',
             'stage'      => 'staging',
         ];
 
-        $form = new ProjectFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertTrue($result, 'Expected validation to succeed.');
         $this->assertEmpty($errors);
+    }
+
+    public function makeSut(): ProjectFormLaravelValidator
+    {
+        return new ProjectFormLaravelValidator($this->app['validator']);
     }
 }

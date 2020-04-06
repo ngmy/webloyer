@@ -7,7 +7,6 @@ use App\Models\Server;
 use App\Models\User;
 use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class DeploymentFormLaravelValidatorTest extends TestCase
@@ -16,20 +15,17 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_ProjectIdFieldIsMissing()
     {
-        Factory::create(User::class, [
-            'email'     => 'user@example.com',
-            'password'  => '0123456789',
-            'api_token' => '0123456789',
-        ]);
+        $user = factory(User::class)->create();
 
         $input = [
             'task'    => 'deploy',
-            'user_id' => 1,
+            'user_id' => $user->id,
         ];
 
-        $form = new DeploymentFormLaravelValidator($this->app['validator']);
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $sut = $this->makeSut();
+
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -37,22 +33,18 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_ProjectIdFieldIsInvalid()
     {
-        Factory::create(User::class, [
-            'email'     => 'user@example.com',
-            'password'  => '0123456789',
-            'api_token' => '0123456789',
-        ]);
+        $user = factory(User::class)->create();
 
         $input = [
             'project_id' => 1,
             'task'       => 'deploy',
-            'user_id'    => 1,
+            'user_id'    => $user->id,
         ];
 
-        $form = new DeploymentFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -60,33 +52,21 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_TaskFieldIsMissing()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
-        ]);
-
-        Factory::create(User::class, [
-            'email'     => 'user@example.com',
-            'password'  => '0123456789',
-            'api_token' => '0123456789',
+        $user = factory(User::class)->create();
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
 
         $input = [
-            'project_id' => 1,
-            'user_id'    => 1,
+            'project_id' => $project->id,
+            'user_id'    => $user->id,
         ];
 
-        $form = new DeploymentFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -94,34 +74,22 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_TaskFieldIsInvalid()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
-        ]);
-
-        Factory::create(User::class, [
-            'email'     => 'user@example.com',
-            'password'  => '0123456789',
-            'api_token' => '0123456789',
+        $user = factory(User::class)->create();
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
 
         $input = [
-            'project_id' => 1,
+            'project_id' => $project->id,
             'task'       => 'invalid_task',
-            'user_id'    => 1,
+            'user_id'    => $server->id,
         ];
 
-        $form = new DeploymentFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -129,26 +97,20 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_UserIdFieldIsMissing()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
 
         $input = [
-            'project_id' => 1,
+            'project_id' => $project->id,
             'task'       => 'deploy',
         ];
 
-        $form = new DeploymentFormLaravelValidator($this->app['validator']);
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $sut = $this->makeSut();
+
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -156,28 +118,21 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_FailToValidate_When_UserIdFieldIsInvalid()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-        ]);
-
-        Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
 
         $input = [
-            'project_id' => 1,
+            'project_id' => $project->id,
             'task'       => 'deploy',
             'user_id'    => 1,
         ];
 
-        $form = new DeploymentFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertFalse($result, 'Expected validation to fail.');
         $this->assertInstanceOf(MessageBag::class, $errors);
@@ -185,36 +140,29 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 
     public function test_Should_PassToValidate_When_ProjectIdFieldAndTaskFieldAndUserIdFieldAreValid()
     {
-        $arrangedServer = Factory::create(Server::class, [
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
+        $server = factory(Server::class)->create();
+        $project = factory(Project::class)->create([
+            'server_id' => $server->id,
         ]);
-
-        Factory::create(Project::class, [
-            'name'      => 'Project 1',
-            'server_id' => $arrangedServer->id,
-            'stage'     => 'staging',
-        ]);
-
-        Factory::create(User::class, [
-            'email'     => 'user@example.com',
-            'password'  => '0123456789',
-            'api_token' => '0123456789',
-        ]);
+        $user = factory(User::class)->create();
 
         $input = [
-            'project_id' => 1,
+            'project_id' => $project->id,
             'task'       => 'deploy',
-            'user_id'    => 1,
+            'user_id'    => $user->id,
         ];
 
-        $form = new DeploymentFormLaravelValidator($this->app['validator']);
+        $sut = $this->makeSut();
 
-        $result = $form->with($input)->passes();
-        $errors = $form->errors();
+        $result = $sut->with($input)->passes();
+        $errors = $sut->errors();
 
         $this->assertTrue($result, 'Expected validation to succeed.');
         $this->assertEmpty($errors);
+    }
+
+    public function makeSut(): DeploymentFormLaravelValidator
+    {
+        return new DeploymentFormLaravelValidator($this->app['validator']);
     }
 }

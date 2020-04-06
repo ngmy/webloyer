@@ -10,7 +10,6 @@ use App\Services\Form\Deployment\DeploymentForm;
 use App\Services\Validation\ValidableInterface;
 use Carbon\Carbon;
 use Illuminate\Support\MessageBag;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class DeploymentFormTest extends TestCase
@@ -45,12 +44,9 @@ class DeploymentFormTest extends TestCase
             ->andReturn(true);
 
         $project = $this->mockProjectModel;
-        $maxDeployment = Factory::build(MaxDeployment::class, [
-            'id'         => 1,
+        $maxDeployment = factory(MaxDeployment::class)->make([
             'project_id' => $project->id,
             'number'     => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
         ]);
         $project->shouldReceive('getMaxDeployment')
             ->once()
@@ -98,12 +94,9 @@ class DeploymentFormTest extends TestCase
             ->andReturn(true);
 
         $project = $this->mockProjectModel;
-        $maxDeployment = Factory::build(MaxDeployment::class, [
-            'id'         => 1,
+        $maxDeployment = factory(MaxDeployment::class)->make([
             'project_id' => $project->id,
             'number'     => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
         ]);
         $project->shouldReceive('getMaxDeployment')
             ->once()
@@ -151,12 +144,9 @@ class DeploymentFormTest extends TestCase
             ->andReturn(true);
 
         $project = $this->mockProjectModel;
-        $maxDeployment = Factory::build(MaxDeployment::class, [
-            'id'         => 1,
+        $maxDeployment = factory(MaxDeployment::class)->make([
             'project_id' => $project->id,
             'number'     => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
         ]);
         $project->shouldReceive('getMaxDeployment')
             ->once()

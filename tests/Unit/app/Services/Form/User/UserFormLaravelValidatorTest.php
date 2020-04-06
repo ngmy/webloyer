@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Services\Form\User\UserFormLaravelValidator;
 use Illuminate\Support\MessageBag;
 use Kodeine\Acl\Models\Eloquent\Role;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class UserFormLaravelValidatorTest extends TestCase

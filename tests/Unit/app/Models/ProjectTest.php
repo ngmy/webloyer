@@ -7,7 +7,6 @@ use App\Models\Project;
 use App\Models\Server;
 use App\Models\User;
 use Carbon\Carbon;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class ProjectTest extends TestCase
