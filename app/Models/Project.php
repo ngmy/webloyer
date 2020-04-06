@@ -12,8 +12,6 @@ class Project extends BaseModel
 {
     use SerializedLobTrait;
 
-    protected $table = 'projects';
-
     protected $fillable = [
         'name',
         'stage',

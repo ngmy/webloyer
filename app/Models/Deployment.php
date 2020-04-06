@@ -7,8 +7,6 @@ use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 
 class Deployment extends BaseModel implements PresentableInterface
 {
-    protected $table = 'deployments';
-
     protected $fillable = [
         'project_id',
         'number',

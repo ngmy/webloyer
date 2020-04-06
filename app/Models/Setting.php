@@ -9,8 +9,6 @@ class Setting extends BaseModel
 {
     use SerializedLobTrait;
 
-    protected $table = 'settings';
-
     protected $fillable = [
         'type',
         'attributes',
