@@ -13,4 +13,9 @@
   <arg value="p"/>
 
   <rule ref="PSR12"/>
+
+  <!-- ignore WARNING: Line exceeds %s characters; contains %s characters -->
+  <rule ref="vendor/squizlabs/php_codesniffer/src/Standards/Generic/Sniffs/Files/LineLengthSniff.php">
+    <exclude-pattern>tests</exclude-pattern>
+  </rule>
 </ruleset>
