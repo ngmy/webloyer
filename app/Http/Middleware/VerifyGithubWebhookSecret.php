@@ -23,7 +23,7 @@ class VerifyGithubWebhookSecret
      */
     public function handle($request, Closure $next)
     {
-        $secret = $request->projects->github_webhook_secret;
+        $secret = $request->project->github_webhook_secret;
 
         if (isset($secret)) {
             $signature = 'sha1='.hash_hmac('sha1', $request->getContent(), $secret);

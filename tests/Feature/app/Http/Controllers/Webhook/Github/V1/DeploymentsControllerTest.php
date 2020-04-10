@@ -71,7 +71,9 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_ReturnStatusCode400_When_StoreProcessFails()
     {
-        $project = factory(Project::class)->make();
+        $project = factory(Project::class)->make([
+            'github_webhook_secret' => null,
+        ]);
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
