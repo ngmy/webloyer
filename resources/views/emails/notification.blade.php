@@ -12,7 +12,7 @@ Finished At: {{ $deployment->updated_at }}
 Executed By: {{ is_null($deployment->user) ? '' : $deployment->user->email }}
 
 
-Deployment URL: {{ route('projects.deployments.show', [$project->id, $deployment->number]) }}
+Deployment URL: {{ route('projects.deployments.show', ['project' => $project->id, 'deployment' => $deployment->number]) }}
 
 
 Log:

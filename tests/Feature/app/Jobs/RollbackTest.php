@@ -296,6 +296,7 @@ class RollbackTest extends TestCase
             ->once()
             ->andReturn([$recipe])
             ->mock();
+        $project->id = 1;
         $project->email_notification_recipient = 'webloyer@example.com';
 
         $this->mockProjectRepository
@@ -439,6 +440,7 @@ class RollbackTest extends TestCase
             ->once()
             ->andReturn([$recipe])
             ->mock();
+        $project->id = 1;
         $project->email_notification_recipient = 'webloyer@example.com';
 
         $this->mockProjectRepository
