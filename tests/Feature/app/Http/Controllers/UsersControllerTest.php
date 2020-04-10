@@ -45,7 +45,10 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $users = factory(User::class, 3)->make();
+        $i = 1;
+        $users = factory(User::class, 3)->make()->each(function (User $user) use ($i) {
+            $user->id = $i++;
+        });
 
         $perPage = 10;
 
@@ -104,7 +107,9 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $user = factory(User::class)->make();
+        $user = factory(User::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -130,7 +135,9 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $user = factory(User::class)->make();
+        $user = factory(User::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -176,7 +183,9 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $user = factory(User::class)->make();
+        $user = factory(User::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -213,7 +222,9 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayPasswordChangePage_When_PasswordChangePageIsRequestedAndResourceIsFound()
     {
-        $user = factory(User::class)->make();
+        $user = factory(User::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -259,7 +270,9 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToPasswordChangePage_When_PasswordUpdateProcessFails()
     {
-        $user = factory(User::class)->make();
+        $user = factory(User::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -296,7 +309,9 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayEditRolePage_When_EditRolePageIsRequestedAndResourceIsFound()
     {
-        $user = factory(User::class)->make();
+        $user = factory(User::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockUserRepository
             ->shouldReceive('byId')
