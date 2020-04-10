@@ -43,16 +43,19 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $recipes[] = $this->mockRecipeModel
+        $recipe1 = $this->mockRecipeModel
             ->shouldReceive('getProjects')
             ->once()
             ->andReturn(new Collection())
             ->mock();
-        $recipes[] = $this->mockRecipeModel
+        $recipe1->id = 1;
+        $recipe2 = $this->mockRecipeModel
             ->shouldReceive('getProjects')
             ->once()
             ->andReturn(new Collection())
             ->mock();
+        $recipe2->id = 2;
+        $recipes = [$recipe1, $recipe2];
 
         $perPage = 10;
 
@@ -111,6 +114,8 @@ class RecipesControllerTest extends TestCase
             ->once()
             ->andReturn(new Collection())
             ->mock();
+        $recipe->id = 1;
+        $recipe->name = '';
 
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -137,7 +142,9 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $recipe = factory(Recipe::class)->make();
+        $recipe = factory(Recipe::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -183,7 +190,9 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $recipe = factory(Recipe::class)->make();
+        $recipe = factory(Recipe::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockRecipeRepository
             ->shouldReceive('byId')
