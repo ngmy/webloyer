@@ -13,7 +13,6 @@ use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class UsersControllerTest extends TestCase
@@ -46,11 +45,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $users = Factory::buildList(User::class, [
-            ['id' => 1, 'name' => 'User 1', 'email' => 'user1@example.com', 'password' => '12345678', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
-            ['id' => 2, 'name' => 'User 2', 'email' => 'user2@example.com', 'password' => '12345678', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
-            ['id' => 3, 'name' => 'User 3', 'email' => 'user3@example.com', 'password' => '12345678', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
-        ]);
+        $users = factory(User::class, 3)->make();
 
         $perPage = 10;
 
@@ -109,14 +104,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -142,14 +130,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -176,14 +157,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -202,14 +176,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -246,14 +213,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayPasswordChangePage_When_PasswordChangePageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -280,14 +240,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_PasswordUpdateProcessSucceeds()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -306,14 +259,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToPasswordChangePage_When_PasswordUpdateProcessFails()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -350,14 +296,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_DisplayEditRolePage_When_EditRolePageIsRequestedAndResourceIsFound()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -389,14 +328,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_RoleUpdateProcessSucceeds()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -415,7 +347,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditRolePage_When_EditUpdateProcessFails()
     {
-        $user = Factory::build(User::class, [
+        $user = factory(User::class)->make([
             'id'         => 1,
             'name'       => 'User 1',
             'email'      => 'user1@example.com',
@@ -459,14 +391,7 @@ class UsersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $user = Factory::build(User::class, [
-            'id'         => 1,
-            'name'       => 'User 1',
-            'email'      => 'user1@example.com',
-            'password'   => '12345678',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $user = factory(User::class)->make();
 
         $this->mockUserRepository
             ->shouldReceive('byId')

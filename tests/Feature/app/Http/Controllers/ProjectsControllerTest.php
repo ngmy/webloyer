@@ -18,7 +18,6 @@ use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class ProjectsControllerTest extends TestCase
@@ -155,14 +154,7 @@ class ProjectsControllerTest extends TestCase
             ->with('attributes')
             ->andReturn($this->mockProjectAttributeEntity);
 
-        $server = Factory::build(Server::class, [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $server = factory(Server::class)->make();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -247,12 +239,7 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $project = Factory::build(Project::class, [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $project = factory(Project::class)->make();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -271,12 +258,7 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $project = Factory::build(Project::class, [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $project = factory(Project::class)->make();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -313,7 +295,7 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $project = Factory::build(Project::class, [
+        $project = factory(Project::class)->make([
             'id'         => 1,
             'name'       => 'Project 1',
             'created_at' => new Carbon(),

@@ -13,7 +13,6 @@ use Illuminate\Support\MessageBag;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class DeploymentsControllerTest extends TestCase
@@ -72,13 +71,7 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_ReturnStatusCode400_When_StoreProcessFails()
     {
-        $project = Factory::build(Project::class, [
-            'id'                     => 1,
-            'name'                   => 'Project 1',
-            'github_webhook_user_id' => 1,
-            'created_at'             => new Carbon(),
-            'updated_at'             => new Carbon(),
-        ]);
+        $project = factory(Project::class)->make();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')

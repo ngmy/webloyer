@@ -13,7 +13,6 @@ use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class RecipesControllerTest extends TestCase
@@ -138,14 +137,7 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -172,14 +164,7 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -198,14 +183,7 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -242,14 +220,7 @@ class RecipesControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'Recipe 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $this->mockRecipeRepository
             ->shouldReceive('byId')

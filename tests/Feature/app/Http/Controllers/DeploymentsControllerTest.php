@@ -13,7 +13,6 @@ use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class DeploymentsControllerTest extends TestCase
@@ -49,11 +48,7 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $deployments = Factory::buildList(Deployment::class, [
-            ['id' => 1, 'project_id' => 1, 'number' => 1, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon(), 'updated_at' => new Carbon(), 'user' => new User()],
-            ['id' => 2, 'project_id' => 1, 'number' => 2, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon(), 'updated_at' => new Carbon(), 'user' => new User()],
-            ['id' => 3, 'project_id' => 1, 'number' => 3, 'task' => 'deploy', 'user_id' => 1, 'created_at' => new Carbon(), 'updated_at' => new Carbon(), 'user' => new User()],
-        ]);
+        $deployments = factory(Deployment::class, 3)->make();
 
         $perPage = 10;
 
@@ -105,12 +100,7 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessFails()
     {
-        $project = Factory::build(Project::class, [
-            'id'         => 1,
-            'name'       => 'Project 1',
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-        ]);
+        $project = factory(Project::class)->make();
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -140,16 +130,7 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $deployment = Factory::build(Deployment::class, [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-            'user'       => new User(),
-        ]);
+        $deployment = factory(Deployment::class)->make();
 
         $project = $this->mockProjectModel
             ->shouldReceive('getDeploymentByNumber')

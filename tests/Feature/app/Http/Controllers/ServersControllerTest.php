@@ -12,7 +12,6 @@ use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class ServersControllerTest extends TestCase
@@ -42,11 +41,7 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $servers = Factory::buildList(Server::class, [
-            ['id' => 1, 'name' => 'Server 1', 'description' => '', 'body' => '', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
-            ['id' => 2, 'name' => 'Server 2', 'description' => '', 'body' => '', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
-            ['id' => 3, 'name' => 'Server 3', 'description' => '', 'body' => '', 'created_at' => new Carbon(), 'updated_at' => new Carbon()],
-        ]);
+        $servers = factory(Server::class, 3)->make();
 
         $perPage = 10;
 
@@ -100,14 +95,7 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $server = Factory::build(Server::class, [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $server = factory(Server::class)->make();
 
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -134,14 +122,7 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $server = Factory::build(Server::class, [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $server = factory(Server::class)->make();
 
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -168,14 +149,7 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
     {
-        $server = Factory::build(Server::class, [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $server = factory(Server::class)->make();
 
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -194,14 +168,7 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $server = Factory::build(Server::class, [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $server = factory(Server::class)->make();
 
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -238,14 +205,7 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $server = Factory::build(Server::class, [
-            'id'          => 1,
-            'name'        => 'Server 1',
-            'description' => '',
-            'body'        => '',
-            'created_at'  => new Carbon(),
-            'updated_at'  => new Carbon(),
-        ]);
+        $server = factory(Server::class)->make();
 
         $this->mockServerRepository
             ->shouldReceive('byId')
