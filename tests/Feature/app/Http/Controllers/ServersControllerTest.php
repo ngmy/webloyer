@@ -41,7 +41,10 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
     {
-        $servers = factory(Server::class, 3)->make();
+        $i = 1;
+        $servers = factory(Server::class, 3)->make()->each(function (Server $server) use ($i) {
+            $server->id = $i++;
+        });
 
         $perPage = 10;
 
@@ -95,7 +98,9 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $server = factory(Server::class)->make();
+        $server = factory(Server::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -122,7 +127,9 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
     {
-        $server = factory(Server::class)->make();
+        $server = factory(Server::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -168,7 +175,9 @@ class ServersControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $server = factory(Server::class)->make();
+        $server = factory(Server::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockServerRepository
             ->shouldReceive('byId')
