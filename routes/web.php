@@ -97,4 +97,5 @@ Route::group([
         'as'   => 'settings.email',
         'uses' => 'SettingsController@getEmail',
     ]);
+    Route::post('settings/email', 'SettingsController@postEmail');
 });
