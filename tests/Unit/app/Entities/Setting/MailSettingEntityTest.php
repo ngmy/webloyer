@@ -9,7 +9,7 @@ class MailSettingEntityTest extends TestCase
 {
     public function test_Should_SetAndGetDriver()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $mailSettingEntity->setDriver('smtp');
 
@@ -20,7 +20,7 @@ class MailSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetFrom()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $from['address'] = 'from_address@example.com';
         $from['name']    = 'from_name';
@@ -34,7 +34,7 @@ class MailSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetSmtpHost()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $mailSettingEntity->setSmtpHost('localhost');
 
@@ -45,7 +45,7 @@ class MailSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetSmtpPort()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $mailSettingEntity->setSmtpPort(587);
 
@@ -56,7 +56,7 @@ class MailSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetSmtpEncryption()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $mailSettingEntity->setSmtpEncryption('tls');
 
@@ -67,7 +67,7 @@ class MailSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetSmtpUsername()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $mailSettingEntity->setSmtpUsername('username@example.com');
 
@@ -78,7 +78,7 @@ class MailSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetSmtpPassword()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $mailSettingEntity->setSmtpPassword('password');
 
@@ -89,7 +89,7 @@ class MailSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetSendmailPath()
     {
-        $mailSettingEntity = new MailSettingEntity;
+        $mailSettingEntity = new MailSettingEntity();
 
         $mailSettingEntity->setSendmailPath('/usr/sbin/sendmail -bs');
 

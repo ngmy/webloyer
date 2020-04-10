@@ -9,7 +9,7 @@ class AppSettingEntityTest extends TestCase
 {
     public function test_Should_SetAndGetUrl()
     {
-        $appSettingEntity = new AppSettingEntity;
+        $appSettingEntity = new AppSettingEntity();
 
         $appSettingEntity->setUrl('http://example.com');
 

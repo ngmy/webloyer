@@ -15,7 +15,7 @@ class StorageDeployCommanderTest extends TestCase
             ->once()
             ->andReturn(1);
 
-        $deployCommander = new StorageDeployCommander;
+        $deployCommander = new StorageDeployCommander();
         $result = $deployCommander->deploy(new Deployment());
 
         $this->assertTrue($result, 'Expected deploy command to succeed.');
@@ -27,7 +27,7 @@ class StorageDeployCommanderTest extends TestCase
             ->once()
             ->andReturn(0);
 
-        $deployCommander = new StorageDeployCommander;
+        $deployCommander = new StorageDeployCommander();
         $result = $deployCommander->deploy(new Deployment());
 
         $this->assertFalse($result, 'Expected deploy command to fail.');
@@ -39,7 +39,7 @@ class StorageDeployCommanderTest extends TestCase
             ->once()
             ->andReturn(1);
 
-        $deployCommander = new StorageDeployCommander;
+        $deployCommander = new StorageDeployCommander();
         $result = $deployCommander->rollback(new Deployment());
 
         $this->assertTrue($result, 'Expected rollback command to succeed.');
@@ -51,7 +51,7 @@ class StorageDeployCommanderTest extends TestCase
             ->once()
             ->andReturn(0);
 
-        $deployCommander = new StorageDeployCommander;
+        $deployCommander = new StorageDeployCommander();
         $result = $deployCommander->rollback(new Deployment());
 
         $this->assertFalse($result, 'Expected rollback command to fail.');

@@ -9,7 +9,7 @@ class DbSettingEntityTest extends TestCase
 {
     public function test_Should_SetAndGetDriver()
     {
-        $dbSettingEntity = new DbSettingEntity;
+        $dbSettingEntity = new DbSettingEntity();
 
         $dbSettingEntity->setDriver('mysql');
 
@@ -20,7 +20,7 @@ class DbSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetHost()
     {
-        $dbSettingEntity = new DbSettingEntity;
+        $dbSettingEntity = new DbSettingEntity();
 
         $dbSettingEntity->setHost('localhost');
 
@@ -31,7 +31,7 @@ class DbSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetDatabase()
     {
-        $dbSettingEntity = new DbSettingEntity;
+        $dbSettingEntity = new DbSettingEntity();
 
         $dbSettingEntity->setDatabase('webloyer');
 
@@ -42,7 +42,7 @@ class DbSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetUsername()
     {
-        $dbSettingEntity = new DbSettingEntity;
+        $dbSettingEntity = new DbSettingEntity();
 
         $dbSettingEntity->setUsername('username');
 
@@ -53,7 +53,7 @@ class DbSettingEntityTest extends TestCase
 
     public function test_Should_SetAndGetPassword()
     {
-        $dbSettingEntity = new DbSettingEntity;
+        $dbSettingEntity = new DbSettingEntity();
 
         $dbSettingEntity->setPassword('password');
 

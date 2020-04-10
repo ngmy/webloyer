@@ -34,7 +34,7 @@ class DeployerRecipeFileBuilderTest extends TestCase
 
         $recipeFileBuilder = new DeployerRecipeFileBuilder(
             $this->mockFilesystem,
-            new DeployerFile
+            new DeployerFile()
         );
         $recipeFileBuilder->setRecipe($this->mockRecipeModel);
         $result = $recipeFileBuilder

@@ -74,7 +74,7 @@ class DeployerServerListFileBuilderTest extends TestCase
 
         $serverListFileBuilder = new DeployerServerListFileBuilder(
             $this->mockFilesystem,
-            new DeployerFile,
+            new DeployerFile(),
             $this->mockYamlParser,
             $this->mockYamlDumper
         );
@@ -117,8 +117,8 @@ class DeployerServerListFileBuilderTest extends TestCase
         $serverListFileBuilder = new DeployerServerListFileBuilder(
             new LaravelFilesystem($this->app['files']),
             $this->mockDeployerFile,
-            new Parser,
-            new Dumper
+            new Parser(),
+            new Dumper()
         );
 
         $this->mockServerModel->body = <<<EOF
@@ -171,8 +171,8 @@ EOF;
         $serverListFileBuilder = new DeployerServerListFileBuilder(
             new LaravelFilesystem($this->app['files']),
             $this->mockDeployerFile,
-            new Parser,
-            new Dumper
+            new Parser(),
+            new Dumper()
         );
 
         $this->mockServerModel->body = <<<EOF

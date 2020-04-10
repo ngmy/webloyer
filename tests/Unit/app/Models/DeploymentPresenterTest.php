@@ -17,7 +17,7 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 0,
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $html = $deploymentPresenter->status();
@@ -31,7 +31,7 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 1,
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $html = $deploymentPresenter->status();
@@ -45,7 +45,7 @@ class DeploymentPresenterTest extends TestCase
             'status'     => null,
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $html = $deploymentPresenter->status();
@@ -59,7 +59,7 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 0,
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $text = $deploymentPresenter->statusText();
@@ -73,7 +73,7 @@ class DeploymentPresenterTest extends TestCase
             'status'     => 1,
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $text = $deploymentPresenter->statusText();
@@ -87,7 +87,7 @@ class DeploymentPresenterTest extends TestCase
             'status'     => null,
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $text = $deploymentPresenter->statusText();
@@ -101,7 +101,7 @@ class DeploymentPresenterTest extends TestCase
             'message'    => 'Message',
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $html = $deploymentPresenter->message();
@@ -115,7 +115,7 @@ class DeploymentPresenterTest extends TestCase
             'message'    => 'Message',
         ]);
 
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         $deploymentPresenter = new DeploymentPresenter($deployment, $converter);
 
         $html = $deploymentPresenter->messageText();

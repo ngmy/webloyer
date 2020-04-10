@@ -54,15 +54,15 @@ EOF;
 
         $mailSettings = $configMailSettingRepository->all();
 
-        $this->assertEquals('smtp',                     $mailSettings->getDriver());
+        $this->assertEquals('smtp', $mailSettings->getDriver());
         $this->assertEquals('from_address@example.com', $mailSettings->getFrom()['address']);
-        $this->assertEquals('from_name',                $mailSettings->getFrom()['name']);
-        $this->assertEquals('localhost',                $mailSettings->getSmtpHost());
-        $this->assertEquals(587,                        $mailSettings->getSmtpPort());
-        $this->assertEquals('tls',                      $mailSettings->getSmtpEncryption());
-        $this->assertEquals('username@example.com',     $mailSettings->getSmtpUsername());
-        $this->assertEquals('password',                 $mailSettings->getSmtpPassword());
-        $this->assertEquals('/usr/sbin/sendmail -bs',   $mailSettings->getSendmailPath());
+        $this->assertEquals('from_name', $mailSettings->getFrom()['name']);
+        $this->assertEquals('localhost', $mailSettings->getSmtpHost());
+        $this->assertEquals(587, $mailSettings->getSmtpPort());
+        $this->assertEquals('tls', $mailSettings->getSmtpEncryption());
+        $this->assertEquals('username@example.com', $mailSettings->getSmtpUsername());
+        $this->assertEquals('password', $mailSettings->getSmtpPassword());
+        $this->assertEquals('/usr/sbin/sendmail -bs', $mailSettings->getSendmailPath());
     }
 
     public function test_Should_UpdateExistingMailSettings()
@@ -95,14 +95,14 @@ EOF;
             'sendmail_path'   => '/usr/sbin/sendmail -bs',
         ]);
 
-        $this->assertEquals('smtp',                     $dotenvReader->getConfig('MAIL_DRIVER'));
+        $this->assertEquals('smtp', $dotenvReader->getConfig('MAIL_DRIVER'));
         $this->assertEquals('from_address@example.com', $dotenvReader->getConfig('MAIL_FROM_ADDRESS'));
-        $this->assertEquals('from_name',                $dotenvReader->getConfig('MAIL_FROM_NAME'));
-        $this->assertEquals('localhost',                $dotenvReader->getConfig('MAIL_HOST'));
-        $this->assertEquals(587,                        $dotenvReader->getConfig('MAIL_PORT'));
-        $this->assertEquals('tls',                      $dotenvReader->getConfig('MAIL_ENCRYPTION'));
-        $this->assertEquals('username@example.com',     $dotenvReader->getConfig('MAIL_USERNAME'));
-        $this->assertEquals('password',                 $dotenvReader->getConfig('MAIL_PASSWORD'));
-        $this->assertEquals('/usr/sbin/sendmail -bs',   $dotenvReader->getConfig('MAIL_SENDMAIL'));
+        $this->assertEquals('from_name', $dotenvReader->getConfig('MAIL_FROM_NAME'));
+        $this->assertEquals('localhost', $dotenvReader->getConfig('MAIL_HOST'));
+        $this->assertEquals(587, $dotenvReader->getConfig('MAIL_PORT'));
+        $this->assertEquals('tls', $dotenvReader->getConfig('MAIL_ENCRYPTION'));
+        $this->assertEquals('username@example.com', $dotenvReader->getConfig('MAIL_USERNAME'));
+        $this->assertEquals('password', $dotenvReader->getConfig('MAIL_PASSWORD'));
+        $this->assertEquals('/usr/sbin/sendmail -bs', $dotenvReader->getConfig('MAIL_SENDMAIL'));
     }
 }
