@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Models\Recipe;
 use App\Repositories\Recipe\RecipeInterface;
 use App\Services\Form\Recipe\RecipeForm;
-use App\Models\Recipe;
+use Illuminate\Http\Request;
 
 class RecipesController extends Controller
 {

@@ -9,7 +9,8 @@ use Kodeine\Acl\Traits\HasRole;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRole;
+    use Notifiable;
+    use HasRole;
 
     /**
      * The attributes that are mass assignable.

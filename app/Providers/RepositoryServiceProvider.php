@@ -15,9 +15,7 @@ use App\Repositories\Role\EloquentRole;
 use App\Repositories\Setting\ConfigAppSetting;
 use App\Repositories\Setting\ConfigDbSetting;
 use App\Repositories\Setting\EloquentSetting;
-
 use Kodeine\Acl\Models\Eloquent\Role;
-
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -40,27 +38,27 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('App\Repositories\Project\ProjectInterface', function ($app) {
-            return new EloquentProject(new Project);
+            return new EloquentProject(new Project());
         });
 
         $this->app->bind('App\Repositories\Recipe\RecipeInterface', function ($app) {
-            return new EloquentRecipe(new Recipe);
+            return new EloquentRecipe(new Recipe());
         });
 
         $this->app->bind('App\Repositories\Server\ServerInterface', function ($app) {
-            return new EloquentServer(new Server);
+            return new EloquentServer(new Server());
         });
 
         $this->app->bind('App\Repositories\User\UserInterface', function ($app) {
-            return new EloquentUser(new User);
+            return new EloquentUser(new User());
         });
 
         $this->app->bind('App\Repositories\Role\RoleInterface', function ($app) {
-            return new EloquentRole(new Role);
+            return new EloquentRole(new Role());
         });
 
         $this->app->bind('App\Repositories\Setting\SettingInterface', function ($app) {
-            return new EloquentSetting(new Setting);
+            return new EloquentSetting(new Setting());
         });
 
         $this->app->bind('App\Repositories\Setting\DbSettingInterface', function ($app) {

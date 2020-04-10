@@ -32,7 +32,7 @@ class OldDeploymentSpecification extends DeploymentSpecification
 
         if (!is_null($project->days_to_keep_deployments)) {
             $currentDate = clone $this->currentDate;
-            $date = $currentDate->modify('-'.$project->days_to_keep_deployments.' days');
+            $date = $currentDate->modify('-' . $project->days_to_keep_deployments . ' days');
             $pastDaysToKeepDeployments = $project->getDeploymentsWhereCreatedAtBefore($date);
 
             if ($project->keep_last_deployment && $pastDaysToKeepDeployments->contains($project->getLastDeployment())) {

@@ -2,13 +2,11 @@
 
 namespace App\Console\Commands\Webloyer;
 
-use Artisan;
-use Hash;
-
 use App\Repositories\Setting\AppSettingInterface;
 use App\Repositories\Setting\DbSettingInterface;
 use App\Repositories\User\UserInterface;
-
+use Artisan;
+use Hash;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -46,8 +44,11 @@ class Install extends Command
      * @param \App\Repositories\User\UserInterface          $userRepository
      * @return void
      */
-    public function handle(AppSettingInterface $appSetting, DbSettingInterface $dbSetting, UserInterface $userRepository)
-    {
+    public function handle(
+        AppSettingInterface $appSetting,
+        DbSettingInterface $dbSetting,
+        UserInterface $userRepository
+    ) {
         $config['app']['url'] = $this->ask(trans('webloyer.enter_webloyer_url'));
 
         $config['db']['driver'] = $this->choice(trans('webloyer.enter_db_system'), [
@@ -64,7 +65,10 @@ class Install extends Command
             $config['db']['password'] = $this->ask(trans('webloyer.enter_db_password'), false);
         } else {
             $config['db']['host']     = null;
-            $config['db']['database'] = $this->ask(trans('webloyer.enter_db_name_sqlite'), storage_path('webloyer.sqlite'));
+            $config['db']['database'] = $this->ask(
+                trans('webloyer.enter_db_name_sqlite'),
+                storage_path('webloyer.sqlite')
+            );
             $config['db']['username'] = null;
             $config['db']['password'] = null;
         }
@@ -77,11 +81,11 @@ class Install extends Command
         $appSetting->update($config['app']);
         $dbSetting->update($config['db']);
 
-        config(['database.default'                                          => $config['db']['driver']]);
-        config(['database.connections.'.$config['db']['driver'].'.host'     => $config['db']['host']]);
-        config(['database.connections.'.$config['db']['driver'].'.database' => $config['db']['database']]);
-        config(['database.connections.'.$config['db']['driver'].'.username' => $config['db']['username']]);
-        config(['database.connections.'.$config['db']['driver'].'.password' => $config['db']['password']]);
+        config(['database.default'                                              => $config['db']['driver']]);
+        config(['database.connections.' . $config['db']['driver'] . '.host'     => $config['db']['host']]);
+        config(['database.connections.' . $config['db']['driver'] . '.database' => $config['db']['database']]);
+        config(['database.connections.' . $config['db']['driver'] . '.username' => $config['db']['username']]);
+        config(['database.connections.' . $config['db']['driver'] . '.password' => $config['db']['password']]);
 
         // Migrate and seed database
         Artisan::call('migrate:refresh', [

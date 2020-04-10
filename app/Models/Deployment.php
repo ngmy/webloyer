@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Robbo\Presenter\PresentableInterface;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 
@@ -28,12 +29,12 @@ class Deployment extends BaseModel implements PresentableInterface
      */
     public function getPresenter()
     {
-        $converter = new AnsiToHtmlConverter;
+        $converter = new AnsiToHtmlConverter();
         return new DeploymentPresenter($this, $converter);
     }
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 }

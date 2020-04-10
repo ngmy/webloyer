@@ -12,4 +12,3 @@ interface ConfigReaderInterface
      */
     public function getConfig($name);
 }
-

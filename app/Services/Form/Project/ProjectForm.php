@@ -2,8 +2,9 @@
 
 namespace App\Services\Form\Project;
 
-use App\Services\Validation\ValidableInterface;
+use App\Entities\ProjectAttribute\ProjectAttributeEntity;
 use App\Repositories\Project\ProjectInterface;
+use App\Services\Validation\ValidableInterface;
 use DB;
 
 class ProjectForm
@@ -40,7 +41,7 @@ class ProjectForm
         }
 
         DB::transaction(function () use ($input) {
-            $projectAttribute = new \App\Entities\ProjectAttribute\ProjectAttributeEntity;
+            $projectAttribute = new ProjectAttributeEntity();
             if (!empty($input['deploy_path'])) {
                 $projectAttribute->setDeployPath($input['deploy_path']);
             }
@@ -80,7 +81,7 @@ class ProjectForm
 
             $project->syncRecipes($input['recipe_id']);
 
-            $projectAttribute = new \App\Entities\ProjectAttribute\ProjectAttributeEntity;
+            $projectAttribute = new ProjectAttributeEntity();
             if (!empty($input['deploy_path'])) {
                 $projectAttribute->setDeployPath($input['deploy_path']);
             }

@@ -2,11 +2,11 @@
 
 namespace App\Repositories\Setting;
 
-use App\Services\Config\ConfigReaderInterface;
-use App\Services\Config\ConfigWriterInterface;
 use App\Entities\Setting\MailSettingEntity;
 use App\Repositories\AbstractConfigRepository;
 use App\Repositories\Setting\MailSettingInterface;
+use App\Services\Config\ConfigReaderInterface;
+use App\Services\Config\ConfigWriterInterface;
 
 class ConfigMailSetting extends AbstractConfigRepository implements MailSettingInterface
 {
@@ -27,7 +27,7 @@ class ConfigMailSetting extends AbstractConfigRepository implements MailSettingI
             'name'    => $fromName,
         ];
 
-        $mailSetting = new MailSettingEntity;
+        $mailSetting = new MailSettingEntity();
         $mailSetting->setDriver($driver)
             ->setFrom($from)
             ->setSmtpHost($smtpHost)
@@ -42,15 +42,15 @@ class ConfigMailSetting extends AbstractConfigRepository implements MailSettingI
 
     public function update(array $data)
     {
-        $this->writer->setConfig('MAIL_DRIVER',       $data['driver']);
+        $this->writer->setConfig('MAIL_DRIVER', $data['driver']);
         $this->writer->setConfig('MAIL_FROM_ADDRESS', $data['from_address']);
-        $this->writer->setConfig('MAIL_FROM_NAME',    $data['from_name']);
-        $this->writer->setConfig('MAIL_HOST',         $data['smtp_host']);
-        $this->writer->setConfig('MAIL_PORT',         $data['smtp_port']);
-        $this->writer->setConfig('MAIL_ENCRYPTION',   $data['smtp_encryption']);
-        $this->writer->setConfig('MAIL_USERNAME',     $data['smtp_username']);
-        $this->writer->setConfig('MAIL_PASSWORD',     $data['smtp_password']);
-        $this->writer->setConfig('MAIL_SENDMAIL',     $data['sendmail_path']);
+        $this->writer->setConfig('MAIL_FROM_NAME', $data['from_name']);
+        $this->writer->setConfig('MAIL_HOST', $data['smtp_host']);
+        $this->writer->setConfig('MAIL_PORT', $data['smtp_port']);
+        $this->writer->setConfig('MAIL_ENCRYPTION', $data['smtp_encryption']);
+        $this->writer->setConfig('MAIL_USERNAME', $data['smtp_username']);
+        $this->writer->setConfig('MAIL_PASSWORD', $data['smtp_password']);
+        $this->writer->setConfig('MAIL_SENDMAIL', $data['sendmail_path']);
 
         return true;
     }

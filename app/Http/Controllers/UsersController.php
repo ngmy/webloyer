@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Repositories\User\UserInterface;
-use App\Repositories\Role\RoleInterface;
-use App\Services\Form\User\UserForm;
+use App\Http\Requests;
 use App\Models\User;
+use App\Repositories\Role\RoleInterface;
+use App\Repositories\User\UserInterface;
+use App\Services\Form\User\UserForm;
+use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {

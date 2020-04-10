@@ -26,7 +26,7 @@ class VerifyGithubWebhookSecret
         $secret = $request->project->github_webhook_secret;
 
         if (isset($secret)) {
-            $signature = 'sha1='.hash_hmac('sha1', $request->getContent(), $secret);
+            $signature = 'sha1=' . hash_hmac('sha1', $request->getContent(), $secret);
 
             if ($signature !== $request->header('X-Hub-Signature')) {
                 abort(401);

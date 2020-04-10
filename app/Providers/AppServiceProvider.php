@@ -93,7 +93,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind('App\Services\Notification\NotifierInterface', function ($app) {
-            return new MailNotifier;
+            return new MailNotifier();
         });
 
         $this->app->bind('App\Services\Config\ConfigReaderInterface', function ($app) {
@@ -117,21 +117,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\Deployment\DeployerServerListFileBuilder', function ($app) {
             return new DeployerServerListFileBuilder(
                 new LaravelFilesystem($app['files']),
-                new DeployerFile,
-                new Parser,
-                new Dumper
+                new DeployerFile(),
+                new Parser(),
+                new Dumper()
             );
         });
         $this->app->bind('App\Services\Deployment\DeployerRecipeFileBuilder', function ($app) {
             return new DeployerRecipeFileBuilder(
                 new LaravelFilesystem($app['files']),
-                new DeployerFile
+                new DeployerFile()
             );
         });
         $this->app->bind('App\Services\Deployment\DeployerDeploymentFileBuilder', function ($app) {
             return new DeployerDeploymentFileBuilder(
                 new LaravelFilesystem($app['files']),
-                new DeployerFile
+                new DeployerFile()
             );
         });
 

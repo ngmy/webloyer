@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Services\Form\Setting\MailSettingForm;
+use App\Http\Requests;
 use App\Repositories\Setting\SettingInterface;
+use App\Services\Form\Setting\MailSettingForm;
+use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {

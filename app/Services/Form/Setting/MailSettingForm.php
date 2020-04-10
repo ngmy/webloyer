@@ -2,8 +2,9 @@
 
 namespace App\Services\Form\Setting;
 
-use App\Services\Validation\ValidableInterface;
+use App\Entities\Setting\MailSettingEntity;
 use App\Repositories\Setting\SettingInterface;
+use App\Services\Validation\ValidableInterface;
 
 class MailSettingForm
 {
@@ -42,7 +43,7 @@ class MailSettingForm
             }
         }
 
-        $mailSetting = new \App\Entities\Setting\MailSettingEntity;
+        $mailSetting = new MailSettingEntity();
         $mailSetting->setDriver($input['driver']);
         $mailSetting->setFrom([
             'address' => $input['from_address'],

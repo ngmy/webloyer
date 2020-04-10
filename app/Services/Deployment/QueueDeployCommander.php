@@ -4,7 +4,6 @@ namespace App\Services\Deployment;
 
 use App\Jobs\Deploy;
 use App\Jobs\Rollback;
-
 use Illuminate\Contracts\Bus\Dispatcher;
 
 class QueueDeployCommander implements DeployCommanderInterface

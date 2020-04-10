@@ -39,7 +39,7 @@ class DiscardOldDeployments extends Command
         parent::__construct();
 
         $this->projectRepository = $projectRepository;
-        $this->spec = new OldDeploymentSpecification(new DateTime);
+        $this->spec = new OldDeploymentSpecification(new DateTime());
     }
 
     /**

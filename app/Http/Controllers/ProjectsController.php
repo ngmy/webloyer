@@ -34,8 +34,13 @@ class ProjectsController extends Controller
      * @param \App\Repositories\User\UserInterface       $user
      * @return void
      */
-    public function __construct(ProjectInterface $project, ProjectForm $projectForm, RecipeInterface $recipe, ServerInterface $server, UserInterface $user)
-    {
+    public function __construct(
+        ProjectInterface $project,
+        ProjectForm $projectForm,
+        RecipeInterface $recipe,
+        ServerInterface $server,
+        UserInterface $user
+    ) {
         $this->middleware('auth');
         $this->middleware('acl');
 

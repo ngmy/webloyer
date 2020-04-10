@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Models\Deployment;
+use App\Models\Project;
 use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Deployment\DeploymentForm;
-use App\Models\Project;
-use App\Models\Deployment;
-
 use Illuminate\Http\Request;
 
 class DeploymentsController extends Controller

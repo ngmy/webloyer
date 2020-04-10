@@ -3,7 +3,6 @@
 namespace App\Services\Filesystem;
 
 use App\Services\Filesystem\FilesystemInterface;
-
 use Illuminate\Filesystem\Filesystem;
 
 class LaravelFilesystem implements FilesystemInterface

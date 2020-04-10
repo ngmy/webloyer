@@ -27,7 +27,7 @@ class UserFormLaravelValidator extends AbstractLaravelValidator
         $unique = 'unique:users,email';
 
         if (isset($this->data['id'])) {
-            $unique .= ','.$this->data['id'];
+            $unique .= ',' . $this->data['id'];
         }
 
         $rules['email'] = "sometimes|required|email|$unique";

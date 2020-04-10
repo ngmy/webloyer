@@ -35,7 +35,7 @@ class EloquentSetting extends AbstractEloquentRepository implements SettingInter
         }
 
         if ($type === 'mail') {
-            $attributes = new MailSettingEntity;
+            $attributes = new MailSettingEntity();
             $attributes->setDriver('smtp');
             $attributes->setFrom([
                 'address' => 'webloyer@example.com',

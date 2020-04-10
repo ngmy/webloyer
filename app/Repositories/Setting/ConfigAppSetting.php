@@ -14,7 +14,7 @@ class ConfigAppSetting extends AbstractConfigRepository implements AppSettingInt
     {
         $url = $this->reader->getConfig('APP_URL');
 
-        $appSetting = new AppSettingEntity;
+        $appSetting = new AppSettingEntity();
         $appSetting->setUrl($url);
 
         return $appSetting;

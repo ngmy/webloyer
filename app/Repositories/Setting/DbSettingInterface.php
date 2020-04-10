@@ -7,4 +7,3 @@ use App\Repositories\Setting\SettingInterface;
 interface DbSettingInterface extends SettingInterface
 {
 }
-

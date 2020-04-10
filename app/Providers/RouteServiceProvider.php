@@ -37,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider
             $project = $projectRepository->byId($id);
 
             if (is_null($project)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $project;
@@ -49,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
             $deployment = $project->getDeploymentByNumber($num);
 
             if (is_null($deployment)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $deployment;
@@ -61,7 +61,7 @@ class RouteServiceProvider extends ServiceProvider
             $recipe = $recipeRepository->byId($id);
 
             if (is_null($recipe)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $recipe;
@@ -73,7 +73,7 @@ class RouteServiceProvider extends ServiceProvider
             $server = $serverRepository->byId($id);
 
             if (is_null($server)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $server;
@@ -85,7 +85,7 @@ class RouteServiceProvider extends ServiceProvider
             $user = $userRepository->byId($id);
 
             if (is_null($user)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $user;

@@ -31,7 +31,7 @@ class DotenvWriter implements ConfigWriterInterface
         if (preg_match("/^$name=.*$/m", $contents)) {
             $contents = preg_replace("/^$name=.*$/m", "$name=$value", $contents);
         } else {
-            $contents .= "$name=$value".PHP_EOL;
+            $contents .= "$name=$value" . PHP_EOL;
         }
 
         return $this->fs->put($this->path, $contents);

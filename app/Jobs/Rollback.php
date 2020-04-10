@@ -21,7 +21,10 @@ use Symfony\Component\Process\ProcessBuilder;
 
 class Rollback implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $deployment;
 
@@ -49,8 +52,13 @@ class Rollback implements ShouldQueue
      * @param \App\Repositories\Setting\SettingInterface   $settingRepository
      * @return void
      */
-    public function handle(ProjectInterface $projectRepository, ServerInterface $serverRepository, ProcessBuilder $processBuilder, NotifierInterface $notifier, SettingInterface $settingRepository)
-    {
+    public function handle(
+        ProjectInterface $projectRepository,
+        ServerInterface $serverRepository,
+        ProcessBuilder $processBuilder,
+        NotifierInterface $notifier,
+        SettingInterface $settingRepository
+    ) {
         $deployment = $this->deployment;
         $project    = $projectRepository->byId($deployment->project_id);
         $server     = $serverRepository->byId($project->server_id);
@@ -66,7 +74,8 @@ class Rollback implements ShouldQueue
 
         // Create recipe files
         foreach ($project->getRecipes() as $i => $recipe) {
-            // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array, a destructor is called and a recipe file is deleted immediately.
+            // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array,
+            //       a destructor is called and a recipe file is deleted immediately.
             $recipeFileBuilders[] = $app->make(DeployerRecipeFileBuilder::class)->setRecipe($recipe);
             $app->bind(DeployerFileBuilderInterface::class, $recipeFileBuilders[$i]);
             $recipeFiles[] = $app->make(DeployerFileDirector::class)->construct();

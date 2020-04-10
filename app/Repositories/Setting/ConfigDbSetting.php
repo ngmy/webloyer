@@ -18,7 +18,7 @@ class ConfigDbSetting extends AbstractConfigRepository implements DbSettingInter
         $username = $this->reader->getConfig('DB_USERNAME');
         $password = $this->reader->getConfig('DB_PASSWORD');
 
-        $dbSetting = new DbSettingEntity;
+        $dbSetting = new DbSettingEntity();
         $dbSetting->setDriver($driver)
             ->setHost($host)
             ->setDatabase($database)
@@ -30,8 +30,8 @@ class ConfigDbSetting extends AbstractConfigRepository implements DbSettingInter
 
     public function update(array $data)
     {
-        $this->writer->setConfig('DB_DRIVER',   $data['driver']);
-        $this->writer->setConfig('DB_HOST',     $data['host']);
+        $this->writer->setConfig('DB_DRIVER', $data['driver']);
+        $this->writer->setConfig('DB_HOST', $data['host']);
         $this->writer->setConfig('DB_DATABASE', $data['database']);
         $this->writer->setConfig('DB_USERNAME', $data['username']);
         $this->writer->setConfig('DB_PASSWORD', $data['password']);

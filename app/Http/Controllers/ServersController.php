@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Models\Server;
 use App\Repositories\Server\ServerInterface;
 use App\Services\Form\Server\ServerForm;
-use App\Models\Server;
+use Illuminate\Http\Request;
 
 class ServersController extends Controller
 {

@@ -23,8 +23,11 @@ class DeploymentForm
      * @param \App\Services\Deployment\DeployCommanderInterface $deployCommander
      * @return void
      */
-    public function __construct(ValidableInterface $validator, ProjectInterface $project, DeployCommanderInterface $deployCommander)
-    {
+    public function __construct(
+        ValidableInterface $validator,
+        ProjectInterface $project,
+        DeployCommanderInterface $deployCommander
+    ) {
         $this->validator       = $validator;
         $this->project         = $project;
         $this->deployCommander = $deployCommander;
