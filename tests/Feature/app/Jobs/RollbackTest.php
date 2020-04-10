@@ -22,7 +22,6 @@ use App\Services\Notification\NotifierInterface;
 use Carbon\Carbon;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
-use Tests\Helpers\Factory;
 use Tests\TestCase;
 
 class RollbackTest extends TestCase
@@ -77,23 +76,9 @@ class RollbackTest extends TestCase
 
     public function test_Should_Work_When_DeployerIsNormalEnd()
     {
-        $deployment = Factory::build(Deployment::class, [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-            'user'       => new User(),
-        ]);
+        $deployment = factory(Deployment::class)->make();
 
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'recipe 1',
-            'desctiption' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $project = $this->mockProjectModel
             ->shouldReceive('updateDeployment')
@@ -191,23 +176,9 @@ class RollbackTest extends TestCase
 
     public function test_Should_Work_When_DeployerIsAbnormalEnd()
     {
-        $deployment = Factory::build(Deployment::class, [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-            'user'       => new User(),
-        ]);
+        $deployment = factory(Deployment::class)->make();
 
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'Recipe 1',
-            'desctiption' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $project = $this->mockProjectModel
             ->shouldReceive('updateDeployment')
@@ -305,35 +276,13 @@ class RollbackTest extends TestCase
 
     public function test_Should_WorkAndSendNotification_When_DeployerIsNormalEndAndEmailNotificationRecipientIsSet()
     {
-        $deployment = Factory::build(Deployment::class, [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-            'user'       => new User(),
+        $deployment = factory(Deployment::class)->make();
+
+        $updatedDeployment = factory(Deployment::class)->make([
+            'status' => 0,
         ]);
 
-        $updatedDeployment = Factory::build(Deployment::class, [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-            'user'       => new User(),
-            'status'     => 0,
-        ]);
-
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'recipe 1',
-            'desctiption' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $project = $this->mockProjectModel
             ->shouldReceive('updateDeployment')
@@ -470,35 +419,13 @@ class RollbackTest extends TestCase
 
     public function test_Should_WorkAndSendNotification_When_DeployerIsAbnormalEndAndEmailNotificationRecipientIsSet()
     {
-        $deployment = Factory::build(Deployment::class, [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-            'user'       => new User(),
+        $deployment = factory(Deployment::class)->make();
+
+        $updatedDeployment = factory(Deployment::class)->make([
+            'stauts' => 1,
         ]);
 
-        $updatedDeployment = Factory::build(Deployment::class, [
-            'id'         => 1,
-            'project_id' => 1,
-            'number'     => 1,
-            'task'       => 'deploy',
-            'user_id'    => 1,
-            'created_at' => new Carbon(),
-            'updated_at' => new Carbon(),
-            'user'       => new User(),
-            'stauts'     => 1,
-        ]);
-
-        $recipe = Factory::build(Recipe::class, [
-            'id'          => 1,
-            'name'        => 'Recipe 1',
-            'desctiption' => '',
-            'body'        => '',
-        ]);
+        $recipe = factory(Recipe::class)->make();
 
         $project = $this->mockProjectModel
             ->shouldReceive('updateDeployment')
