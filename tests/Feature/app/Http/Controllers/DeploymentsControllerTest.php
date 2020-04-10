@@ -57,6 +57,8 @@ class DeploymentsControllerTest extends TestCase
             ->once()
             ->andReturn(new Paginator($deployments, $perPage))
             ->mock();
+        $project->id = 1;
+        $project->name = '';
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -72,11 +74,16 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
     {
+        $deployment = $this->mockDeploymentModel;
+        $deployment->number = 1;
+
         $project = $this->mockProjectModel
             ->shouldReceive('getLastDeployment')
             ->once()
-            ->andReturn($this->mockDeploymentModel)
+            ->andReturn($deployment)
             ->mock();
+        $project->id = 1;
+        $project->name = '';
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -100,7 +107,9 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessFails()
     {
-        $project = factory(Project::class)->make();
+        $project = factory(Project::class)->make([
+            'id' => 1,
+        ]);
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -130,13 +139,18 @@ class DeploymentsControllerTest extends TestCase
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
     {
-        $deployment = factory(Deployment::class)->make();
+        $deployment = factory(Deployment::class)->make([
+            'id' => 1,
+            'project_id' => 1,
+        ]);
 
         $project = $this->mockProjectModel
             ->shouldReceive('getDeploymentByNumber')
             ->once()
             ->andReturn($deployment)
             ->mock();
+        $project->id = 1;
+        $project->name = '';
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
