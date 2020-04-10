@@ -78,6 +78,7 @@ class DeployerServerListFileBuilderTest extends TestCase
             $this->mockYamlParser,
             $this->mockYamlDumper
         );
+        $this->mockServerModel->body = '';
         $serverListFileBuilder->setServer($this->mockServerModel)
             ->setProject($this->mockProjectModel);
         $result = $serverListFileBuilder
