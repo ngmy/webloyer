@@ -3,8 +3,7 @@
 namespace Tests\Unit\app\Services\Notification;
 
 use App\Services\Notification\MailNotifier;
-use Swift_Mailer;
-use Swift_MailTransport;
+use Mail;
 use Tests\TestCase;
 
 class MailNotifierTest extends TestCase
@@ -29,16 +28,9 @@ class MailNotifierTest extends TestCase
 
     public function test_Should_SendEmailNotification_When_ToAddressIsSet()
     {
-        $mockSwiftMailer = $this->mock(Swift_Mailer::class);
-        $mockSwiftMailTransport = $this->partialMock(Swift_MailTransport::class);
-
-        $mockSwiftMailer->shouldReceive('send');
-        $mockSwiftMailer->shouldReceive('getTransport')
-            ->andReturn($mockSwiftMailTransport);
-
-        $this->app['mailer']->setSwiftMailer($mockSwiftMailer);
-
         $notifier = new MailNotifier();
+
+        Mail::shouldReceive('raw');
 
         $notifier->to('to@example.com')->notify('Subject', 'Message');
     }
