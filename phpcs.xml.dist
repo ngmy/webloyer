@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="Application Coding Standard">
+  <description>The application coding standard.</description>
+
+  <file>app</file>
+  <file>tests</file>
+
+  <arg name="basepath" value="."/>
+  <arg name="extensions" value="php"/>
+  <arg name="report" value="full"/>
+  <arg name="colors"/>
+  <arg name="parallel" value="75"/>
+  <arg value="p"/>
+
+  <rule ref="PSR12"/>
+</ruleset>

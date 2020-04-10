@@ -1,0 +1,11 @@
+includes:
+  - vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+  level: max
+  paths:
+    - app
+    - tests
+  reportUnmatchedIgnoredErrors: false
+
+# vim: set ft=yaml:
