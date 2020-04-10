@@ -26,7 +26,7 @@ class UserFormTest extends TestCase
         $this->mockUserModel = $this->partialMock(User::class);
     }
 
-    public function test_Should_SucceedToSave_When_ValidationPassesAndRoleFieldIsNotSpecified()
+    public function testShouldSucceedToSaveWhenValidationPassesAndRoleFieldIsNotSpecified()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -47,7 +47,7 @@ class UserFormTest extends TestCase
         $this->assertTrue($result, 'Expected save to succeed.');
     }
 
-    public function test_Should_SucceedToSave_When_ValidationPassesAndRoleFieldIsSpecified()
+    public function testShouldSucceedToSaveWhenValidationPassesAndRoleFieldIsSpecified()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -73,7 +73,7 @@ class UserFormTest extends TestCase
         $this->assertTrue($result, 'Expected save to succeed.');
     }
 
-    public function test_Should_FailToSave_When_ValidationFails()
+    public function testShouldFailToSaveWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -90,7 +90,7 @@ class UserFormTest extends TestCase
         $this->assertFalse($result, 'Expected save to fail.');
     }
 
-    public function test_Should_SucceedToUpdate_When_ValidationPasses()
+    public function testShouldSucceedToUpdateWhenValidationPasses()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -112,7 +112,7 @@ class UserFormTest extends TestCase
         $this->assertTrue($result, 'Expected update to succeed.');
     }
 
-    public function test_Should_FailToUpdate_When_ValidationFails()
+    public function testShouldFailToUpdateWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -129,7 +129,7 @@ class UserFormTest extends TestCase
         $this->assertFalse($result, 'Expected update to fail.');
     }
 
-    public function test_Should_SucceedToUpdatePassword_When_ValidationPasses()
+    public function testShouldSucceedToUpdatePasswordWhenValidationPasses()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -151,7 +151,7 @@ class UserFormTest extends TestCase
         $this->assertTrue($result, 'Expected update to succeed.');
     }
 
-    public function test_Should_FailToUpdatePassword_When_ValidationFails()
+    public function testShouldFailToUpdatePasswordWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -168,7 +168,7 @@ class UserFormTest extends TestCase
         $this->assertFalse($result, 'Expected update to fail.');
     }
 
-    public function test_Should_SucceedToUpdateRole_When_ValidationPasses()
+    public function testShouldSucceedToUpdateRoleWhenValidationPasses()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -190,7 +190,7 @@ class UserFormTest extends TestCase
         $this->assertTrue($result, 'Expected update to succeed.');
     }
 
-    public function test_Should_FailToUpdateRole_When_ValidationFails()
+    public function testShouldFailToUpdateRoleWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -207,7 +207,7 @@ class UserFormTest extends TestCase
         $this->assertFalse($result, 'Expected update to fail.');
     }
 
-    public function test_Should_GetValidationErrors()
+    public function testShouldGetValidationErrors()
     {
         $this->mockValidator
             ->shouldReceive('errors')

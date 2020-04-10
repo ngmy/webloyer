@@ -10,7 +10,7 @@ class EloquentRoleTest extends TestCase
 {
     protected $useDatabase = true;
 
-    public function test_Should_GetRoleById()
+    public function testShouldGetRoleById()
     {
         $role = factory(Role::class)->create();
 
@@ -21,7 +21,7 @@ class EloquentRoleTest extends TestCase
         $this->assertTrue($role->is($actual));
     }
 
-    public function test_Should_GetRolesByPage()
+    public function testShouldGetRolesByPage()
     {
         $roles = factory(Role::class, 5)->create();
 
@@ -32,7 +32,7 @@ class EloquentRoleTest extends TestCase
         $this->assertCount(5, $actual->items());
     }
 
-    public function test_Should_CreateNewRole()
+    public function testShouldCreateNewRole()
     {
         $sut = $this->makeSut();
 
@@ -45,7 +45,7 @@ class EloquentRoleTest extends TestCase
         $this->assertDatabaseHas('roles', $actual->toArray());
     }
 
-    public function test_Should_UpdateExistingRole()
+    public function testShouldUpdateExistingRole()
     {
         $role = factory(Role::class)->create();
 
@@ -66,7 +66,7 @@ class EloquentRoleTest extends TestCase
         ]);
     }
 
-    public function test_Should_DeleteExistingRole()
+    public function testShouldDeleteExistingRole()
     {
         $role = factory(Role::class)->create();
 

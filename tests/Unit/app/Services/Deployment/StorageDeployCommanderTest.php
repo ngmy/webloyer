@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class StorageDeployCommanderTest extends TestCase
 {
-    public function test_Should_ReturnTrue_When_DeployCommandSucceeds()
+    public function testShouldReturnTrueWhenDeployCommandSucceeds()
     {
         Storage::shouldReceive('put')
             ->once()
@@ -21,7 +21,7 @@ class StorageDeployCommanderTest extends TestCase
         $this->assertTrue($result, 'Expected deploy command to succeed.');
     }
 
-    public function test_Should_ReturnFalse_When_DeployCommandFails()
+    public function testShouldReturnFalseWhenDeployCommandFails()
     {
         Storage::shouldReceive('put')
             ->once()
@@ -33,7 +33,7 @@ class StorageDeployCommanderTest extends TestCase
         $this->assertFalse($result, 'Expected deploy command to fail.');
     }
 
-    public function test_Should_ReturnTrue_When_RollbackCommandSucceeds()
+    public function testShouldReturnTrueWhenRollbackCommandSucceeds()
     {
         Storage::shouldReceive('put')
             ->once()
@@ -45,7 +45,7 @@ class StorageDeployCommanderTest extends TestCase
         $this->assertTrue($result, 'Expected rollback command to succeed.');
     }
 
-    public function test_Should_ReturnFalse_When_RollbackCommandFails()
+    public function testShouldReturnFalseWhenRollbackCommandFails()
     {
         Storage::shouldReceive('put')
             ->once()

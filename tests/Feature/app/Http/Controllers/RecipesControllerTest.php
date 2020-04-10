@@ -41,7 +41,7 @@ class RecipesControllerTest extends TestCase
         $this->mockRecipeModel = $this->partialMock(Recipe::class);
     }
 
-    public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
+    public function testShouldDisplayIndexPageWhenIndexPageIsRequested()
     {
         $recipe1 = $this->mockRecipeModel
             ->shouldReceive('getProjects')
@@ -70,14 +70,14 @@ class RecipesControllerTest extends TestCase
         $response->assertViewHas('recipes');
     }
 
-    public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
+    public function testShouldDisplayCreatePageWhenCreatePageIsRequested()
     {
         $response = $this->get('recipes/create');
 
         $response->assertStatus(200);
     }
 
-    public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenStoreProcessSucceeds()
     {
         $this->mockRecipeForm
             ->shouldReceive('save')
@@ -89,7 +89,7 @@ class RecipesControllerTest extends TestCase
         $response->assertRedirect('recipes');
     }
 
-    public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
+    public function testShouldRedirectToCreatePageWhenStoreProcessFails()
     {
         $this->mockRecipeForm
             ->shouldReceive('save')
@@ -107,7 +107,7 @@ class RecipesControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayShowPageWhenShowPageIsRequestedAndResourceIsFound()
     {
         $recipe = $this->mockRecipeModel
             ->shouldReceive('getProjects')
@@ -128,7 +128,7 @@ class RecipesControllerTest extends TestCase
         $response->assertViewHas('recipe');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenShowPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -140,7 +140,7 @@ class RecipesControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayEditPageWhenEditPageIsRequestedAndResourceIsFound()
     {
         $recipe = factory(Recipe::class)->make([
             'id' => 1,
@@ -157,7 +157,7 @@ class RecipesControllerTest extends TestCase
         $response->assertViewHas('recipe');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenEditPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -169,7 +169,7 @@ class RecipesControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenUpdateProcessSucceeds()
     {
         $recipe = factory(Recipe::class)->make();
 
@@ -188,7 +188,7 @@ class RecipesControllerTest extends TestCase
         $response->assertRedirect('recipes');
     }
 
-    public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
+    public function testShouldRedirectToEditPageWhenUpdateProcessFails()
     {
         $recipe = factory(Recipe::class)->make([
             'id' => 1,
@@ -215,7 +215,7 @@ class RecipesControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenUpdateProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockRecipeRepository
             ->shouldReceive('byId')
@@ -227,7 +227,7 @@ class RecipesControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenDestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
         $recipe = factory(Recipe::class)->make();
 
@@ -245,7 +245,7 @@ class RecipesControllerTest extends TestCase
         $response->assertRedirect('recipes');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenDestroyProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockRecipeRepository
             ->shouldReceive('byId')

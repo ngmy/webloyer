@@ -6,7 +6,6 @@ use App\Repositories\Setting\ConfigDbSetting;
 use App\Services\Config\DotenvReader;
 use App\Services\Config\DotenvWriter;
 use App\Services\Filesystem\LaravelFilesystem;
-
 use org\bovigo\vfs\vfsStream;
 use Tests\TestCase;
 
@@ -21,7 +20,7 @@ class ConfigDbSettingTest extends TestCase
         $this->rootDir = vfsStream::setup('rootDir');
     }
 
-    public function test_Should_GetAllDbSettings()
+    public function testShouldGetAllDbSettings()
     {
         $config = <<<EOF
 DB_DRIVER=mysql
@@ -50,14 +49,14 @@ EOF;
 
         $dbSettings = $configDbSettingRepository->all();
 
-        $this->assertEquals('mysql',     $dbSettings->getDriver());
+        $this->assertEquals('mysql', $dbSettings->getDriver());
         $this->assertEquals('localhost', $dbSettings->getHost());
-        $this->assertEquals('database',  $dbSettings->getDatabase());
-        $this->assertEquals('username',  $dbSettings->getUsername());
-        $this->assertEquals('password',  $dbSettings->getPassword());
+        $this->assertEquals('database', $dbSettings->getDatabase());
+        $this->assertEquals('username', $dbSettings->getUsername());
+        $this->assertEquals('password', $dbSettings->getPassword());
     }
 
-    public function test_Should_UpdateExistingDbSettings()
+    public function testShouldUpdateExistingDbSettings()
     {
         vfsStream::newFile('.env')->at($this->rootDir);
 
@@ -83,10 +82,10 @@ EOF;
             'password' => 'password',
         ]);
 
-        $this->assertEquals('mysql',     $dotenvReader->getConfig('DB_DRIVER'));
+        $this->assertEquals('mysql', $dotenvReader->getConfig('DB_DRIVER'));
         $this->assertEquals('localhost', $dotenvReader->getConfig('DB_HOST'));
-        $this->assertEquals('database',  $dotenvReader->getConfig('DB_DATABASE'));
-        $this->assertEquals('username',  $dotenvReader->getConfig('DB_USERNAME'));
-        $this->assertEquals('password',  $dotenvReader->getConfig('DB_PASSWORD'));
+        $this->assertEquals('database', $dotenvReader->getConfig('DB_DATABASE'));
+        $this->assertEquals('username', $dotenvReader->getConfig('DB_USERNAME'));
+        $this->assertEquals('password', $dotenvReader->getConfig('DB_PASSWORD'));
     }
 }

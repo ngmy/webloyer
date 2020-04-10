@@ -13,7 +13,7 @@ class ProjectTest extends TestCase
 {
     protected $useDatabase = true;
 
-    public function test_Should_GetDeploymentsWhereCreatedAtBefore()
+    public function testShouldGetDeploymentsWhereCreatedAtBefore()
     {
         $user = factory(User::class)->create();
         $server = factory(Server::class)->create();
@@ -51,7 +51,7 @@ class ProjectTest extends TestCase
         $this->assertTrue($actual[1]->is($deployment1));
     }
 
-    public function test_Should_GetDeploymentsWhereNumberBefore()
+    public function testShouldGetDeploymentsWhereNumberBefore()
     {
         $user = factory(User::class)->create();
         $server = factory(Server::class)->create();

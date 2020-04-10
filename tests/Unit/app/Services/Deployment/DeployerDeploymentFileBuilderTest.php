@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\app\Services\Deployment;
 
-
 use App\Models\Project;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerFile;
@@ -30,7 +29,7 @@ class DeployerDeploymentFileBuilderTest extends TestCase
         $this->mockServerListFile = $this->mock(DeployerFile::class);
     }
 
-    public function test_Should_BuildDeployerDeploymentFile()
+    public function testShouldBuildDeployerDeploymentFile()
     {
         $this->mockFilesystem
             ->shouldReceive('delete')
@@ -52,7 +51,7 @@ class DeployerDeploymentFileBuilderTest extends TestCase
 
         $deploymentFileBuilder = new DeployerDeploymentFileBuilder(
             $this->mockFilesystem,
-            new DeployerFile
+            new DeployerFile()
         );
         $deploymentFileBuilder->setProject($this->mockProjectModel)
             ->setServerListFile($mockServerListFile)

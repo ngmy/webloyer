@@ -19,9 +19,9 @@ class OldDeploymentSpecificationTest extends TestCase
         $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
-    public function test_Should_GetSatisfyingElements_When_DaysToKeepDeploymentsIsSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsSet()
+    public function testShouldGetSatisfyingElementsWhenDaysToKeepDeploymentsIsSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsSet()
     {
-        $date = new DateTime;
+        $date = new DateTime();
         $spec = new OldDeploymentSpecification($date);
 
         $deployment1 = $this->partialMock(Deployment::class);
@@ -76,9 +76,9 @@ class OldDeploymentSpecificationTest extends TestCase
         $this->assertEquals($deployment1, $oldDeployments[2]);
     }
 
-    public function test_Should_GetSatisfyingElements_When_DaysToKeepDeploymentsIsNotSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsSet()
+    public function testShouldGetSatisfyingElementsWhenDaysToKeepDeploymentsIsNotSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsSet()
     {
-        $date = new DateTime;
+        $date = new DateTime();
         $spec = new OldDeploymentSpecification($date);
 
         $deployment1 = $this->partialMock(Deployment::class);
@@ -125,9 +125,9 @@ class OldDeploymentSpecificationTest extends TestCase
         $this->assertEquals($deployment1, $oldDeployments[2]);
     }
 
-    public function test_Should_GetSatisfyingElements_When_DaysToKeepDeploymentsIsSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsNotSet()
+    public function testShouldGetSatisfyingElementsWhenDaysToKeepDeploymentsIsSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsNotSet()
     {
-        $date = new DateTime;
+        $date = new DateTime();
         $spec = new OldDeploymentSpecification($date);
 
         $deployment1 = $this->partialMock(Deployment::class);
@@ -163,9 +163,9 @@ class OldDeploymentSpecificationTest extends TestCase
         $this->assertEquals($deployment1, $oldDeployments[1]);
     }
 
-    public function test_Should_GetSatisfyingElements_When_DaysToKeepDeploymentsIsSetAndKeepLastDeploymentIsTrueMaxNumberDeploymentsToKeepIsNotSet()
+    public function testShouldGetSatisfyingElementsWhenDaysToKeepDeploymentsIsSetAndKeepLastDeploymentIsTrueMaxNumberDeploymentsToKeepIsNotSet()
     {
-        $date = new DateTime;
+        $date = new DateTime();
         $spec = new OldDeploymentSpecification($date);
 
         $deployment1 = $this->partialMock(Deployment::class);
@@ -203,9 +203,9 @@ class OldDeploymentSpecificationTest extends TestCase
         $this->assertEquals($deployment1, $oldDeployments[0]);
     }
 
-    public function test_Should_GetSatisfyingElements_When_DaysToKeepDeploymentsIsNotSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsNotSet()
+    public function testShouldGetSatisfyingElementsWhenDaysToKeepDeploymentsIsNotSetAndKeepLastDeploymentIsFalseAndMaxNumberDeploymentsToKeepIsNotSet()
     {
-        $date = new DateTime;
+        $date = new DateTime();
         $spec = new OldDeploymentSpecification($date);
 
         $deployment1 = $this->partialMock(Deployment::class);
@@ -232,9 +232,9 @@ class OldDeploymentSpecificationTest extends TestCase
         $this->assertEmpty($oldDeployments);
     }
 
-    public function test_Should_GetSatisfyingElements_When_DeploymentsDoNotExists()
+    public function testShouldGetSatisfyingElementsWhenDeploymentsDoNotExists()
     {
-        $date = new DateTime;
+        $date = new DateTime();
         $spec = new OldDeploymentSpecification($date);
 
         $deployments = collect([]);

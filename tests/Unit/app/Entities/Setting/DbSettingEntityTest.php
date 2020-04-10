@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class DbSettingEntityTest extends TestCase
 {
-    public function test_Should_SetAndGetDriver()
+    public function testShouldSetAndGetDriver()
     {
         $dbSettingEntity = new DbSettingEntity();
 
@@ -18,7 +18,7 @@ class DbSettingEntityTest extends TestCase
         $this->assertEquals('mysql', $driver);
     }
 
-    public function test_Should_SetAndGetHost()
+    public function testShouldSetAndGetHost()
     {
         $dbSettingEntity = new DbSettingEntity();
 
@@ -29,7 +29,7 @@ class DbSettingEntityTest extends TestCase
         $this->assertEquals('localhost', $retHost);
     }
 
-    public function test_Should_SetAndGetDatabase()
+    public function testShouldSetAndGetDatabase()
     {
         $dbSettingEntity = new DbSettingEntity();
 
@@ -40,7 +40,7 @@ class DbSettingEntityTest extends TestCase
         $this->assertEquals('webloyer', $database);
     }
 
-    public function test_Should_SetAndGetUsername()
+    public function testShouldSetAndGetUsername()
     {
         $dbSettingEntity = new DbSettingEntity();
 
@@ -51,7 +51,7 @@ class DbSettingEntityTest extends TestCase
         $this->assertEquals('username', $username);
     }
 
-    public function test_Should_SetAndGetPassword()
+    public function testShouldSetAndGetPassword()
     {
         $dbSettingEntity = new DbSettingEntity();
 

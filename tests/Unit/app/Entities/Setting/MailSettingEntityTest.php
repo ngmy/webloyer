@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class MailSettingEntityTest extends TestCase
 {
-    public function test_Should_SetAndGetDriver()
+    public function testShouldSetAndGetDriver()
     {
         $mailSettingEntity = new MailSettingEntity();
 
@@ -18,7 +18,7 @@ class MailSettingEntityTest extends TestCase
         $this->assertEquals('smtp', $driver);
     }
 
-    public function test_Should_SetAndGetFrom()
+    public function testShouldSetAndGetFrom()
     {
         $mailSettingEntity = new MailSettingEntity();
 
@@ -32,7 +32,7 @@ class MailSettingEntityTest extends TestCase
         $this->assertEquals($from, $retFrom);
     }
 
-    public function test_Should_SetAndGetSmtpHost()
+    public function testShouldSetAndGetSmtpHost()
     {
         $mailSettingEntity = new MailSettingEntity();
 
@@ -43,7 +43,7 @@ class MailSettingEntityTest extends TestCase
         $this->assertEquals('localhost', $smtpHost);
     }
 
-    public function test_Should_SetAndGetSmtpPort()
+    public function testShouldSetAndGetSmtpPort()
     {
         $mailSettingEntity = new MailSettingEntity();
 
@@ -54,7 +54,7 @@ class MailSettingEntityTest extends TestCase
         $this->assertEquals(587, $smtpPort);
     }
 
-    public function test_Should_SetAndGetSmtpEncryption()
+    public function testShouldSetAndGetSmtpEncryption()
     {
         $mailSettingEntity = new MailSettingEntity();
 
@@ -65,7 +65,7 @@ class MailSettingEntityTest extends TestCase
         $this->assertEquals('tls', $smtpEncryption);
     }
 
-    public function test_Should_SetAndGetSmtpUsername()
+    public function testShouldSetAndGetSmtpUsername()
     {
         $mailSettingEntity = new MailSettingEntity();
 
@@ -76,7 +76,7 @@ class MailSettingEntityTest extends TestCase
         $this->assertEquals('username@example.com', $smtpUsername);
     }
 
-    public function test_Should_SetAndGetSmtpPassword()
+    public function testShouldSetAndGetSmtpPassword()
     {
         $mailSettingEntity = new MailSettingEntity();
 
@@ -87,7 +87,7 @@ class MailSettingEntityTest extends TestCase
         $this->assertEquals('password', $smtpPassword);
     }
 
-    public function test_Should_SetAndGetSendmailPath()
+    public function testShouldSetAndGetSendmailPath()
     {
         $mailSettingEntity = new MailSettingEntity();
 

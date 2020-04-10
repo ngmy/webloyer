@@ -17,7 +17,7 @@ class LaravelFilesystemTest extends TestCase
         $this->rootDir = vfsStream::setup('rootDir');
     }
 
-    public function test_Should_WriteFile()
+    public function testShouldWriteFile()
     {
         $fs = new LaravelFilesystem($this->app['files']);
         $fs->put(vfsStream::url('rootDir/file'), 'contents');
@@ -27,7 +27,7 @@ class LaravelFilesystemTest extends TestCase
         $this->assertEquals('contents', $putFile);
     }
 
-    public function test_Should_ReadFile()
+    public function testShouldReadFile()
     {
         $file = vfsStream::newFile('file')->at($this->rootDir)->setContent('contents');
 
@@ -37,7 +37,7 @@ class LaravelFilesystemTest extends TestCase
         $this->assertEquals('contents', $getFile);
     }
 
-    public function test_Should_DeleteFile()
+    public function testShouldDeleteFile()
     {
         $file = vfsStream::newFile('file')->at($this->rootDir);
 

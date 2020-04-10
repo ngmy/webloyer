@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class MailSettingFormLaravelValidatorTest extends TestCase
 {
-    public function test_Should_PassToValidate_When_AllFieldsIsValid()
+    public function testShouldPassToValidateWhenAllFieldsIsValid()
     {
         $input = [
             'driver'            => 'smtp',
@@ -31,7 +31,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function test_Should_FailToValidate_When_DriverFieldIsMissing()
+    public function testShouldFailToValidateWhenDriverFieldIsMissing()
     {
         $input = [
             'from_address'      => 'from_address@example.com',
@@ -53,7 +53,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_DriverFieldIsInvalid()
+    public function testShouldFailToValidateWhenDriverFieldIsInvalid()
     {
         $input = [
             'driver'            => 'invalid',
@@ -76,7 +76,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_FromAddressFieldIsMissing()
+    public function testShouldFailToValidateWhenFromAddressFieldIsMissing()
     {
         $input = [
             'driver'            => 'smtp',
@@ -98,7 +98,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_FromAddressFieldIsInvalid()
+    public function testShouldFailToValidateWhenFromAddressFieldIsInvalid()
     {
         $input = [
             'driver'            => 'smtp',
@@ -121,7 +121,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_PassToValidate_When_SmtpPortFieldIsEqualToMin()
+    public function testShouldPassToValidateWhenSmtpPortFieldIsEqualToMin()
     {
         $input = [
             'driver'            => 'smtp',
@@ -144,7 +144,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function test_Should_PassToValidate_When_SmtpPortFieldIsEqualToMax()
+    public function testShouldPassToValidateWhenSmtpPortFieldIsEqualToMax()
     {
         $input = [
             'driver'            => 'smtp',
@@ -167,7 +167,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function test_Should_FailToValidate_When_SmtpPortFieldIsLessThanMin()
+    public function testShouldFailToValidateWhenSmtpPortFieldIsLessThanMin()
     {
         $input = [
             'driver'            => 'smtp',
@@ -190,7 +190,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_SmtpPortFieldIsGreaterThanMax()
+    public function testShouldFailToValidateWhenSmtpPortFieldIsGreaterThanMax()
     {
         $input = [
             'driver'            => 'smtp',
@@ -213,7 +213,7 @@ class MailSettingFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_SmtpEncryptionFieldIsInvalid()
+    public function testShouldFailToValidateWhenSmtpEncryptionFieldIsInvalid()
     {
         $input = [
             'driver'            => 'smtp',

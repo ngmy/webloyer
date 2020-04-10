@@ -43,7 +43,7 @@ class UsersControllerTest extends TestCase
         $this->mockUserForm = $this->mock(UserForm::class);
     }
 
-    public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
+    public function testShouldDisplayIndexPageWhenIndexPageIsRequested()
     {
         $i = 1;
         $users = factory(User::class, 3)->make()->each(function (User $user) use ($i) {
@@ -63,7 +63,7 @@ class UsersControllerTest extends TestCase
         $response->assertViewHas('users');
     }
 
-    public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
+    public function testShouldDisplayCreatePageWhenCreatePageIsRequested()
     {
         $this->mockRoleRepsitory
             ->shouldReceive('all')
@@ -75,7 +75,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenStoreProcessSucceeds()
     {
         $this->mockUserForm
             ->shouldReceive('save')
@@ -87,7 +87,7 @@ class UsersControllerTest extends TestCase
         $response->assertRedirect('users');
     }
 
-    public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
+    public function testShouldRedirectToCreatePageWhenStoreProcessFails()
     {
         $this->mockUserForm
             ->shouldReceive('save')
@@ -105,7 +105,7 @@ class UsersControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
+    public function testShouldRedirectToEditPageWhenShowPageIsRequestedAndResourceIsFound()
     {
         $user = factory(User::class)->make([
             'id' => 1,
@@ -121,7 +121,7 @@ class UsersControllerTest extends TestCase
         $response->assertRedirect('users/1/edit');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenShowPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -133,7 +133,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayEditPageWhenEditPageIsRequestedAndResourceIsFound()
     {
         $user = factory(User::class)->make([
             'id' => 1,
@@ -150,7 +150,7 @@ class UsersControllerTest extends TestCase
         $response->assertViewHas('user');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenEditPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -162,7 +162,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenUpdateProcessSucceeds()
     {
         $user = factory(User::class)->make();
 
@@ -181,7 +181,7 @@ class UsersControllerTest extends TestCase
         $response->assertRedirect('users');
     }
 
-    public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
+    public function testShouldRedirectToEditPageWhenUpdateProcessFails()
     {
         $user = factory(User::class)->make([
             'id' => 1,
@@ -208,7 +208,7 @@ class UsersControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenUpdateProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -220,7 +220,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_DisplayPasswordChangePage_When_PasswordChangePageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayPasswordChangePageWhenPasswordChangePageIsRequestedAndResourceIsFound()
     {
         $user = factory(User::class)->make([
             'id' => 1,
@@ -237,7 +237,7 @@ class UsersControllerTest extends TestCase
         $response->assertViewHas('user');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_PasswordChangePageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenPasswordChangePageIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -249,7 +249,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_PasswordUpdateProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenPasswordUpdateProcessSucceeds()
     {
         $user = factory(User::class)->make();
 
@@ -268,7 +268,7 @@ class UsersControllerTest extends TestCase
         $response->assertRedirect('users');
     }
 
-    public function test_Should_RedirectToPasswordChangePage_When_PasswordUpdateProcessFails()
+    public function testShouldRedirectToPasswordChangePageWhenPasswordUpdateProcessFails()
     {
         $user = factory(User::class)->make([
             'id' => 1,
@@ -295,7 +295,7 @@ class UsersControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayNotFoundPage_When_PasswordUpdateProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenPasswordUpdateProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -307,7 +307,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_DisplayEditRolePage_When_EditRolePageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayEditRolePageWhenEditRolePageIsRequestedAndResourceIsFound()
     {
         $user = factory(User::class)->make([
             'id' => 1,
@@ -329,7 +329,7 @@ class UsersControllerTest extends TestCase
         $response->assertViewHas('user');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_EditRolePageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenEditRolePageIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -341,7 +341,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_RoleUpdateProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenRoleUpdateProcessSucceeds()
     {
         $user = factory(User::class)->make();
 
@@ -360,7 +360,7 @@ class UsersControllerTest extends TestCase
         $response->assertRedirect('users');
     }
 
-    public function test_Should_RedirectToEditRolePage_When_EditUpdateProcessFails()
+    public function testShouldRedirectToEditRolePageWhenEditUpdateProcessFails()
     {
         $user = factory(User::class)->make([
             'id'         => 1,
@@ -392,7 +392,7 @@ class UsersControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayNotFoundPage_When_RoleUpdateProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenRoleUpdateProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')
@@ -404,7 +404,7 @@ class UsersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenDestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
         $user = factory(User::class)->make();
 
@@ -422,7 +422,7 @@ class UsersControllerTest extends TestCase
         $response->assertRedirect('users');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenDestroyProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockUserRepository
             ->shouldReceive('byId')

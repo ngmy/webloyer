@@ -32,7 +32,7 @@ class DeploymentFormTest extends TestCase
         $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
-    public function test_Should_SucceedToSave_When_ValidationPasses()
+    public function testShouldSucceedToSaveWhenValidationPasses()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -82,7 +82,7 @@ class DeploymentFormTest extends TestCase
         $this->assertTrue($result, 'Expected save to succeed.');
     }
 
-    public function test_Should_SucceedToSave_When_ValidationPassesAndSaveToDatabaseSucceeds()
+    public function testShouldSucceedToSaveWhenValidationPassesAndSaveToDatabaseSucceeds()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -132,7 +132,7 @@ class DeploymentFormTest extends TestCase
         $this->assertTrue($result, 'Expected save to succeed.');
     }
 
-    public function test_Should_FailToSave_When_ValidationPassesAndSaveToDatabaseFails()
+    public function testShouldFailToSaveWhenValidationPassesAndSaveToDatabaseFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -177,7 +177,7 @@ class DeploymentFormTest extends TestCase
         $this->assertFalse($result, 'Expected save to fail.');
     }
 
-    public function test_Should_FailToSave_When_ValidationFails()
+    public function testShouldFailToSaveWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -198,7 +198,7 @@ class DeploymentFormTest extends TestCase
         $this->assertFalse($result, 'Expected save to fail.');
     }
 
-    public function test_Should_GetValidationErrors()
+    public function testShouldGetValidationErrors()
     {
         $this->mockValidator
             ->shouldReceive('errors')

@@ -12,7 +12,7 @@ class UserFormLaravelValidatorTest extends TestCase
 {
     protected $useDatabase = true;
 
-    public function test_Should_PassToValidate_When_NameFieldIsValid()
+    public function testShouldPassToValidateWhenNameFieldIsValid()
     {
         $input = [
             'name' => 'User 1',
@@ -27,7 +27,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function test_Should_PassToValidate_When_EmailFieldIsValid()
+    public function testShouldPassToValidateWhenEmailFieldIsValid()
     {
         $input = [
             'email' => 'user1@example.com',
@@ -42,7 +42,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function test_Should_FailToValidate_When_EmailFieldIsInvalid()
+    public function testShouldFailToValidateWhenEmailFieldIsInvalid()
     {
         $input = [
             'email' => 'invalid',
@@ -57,7 +57,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_PassToValidate_When_PasswordFieldAndPasswordConfirmationFieldAreValid()
+    public function testShouldPassToValidateWhenPasswordFieldAndPasswordConfirmationFieldAreValid()
     {
         $input = [
             'password'              => '12345678',
@@ -73,7 +73,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function test_Should_FailToValidate_When_PasswordFieldAndPasswordConfirmationFieldAreInvalid()
+    public function testShouldFailToValidateWhenPasswordFieldAndPasswordConfirmationFieldAreInvalid()
     {
         $input = [
             'password'              => '1234567',
@@ -89,7 +89,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_PasswordFieldAndPasswordConfirmationFieldAreDifferent()
+    public function testShouldFailToValidateWhenPasswordFieldAndPasswordConfirmationFieldAreDifferent()
     {
         $input = [
             'password'              => '12345678',
@@ -105,7 +105,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_PassToValidate_When_RoleFieldIsValid()
+    public function testShouldPassToValidateWhenRoleFieldIsValid()
     {
         $role1 = factory(Role::class)->create();
         $role2 = factory(Role::class)->create();
@@ -123,7 +123,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function test_Should_FailToValidate_When_RoleFieldIsInvalid()
+    public function testShouldFailToValidateWhenRoleFieldIsInvalid()
     {
         $input = [
             'role' => [1],
@@ -138,7 +138,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsNotSpecified()
+    public function testShouldFailToValidateWhenEmailFieldIsNotUniqueAndIdFieldIsNotSpecified()
     {
         $user = factory(User::class)->create();
 
@@ -155,7 +155,7 @@ class UserFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_PassToValidate_When_EmailFieldIsNotUniqueAndIdFieldIsSpecified()
+    public function testShouldPassToValidateWhenEmailFieldIsNotUniqueAndIdFieldIsSpecified()
     {
         $user = factory(User::class)->create();
 

@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class MailNotifierTest extends TestCase
 {
-    public function test_Should_SetFromAddressAndReturnThis()
+    public function testShouldSetFromAddressAndReturnThis()
     {
         $notifier = new MailNotifier();
 
@@ -17,7 +17,7 @@ class MailNotifierTest extends TestCase
         $this->assertEquals($notifier, $result);
     }
 
-    public function test_Should_SetToAddressAndReturnThis()
+    public function testShouldSetToAddressAndReturnThis()
     {
         $notifier = new MailNotifier();
 
@@ -26,7 +26,7 @@ class MailNotifierTest extends TestCase
         $this->assertEquals($notifier, $result);
     }
 
-    public function test_Should_SendEmailNotification_When_ToAddressIsSet()
+    public function testShouldSendEmailNotificationWhenToAddressIsSet()
     {
         $notifier = new MailNotifier();
 

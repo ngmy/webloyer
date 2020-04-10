@@ -18,7 +18,7 @@ class DotenvReaderTest extends TestCase
         $this->rootDir = vfsStream::setup('rootDir');
     }
 
-    public function test_Should_GetConfigValue_When_ConfigExistsAndValueIsNotEmpty()
+    public function testShouldGetConfigValueWhenConfigExistsAndValueIsNotEmpty()
     {
         $contents = <<<EOF
 NAME1=value1
@@ -39,7 +39,7 @@ EOF;
         $this->assertEquals('value1', $value);
     }
 
-    public function test_Should_GetConfigValue_When_ConfigExistsAndValueIsSingleQuoted()
+    public function testShouldGetConfigValueWhenConfigExistsAndValueIsSingleQuoted()
     {
         $contents = <<<EOF
 NAME1=value1
@@ -60,7 +60,7 @@ EOF;
         $this->assertEquals("'value2'", $value);
     }
 
-    public function test_Should_GetConfigValue_When_ConfigExistsAndValueHasWhitespaces()
+    public function testShouldGetConfigValueWhenConfigExistsAndValueHasWhitespaces()
     {
         $contents = <<<EOF
 NAME1=value1
@@ -81,7 +81,7 @@ EOF;
         $this->assertEquals(' v a l u e 3 ', $value);
     }
 
-    public function test_Should_GetNull_When_ConfigExistsAndValueIsEmpty()
+    public function testShouldGetNullWhenConfigExistsAndValueIsEmpty()
     {
         $contents = <<<EOF
 NAME1=value1
@@ -102,7 +102,7 @@ EOF;
         $this->assertNull($value);
     }
 
-    public function test_Should_GetNull_When_ConfigDoesNotExist()
+    public function testShouldGetNullWhenConfigDoesNotExist()
     {
         $contents = <<<EOF
 NAME1=value1

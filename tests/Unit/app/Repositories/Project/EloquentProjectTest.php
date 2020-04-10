@@ -17,7 +17,7 @@ class EloquentProjectTest extends TestCase
     /** @var EloquentProject */
     private $sut;
 
-    public function test_Should_GetProjectById()
+    public function testShouldGetProjectById()
     {
         $server = factory(Server::class)->create();
         $project = factory(Project::class)->create([
@@ -29,7 +29,7 @@ class EloquentProjectTest extends TestCase
         $this->assertTrue($project->is($actual));
     }
 
-    public function test_Should_GetProjectsByPage()
+    public function testShouldGetProjectsByPage()
     {
         $server = factory(Server::class)->create();
         $i = 1;
@@ -50,7 +50,7 @@ class EloquentProjectTest extends TestCase
         $this->assertTrue($projects[4]->is($actual[4]));
     }
 
-    public function test_Should_CreateNewProject()
+    public function testShouldCreateNewProject()
     {
         $server = factory(Server::class)->create();
 
@@ -65,7 +65,7 @@ class EloquentProjectTest extends TestCase
         $this->assertDatabaseHas('projects', $actual->toArray());
     }
 
-    public function test_Should_UpdateExistingProject()
+    public function testShouldUpdateExistingProject()
     {
         $server1 = factory(Server::class)->create();
         $server2 = factory(Server::class)->create();
@@ -84,7 +84,7 @@ class EloquentProjectTest extends TestCase
         ]);
     }
 
-    public function test_Should_DeleteExistingProject()
+    public function testShouldDeleteExistingProject()
     {
         $recipe = factory(Recipe::class)->create();
         $server = factory(Server::class)->create();

@@ -60,7 +60,7 @@ class ProjectsControllerTest extends TestCase
         $this->mockProjectAttributeEntity = $this->mock(ProjectAttributeEntity::class);
     }
 
-    public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
+    public function testShouldDisplayIndexPageWhenIndexPageIsRequested()
     {
         $project = $this->mockProjectModel
             ->shouldReceive('getLastDeployment')
@@ -87,7 +87,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertViewHas('projects');
     }
 
-    public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
+    public function testShouldDisplayCreatePageWhenCreatePageIsRequested()
     {
         $this->mockRecipeRepository
             ->shouldReceive('all')
@@ -109,7 +109,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenStoreProcessSucceeds()
     {
         $this->mockProjectForm
             ->shouldReceive('save')
@@ -121,7 +121,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertRedirect('projects');
     }
 
-    public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
+    public function testShouldRedirectToCreatePageWhenStoreProcessFails()
     {
         $this->mockProjectForm
             ->shouldReceive('save')
@@ -139,7 +139,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayShowPageWhenShowPageIsRequestedAndResourceIsFound()
     {
         $this->mockProjectAttributeEntity
             ->shouldReceive('getDeployPath')
@@ -176,7 +176,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertViewHas('project');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenShowPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -188,7 +188,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayEditPageWhenEditPageIsRequestedAndResourceIsFound()
     {
         $this->mockProjectAttributeEntity
             ->shouldReceive('getDeployPath')
@@ -231,7 +231,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertViewHas('project');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenEditPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -243,7 +243,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenUpdateProcessSucceeds()
     {
         $project = factory(Project::class)->make();
 
@@ -262,7 +262,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertRedirect('projects');
     }
 
-    public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
+    public function testShouldRedirectToEditPageWhenUpdateProcessFails()
     {
         $project = factory(Project::class)->make([
             'id' => 1,
@@ -290,7 +290,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenUpdateProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -302,7 +302,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenDestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
         $project = factory(Project::class)->make([
             'id'         => 1,
@@ -325,7 +325,7 @@ class ProjectsControllerTest extends TestCase
         $response->assertRedirect('projects');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenDestroyProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockProjectRepository
             ->shouldReceive('byId')

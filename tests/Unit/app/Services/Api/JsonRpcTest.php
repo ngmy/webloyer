@@ -37,7 +37,7 @@ class JsonRpcTest extends TestCase
         $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
-    public function test_Should_NotThrowWException_When_DeployProcedureSucceeds()
+    public function testShouldNotThrowWExceptionWhenDeployProcedureSucceeds()
     {
         try {
             $this->mockAuthGuard
@@ -71,7 +71,7 @@ class JsonRpcTest extends TestCase
         }
     }
 
-    public function test_Should_ThrowWException_When_DeployProcedureFails()
+    public function testShouldThrowWExceptionWhenDeployProcedureFails()
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -100,7 +100,7 @@ class JsonRpcTest extends TestCase
         $jsonRpc->deploy(1);
     }
 
-    public function test_Should_NotThrowWException_When_RollbackProcedureSucceeds()
+    public function testShouldNotThrowWExceptionWhenRollbackProcedureSucceeds()
     {
         try {
             $this->mockAuthGuard
@@ -134,7 +134,7 @@ class JsonRpcTest extends TestCase
         }
     }
 
-    public function test_Should_ThrowWException_When_RollbackProcedureFails()
+    public function testShouldThrowWExceptionWhenRollbackProcedureFails()
     {
         $this->expectException(InvalidArgumentException::class);
 

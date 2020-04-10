@@ -42,7 +42,7 @@ class SettingsControllerTest extends TestCase
         $this->mockMailSettingEntity = $this->mock(MailSettingEntity::class);
     }
 
-    public function test_Should_DisplayEmailSettingPage()
+    public function testShouldDisplayEmailSettingPage()
     {
         $this->mockMailSettingEntity
             ->shouldReceive('getDriver')
@@ -76,7 +76,7 @@ class SettingsControllerTest extends TestCase
         $response->assertViewHas('settings');
     }
 
-    public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessSucceeds()
+    public function testShouldRedirectToEmailSettingPageWhenEmailSettingProcessIsRequestedAndEmailSettingProcessSucceeds()
     {
         $this->mockMailSettingForm
             ->shouldReceive('update')
@@ -88,7 +88,7 @@ class SettingsControllerTest extends TestCase
         $response->assertRedirect('settings/email');
     }
 
-    public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessFails()
+    public function testShouldRedirectToEmailSettingPageWhenEmailSettingProcessIsRequestedAndEmailSettingProcessFails()
     {
         $this->mockMailSettingForm
             ->shouldReceive('update')

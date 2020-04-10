@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class ServerFormLaravelValidatorTest extends TestCase
 {
-    public function test_Should_FailToValidate_When_NameFieldIsMissing()
+    public function testShouldFailToValidateWhenNameFieldIsMissing()
     {
         $input = [
             'description' => '',
@@ -23,7 +23,7 @@ class ServerFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_BodyFieldIsMissing()
+    public function testShouldFailToValidateWhenBodyFieldIsMissing()
     {
         $input = [
             'name'        => 'Server 1',
@@ -39,7 +39,7 @@ class ServerFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_PassToValidate_When_NameFieldAndBodyFieldAreValid()
+    public function testShouldPassToValidateWhenNameFieldAndBodyFieldAreValid()
     {
         $input = [
             'name'        => 'Server 1',

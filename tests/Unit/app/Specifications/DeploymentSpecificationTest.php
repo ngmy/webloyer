@@ -18,9 +18,9 @@ class DeploymentSpecificationTest extends TestCase
         $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
-    public function test_Should_GetSatisfyingElements()
+    public function testShouldGetSatisfyingElements()
     {
-        $spec = new DeploymentSpecification;
+        $spec = new DeploymentSpecification();
 
         $deployment1 = $this->partialMock(Deployment::class);
         $deployment2 = $this->partialMock(Deployment::class);

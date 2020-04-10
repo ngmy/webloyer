@@ -46,7 +46,7 @@ class DeploymentsControllerTest extends TestCase
         $this->mockDeploymentModel = $this->partialMock(Deployment::class);
     }
 
-    public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
+    public function testShouldDisplayIndexPageWhenIndexPageIsRequested()
     {
         $deployments = factory(Deployment::class, 3)->make();
 
@@ -72,7 +72,7 @@ class DeploymentsControllerTest extends TestCase
         $response->assertViewHas('project');
     }
 
-    public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenStoreProcessSucceeds()
     {
         $deployment = $this->mockDeploymentModel;
         $deployment->number = 1;
@@ -105,7 +105,7 @@ class DeploymentsControllerTest extends TestCase
         $response->assertRedirect('projects/1/deployments');
     }
 
-    public function test_Should_RedirectToIndexPage_When_StoreProcessFails()
+    public function testShouldRedirectToIndexPageWhenStoreProcessFails()
     {
         $project = factory(Project::class)->make([
             'id' => 1,
@@ -137,7 +137,7 @@ class DeploymentsControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayShowPageWhenShowPageIsRequestedAndResourceIsFound()
     {
         $deployment = factory(Deployment::class)->make([
             'id' => 1,
@@ -163,7 +163,7 @@ class DeploymentsControllerTest extends TestCase
         $response->assertViewHas('deployment');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenShowPageIsRequestedAndResourceIsNotFound()
     {
         $project = $this->mockProjectModel
             ->shouldReceive('getDeploymentByNumber')

@@ -6,7 +6,6 @@ use App\Repositories\Setting\ConfigMailSetting;
 use App\Services\Config\DotenvReader;
 use App\Services\Config\DotenvWriter;
 use App\Services\Filesystem\LaravelFilesystem;
-
 use org\bovigo\vfs\vfsStream;
 use Tests\TestCase;
 
@@ -21,7 +20,7 @@ class ConfigMailSettingTest extends TestCase
         $this->rootDir = vfsStream::setup('rootDir');
     }
 
-    public function test_Should_GetAllMailSettings()
+    public function testShouldGetAllMailSettings()
     {
         $config = <<<EOF
 MAIL_DRIVER=smtp
@@ -65,7 +64,7 @@ EOF;
         $this->assertEquals('/usr/sbin/sendmail -bs', $mailSettings->getSendmailPath());
     }
 
-    public function test_Should_UpdateExistingMailSettings()
+    public function testShouldUpdateExistingMailSettings()
     {
         vfsStream::newFile('.env')->at($this->rootDir);
 

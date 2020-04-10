@@ -48,7 +48,7 @@ class DeployerServerListFileBuilderTest extends TestCase
         $this->rootDir = vfsStream::setup('rootDir');
     }
 
-    public function test_Should_BuildDeployerServerListFile()
+    public function testShouldBuildDeployerServerListFile()
     {
         $this->mockProjectModel
             ->shouldReceive('getAttribute')
@@ -90,7 +90,7 @@ class DeployerServerListFileBuilderTest extends TestCase
         $this->assertStringMatchesFormat(storage_path("app/server_%x.yml"), $result->getFullPath());
     }
 
-    public function test_Should_OverrideAttributeInDeployerServerListFile_When_ProjectAttributeIsSpecified()
+    public function testShouldOverrideAttributeInDeployerServerListFileWhenProjectAttributeIsSpecified()
     {
         $path = vfsStream::url('rootDir/server.yml');
 
@@ -144,7 +144,7 @@ EOF;
         $this->assertEquals('/home/www/deploy2', $serverListFile['test']['deploy_path']);
     }
 
-    public function test_Should_OverrideAttributeInDeployerServerListFile_When_ProjectAttributeIsNotSpecified()
+    public function testShouldOverrideAttributeInDeployerServerListFileWhenProjectAttributeIsNotSpecified()
     {
         $path = vfsStream::url('rootDir/server.yml');
 

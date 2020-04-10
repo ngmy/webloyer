@@ -46,7 +46,7 @@ class DeploymentsControllerTest extends TestCase
         $this->mockDeploymentModel = $this->partialMock(Deployment::class);
     }
 
-    public function test_Should_ReturnStatusCode200_When_StoreProcessSucceeds()
+    public function testShouldReturnStatusCode200WhenStoreProcessSucceeds()
     {
         $project = $this->mockProjectModel
             ->shouldReceive('getLastDeployment')
@@ -69,7 +69,7 @@ class DeploymentsControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_Should_ReturnStatusCode400_When_StoreProcessFails()
+    public function testShouldReturnStatusCode400WhenStoreProcessFails()
     {
         $project = factory(Project::class)->make([
             'github_webhook_secret' => null,

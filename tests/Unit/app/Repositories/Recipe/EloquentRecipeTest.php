@@ -13,7 +13,7 @@ class EloquentRecipeTest extends TestCase
     /** @var EloquentRecipe */
     private $sut;
 
-    public function test_Should_GetRecipeById()
+    public function testShouldGetRecipeById()
     {
         $recipe = factory(Recipe::class)->create();
 
@@ -22,7 +22,7 @@ class EloquentRecipeTest extends TestCase
         $this->assertTrue($recipe->is($actual));
     }
 
-    public function test_Should_GetRecipesByPage()
+    public function testShouldGetRecipesByPage()
     {
         $recipes = factory(Recipe::class, 5)->create();
 
@@ -31,7 +31,7 @@ class EloquentRecipeTest extends TestCase
         $this->assertCount(5, $actual->items());
     }
 
-    public function test_Should_CreateNewRecipe()
+    public function testShouldCreateNewRecipe()
     {
         $actual = $this->sut->create([
             'name'        => 'Recipe 1',
@@ -42,7 +42,7 @@ class EloquentRecipeTest extends TestCase
         $this->assertDatabaseHas('recipes', $actual->toArray());
     }
 
-    public function test_Should_UpdateExistingRecipe()
+    public function testShouldUpdateExistingRecipe()
     {
         $recipe = factory(Recipe::class)->create();
 
@@ -61,7 +61,7 @@ class EloquentRecipeTest extends TestCase
         ]);
     }
 
-    public function test_Should_DeleteExistingRecipe()
+    public function testShouldDeleteExistingRecipe()
     {
         $recipe = factory(Recipe::class)->create();
 

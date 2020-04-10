@@ -74,7 +74,7 @@ class RollbackTest extends TestCase
         $this->mockSettingModel = $this->partialMock(Setting::class);
     }
 
-    public function test_Should_Work_When_DeployerIsNormalEnd()
+    public function testShouldWorkWhenDeployerIsNormalEnd()
     {
         $deployment = factory(Deployment::class)->make();
 
@@ -174,7 +174,7 @@ class RollbackTest extends TestCase
         );
     }
 
-    public function test_Should_Work_When_DeployerIsAbnormalEnd()
+    public function testShouldWorkWhenDeployerIsAbnormalEnd()
     {
         $deployment = factory(Deployment::class)->make();
 
@@ -274,7 +274,7 @@ class RollbackTest extends TestCase
         );
     }
 
-    public function test_Should_WorkAndSendNotification_When_DeployerIsNormalEndAndEmailNotificationRecipientIsSet()
+    public function testShouldWorkAndSendNotificationWhenDeployerIsNormalEndAndEmailNotificationRecipientIsSet()
     {
         $deployment = factory(Deployment::class)->make();
 
@@ -418,7 +418,7 @@ class RollbackTest extends TestCase
         );
     }
 
-    public function test_Should_WorkAndSendNotification_When_DeployerIsAbnormalEndAndEmailNotificationRecipientIsSet()
+    public function testShouldWorkAndSendNotificationWhenDeployerIsAbnormalEndAndEmailNotificationRecipientIsSet()
     {
         $deployment = factory(Deployment::class)->make();
 

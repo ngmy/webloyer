@@ -22,7 +22,7 @@ class MailSettingFormTest extends TestCase
         $this->mockSettingRepository = $this->mock(SettingInterface::class);
     }
 
-    public function test_Should_SucceedToUpdate_When_ValidationPasses()
+    public function testShouldSucceedToUpdateWhenValidationPasses()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -54,7 +54,7 @@ class MailSettingFormTest extends TestCase
         $this->assertTrue($result, 'Expected update to succeed.');
     }
 
-    public function test_Should_FailToUpdate_When_ValidationFails()
+    public function testShouldFailToUpdateWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -71,7 +71,7 @@ class MailSettingFormTest extends TestCase
         $this->assertFalse($result, 'Expected update to fail.');
     }
 
-    public function test_Should_GetValidationErrors()
+    public function testShouldGetValidationErrors()
     {
         $this->mockValidator
             ->shouldReceive('errors')

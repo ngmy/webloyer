@@ -39,7 +39,7 @@ class ServersControllerTest extends TestCase
         $this->mockServerForm = $this->mock(ServerForm::class);
     }
 
-    public function test_Should_DisplayIndexPage_When_IndexPageIsRequested()
+    public function testShouldDisplayIndexPageWhenIndexPageIsRequested()
     {
         $i = 1;
         $servers = factory(Server::class, 3)->make()->each(function (Server $server) use ($i) {
@@ -59,14 +59,14 @@ class ServersControllerTest extends TestCase
         $response->assertViewHas('servers');
     }
 
-    public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
+    public function testShouldDisplayCreatePageWhenCreatePageIsRequested()
     {
         $response = $this->get('servers/create');
 
         $response->assertStatus(200);
     }
 
-    public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenStoreProcessSucceeds()
     {
         $this->mockServerForm
             ->shouldReceive('save')
@@ -78,7 +78,7 @@ class ServersControllerTest extends TestCase
         $response->assertRedirect('servers');
     }
 
-    public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
+    public function testShouldRedirectToCreatePageWhenStoreProcessFails()
     {
         $this->mockServerForm
             ->shouldReceive('save')
@@ -96,7 +96,7 @@ class ServersControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayShowPageWhenShowPageIsRequestedAndResourceIsFound()
     {
         $server = factory(Server::class)->make([
             'id' => 1,
@@ -113,7 +113,7 @@ class ServersControllerTest extends TestCase
         $response->assertViewHas('server');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenShowPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -125,7 +125,7 @@ class ServersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
+    public function testShouldDisplayEditPageWhenEditPageIsRequestedAndResourceIsFound()
     {
         $server = factory(Server::class)->make([
             'id' => 1,
@@ -142,7 +142,7 @@ class ServersControllerTest extends TestCase
         $response->assertViewHas('server');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenEditPageIsRequestedAndResourceIsNotFound()
     {
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -154,7 +154,7 @@ class ServersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenUpdateProcessSucceeds()
     {
         $server = factory(Server::class)->make();
 
@@ -173,7 +173,7 @@ class ServersControllerTest extends TestCase
         $response->assertRedirect('servers');
     }
 
-    public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
+    public function testShouldRedirectToEditPageWhenUpdateProcessFails()
     {
         $server = factory(Server::class)->make([
             'id' => 1,
@@ -200,7 +200,7 @@ class ServersControllerTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
-    public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenUpdateProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockServerRepository
             ->shouldReceive('byId')
@@ -212,7 +212,7 @@ class ServersControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
+    public function testShouldRedirectToIndexPageWhenDestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
         $server = factory(Server::class)->make();
 
@@ -230,7 +230,7 @@ class ServersControllerTest extends TestCase
         $response->assertRedirect('servers');
     }
 
-    public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
+    public function testShouldDisplayNotFoundPageWhenDestroyProcessIsRequestedAndResourceIsNotFound()
     {
         $this->mockServerRepository
             ->shouldReceive('byId')

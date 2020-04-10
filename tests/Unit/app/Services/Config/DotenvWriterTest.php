@@ -18,7 +18,7 @@ class DotenvWriterTest extends TestCase
         $this->rootDir = vfsStream::setup('rootDir');
     }
 
-    public function test_Should_UpdateExistingConfig_When_ConfigExists()
+    public function testShouldUpdateExistingConfigWhenConfigExists()
     {
         $contentsBefore = <<<EOF
 NAME1=value1
@@ -43,7 +43,7 @@ EOF;
         $this->assertEquals($contentsAfter, $dotenv->getContent());
     }
 
-    public function test_Should_AddNewConfig_When_ConfigDoesNotExist()
+    public function testShouldAddNewConfigWhenConfigDoesNotExist()
     {
         $contentsBefore = <<<EOF
 NAME1=value1

@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class AppSettingEntityTest extends TestCase
 {
-    public function test_Should_SetAndGetUrl()
+    public function testShouldSetAndGetUrl()
     {
         $appSettingEntity = new AppSettingEntity();
 

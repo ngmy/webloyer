@@ -26,7 +26,7 @@ class ProjectFormTest extends TestCase
         $this->mockProjectModel = $this->partialMock(Project::class);
     }
 
-    public function test_Should_SucceedToSaveAndNotAddProjectAttribute_When_ValidationPassesAndDeployPathFieldIsNotSpecified()
+    public function testShouldSucceedToSaveAndNotAddProjectAttributeWhenValidationPassesAndDeployPathFieldIsNotSpecified()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -59,7 +59,7 @@ class ProjectFormTest extends TestCase
         $this->assertTrue($result, 'Expected save to succeed.');
     }
 
-    public function test_Should_SucceedToSaveAndAddProjectAttribute_When_ValidationPassesAndDeployPathFieldIsSpecified()
+    public function testShouldSucceedToSaveAndAddProjectAttributeWhenValidationPassesAndDeployPathFieldIsSpecified()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -92,7 +92,7 @@ class ProjectFormTest extends TestCase
         $this->assertTrue($result, 'Expected save to succeed.');
     }
 
-    public function test_Should_FailToSave_When_ValidationFails()
+    public function testShouldFailToSaveWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -114,7 +114,7 @@ class ProjectFormTest extends TestCase
         $this->assertFalse($result, 'Expected save to fail.');
     }
 
-    public function test_Should_SucceedToUpdateAndNotAddProjectAttribute_When_ValidationPassesAndDeployPathFieldIsNotSpecified()
+    public function testShouldSucceedToUpdateAndNotAddProjectAttributeWhenValidationPassesAndDeployPathFieldIsNotSpecified()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -150,7 +150,7 @@ class ProjectFormTest extends TestCase
         $this->assertTrue($result, 'Expected update to succeed.');
     }
 
-    public function test_Should_SucceedToUpdateAndAddProjectAttribute_When_ValidationPassesAndDeployPathFieldIsSpecified()
+    public function testShouldSucceedToUpdateAndAddProjectAttributeWhenValidationPassesAndDeployPathFieldIsSpecified()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -186,7 +186,7 @@ class ProjectFormTest extends TestCase
         $this->assertTrue($result, 'Expected update to succeed.');
     }
 
-    public function test_Should_FailToUpdate_When_ValidationFails()
+    public function testShouldFailToUpdateWhenValidationFails()
     {
         $this->mockValidator
             ->shouldReceive('with')
@@ -208,7 +208,7 @@ class ProjectFormTest extends TestCase
         $this->assertFalse($result, 'Expected update to fail.');
     }
 
-    public function test_Should_GetValidationErrors()
+    public function testShouldGetValidationErrors()
     {
         $this->mockValidator
             ->shouldReceive('errors')

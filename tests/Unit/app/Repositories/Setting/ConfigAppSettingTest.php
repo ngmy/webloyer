@@ -20,7 +20,7 @@ class ConfigAppSettingTest extends TestCase
         $this->rootDir = vfsStream::setup('rootDir');
     }
 
-    public function test_Should_GetAllAppSettings()
+    public function testShouldGetAllAppSettings()
     {
         $config = <<<EOF
 APP_URL=http://example.com
@@ -48,7 +48,7 @@ EOF;
         $this->assertEquals('http://example.com', $appSettings->getUrl());
     }
 
-    public function test_Should_UpdateExistingAppSettings()
+    public function testShouldUpdateExistingAppSettings()
     {
         vfsStream::newFile('.env')->at($this->rootDir);
 

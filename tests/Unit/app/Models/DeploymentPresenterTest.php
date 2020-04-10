@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class DeploymentPresenterTest extends TestCase
 {
-    public function test_Should_ConvertStatusToHtmlSnippet_When_StatusIsOK()
+    public function testShouldConvertStatusToHtmlSnippetWhenStatusIsOK()
     {
         $deployment = factory(Deployment::class)->make([
             'status'     => 0,
@@ -25,7 +25,7 @@ class DeploymentPresenterTest extends TestCase
         $this->assertEquals('<span class="glyphicon glyphicon-ok-circle green" aria-hidden="true"></span>', $html);
     }
 
-    public function test_Should_ConvertStatusToHtmlSnippet_When_StatusIsNg()
+    public function testShouldConvertStatusToHtmlSnippetWhenStatusIsNg()
     {
         $deployment = factory(Deployment::class)->make([
             'status'     => 1,
@@ -39,7 +39,7 @@ class DeploymentPresenterTest extends TestCase
         $this->assertEquals('<span class="glyphicon glyphicon-ban-circle red" aria-hidden="true"></span>', $html);
     }
 
-    public function test_Should_ConvertStatusToHtmlSnippet_When_StatusIsUnknown()
+    public function testShouldConvertStatusToHtmlSnippetWhenStatusIsUnknown()
     {
         $deployment = factory(Deployment::class)->make([
             'status'     => null,
@@ -53,7 +53,7 @@ class DeploymentPresenterTest extends TestCase
         $this->assertEquals('<span></span>', $html);
     }
 
-    public function test_Should_ConvertStatusToText_When_StatusIsOK()
+    public function testShouldConvertStatusToTextWhenStatusIsOK()
     {
         $deployment = factory(Deployment::class)->make([
             'status'     => 0,
@@ -67,7 +67,7 @@ class DeploymentPresenterTest extends TestCase
         $this->assertEquals('success', $text);
     }
 
-    public function test_Should_ConvertStatusToText_When_StatusIsNg()
+    public function testShouldConvertStatusToTextWhenStatusIsNg()
     {
         $deployment = factory(Deployment::class)->make([
             'status'     => 1,
@@ -81,7 +81,7 @@ class DeploymentPresenterTest extends TestCase
         $this->assertEquals('failure', $text);
     }
 
-    public function test_Should_ConvertStatusToText_When_StatusIsNotDetermined()
+    public function testShouldConvertStatusToTextWhenStatusIsNotDetermined()
     {
         $deployment = factory(Deployment::class)->make([
             'status'     => null,
@@ -95,7 +95,7 @@ class DeploymentPresenterTest extends TestCase
         $this->assertEquals('running', $text);
     }
 
-    public function test_Should_ConvertMessageToHtmlSnippet()
+    public function testShouldConvertMessageToHtmlSnippet()
     {
         $deployment = factory(Deployment::class)->make([
             'message'    => 'Message',
@@ -109,7 +109,7 @@ class DeploymentPresenterTest extends TestCase
         $this->assertEquals('<span style="background-color: black; color: white">Message</span>', $html);
     }
 
-    public function test_Should_ConvertMessageToText()
+    public function testShouldConvertMessageToText()
     {
         $deployment = factory(Deployment::class)->make([
             'message'    => 'Message',

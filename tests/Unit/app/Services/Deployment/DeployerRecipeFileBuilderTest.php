@@ -23,7 +23,7 @@ class DeployerRecipeFileBuilderTest extends TestCase
         $this->mockFilesystem = $this->mock(FilesystemInterface::class);
     }
 
-    public function test_Should_BuildDeployerRecipeFile()
+    public function testShouldBuildDeployerRecipeFile()
     {
         $this->mockFilesystem
             ->shouldReceive('delete')

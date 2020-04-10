@@ -14,7 +14,7 @@ class EloquentUserTest extends TestCase
     /** @var EloquentUser */
     private $sut;
 
-    public function test_Should_GetUserById()
+    public function testShouldGetUserById()
     {
         $user = factory(User::class)->create();
 
@@ -23,7 +23,7 @@ class EloquentUserTest extends TestCase
         $this->assertTrue($user->is($actual));
     }
 
-    public function test_Should_GetUsersByPage()
+    public function testShouldGetUsersByPage()
     {
         $users = factory(User::class, 5)->create();
 
@@ -32,7 +32,7 @@ class EloquentUserTest extends TestCase
         $this->assertCount(5, $actual->items());
     }
 
-    public function test_Should_CreateNewUser()
+    public function testShouldCreateNewUser()
     {
         $actual = $this->sut->create([
             'name'      => 'User 1',
@@ -44,7 +44,7 @@ class EloquentUserTest extends TestCase
         $this->assertDatabaseHas('users', $actual->toArray());
     }
 
-    public function test_Should_UpdateExistingUser()
+    public function testShouldUpdateExistingUser()
     {
         $user = factory(User::class)->create();
 
@@ -65,31 +65,7 @@ class EloquentUserTest extends TestCase
         ]);
     }
 
-    public function test_Should_UpdateExistingUser_When_RoleIsSpecified()
-    {
-        $role = factory(Role::class)->create();
-        $user = factory(User::class)->create();
-        $user->assignRole($role->slug);
-
-        $this->sut->update([
-            'id'        => $user->id,
-            'name'      => 'User 2',
-            'email'     => 'user2@example.com',
-            'password'  => '23456789',
-            'api_token' => '23456789',
-        ]);
-
-        $this->assertDatabaseHas('users', [
-            'id'        => $user->id,
-            'name'      => 'User 2',
-            'email'     => 'user2@example.com',
-            'password'  => '23456789',
-            'api_token' => '23456789',
-        ]);
-        $this->assertDatabaseHas('role_user', ['role_id' => $role->id, 'user_id' => $user->id]);
-    }
-
-    public function test_Should_UpdateExistingUser_When_RoleIsEmpty()
+    public function testShouldUpdateExistingUserWhenRoleIsSpecified()
     {
         $role = factory(Role::class)->create();
         $user = factory(User::class)->create();
@@ -113,7 +89,31 @@ class EloquentUserTest extends TestCase
         $this->assertDatabaseHas('role_user', ['role_id' => $role->id, 'user_id' => $user->id]);
     }
 
-    public function test_Should_DeleteExistingUser()
+    public function testShouldUpdateExistingUserWhenRoleIsEmpty()
+    {
+        $role = factory(Role::class)->create();
+        $user = factory(User::class)->create();
+        $user->assignRole($role->slug);
+
+        $this->sut->update([
+            'id'        => $user->id,
+            'name'      => 'User 2',
+            'email'     => 'user2@example.com',
+            'password'  => '23456789',
+            'api_token' => '23456789',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'id'        => $user->id,
+            'name'      => 'User 2',
+            'email'     => 'user2@example.com',
+            'password'  => '23456789',
+            'api_token' => '23456789',
+        ]);
+        $this->assertDatabaseHas('role_user', ['role_id' => $role->id, 'user_id' => $user->id]);
+    }
+
+    public function testShouldDeleteExistingUser()
     {
         $user = factory(User::class)->create();
 

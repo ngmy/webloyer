@@ -13,7 +13,7 @@ class EloquentServerTest extends TestCase
     /** @var EloquentServer */
     private $sut;
 
-    public function test_Should_GetServerById()
+    public function testShouldGetServerById()
     {
         $server = factory(Server::class)->create();
 
@@ -22,7 +22,7 @@ class EloquentServerTest extends TestCase
         $this->assertTrue($server->is($actual));
     }
 
-    public function test_Should_GetServersByPage()
+    public function testShouldGetServersByPage()
     {
         $servers = factory(Server::class, 5)->create();
 
@@ -31,7 +31,7 @@ class EloquentServerTest extends TestCase
         $this->assertCount(5, $actual->items());
     }
 
-    public function test_Should_CreateNewServer()
+    public function testShouldCreateNewServer()
     {
         $actual = $this->sut->create([
             'name'        => 'Server 1',
@@ -42,7 +42,7 @@ class EloquentServerTest extends TestCase
         $this->assertDatabaseHas('servers', $actual->toArray());
     }
 
-    public function test_Should_UpdateExistingServer()
+    public function testShouldUpdateExistingServer()
     {
         $server = factory(Server::class)->create();
 
@@ -61,7 +61,7 @@ class EloquentServerTest extends TestCase
         ]);
     }
 
-    public function test_Should_DeleteExistingServer()
+    public function testShouldDeleteExistingServer()
     {
         $server = factory(Server::class)->create();
 

@@ -13,7 +13,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
 {
     protected $useDatabase = true;
 
-    public function test_Should_FailToValidate_When_ProjectIdFieldIsMissing()
+    public function testShouldFailToValidateWhenProjectIdFieldIsMissing()
     {
         $user = factory(User::class)->create();
 
@@ -31,7 +31,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_ProjectIdFieldIsInvalid()
+    public function testShouldFailToValidateWhenProjectIdFieldIsInvalid()
     {
         $user = factory(User::class)->create();
 
@@ -50,7 +50,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_TaskFieldIsMissing()
+    public function testShouldFailToValidateWhenTaskFieldIsMissing()
     {
         $user = factory(User::class)->create();
         $server = factory(Server::class)->create();
@@ -72,7 +72,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_TaskFieldIsInvalid()
+    public function testShouldFailToValidateWhenTaskFieldIsInvalid()
     {
         $user = factory(User::class)->create();
         $server = factory(Server::class)->create();
@@ -95,7 +95,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_UserIdFieldIsMissing()
+    public function testShouldFailToValidateWhenUserIdFieldIsMissing()
     {
         $server = factory(Server::class)->create();
         $project = factory(Project::class)->create([
@@ -116,7 +116,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_UserIdFieldIsInvalid()
+    public function testShouldFailToValidateWhenUserIdFieldIsInvalid()
     {
         $server = factory(Server::class)->create();
         $project = factory(Project::class)->create([
@@ -138,7 +138,7 @@ class DeploymentFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_PassToValidate_When_ProjectIdFieldAndTaskFieldAndUserIdFieldAreValid()
+    public function testShouldPassToValidateWhenProjectIdFieldAndTaskFieldAndUserIdFieldAreValid()
     {
         $server = factory(Server::class)->create();
         $project = factory(Project::class)->create([

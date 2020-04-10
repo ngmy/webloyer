@@ -12,7 +12,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
 {
     protected $useDatabase = true;
 
-    public function test_Should_FailToValidate_When_RecipeIdFieldIsMissing()
+    public function testShouldFailToValidateWhenRecipeIdFieldIsMissing()
     {
         $server = factory(Server::class)->create();
 
@@ -32,7 +32,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_NameFieldIsMissing()
+    public function testShouldFailToValidateWhenNameFieldIsMissing()
     {
         $recipe = factory(Recipe::class)->create();
         $server = factory(Server::class)->create();
@@ -53,7 +53,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_ServerIdFieldIsMissing()
+    public function testShouldFailToValidateWhenServerIdFieldIsMissing()
     {
         $recipe = factory(Recipe::class)->create();
 
@@ -73,7 +73,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_RepositoryFieldIsMissing()
+    public function testShouldFailToValidateWhenRepositoryFieldIsMissing()
     {
         $recipe = factory(Recipe::class)->create();
         $server = factory(Server::class)->create();
@@ -94,7 +94,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_RepositoryFieldIsInvalidUrl()
+    public function testShouldFailToValidateWhenRepositoryFieldIsInvalidUrl()
     {
         $recipe = factory(Recipe::class)->create();
         $server = factory(Server::class)->create();
@@ -116,7 +116,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_FailToValidate_When_StageFieldIsMissing()
+    public function testShouldFailToValidateWhenStageFieldIsMissing()
     {
         $recipe = factory(Recipe::class)->create();
         $server = factory(Server::class)->create();
@@ -137,7 +137,7 @@ class ProjectFormLaravelValidatorTest extends TestCase
         $this->assertInstanceOf(MessageBag::class, $errors);
     }
 
-    public function test_Should_PassToValidate_When_NameFieldAndRecipeIdFieldAndServerIdFieldAndRepositoryFieldAndStageFieldAreValid()
+    public function testShouldPassToValidateWhenNameFieldAndRecipeIdFieldAndServerIdFieldAndRepositoryFieldAndStageFieldAreValid()
     {
         $recipe = factory(Recipe::class)->create();
         $server = factory(Server::class)->create();
