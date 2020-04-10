@@ -5,6 +5,11 @@ namespace App\Jobs;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Server\ServerInterface;
 use App\Repositories\Setting\SettingInterface;
+use App\Services\Deployment\DeployerDeploymentFileBuilder;
+use App\Services\Deployment\DeployerFileBuilderInterface;
+use App\Services\Deployment\DeployerFileDirector;
+use App\Services\Deployment\DeployerRecipeFileBuilder;
+use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Notification\NotifierInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -53,24 +58,27 @@ class Deploy implements ShouldQueue
         $app = app();
 
         // Create a server list file
-        $serverListFileBuilder = $app->make('App\Services\Deployment\DeployerServerListFileBuilder')
+        $serverListFileBuilder = $app->make(DeployerServerListFileBuilder::class)
             ->setServer($server)
             ->setProject($project);
-        $serverListFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$serverListFileBuilder])->construct();
+        $app->bind(DeployerFileBuilderInterface::class, $serverListFileBuilder);
+        $serverListFile = $app->make(DeployerFileDirector::class)->construct();
 
         // Create recipe files
         foreach ($project->getRecipes() as $i => $recipe) {
             // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array, a destructor is called and a recipe file is deleted immediately.
-            $recipeFileBuilders[] = $app->make('App\Services\Deployment\DeployerRecipeFileBuilder')->setRecipe($recipe);
-            $recipeFiles[] = $app->make('App\Services\Deployment\DeployerFileDirector', [$recipeFileBuilders[$i]])->construct();
+            $recipeFileBuilders[] = $app->make(DeployerRecipeFileBuilder::class)->setRecipe($recipe);
+            $app->bind(DeployerFileBuilderInterface::class, $recipeFileBuilders[$i]);
+            $recipeFiles[] = $app->make(DeployerFileDirector::class)->construct();
         }
 
         // Create a deployment file
-        $deploymentFileBuilder = $app->make('App\Services\Deployment\DeployerDeploymentFileBuilder')
+        $deploymentFileBuilder = $app->make(DeployerDeploymentFileBuilder::class)
             ->setProject($project)
             ->setServerListFile($serverListFile)
             ->setRecipeFile($recipeFiles);
-        $deploymentFile = $app->make('App\Services\Deployment\DeployerFileDirector', [$deploymentFileBuilder])->construct();
+        $app->bind(DeployerFileBuilderInterface::class, $deploymentFileBuilder);
+        $deploymentFile = $app->make(DeployerFileDirector::class)->construct();
 
         // Create a command
         $processBuilder
