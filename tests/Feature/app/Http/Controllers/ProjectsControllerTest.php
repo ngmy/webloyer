@@ -67,6 +67,8 @@ class ProjectsControllerTest extends TestCase
             ->times(2)
             ->andReturn([])
             ->mock();
+        $project->id = 1;
+        $project->name = '';
 
         $projects = [
             $project,
@@ -153,6 +155,8 @@ class ProjectsControllerTest extends TestCase
         $project->shouldReceive('getAttribute')
             ->with('attributes')
             ->andReturn($this->mockProjectAttributeEntity);
+        $project->id = 1;
+        $project->name = '';
 
         $server = factory(Server::class)->make();
 
@@ -198,6 +202,8 @@ class ProjectsControllerTest extends TestCase
         $project->shouldReceive('getAttribute')
             ->with('attributes')
             ->andReturn($this->mockProjectAttributeEntity);
+        $project->id = 1;
+        $project->name = '';
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
@@ -258,7 +264,10 @@ class ProjectsControllerTest extends TestCase
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
     {
-        $project = factory(Project::class)->make();
+        $project = factory(Project::class)->make([
+            'id' => 1,
+            'name' => '',
+        ]);
 
         $this->mockProjectRepository
             ->shouldReceive('byId')
