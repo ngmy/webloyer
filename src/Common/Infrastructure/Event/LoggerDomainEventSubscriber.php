@@ -6,6 +6,7 @@ namespace Common\Infrastructure\Event;
 
 use Common\Domain\Model\Event\DomainEvent;
 use Common\Domain\Model\Event\DomainEventSubscriber;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 
 class LoggerDomainEventSubscriber implements DomainEventSubscriber
@@ -29,7 +30,14 @@ class LoggerDomainEventSubscriber implements DomainEventSubscriber
      */
     public function handle(DomainEvent $domainEvent): void
     {
-        $domainEventInArray = json_decode(json_encode($domainEvent), true);
+        $domainEventInJson = json_encode($domainEvent);
+        if (!$domainEventInJson) {
+            throw new InvalidArgumentException(
+                'json_encode failed.' . PHP_EOL .
+                'Value: ' . var_export($domainEvent, true)
+            );
+        }
+        $domainEventInArray = json_decode($domainEventInJson, true);
 
         $this->logger->info(
             get_class($domainEvent),

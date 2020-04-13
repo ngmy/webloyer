@@ -8,9 +8,9 @@ use BadMethodCallException;
 
 class DomainEventPublisher
 {
-    /** @var self */
+    /** @var null|self */
     private static $instance;
-    /** @var array<i, DomainEventSubscriber> */
+    /** @var array<int, DomainEventSubscriber> */
     private $subscribers = [];
     /** @var int */
     private $id = 0;
@@ -20,7 +20,7 @@ class DomainEventPublisher
      */
     public static function getInstance(): self
     {
-        if (is_null(self::$instance)) {
+        if (\is_null(self::$instance)) {
             self::$instance = new self();
         }
         return self::$instance;
