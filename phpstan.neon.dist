@@ -5,6 +5,7 @@ parameters:
   level: max
   paths:
     - app
+    - src
     - tests
   reportUnmatchedIgnoredErrors: false
 
