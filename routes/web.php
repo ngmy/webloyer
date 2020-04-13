@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\RouteServiceProvider;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +14,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect(RouteServiceProvider::HOME);
 });
 
 Auth::routes();
