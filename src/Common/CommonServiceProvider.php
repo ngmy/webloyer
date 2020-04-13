@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Common;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
-use Common\Infrastructure\Event\LaravelEventDomainEventSubscriber;
-use Common\Infrastructure\Event\LoggerDomainEventSubscriber;
+use Common\Infra\Event\LaravelEventDomainEventSubscriber;
+use Common\Infra\Event\LoggerDomainEventSubscriber;
 use Illuminate\Support\ServiceProvider;
 
 class CommonServiceProvider extends ServiceProvider

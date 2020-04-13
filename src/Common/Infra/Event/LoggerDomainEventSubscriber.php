@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Common\Infrastructure\Event;
+namespace Common\Infra\Event;
 
 use Common\Domain\Model\Event\DomainEvent;
 use Common\Domain\Model\Event\DomainEventSubscriber;
