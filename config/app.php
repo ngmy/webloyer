@@ -177,6 +177,9 @@ return [
 
         App\Providers\RepositoryServiceProvider::class,
 
+        Common\CommonServiceProvider::class,
+        Webloyer\WebloyerServiceProvider::class,
+
     ],
 
     /*

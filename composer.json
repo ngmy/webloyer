@@ -87,7 +87,9 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Common\\": "src/Common",
+            "Webloyer\\": "src/Webloyer"
         },
         "classmap": [
             "database/seeds",
