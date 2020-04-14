@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
+use App\Http\Requests\Project as ProjectRequest;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Recipe\RecipeInterface;
 use App\Repositories\Server\ServerInterface;
@@ -57,10 +57,10 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ProjectRequest\IndexRequest $request
      * @return Response
      */
-    public function index(Request $request)
+    public function index(ProjectRequest\IndexRequest $request)
     {
         $page = $request->input('page', 1);
 
@@ -97,20 +97,16 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ProjectRequest\CreateRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
         $input = $request->all();
 
-        if ($this->projectForm->save($input)) {
-            return redirect()->route('projects.index');
-        } else {
-            return redirect()->route('projects.create')
-                ->withInput()
-                ->withErrors($this->projectForm->errors());
-        }
+        $this->projectForm->save($input);
+
+        return redirect()->route('projects.index');
     }
 
     /**
@@ -163,21 +159,17 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Project      $project
+     * @param ProjectRequest\UpdateRequest $request
+     * @param \App\Models\Project          $project
      * @return Response
      */
-    public function update(Request $request, Project $project)
+    public function update(ProjectRequest\UpdateRequest $request, Project $project)
     {
         $input = array_merge($request->all(), ['id' => $project->id]);
 
-        if ($this->projectForm->update($input)) {
-            return redirect()->route('projects.index');
-        } else {
-            return redirect()->route('projects.edit', [$project])
-                ->withInput()
-                ->withErrors($this->projectForm->errors());
-        }
+        $this->projectForm->update($input);
+
+        return redirect()->route('projects.index');
     }
 
     /**
