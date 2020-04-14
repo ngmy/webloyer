@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Recipe;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
+use App\Http\Requests\Recipe as RecipeRequest;
 use App\Models\Recipe;
 use App\Repositories\Recipe\RecipeInterface;
 use App\Services\Form\Recipe\RecipeForm;
@@ -37,10 +37,10 @@ class RecipeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param RecipeeRequest\IndexRequest $request
      * @return Response
      */
-    public function index(Request $request)
+    public function index(RecipeRequest\IndexRequest $request)
     {
         $page = $request->input('page', 1);
 
@@ -64,20 +64,16 @@ class RecipeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param RecipeRequest\StoreRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(RecipeRequest\StoreRequest $request)
     {
         $input = $request->all();
 
-        if ($this->recipeForm->save($input)) {
-            return redirect()->route('recipes.index');
-        } else {
-            return redirect()->route('recipes.create')
-                ->withInput()
-                ->withErrors($this->recipeForm->errors());
-        }
+        $this->recipeForm->save($input);
+
+        return redirect()->route('recipes.index');
     }
 
     /**
@@ -108,21 +104,17 @@ class RecipeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param RecipeRequest\UpdateRequest $request
      * @param \App\Models\Recipe       $recipe
      * @return Response
      */
-    public function update(Request $request, Recipe $recipe)
+    public function update(RecipeRequest\UpdateRequest $request, Recipe $recipe)
     {
         $input = array_merge($request->all(), ['id' => $recipe->id]);
 
-        if ($this->recipeForm->update($input)) {
-            return redirect()->route('recipes.index');
-        } else {
-            return redirect()->route('recipes.edit', [$recipe])
-                ->withInput()
-                ->withErrors($this->recipeForm->errors());
-        }
+        $this->recipeForm->update($input);
+
+        return redirect()->route('recipes.index');
     }
 
     /**

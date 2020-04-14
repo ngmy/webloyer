@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Server;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
+use App\Http\Requests\Server as ServerRequest;
 use App\Models\Server;
 use App\Repositories\Server\ServerInterface;
 use App\Services\Form\Server\ServerForm;
@@ -37,10 +37,10 @@ class ServerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ServerRequest\IndexRequest $request
      * @return Response
      */
-    public function index(Request $request)
+    public function index(ServerRequest\IndexRequest $request)
     {
         $page = $request->input('page', 1);
 
@@ -64,20 +64,16 @@ class ServerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param ServerRequest\StoreRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(ServerRequest\StoreRequest $request)
     {
         $input = $request->all();
 
-        if ($this->serverForm->save($input)) {
-            return redirect()->route('servers.index');
-        } else {
-            return redirect()->route('servers.create')
-                ->withInput()
-                ->withErrors($this->serverForm->errors());
-        }
+        $this->serverForm->save($input);
+
+        return redirect()->route('servers.index');
     }
 
     /**
@@ -105,21 +101,17 @@ class ServerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Server       $server
+     * @param ServerRequest\UpdateRequest $request
+     * @param \App\Models\Server          $server
      * @return Response
      */
-    public function update(Request $request, Server $server)
+    public function update(ServerRequest\UpdateRequest $request, Server $server)
     {
         $input = array_merge($request->all(), ['id' => $server->id]);
 
-        if ($this->serverForm->update($input)) {
-            return redirect()->route('servers.index');
-        } else {
-            return redirect()->route('servers.edit', [$server])
-                ->withInput()
-                ->withErrors($this->serverForm->errors());
-        }
+        $this->serverForm->update($input);
+
+        return redirect()->route('servers.index');
     }
 
     /**

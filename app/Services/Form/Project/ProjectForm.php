@@ -13,7 +13,7 @@ class ProjectForm
     /**
      * Create a new form service instance.
      *
-     * @param \App\Repositories\Project\ProjectInterface  $project
+     * @param \App\Repositories\Project\ProjectInterface $project
      * @return void
      */
     public function __construct(ProjectInterface $project)
