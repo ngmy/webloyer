@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
 
-use App\Http\Requests;
+namespace App\Http\Controllers\Project;
+
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Repositories\Project\ProjectInterface;
 use App\Repositories\Recipe\RecipeInterface;
 use App\Repositories\Server\ServerInterface;
@@ -12,17 +14,18 @@ use App\Services\Form\Project\ProjectForm;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class ProjectController extends Controller
 {
-    protected $project;
-
-    protected $projectForm;
-
-    protected $recipe;
-
-    protected $server;
-
-    protected $user;
+    /** @var ProjectInterface */
+    private $project;
+    /** @var ProjectForm */
+    private $projectForm;
+    /** @var RecipeInterface */
+    private $recipe;
+    /** @var ServerInterface */
+    private $server;
+    /** @var UserInterface */
+    private $user;
 
     /**
      * Create a new controller instance.

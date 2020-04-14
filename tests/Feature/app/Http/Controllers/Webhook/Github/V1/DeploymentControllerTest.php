@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\app\Http\Controllers\Webhook\Github\V1;
 
 use App\Http\Middleware\ApplySettings;
@@ -15,7 +17,7 @@ use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\TestCase;
 
-class DeploymentsControllerTest extends TestCase
+class DeploymentControllerTest extends TestCase
 {
     use ControllerTestHelper;
 

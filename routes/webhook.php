@@ -1,7 +1,9 @@
 <?php
 
-Route::group(['prefix' => 'github/v1', 'middleware' => 'github_webhook_secret'], function () {
-    Route::resource('projects.deployments', 'Webhook\Github\V1\DeploymentsController', [
-        'only' => ['store']
-    ]);
+Route::middleware('github_webhook_secret')->namespace('Github')->prefix('github')->group(function () {
+    Route::namespace('V1')->prefix('v1')->group(function () {
+        Route::resource('projects.deployments', 'DeploymentController')->only([
+            'store',
+        ]);
+    });
 });

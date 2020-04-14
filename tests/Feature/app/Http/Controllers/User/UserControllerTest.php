@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Feature\app\Http\Controllers;
+declare(strict_types=1);
+
+namespace Tests\Feature\app\Http\Controllers\User;
 
 use App\Http\Middleware\ApplySettings;
 use App\Models\User;
@@ -15,7 +17,7 @@ use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\TestCase;
 
-class UsersControllerTest extends TestCase
+class UserControllerTest extends TestCase
 {
     use ControllerTestHelper;
 

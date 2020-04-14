@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Webhook\Github\V1;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Models\Project;
 use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Deployment\DeploymentForm;
-use App\Models\Project;
 use Illuminate\Http\Request;
 
-class DeploymentsController extends Controller
+class DeploymentController extends Controller
 {
-    protected $project;
-
-    protected $deploymentForm;
+    /** @var ProjectInterface */
+    private $project;
+    /** @var DeploymentForm */
+    private $deploymentForm;
 
     /**
      * Create a new controller instance.

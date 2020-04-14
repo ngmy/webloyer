@@ -134,7 +134,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
              ->middleware('api')
-             ->namespace($this->namespace)
+             ->namespace($this->namespace . '\Api')
              ->group(base_path('routes/api.php'));
     }
 
@@ -145,7 +145,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('webhook')
              ->middleware('api')
-             ->namespace($this->namespace)
+             ->namespace($this->namespace . '\Webhook')
              ->group(base_path('routes/webhook.php'));
     }
 }

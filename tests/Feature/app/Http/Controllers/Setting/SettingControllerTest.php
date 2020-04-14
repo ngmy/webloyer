@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Feature\app\Http\Controllers;
+declare(strict_types=1);
+
+namespace Tests\Feature\app\Http\Controllers\Setting;
 
 use App\Entities\Setting\MailSettingEntity;
 use App\Http\Middleware\ApplySettings;
@@ -13,7 +15,7 @@ use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\TestCase;
 
-class SettingsControllerTest extends TestCase
+class SettingControllerTest extends TestCase
 {
     use ControllerTestHelper;
 

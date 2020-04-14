@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Server;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -9,11 +11,12 @@ use App\Repositories\Server\ServerInterface;
 use App\Services\Form\Server\ServerForm;
 use Illuminate\Http\Request;
 
-class ServersController extends Controller
+class ServerController extends Controller
 {
-    protected $server;
-
-    protected $serverForm;
+    /** @var ServerInterface */
+    private $server;
+    /** @var ServerForm */
+    private $serverForm;
 
     /**
      * Create a new controller instance.

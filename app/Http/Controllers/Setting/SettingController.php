@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Setting;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -8,7 +10,7 @@ use App\Repositories\Setting\SettingInterface;
 use App\Services\Form\Setting\MailSettingForm;
 use Illuminate\Http\Request;
 
-class SettingsController extends Controller
+class SettingController extends Controller
 {
     public function __construct()
     {

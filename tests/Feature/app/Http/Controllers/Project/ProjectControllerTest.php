@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Feature\app\Http\Controllers;
+declare(strict_types=1);
+
+namespace Tests\Feature\app\Http\Controllers\Project;
 
 use App\Entities\ProjectAttribute\ProjectAttributeEntity;
 use App\Http\Middleware\ApplySettings;
@@ -20,7 +22,7 @@ use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\TestCase;
 
-class ProjectsControllerTest extends TestCase
+class ProjectControllerTest extends TestCase
 {
     use ControllerTestHelper;
 

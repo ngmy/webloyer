@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1'], function () {
+Route::prefix('v1')->group(function () {
     Route::post('jsonrpc', function (Request $request) {
         $server = new Server();
         $middlewareHandler = $server->getMiddlewareHandler();

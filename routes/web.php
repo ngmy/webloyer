@@ -18,86 +18,66 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::get('register', [
-    'as'   => 'register',
-    'uses' => function () {
+Route::namespace('Auth')->group(function () {
+    Route::get('register', function () {
         abort(404);
-    },
-]);
-Route::post('register', function () {
-    abort(404);
+    })->name('register');
+    Route::post('register', function () {
+        abort(404);
+    });
+    Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.forgot');
+    Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
 });
-Route::get('password/reset', [
-    'as'   => 'password.forgot',
-    'uses' => 'Auth\ForgotPasswordController@showLinkRequestForm',
-]);
-Route::get('password/reset/{token}', [
-    'as'   => 'password.reset',
-    'uses' => 'Auth\ResetPasswordController@showResetForm',
-]);
 
 Route::group([
+    'namespace' => 'Project',
     'protect_alias' => 'project',
 ], function () {
-    Route::resource('projects', 'ProjectsController');
+    Route::resource('projects', 'ProjectController');
 });
 
 Route::group([
+    'namespace' => 'Deployment',
     'protect_alias' => 'deployment',
 ], function () {
-    Route::resource('projects.deployments', 'DeploymentsController', [
-        'only' => ['index', 'store', 'show']
+    Route::resource('projects.deployments', 'DeploymentController')->only([
+        'index',
+        'store',
+        'show',
     ]);
 });
 
 Route::group([
+    'namespace' => 'Recipe',
     'protect_alias' => 'recipe',
 ], function () {
-    Route::resource('recipes', 'RecipesController');
+    Route::resource('recipes', 'RecipeController');
 });
 
 Route::group([
+    'namespace' => 'Server',
     'protect_alias' => 'server',
 ], function () {
-    Route::resource('servers', 'ServersController');
+    Route::resource('servers', 'ServerController');
 });
 
 Route::group([
+    'namespace' => 'User',
     'protect_alias' => 'user',
 ], function () {
-    Route::get('users/{user}/password/change', [
-        'as'   => 'users.password.change',
-        'uses' => 'UsersController@changePassword',
-    ]);
-    Route::put('users/{user}/password', [
-        'as'   => 'users.password.update',
-        'uses' => 'UsersController@updatePassword',
-    ]);
-    Route::get('users/{user}/role/edit', [
-        'as'   => 'users.role.edit',
-        'uses' => 'UsersController@editRole',
-    ]);
-    Route::put('users/{user}/role', [
-        'as'   => 'users.role.update',
-        'uses' => 'UsersController@updateRole',
-    ]);
-    Route::get('users/{user}/api_token/edit', [
-        'as'   => 'users.api_token.edit',
-        'uses' => 'UsersController@editApiToken',
-    ]);
-    Route::put('users/{user}/api_token', [
-        'as'   => 'users.api_token.regenerate',
-        'uses' => 'UsersController@regenerateApiToken',
-    ]);
-    Route::resource('users', 'UsersController');
+    Route::get('users/{user}/password/change', 'UserController@changePassword')->name('users.password.change');
+    Route::put('users/{user}/password', 'UserController@updatePassword')->name('users.password.update');
+    Route::get('users/{user}/role/edit', 'UserController@editRole')->name('users.role.edit');
+    Route::put('users/{user}/role', 'UserController@updateRole')->name('users.role.update');
+    Route::get('users/{user}/api_token/edit', 'UserController@editApiToken')->name('users.api_token.edit');
+    Route::put('users/{user}/api_token', 'UserController@regenerateApiToken')->name('users.api_token.regenerate');
+    Route::resource('users', 'UserController');
 });
 
 Route::group([
+    'namespace' => 'Setting',
     'protect_alias' => 'setting'
 ], function () {
-    Route::get('settings/email', [
-        'as'   => 'settings.email',
-        'uses' => 'SettingsController@getEmail',
-    ]);
-    Route::post('settings/email', 'SettingsController@postEmail');
+    Route::get('settings/email', 'SettingController@getEmail')->name('settings.email');
+    Route::post('settings/email', 'SettingController@postEmail');
 });

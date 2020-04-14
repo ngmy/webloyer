@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Deployment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -10,11 +12,12 @@ use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Deployment\DeploymentForm;
 use Illuminate\Http\Request;
 
-class DeploymentsController extends Controller
+class DeploymentController extends Controller
 {
-    protected $project;
-
-    protected $deploymentForm;
+    /** @var ProjectInterface */
+    private $project;
+    /** @var DeploymentForm */
+    private $deploymentForm;
 
     /**
      * Create a new controller instance.

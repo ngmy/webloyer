@@ -1,26 +1,29 @@
 <?php
 
-namespace Tests\Feature\app\Http\Controllers;
+declare(strict_types=1);
+
+namespace Tests\Feature\app\Http\Controllers\Recipe;
 
 use App\Http\Middleware\ApplySettings;
-use App\Models\Server;
+use App\Models\Recipe;
 use App\Models\User;
-use App\Repositories\Server\ServerInterface;
-use App\Services\Form\Server\ServerForm;
+use App\Repositories\Recipe\RecipeInterface;
+use App\Services\Form\Recipe\RecipeForm;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\Paginator;
 use Session;
 use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\TestCase;
 
-class ServersControllerTest extends TestCase
+class RecipeControllerTest extends TestCase
 {
     use ControllerTestHelper;
 
-    protected $mockServerRepository;
+    protected $mockRecipeRepository;
 
-    protected $mockServerForm;
+    protected $mockRecipeForm;
 
     public function setUp(): void
     {
@@ -35,209 +38,223 @@ class ServersControllerTest extends TestCase
             ->andReturn(true);
         $this->auth($user);
 
-        $this->mockServerRepository = $this->mock(ServerInterface::class);
-        $this->mockServerForm = $this->mock(ServerForm::class);
+        $this->mockRecipeRepository = $this->mock(RecipeInterface::class);
+        $this->mockRecipeForm = $this->mock(RecipeForm::class);
+        $this->mockRecipeModel = $this->partialMock(Recipe::class);
     }
 
     public function testShouldDisplayIndexPageWhenIndexPageIsRequested()
     {
-        $i = 1;
-        $servers = factory(Server::class, 3)->make()->each(function (Server $server) use ($i) {
-            $server->id = $i++;
-        });
+        $recipe1 = $this->mockRecipeModel
+            ->shouldReceive('getProjects')
+            ->once()
+            ->andReturn(new Collection())
+            ->mock();
+        $recipe1->id = 1;
+        $recipe2 = $this->mockRecipeModel
+            ->shouldReceive('getProjects')
+            ->once()
+            ->andReturn(new Collection())
+            ->mock();
+        $recipe2->id = 2;
+        $recipes = [$recipe1, $recipe2];
 
         $perPage = 10;
 
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byPage')
             ->once()
-            ->andReturn(new Paginator($servers, $perPage));
+            ->andReturn(new Paginator($recipes, $perPage));
 
-        $response = $this->get('servers');
+        $response = $this->get('recipes');
 
         $response->assertStatus(200);
-        $response->assertViewHas('servers');
+        $response->assertViewHas('recipes');
     }
 
     public function testShouldDisplayCreatePageWhenCreatePageIsRequested()
     {
-        $response = $this->get('servers/create');
+        $response = $this->get('recipes/create');
 
         $response->assertStatus(200);
     }
 
     public function testShouldRedirectToIndexPageWhenStoreProcessSucceeds()
     {
-        $this->mockServerForm
+        $this->mockRecipeForm
             ->shouldReceive('save')
             ->once()
             ->andReturn(true);
 
-        $response = $this->post('servers');
+        $response = $this->post('recipes');
 
-        $response->assertRedirect('servers');
+        $response->assertRedirect('recipes');
     }
 
     public function testShouldRedirectToCreatePageWhenStoreProcessFails()
     {
-        $this->mockServerForm
+        $this->mockRecipeForm
             ->shouldReceive('save')
             ->once()
             ->andReturn(false);
 
-        $this->mockServerForm
+        $this->mockRecipeForm
             ->shouldReceive('errors')
             ->once()
             ->andReturn([]);
 
-        $response = $this->post('servers');
+        $response = $this->post('recipes');
 
-        $response->assertRedirect('servers/create');
+        $response->assertRedirect('recipes/create');
         $response->assertSessionHasErrors();
     }
 
     public function testShouldDisplayShowPageWhenShowPageIsRequestedAndResourceIsFound()
     {
-        $server = factory(Server::class)->make([
-            'id' => 1,
-        ]);
+        $recipe = $this->mockRecipeModel
+            ->shouldReceive('getProjects')
+            ->once()
+            ->andReturn(new Collection())
+            ->mock();
+        $recipe->id = 1;
+        $recipe->name = '';
 
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
-            ->andReturn($server);
+            ->andReturn($recipe);
 
-        $response = $this->get('servers/1');
+        $response = $this->get('recipes/1');
 
         $response->assertStatus(200);
-        $response->assertViewHas('server');
+        $response->assertViewHas('recipe');
     }
 
     public function testShouldDisplayNotFoundPageWhenShowPageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
             ->andReturn(null);
 
-        $response = $this->get('servers/1');
+        $response = $this->get('recipes/1');
 
         $response->assertStatus(404);
     }
 
     public function testShouldDisplayEditPageWhenEditPageIsRequestedAndResourceIsFound()
     {
-        $server = factory(Server::class)->make([
+        $recipe = factory(Recipe::class)->make([
             'id' => 1,
         ]);
 
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
-            ->andReturn($server);
+            ->andReturn($recipe);
 
-        $response = $this->get('servers/1/edit');
+        $response = $this->get('recipes/1/edit');
 
         $response->assertStatus(200);
-        $response->assertViewHas('server');
+        $response->assertViewHas('recipe');
     }
 
     public function testShouldDisplayNotFoundPageWhenEditPageIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
             ->andReturn(null);
 
-        $response = $this->get('servers/1/edit');
+        $response = $this->get('recipes/1/edit');
 
         $response->assertStatus(404);
     }
 
     public function testShouldRedirectToIndexPageWhenUpdateProcessSucceeds()
     {
-        $server = factory(Server::class)->make();
+        $recipe = factory(Recipe::class)->make();
 
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
-            ->andReturn($server);
+            ->andReturn($recipe);
 
-        $this->mockServerForm
+        $this->mockRecipeForm
             ->shouldReceive('update')
             ->once()
             ->andReturn(true);
 
-        $response = $this->put('servers/1');
+        $response = $this->put('recipes/1');
 
-        $response->assertRedirect('servers');
+        $response->assertRedirect('recipes');
     }
 
     public function testShouldRedirectToEditPageWhenUpdateProcessFails()
     {
-        $server = factory(Server::class)->make([
+        $recipe = factory(Recipe::class)->make([
             'id' => 1,
         ]);
 
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
-            ->andReturn($server);
+            ->andReturn($recipe);
 
-        $this->mockServerForm
+        $this->mockRecipeForm
             ->shouldReceive('update')
             ->once()
             ->andReturn(false);
 
-        $this->mockServerForm
+        $this->mockRecipeForm
             ->shouldReceive('errors')
             ->once()
             ->andReturn([]);
 
-        $response = $this->put('servers/1');
+        $response = $this->put('recipes/1');
 
-        $response->assertRedirect('servers/1/edit');
+        $response->assertRedirect('recipes/1/edit');
         $response->assertSessionHasErrors();
     }
 
     public function testShouldDisplayNotFoundPageWhenUpdateProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
             ->andReturn(null);
 
-        $response = $this->put('servers/1');
+        $response = $this->put('recipes/1');
 
         $response->assertStatus(404);
     }
 
     public function testShouldRedirectToIndexPageWhenDestroyProcessIsRequestedAndDestroyProcessSucceeds()
     {
-        $server = factory(Server::class)->make();
+        $recipe = factory(Recipe::class)->make();
 
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
-            ->andReturn($server);
+            ->andReturn($recipe);
 
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('delete')
             ->once();
 
-        $response = $this->delete('servers/1');
+        $response = $this->delete('recipes/1');
 
-        $response->assertRedirect('servers');
+        $response->assertRedirect('recipes');
     }
 
     public function testShouldDisplayNotFoundPageWhenDestroyProcessIsRequestedAndResourceIsNotFound()
     {
-        $this->mockServerRepository
+        $this->mockRecipeRepository
             ->shouldReceive('byId')
             ->once()
             ->andReturn(null);
 
-        $response = $this->delete('servers/1');
+        $response = $this->delete('recipes/1');
 
         $response->assertStatus(404);
     }

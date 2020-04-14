@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Recipe;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -9,11 +11,12 @@ use App\Repositories\Recipe\RecipeInterface;
 use App\Services\Form\Recipe\RecipeForm;
 use Illuminate\Http\Request;
 
-class RecipesController extends Controller
+class RecipeController extends Controller
 {
-    protected $recipe;
-
-    protected $recipeForm;
+    /** @var RecipeInterface */
+    private $recipe;
+    /** @var RecipeForm */
+    private $recipeForm;
 
     /**
      * Create a new controller instance.

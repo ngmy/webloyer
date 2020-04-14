@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -10,13 +12,14 @@ use App\Repositories\User\UserInterface;
 use App\Services\Form\User\UserForm;
 use Illuminate\Http\Request;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
-    protected $user;
-
-    protected $userForm;
-
-    protected $role;
+    /** @var UserInterface */
+    private $user;
+    /** @var UserForm */
+    private $userForm;
+    /** @var RoleInterface */
+    private $role;
 
     /**
      * Create a new controller instance.
