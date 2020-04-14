@@ -54,7 +54,7 @@ class StoreRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'recipe_id' => explode(',', $this->recipe_id_order),
+            'recipe_id' => explode(',', (string) $this->recipe_id_order),
         ]);
     }
 }

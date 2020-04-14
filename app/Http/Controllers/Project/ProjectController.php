@@ -97,10 +97,10 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param ProjectRequest\CreateRequest $request
+     * @param ProjectRequest\StoreRequest $request
      * @return Response
      */
-    public function store(CreateRequest $request)
+    public function store(ProjectRequest\StoreRequest $request)
     {
         $input = $request->all();
 
