@@ -13,7 +13,6 @@ use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
 use App\Services\Form\Recipe\RecipeForm;
 use App\Services\Form\Server\ServerForm;
 use App\Services\Form\User\UserForm;
-use App\Services\Form\User\UserFormLaravelValidator;
 use App\Services\Form\Setting\MailSettingForm;
 use App\Services\Form\Setting\MailSettingFormLaravelValidator;
 use App\Services\Notification\MailNotifier;
@@ -74,7 +73,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Services\Form\User\UserForm', function ($app) {
             return new UserForm(
-                new UserFormLaravelValidator($app['validator']),
                 $app->make('App\Repositories\User\UserInterface')
             );
         });

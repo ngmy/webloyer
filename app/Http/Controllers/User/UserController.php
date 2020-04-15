@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
+use App\Http\Requests\User as UserRequest;
 use App\Models\User;
 use App\Repositories\Role\RoleInterface;
 use App\Repositories\User\UserInterface;
 use App\Services\Form\User\UserForm;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -42,10 +41,10 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserRequest\IndexRequest $request
      * @return Response
      */
-    public function index(Request $request)
+    public function index(UserRequest\IndexRequest $request)
     {
         $page = $request->input('page', 1);
 
@@ -72,20 +71,16 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserRequest\StoreRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(UserRequest\StoreRequest $request)
     {
         $input = $request->all();
 
-        if ($this->userForm->save($input)) {
-            return redirect()->route('users.index');
-        } else {
-            return redirect()->route('users.create')
-                ->withInput()
-                ->withErrors($this->userForm->errors());
-        }
+        $this->userForm->save($input);
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -113,21 +108,17 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserRequest\UpdateRequest $request
      * @param \App\Models\User         $user
      * @return Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserRequest\UpdateRequest $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        if ($this->userForm->update($input)) {
-            return redirect()->route('users.index');
-        } else {
-            return redirect()->route('users.edit', [$user])
-                ->withInput()
-                ->withErrors($this->userForm->errors());
-        }
+        $this->userForm->update($input);
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -144,21 +135,17 @@ class UserController extends Controller
     /**
      * Update the password of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserRequest\UpdatePasswordRequest $request
      * @param \App\Models\User         $user
      * @return Response
      */
-    public function updatePassword(Request $request, User $user)
+    public function updatePassword(UserRequest\UpdatePasswordRequest $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        if ($this->userForm->updatePassword($input)) {
-            return redirect()->route('users.index');
-        } else {
-            return redirect()->route('users.password.change', [$user])
-                ->withInput()
-                ->withErrors($this->userForm->errors());
-        }
+        $this->userForm->updatePassword($input);
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -179,21 +166,17 @@ class UserController extends Controller
     /**
      * Update the role of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserRequest\UpdateRoleRequest $request
      * @param \App\Models\User         $user
      * @return Response
      */
-    public function updateRole(Request $request, User $user)
+    public function updateRole(UserRequest\UpdateRoleRequest $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        if ($this->userForm->updateRole($input)) {
-            return redirect()->route('users.index');
-        } else {
-            return redirect()->route('users.role.edit', [$user])
-                ->withInput()
-                ->withErrors($this->userForm->errors());
-        }
+        $this->userForm->updateRole($input);
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -211,21 +194,17 @@ class UserController extends Controller
     /**
      * Regenerate the API token of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UserRequest\RegenerateApiTokenRequest $request
      * @param \App\Models\User         $user
      * @return Response
      */
-    public function regenerateApiToken(Request $request, User $user)
+    public function regenerateApiToken(UserRequest\RegenerateApiTokenRequest $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        if ($this->userForm->regenerateApiToken($input)) {
-            return redirect()->route('users.index');
-        } else {
-            return redirect()->route('users.api_token.edit', [$user])
-                ->withInput()
-                ->withErrors($this->userForm->errors());
-        }
+        $this->userForm->regenerateApiToken($input);
+
+        return redirect()->route('users.index');
     }
 
     /**

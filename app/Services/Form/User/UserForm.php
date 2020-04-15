@@ -2,29 +2,24 @@
 
 namespace App\Services\Form\User;
 
+use App\Repositories\User\UserInterface;
 use DB;
 use Hash;
-use App\Services\Validation\ValidableInterface;
-use App\Repositories\User\UserInterface;
 use Illuminate\Support\Str;
 
 class UserForm
 {
-    protected $validator;
-
     protected $user;
 
     /**
      * Create a new form service instance.
      *
-     * @param \App\Services\Validation\ValidableInterface $validator
-     * @param \App\Repositories\User\UserInterface        $user
+     * @param \App\Repositories\User\UserInterface $user
      * @return void
      */
-    public function __construct(ValidableInterface $validator, UserInterface $user)
+    public function __construct(UserInterface $user)
     {
-        $this->validator = $validator;
-        $this->user      = $user;
+        $this->user = $user;
     }
 
     /**
@@ -35,10 +30,6 @@ class UserForm
      */
     public function save(array $input)
     {
-        if (!$this->valid($input)) {
-            return false;
-        }
-
         if (isset($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         }
@@ -64,10 +55,6 @@ class UserForm
      */
     public function update(array $input)
     {
-        if (!$this->valid($input)) {
-            return false;
-        }
-
         DB::transaction(function () use ($input) {
             $this->user->update($input);
         });
@@ -83,10 +70,6 @@ class UserForm
      */
     public function updatePassword(array $input)
     {
-        if (!$this->valid($input)) {
-            return false;
-        }
-
         $input['password'] = Hash::make($input['password']);
 
         return $this->user->update($input);
@@ -100,10 +83,6 @@ class UserForm
      */
     public function updateRole(array $input)
     {
-        if (!$this->valid($input)) {
-            return false;
-        }
-
         if (!isset($input['role'])) {
             $input['role'] = [];
         }
@@ -128,25 +107,5 @@ class UserForm
         return $this->user->update($input);
 
         return true;
-    }
-
-    /**
-     * Return validation errors.
-     *
-     * @return array
-     */
-    public function errors()
-    {
-        return $this->validator->errors();
-    }
-
-    /**
-     * Test whether form validator passes.
-     *
-     * @return boolean
-     */
-    protected function valid(array $input)
-    {
-        return $this->validator->with($input)->passes();
     }
 }

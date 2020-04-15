@@ -9,7 +9,6 @@ use App\Http\Requests\Server as ServerRequest;
 use App\Models\Server;
 use App\Repositories\Server\ServerInterface;
 use App\Services\Form\Server\ServerForm;
-use Illuminate\Http\Request;
 
 class ServerController extends Controller
 {

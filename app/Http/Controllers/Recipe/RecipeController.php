@@ -9,7 +9,6 @@ use App\Http\Requests\Recipe as RecipeRequest;
 use App\Models\Recipe;
 use App\Repositories\Recipe\RecipeInterface;
 use App\Services\Form\Recipe\RecipeForm;
-use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
