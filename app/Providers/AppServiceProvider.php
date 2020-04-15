@@ -9,7 +9,6 @@ use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Form\Project\ProjectForm;
 use App\Services\Form\Deployment\DeploymentForm;
-use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
 use App\Services\Form\Recipe\RecipeForm;
 use App\Services\Form\Server\ServerForm;
 use App\Services\Form\User\UserForm;
@@ -53,7 +52,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Services\Form\Deployment\DeploymentForm', function ($app) {
             return new DeploymentForm(
-                new DeploymentFormLaravelValidator($app['validator']),
                 $app->make('App\Repositories\Project\ProjectInterface'),
                 $app->make('App\Services\Deployment\DeployCommanderInterface')
             );

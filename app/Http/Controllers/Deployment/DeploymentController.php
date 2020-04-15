@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Deployment;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests;
+use App\Http\Requests\Deployment as DeploymentRequest;
 use App\Models\Deployment;
 use App\Models\Project;
 use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Deployment\DeploymentForm;
-use Illuminate\Http\Request;
 
 class DeploymentController extends Controller
 {
@@ -38,11 +37,11 @@ class DeploymentController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Project      $project
+     * @param DeploymentRequest\IndexRequest $request
+     * @param \App\Models\Project            $project
      * @return Response
      */
-    public function index(Request $request, Project $project)
+    public function index(DeploymentRequest\IndexRequest $request, Project $project)
     {
         $page = $request->input('page', 1);
 
@@ -58,11 +57,11 @@ class DeploymentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Project      $project
+     * @param DeploymentRequest\StoreRequest $request
+     * @param \App\Models\Project            $project
      * @return Response
      */
-    public function store(Request $request, Project $project)
+    public function store(DeploymenRequest\StoreRequest $request, Project $project)
     {
         $input = array_merge($request->all(), [
             'status'     => null,
@@ -71,17 +70,13 @@ class DeploymentController extends Controller
             'user_id'    => $request->user()->id,
         ]);
 
-        if ($this->deploymentForm->save($input)) {
-            $deployment = $project->getLastDeployment();
-            $link = link_to_route('projects.deployments.show', "#$deployment->number", [$project, $deployment->number]);
-            $request->session()->flash('status', "The deployment $link was successfully started.");
+        $this->deploymentForm->save($input);
 
-            return redirect()->route('projects.deployments.index', [$project]);
-        } else {
-            return redirect()->route('projects.deployments.index', [$project])
-                ->withInput()
-                ->withErrors($this->deploymentForm->errors());
-        }
+        $deployment = $project->getLastDeployment();
+        $link = link_to_route('projects.deployments.show', "#$deployment->number", [$project, $deployment->number]);
+        $request->session()->flash('status', "The deployment $link was successfully started.");
+
+        return redirect()->route('projects.deployments.index', [$project]);
     }
 
     /**
