@@ -78,6 +78,8 @@ Route::group([
     'namespace' => 'Setting',
     'protect_alias' => 'setting'
 ], function () {
-    Route::get('settings/email', 'SettingController@getEmail')->name('settings.email');
-    Route::post('settings/email', 'SettingController@postEmail');
+    Route::namespace('Mail')->group(function () {
+        Route::get('settings/email', 'MailSettingController@get')->name('settings.email');
+        Route::post('settings/email', 'MailSettingController@post');
+    });
 });

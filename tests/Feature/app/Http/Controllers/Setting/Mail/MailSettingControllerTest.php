@@ -15,7 +15,7 @@ use Tests\Helpers\ControllerTestHelper;
 use Tests\Helpers\DummyMiddleware;
 use Tests\TestCase;
 
-class SettingControllerTest extends TestCase
+class MailSettingControllerTest extends TestCase
 {
     use ControllerTestHelper;
 

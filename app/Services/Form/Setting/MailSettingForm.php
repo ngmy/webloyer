@@ -4,25 +4,20 @@ namespace App\Services\Form\Setting;
 
 use App\Entities\Setting\MailSettingEntity;
 use App\Repositories\Setting\SettingInterface;
-use App\Services\Validation\ValidableInterface;
 
 class MailSettingForm
 {
-    protected $validator;
-
     protected $setting;
 
     /**
      * Create a new form service instance.
      *
-     * @param \App\Services\Validation\ValidableInterface $validator
-     * @param \App\Repositories\Setting\SettingInterface  $setting
+     * @param \App\Repositories\Setting\SettingInterface $setting
      * @return void
      */
-    public function __construct(ValidableInterface $validator, SettingInterface $setting)
+    public function __construct(SettingInterface $setting)
     {
-        $this->validator = $validator;
-        $this->setting   = $setting;
+        $this->setting = $setting;
     }
 
     /**
@@ -33,10 +28,6 @@ class MailSettingForm
      */
     public function update(array $input)
     {
-        if (!$this->valid($input)) {
-            return false;
-        }
-
         foreach ($input as $key => $value) {
             if ($value === '') {
                 $input[$key] = null;
@@ -62,25 +53,5 @@ class MailSettingForm
         $this->setting->updateByType($input);
 
         return true;
-    }
-
-    /**
-     * Return validation errors.
-     *
-     * @return array
-     */
-    public function errors()
-    {
-        return $this->validator->errors();
-    }
-
-    /**
-     * Test whether form validator passes.
-     *
-     * @return boolean
-     */
-    protected function valid(array $input)
-    {
-        return $this->validator->with($input)->passes();
     }
 }

@@ -13,7 +13,6 @@ use App\Services\Form\Recipe\RecipeForm;
 use App\Services\Form\Server\ServerForm;
 use App\Services\Form\User\UserForm;
 use App\Services\Form\Setting\MailSettingForm;
-use App\Services\Form\Setting\MailSettingFormLaravelValidator;
 use App\Services\Notification\MailNotifier;
 use App\Services\Config\DotenvReader;
 use App\Services\Config\DotenvWriter;
@@ -77,7 +76,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Services\Form\Setting\MailSettingForm', function ($app) {
             return new MailSettingForm(
-                new MailSettingFormLaravelValidator($app['validator']),
                 $app->make('App\Repositories\Setting\SettingInterface')
             );
         });
