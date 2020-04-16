@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Webloyer;
 
 use Illuminate\Support\ServiceProvider;
+use Webloyer\Domain\Model\Recipe\RecipeRepository;
+use Webloyer\Infra\Db\Repositories\Recipe\DbRecipeRepository;
 
 class WebloyerServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,7 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(RecipeRepository::class, DbRecipeRepository::class);
     }
 
     /**
