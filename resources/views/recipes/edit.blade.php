@@ -18,23 +18,23 @@
                         </div>
                     @endif
 
-                    {!! Form::open(['route' => ['recipes.update', $recipe->id], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' => ['recipes.update', $recipe->surrogateId()->value()], 'method' => 'put', 'role' => 'form','class' => 'form-horizontal']) !!}
                         <div class="form-group required">
                             <label for="name" class="col-md-4 control-label">Name</label>
                             <div class="col-md-6">
-                                {!! Form::text('name', $recipe->name, ['class' => 'form-control', 'id' => 'name']) !!}
+                                {!! Form::text('name', $recipe->name()->value(), ['class' => 'form-control', 'id' => 'name']) !!}
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="description" class="col-md-4 control-label">Description</label>
                             <div class="col-md-6">
-                                {!! Form::textarea('description', $recipe->description, ['class' => 'form-control', 'id' => 'description']) !!}
+                                {!! Form::textarea('description', $recipe->description()->value(), ['class' => 'form-control', 'id' => 'description']) !!}
                             </div>
                         </div>
                         <div class="form-group required">
                             <label for="body" class="col-md-4 control-label">Body</label>
                             <div class="col-md-6">
-                                {!! Form::textarea('body', $recipe->body, ['class' => 'form-control', 'id' => 'body', 'data-editor' => 'php']) !!}
+                                {!! Form::textarea('body', $recipe->body()->value(), ['class' => 'form-control', 'id' => 'body', 'data-editor' => 'php']) !!}
                                 <p class="help-block">You can define a <a href="http://deployer.org/docs/recipes">recipe PHP file</a> here.</p>
                             </div>
                         </div>

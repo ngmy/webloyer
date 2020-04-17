@@ -84,7 +84,7 @@ class RecipeController extends Controller
      * @param RecipeDomainModel\Recipe $recipe
      * @return Response
      */
-    public function show(Recipe $recipe)
+    public function show(RecipeDomainModel\Recipe $recipe)
     {
         $recipeProject = $recipe->getProjects()->toArray();
 
@@ -98,7 +98,7 @@ class RecipeController extends Controller
      * @param RecipeDomainModel\Recipe $recipe
      * @return Response
      */
-    public function edit(Recipe $recipe)
+    public function edit(RecipeDomainModel\Recipe $recipe)
     {
         return view('recipes.edit')->with('recipe', $recipe);
     }
@@ -110,7 +110,7 @@ class RecipeController extends Controller
      * @param RecipeDomainModel\Recipe    $recipe
      * @return Response
      */
-    public function update(RecipeRequest\UpdateRequest $request, Recipe $recipe)
+    public function update(RecipeRequest\UpdateRequest $request, RecipeDomainModel\Recipe $recipe)
     {
         $input = $request->all();
 
@@ -131,7 +131,7 @@ class RecipeController extends Controller
      * @param RecipeDomainModel\Recipe $recipe
      * @return Response
      */
-    public function destroy(Recipe $recipe)
+    public function destroy(RecipeDomainModel\Recipe $recipe)
     {
         $command = (new RecipeApplication\Commands\DeleteRecipeCommand())->setId($recipe->id());
 

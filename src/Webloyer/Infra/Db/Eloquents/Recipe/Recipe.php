@@ -12,6 +12,8 @@ use Webloyer\Domain\Model\Recipe as RecipeDomainModel;
 
 class Recipe extends Model implements RecipeDomainModel\RecipeInterest
 {
+    protected $fillable = ['uuid'];
+
     /**
      * @param Builder $query
      * @param string  $id
@@ -67,7 +69,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
             $this->uuid,
             $this->name,
             $this->description,
-            $this->body,
+            $this->body
         )->setSurrogateId($this->id);
     }
 }
