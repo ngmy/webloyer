@@ -1,14 +1,13 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Recipe;
+use Webloyer\Infra\Db\Eloquents\Recipe\Recipe;
+use Webloyer\Infra\Db\Repositories\Recipe\DbRecipeRepository;
 
 class RecipeTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('recipes')->delete();
-
         $deployerRecipes = [
             'cakephp' => [
                 'name'        => 'deployer-cakephp-recipe',
@@ -156,8 +155,10 @@ EOF
             ],
         ];
 
+        $recipeRepository = app(DbRecipeRepository::class);
         foreach ($deployerRecipes as $recipe) {
             Recipe::create([
+                'uuid'        => $recipeRepository->nextId(),
                 'name'        => $recipe['name'],
                 'description' => $recipe['description'],
                 'body'        => $recipe['body'],

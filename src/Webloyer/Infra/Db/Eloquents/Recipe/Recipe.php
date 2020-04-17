@@ -12,7 +12,13 @@ use Webloyer\Domain\Model\Recipe as RecipeDomainModel;
 
 class Recipe extends Model implements RecipeDomainModel\RecipeInterest
 {
-    protected $fillable = ['uuid'];
+    /** @var array<int, string> */
+    protected $fillable = [
+        'uuid',
+        'name',
+        'description',
+        'body',
+    ];
 
     /**
      * @param Builder $query
