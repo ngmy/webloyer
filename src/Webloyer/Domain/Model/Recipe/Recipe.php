@@ -125,4 +125,19 @@ class Recipe
         $interest->informDescription($this->description());
         $interest->informBody($this->body());
     }
+
+    /**
+     * @param mixed $object
+     * @return bool
+     */
+    public function equals($object): bool
+    {
+        $equalObjects = false;
+
+        if ($object instanceof self) {
+            $equalObjects = $object->id == $this->id;
+        }
+
+        return $equalObjects;
+    }
 }
