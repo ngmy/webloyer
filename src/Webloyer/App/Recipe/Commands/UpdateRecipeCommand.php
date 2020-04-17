@@ -2,16 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\App\Recipe;
+namespace Webloyer\App\Recipe\Commands;
 
-class StoreRecipeCommand
+class UpdateRecipeCommand
 {
+    /** @var string */
+    private $id;
     /** @var string */
     private $name;
     /** @var string|null */
     private $description;
     /** @var string */
     private $body;
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
 
     /**
      * @return string
@@ -35,6 +45,16 @@ class StoreRecipeCommand
     public function getBody(): string
     {
         return $this->body;
+    }
+
+    /**
+     * @param string $id
+     * @return self
+     */
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**

@@ -6,31 +6,26 @@ namespace App\Http\Controllers\Recipe;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Recipe as RecipeRequest;
-use App\Models\Recipe;
-use App\Repositories\Recipe\RecipeInterface;
-use App\Services\Form\Recipe\RecipeForm;
+use Webloyer\App\Recipe as RecipeApplication;
+use Webloyer\Domain\Model\Recipe as RecipeDomainModel;
 
 class RecipeController extends Controller
 {
-    /** @var RecipeInterface */
-    private $recipe;
-    /** @var RecipeForm */
-    private $recipeForm;
+    /** @var RecipeApplication\RecipeService */
+    private $recipeService;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Recipe\RecipeInterface $recipe
-     * @param \App\Services\Form\Recipe\RecipeForm     $recipeForm
+     * @param RecipeApplication\RecipeService $recipeService
      * @return void
      */
-    public function __construct(RecipeInterface $recipe, RecipeForm $recipeForm)
+    public function __construct(RecipeApplication\RecipeService $recipeService)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->recipe     = $recipe;
-        $this->recipeForm = $recipeForm;
+        $this->recipeService = $recipeService;
     }
 
     /**
@@ -42,10 +37,13 @@ class RecipeController extends Controller
     public function index(RecipeRequest\IndexRequest $request)
     {
         $page = $request->input('page', 1);
-
         $perPage = 10;
 
-        $recipes = $this->recipe->byPage($page, $perPage);
+        $command = (new RecipeApplication\GetRecipesCommand())
+            ->setPage($page)
+            ->setPerPage($perPage);
+
+        $recipes = $this->recipeService->getRecipes($command);
 
         return view('recipes.index')->with('recipes', $recipes);
     }
@@ -70,7 +68,12 @@ class RecipeController extends Controller
     {
         $input = $request->all();
 
-        $this->recipeForm->save($input);
+        $command = (new RecipeApplication\CreateRecipeCommand())
+            ->setName($input['name'])
+            ->setDescription($input['description'])
+            ->setBody($input['body']);
+
+        $this->recipeService->createRecipe($command);
 
         return redirect()->route('recipes.index');
     }
@@ -78,7 +81,7 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Recipe $recipe
+     * @param RecipeDomainModel\Recipe $recipe
      * @return Response
      */
     public function show(Recipe $recipe)
@@ -92,7 +95,7 @@ class RecipeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Recipe $recipe
+     * @param RecipeDomainModel\Recipe $recipe
      * @return Response
      */
     public function edit(Recipe $recipe)
@@ -104,14 +107,20 @@ class RecipeController extends Controller
      * Update the specified resource in storage.
      *
      * @param RecipeRequest\UpdateRequest $request
-     * @param \App\Models\Recipe       $recipe
+     * @param RecipeDomainModel\Recipe    $recipe
      * @return Response
      */
     public function update(RecipeRequest\UpdateRequest $request, Recipe $recipe)
     {
-        $input = array_merge($request->all(), ['id' => $recipe->id]);
+        $input = $request->all();
 
-        $this->recipeForm->update($input);
+        $command = (new RecipeApplication\UpdateRecipeCommand())
+            ->setId($recipe->id())
+            ->setName($input['name'])
+            ->setDescription($input['description'])
+            ->setBody($input['body']);
+
+        $this->recipeService->updateRecipe($command);
 
         return redirect()->route('recipes.index');
     }
@@ -119,12 +128,14 @@ class RecipeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Recipe $recipe
+     * @param RecipeDomainModel\Recipe $recipe
      * @return Response
      */
     public function destroy(Recipe $recipe)
     {
-        $this->recipe->delete($recipe->id);
+        $command = (new RecipeApplication\DeleteRecipeCommand())->setId($recipe->id());
+
+        $this->recipeService->deleteRecipe($command);
 
         return redirect()->route('recipes.index');
     }

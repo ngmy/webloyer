@@ -10,6 +10,11 @@ namespace Webloyer\Domain\Model\Recipe;
 interface RecipeInterest
 {
     /**
+     * @param string $id
+     * @return void
+     */
+    public function informId(string $id): void;
+    /**
      * @param string $name
      * @return void
      */

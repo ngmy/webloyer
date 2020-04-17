@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Webloyer\Infra\Db\Eloquents;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -37,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider
             $project = $projectRepository->byId($id);
 
             if (is_null($project)) {
-                throw new NotFoundHttpException();
+                abort(404);
             }
 
             return $project;
@@ -49,22 +49,18 @@ class RouteServiceProvider extends ServiceProvider
             $deployment = $project->getDeploymentByNumber($num);
 
             if (is_null($deployment)) {
-                throw new NotFoundHttpException();
+                abort(404);
             }
 
             return $deployment;
         });
 
-        Route::bind('recipe', function ($id) {
-            $recipeRepository = $this->app->make('App\Repositories\Recipe\RecipeInterface');
-
-            $recipe = $recipeRepository->byId($id);
-
-            if (is_null($recipe)) {
-                throw new NotFoundHttpException();
+        Route::bind('recipe', function (int $id) {
+            $recipeOrm = Eloquents\Recipe\Recipe::find($id);
+            if (is_null($recipeOrm)) {
+                abort(404);
             }
-
-            return $recipe;
+            return $recipeOrm->toEntity();
         });
 
         Route::bind('server', function ($id) {
@@ -73,7 +69,7 @@ class RouteServiceProvider extends ServiceProvider
             $server = $serverRepository->byId($id);
 
             if (is_null($server)) {
-                throw new NotFoundHttpException();
+                abort(404);
             }
 
             return $server;
@@ -85,7 +81,7 @@ class RouteServiceProvider extends ServiceProvider
             $user = $userRepository->byId($id);
 
             if (is_null($user)) {
-                throw new NotFoundHttpException();
+                abort(404);
             }
 
             return $user;
