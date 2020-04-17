@@ -158,7 +158,7 @@ EOF
         $recipeRepository = app(DbRecipeRepository::class);
         foreach ($deployerRecipes as $recipe) {
             Recipe::create([
-                'uuid'        => $recipeRepository->nextId(),
+                'uuid'        => $recipeRepository->nextId()->value(),
                 'name'        => $recipe['name'],
                 'description' => $recipe['description'],
                 'body'        => $recipe['body'],
