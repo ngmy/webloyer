@@ -25,17 +25,17 @@
                 <tbody>
                     @foreach ($recipes as $recipe)
                         <tr>
-                            <td>{{ $recipe->name }}</td>
+                            <td>{{ $recipe->name() }}</td>
                             <td><div align="right">{{ number_format(count($recipe->getProjects())) }}</div></td>
                             <td>{{ $recipe->created_at }}</td>
                             <td>{{ $recipe->updated_at }}</td>
                             <td>
-                                {!! link_to_route('recipes.show', 'Show', [$recipe->id], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('recipes.show', 'Show', [$recipe->id()], ['class' => 'btn btn-default']) !!}
                                 @if (Auth::user()->hasPermission('update.recipe'))
-                                    {!! link_to_route('recipes.edit', 'Edit', [$recipe->id], ['class' => 'btn btn-default']) !!}
+                                    {!! link_to_route('recipes.edit', 'Edit', [$recipe->id()], ['class' => 'btn btn-default']) !!}
                                 @endif
                                 @if (Auth::user()->hasPermission('delete.recipe'))
-                                    {!! Form::open(['route' => ['recipes.destroy', $recipe->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                                    {!! Form::open(['route' => ['recipes.destroy', $recipe->id()], 'method' => 'delete', 'style' => 'display:inline']) !!}
                                     {!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
                                     {!! Form::close() !!}
                                 @endif
