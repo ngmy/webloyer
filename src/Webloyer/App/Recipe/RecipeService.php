@@ -59,7 +59,7 @@ class RecipeService
             $this->recipeRepository->nextId()->value(),
             $command->getName(),
             $command->getDescription(),
-            $command->getBody(),
+            $command->getBody()
         );
         $this->recipeRepository->save($recipe);
     }

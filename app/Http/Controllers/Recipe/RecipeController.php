@@ -39,7 +39,7 @@ class RecipeController extends Controller
         $page = $request->input('page', 1);
         $perPage = 10;
 
-        $command = (new RecipeApplication\GetRecipesCommand())
+        $command = (new RecipeApplication\Commands\GetRecipesCommand())
             ->setPage($page)
             ->setPerPage($perPage);
 
@@ -68,7 +68,7 @@ class RecipeController extends Controller
     {
         $input = $request->all();
 
-        $command = (new RecipeApplication\CreateRecipeCommand())
+        $command = (new RecipeApplication\Commands\CreateRecipeCommand())
             ->setName($input['name'])
             ->setDescription($input['description'])
             ->setBody($input['body']);
@@ -114,7 +114,7 @@ class RecipeController extends Controller
     {
         $input = $request->all();
 
-        $command = (new RecipeApplication\UpdateRecipeCommand())
+        $command = (new RecipeApplication\Commands\UpdateRecipeCommand())
             ->setId($recipe->id())
             ->setName($input['name'])
             ->setDescription($input['description'])
@@ -133,7 +133,7 @@ class RecipeController extends Controller
      */
     public function destroy(Recipe $recipe)
     {
-        $command = (new RecipeApplication\DeleteRecipeCommand())->setId($recipe->id());
+        $command = (new RecipeApplication\Commands\DeleteRecipeCommand())->setId($recipe->id());
 
         $this->recipeService->deleteRecipe($command);
 
