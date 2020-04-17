@@ -1,5 +1,7 @@
 <?php
 
+use Webloyer\Domain\Model\Recipe\Recipe;
+
 Breadcrumbs::register('projects.index', function ($breadcrumbs) {
     $breadcrumbs->push('Projects', route('projects.index'));
 });
@@ -38,14 +40,14 @@ Breadcrumbs::register('recipes.create', function ($breadcrumbs) {
     $breadcrumbs->push('Create', route('recipes.create'));
 });
 
-Breadcrumbs::register('recipes.show', function ($breadcrumbs, App\Models\Recipe $recipe) {
+Breadcrumbs::register('recipes.show', function ($breadcrumbs, Recipe $recipe) {
     $breadcrumbs->parent('recipes.index');
-    $breadcrumbs->push($recipe->name, route('recipes.show', [$recipe]));
+    $breadcrumbs->push($recipe->name(), route('recipes.show', [$recipe->surrogateId()]));
 });
 
-Breadcrumbs::register('recipes.edit', function ($breadcrumbs, App\Models\Recipe $recipe) {
+Breadcrumbs::register('recipes.edit', function ($breadcrumbs, Recipe $recipe) {
     $breadcrumbs->parent('recipes.show', $recipe);
-    $breadcrumbs->push('Edit', route('recipes.edit', [$recipe]));
+    $breadcrumbs->push('Edit', route('recipes.edit', [$recipe->surrogateId()]));
 });
 
 Breadcrumbs::register('servers.index', function ($breadcrumbs) {
