@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Repositories\Project\ProjectInterface;
-use App\Repositories\Server\ServerInterface;
 use App\Repositories\Setting\SettingInterface;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerFileBuilderInterface;
@@ -18,6 +17,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Symfony\Component\Process\ProcessBuilder;
+use Webloyer\App\Server as ServerApplication;
 
 class Rollback implements ShouldQueue
 {
@@ -46,7 +46,7 @@ class Rollback implements ShouldQueue
      * Execute the job.
      *
      * @param \App\Repositories\Project\ProjectInterface   $projectRepository
-     * @param \App\Repositories\Server\ServerInterface     $serverRepository
+     * @param ServerApplication\ServerService              $serverService
      * @param \Symfony\Component\Process\ProcessBuilder    $processBuilder
      * @param \App\Services\Notification\NotifierInterface $notifier
      * @param \App\Repositories\Setting\SettingInterface   $settingRepository
@@ -54,14 +54,16 @@ class Rollback implements ShouldQueue
      */
     public function handle(
         ProjectInterface $projectRepository,
-        ServerInterface $serverRepository,
+        ServerApplication\ServerService $serverService,
         ProcessBuilder $processBuilder,
         NotifierInterface $notifier,
         SettingInterface $settingRepository
     ) {
         $deployment = $this->deployment;
         $project    = $projectRepository->byId($deployment->project_id);
-        $server     = $serverRepository->byId($project->server_id);
+
+        $serverCommand = (new ServerApplication\Commands\GetServerCommand())->setId($project->server_id);
+        $server = $serverService->getServer($serverCommand);
 
         $app = app();
 

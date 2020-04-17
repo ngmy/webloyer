@@ -6,31 +6,26 @@ namespace App\Http\Controllers\Server;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Server as ServerRequest;
-use App\Models\Server;
-use App\Repositories\Server\ServerInterface;
-use App\Services\Form\Server\ServerForm;
+use Webloyer\App\Server as ServerApplication;
+use Webloyer\Domain\Model\Server as ServerDomainModel;
 
 class ServerController extends Controller
 {
-    /** @var ServerInterface */
-    private $server;
-    /** @var ServerForm */
-    private $serverForm;
+    /** @var ServerApplication\ServerService */
+    private $serverService;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Server\ServerInterface $server
-     * @param \App\Services\Form\Server\ServerForm     $serverForm
+     * @param ServerApplication\ServerService $serverService
      * @return void
      */
-    public function __construct(ServerInterface $server, ServerForm $serverForm)
+    public function __construct(ServerApplication\ServerService $serverService)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->server     = $server;
-        $this->serverForm = $serverForm;
+        $this->serverService = $serverService;
     }
 
     /**
@@ -42,10 +37,13 @@ class ServerController extends Controller
     public function index(ServerRequest\IndexRequest $request)
     {
         $page = $request->input('page', 1);
-
         $perPage = 10;
 
-        $servers = $this->server->byPage($page, $perPage);
+        $command = (new ServerApplication\Commands\GetServersCommand())
+            ->setPage($page)
+            ->setPerPage($perPage);
+
+        $servers = $this->serverService->getServers($command);
 
         return view('servers.index')->with('servers', $servers);
     }
@@ -70,7 +68,12 @@ class ServerController extends Controller
     {
         $input = $request->all();
 
-        $this->serverForm->save($input);
+        $command = (new ServerApplication\Commands\CreateServerCommand())
+            ->setName($input['name'])
+            ->setDescription($input['description'])
+            ->setBody($input['body']);
+
+        $this->serverService->createServer($command);
 
         return redirect()->route('servers.index');
     }
@@ -78,10 +81,10 @@ class ServerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Server $server
+     * @param ServerDomainModel\Server $server
      * @return Response
      */
-    public function show(Server $server)
+    public function show(ServerDomainModel\Server $server)
     {
         return view('servers.show')->with('server', $server);
     }
@@ -89,10 +92,10 @@ class ServerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Server $server
+     * @param ServerDomainModel\Server $server
      * @return Response
      */
-    public function edit(Server $server)
+    public function edit(ServerDomainModel\Server $server)
     {
         return view('servers.edit')->with('server', $server);
     }
@@ -101,14 +104,20 @@ class ServerController extends Controller
      * Update the specified resource in storage.
      *
      * @param ServerRequest\UpdateRequest $request
-     * @param \App\Models\Server          $server
+     * @param ServerDomainModel\Server    $server
      * @return Response
      */
-    public function update(ServerRequest\UpdateRequest $request, Server $server)
+    public function update(ServerRequest\UpdateRequest $request, ServerDomainModel\Server $server)
     {
-        $input = array_merge($request->all(), ['id' => $server->id]);
+        $input = $request->all();
 
-        $this->serverForm->update($input);
+        $command = (new ServerApplication\Commands\UpdateServerCommand())
+            ->setId($server->id())
+            ->setName($input['name'])
+            ->setDescription($input['description'])
+            ->setBody($input['body']);
+
+        $this->serverService->updateServer($command);
 
         return redirect()->route('servers.index');
     }
@@ -116,12 +125,14 @@ class ServerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Server $server
+     * @param ServerDomainModel\Server $server
      * @return Response
      */
-    public function destroy(Server $server)
+    public function destroy(ServerDomainModel\Server $server)
     {
-        $this->server->delete($server->id);
+        $command = (new ServerApplication\Commands\DeleteServerCommand())->setId($server->id());
+
+        $this->serverService->deleteServer($command);
 
         return redirect()->route('servers.index');
     }

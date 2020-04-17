@@ -64,15 +64,11 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('server', function ($id) {
-            $serverRepository = $this->app->make('App\Repositories\Server\ServerInterface');
-
-            $server = $serverRepository->byId($id);
-
-            if (is_null($server)) {
+            $serverOrm = Eloquents\Server\Server::find($id);
+            if (is_null($serverOrm)) {
                 abort(404);
             }
-
-            return $server;
+            return $serverOrm->toEntity();
         });
 
         Route::bind('user', function ($id) {

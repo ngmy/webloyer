@@ -7,11 +7,11 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project as ProjectRequest;
 use App\Repositories\Project\ProjectInterface;
-use App\Repositories\Server\ServerInterface;
 use App\Repositories\User\UserInterface;
 use App\Services\Form\Project\ProjectForm;
 use App\Models\Project;
-use Webloyer\App\Recipe\RecipeService;
+use Webloyer\App\Recipe;
+use Webloyer\App\Server;
 
 class ProjectController extends Controller
 {
@@ -19,10 +19,10 @@ class ProjectController extends Controller
     private $project;
     /** @var ProjectForm */
     private $projectForm;
-    /** @var RecipeService */
+    /** @var Recipe\RecipeService */
     private $recipeService;
-    /** @var ServerInterface */
-    private $server;
+    /** @var Server\ServerService */
+    private $serverService;
     /** @var UserInterface */
     private $user;
 
@@ -31,16 +31,16 @@ class ProjectController extends Controller
      *
      * @param \App\Repositories\Project\ProjectInterface $project
      * @param \App\Services\Form\Project\ProjectForm     $projectForm
-     * @param RecipeService                              $recipeService
-     * @param \App\Repositories\Server\ServerInterface   $server
+     * @param Recipe\RecipeService                       $recipeService
+     * @param Server\ServerService                       $serverService
      * @param \App\Repositories\User\UserInterface       $user
      * @return void
      */
     public function __construct(
         ProjectInterface $project,
         ProjectForm $projectForm,
-        RecipeService $recipeService,
-        ServerInterface $server,
+        Recipe\RecipeService $recipeService,
+        Server\ServerService $serverService,
         UserInterface $user
     ) {
         $this->middleware('auth');
@@ -49,7 +49,7 @@ class ProjectController extends Controller
         $this->project       = $project;
         $this->projectForm   = $projectForm;
         $this->recipeService = $recipeService;
-        $this->server        = $server;
+        $this->serverService = $serverService;
         $this->user          = $user;
     }
 
@@ -80,7 +80,7 @@ class ProjectController extends Controller
         $recipes = $this->recipeService->getAllRecipes()->toArray();
         $recipes = array_column($recipes, 'name', 'id');
 
-        $servers = $this->server->all()->toArray();
+        $servers = $this->serverService->getAllServers()->toArray();
         $servers = array_column($servers, 'name', 'id');
 
         $users = $this->user->all()->toArray();
@@ -118,7 +118,8 @@ class ProjectController extends Controller
     {
         $projectRecipe = $project->getRecipes()->toArray();
 
-        $projectServer = $this->server->byId($project->server_id);
+        $serverCommand = (new Server\Commands\GetServerCommand())->setId($project->server_id);
+        $projectServer = $this->serverService->getServer($serverCommand);
 
         return view('projects.show')
             ->with('project', $project)
@@ -137,7 +138,7 @@ class ProjectController extends Controller
         $recipes = $this->recipeService->getAllRecipes()->toArray();
         $recipes = array_column($recipes, 'name', 'id');
 
-        $servers = $this->server->all()->toArray();
+        $servers = $this->serverService->getAllServers()->toArray();
         $servers = array_column($servers, 'name', 'id');
 
         $projectRecipe = $project->getRecipes()->toArray();

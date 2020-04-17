@@ -3,12 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Project;
-use App\Models\Recipe;
-use App\Models\Server;
 use App\Models\Setting;
 use App\Models\User;
 use App\Repositories\Project\EloquentProject;
-use App\Repositories\Server\EloquentServer;
 use App\Repositories\User\EloquentUser;
 use App\Repositories\Role\EloquentRole;
 use App\Repositories\Setting\ConfigAppSetting;
@@ -38,10 +35,6 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind('App\Repositories\Project\ProjectInterface', function ($app) {
             return new EloquentProject(new Project());
-        });
-
-        $this->app->bind('App\Repositories\Server\ServerInterface', function ($app) {
-            return new EloquentServer(new Server());
         });
 
         $this->app->bind('App\Repositories\User\UserInterface', function ($app) {
