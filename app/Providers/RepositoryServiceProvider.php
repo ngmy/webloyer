@@ -8,7 +8,6 @@ use App\Models\Server;
 use App\Models\Setting;
 use App\Models\User;
 use App\Repositories\Project\EloquentProject;
-use App\Repositories\Recipe\EloquentRecipe;
 use App\Repositories\Server\EloquentServer;
 use App\Repositories\User\EloquentUser;
 use App\Repositories\Role\EloquentRole;
@@ -39,10 +38,6 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind('App\Repositories\Project\ProjectInterface', function ($app) {
             return new EloquentProject(new Project());
-        });
-
-        $this->app->bind('App\Repositories\Recipe\RecipeInterface', function ($app) {
-            return new EloquentRecipe(new Recipe());
         });
 
         $this->app->bind('App\Repositories\Server\ServerInterface', function ($app) {

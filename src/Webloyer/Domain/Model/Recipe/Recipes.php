@@ -17,4 +17,12 @@ class Recipes
     {
         $this->recipes = $recipes;
     }
+
+    /**
+     * @return array<int, Recipe>
+     */
+    public function toArray(): array
+    {
+        return $this->recipes;
+    }
 }

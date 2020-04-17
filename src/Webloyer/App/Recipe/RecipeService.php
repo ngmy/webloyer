@@ -23,6 +23,14 @@ class RecipeService
     }
 
     /**
+     * @return Recipe\Recipes
+     */
+    public function getAllRecipes(): Recipe\Recipes
+    {
+        return $this->recipeRepository->findAll();
+    }
+
+    /**
      * @param Commands\GetRecipesCommand $command
      * @return Recipe\Recipes
      */

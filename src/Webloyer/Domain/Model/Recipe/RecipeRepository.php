@@ -14,6 +14,10 @@ interface RecipeRepository
      */
     public function nextId(): RecipeId;
     /**
+     * @return Recipes
+     */
+    public function findAll(): Recipes;
+    /**
      * @param int|null $page
      * @param int|null $perPage
      * @return Recipes

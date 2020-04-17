@@ -9,7 +9,6 @@ use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Form\Project\ProjectForm;
 use App\Services\Form\Deployment\DeploymentForm;
-use App\Services\Form\Recipe\RecipeForm;
 use App\Services\Form\Server\ServerForm;
 use App\Services\Form\User\UserForm;
 use App\Services\Form\Setting\MailSettingForm;
@@ -53,12 +52,6 @@ class AppServiceProvider extends ServiceProvider
             return new DeploymentForm(
                 $app->make('App\Repositories\Project\ProjectInterface'),
                 $app->make('App\Services\Deployment\DeployCommanderInterface')
-            );
-        });
-
-        $this->app->bind('App\Services\Form\Recipe\RecipeForm', function ($app) {
-            return new RecipeForm(
-                $app->make('App\Repositories\Recipe\RecipeInterface')
             );
         });
 

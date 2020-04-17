@@ -20,6 +20,20 @@ class DbRecipeRepository implements Recipe\RecipeRepository
     }
 
     /**
+     * @return Recipes
+     */
+    public function findAll(): Recipes
+    {
+        $recipeArray = RecipeOrm::orderBy('name')
+            ->all()
+            ->map(function (RecipeOrm $recipeOrm): Recipe\Recipe {
+                return $recipeOrm->toEntity();
+            })
+            ->toArray();
+        return new Recipe\Recipes(...$recipeArray);
+    }
+
+    /**
      * @param int|null $page
      * @param int|null $perPage
      * @return Recipe\Recipes
