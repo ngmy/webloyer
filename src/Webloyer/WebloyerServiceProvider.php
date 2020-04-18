@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Webloyer;
 
+use Event;
 use Illuminate\Support\ServiceProvider;
+use Webloyer\Domain\Model\Deployment\DeployedEvent;
 use Webloyer\Domain\Model\Recipe\RecipeRepository;
 use Webloyer\Domain\Model\Server\ServerRepository;
 use Webloyer\Infra\Db\Repositories\Recipe\DbRecipeRepository;
@@ -30,6 +32,6 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+//        Event::listen(DeployedEvent::class, KickDeployerListener::class);
     }
 }

@@ -27,7 +27,7 @@ trait Enumerable
     /**
      * @return mixed
      */
-    public function value(): mixed
+    public function value()
     {
         return $this->scalar;
     }
@@ -56,10 +56,13 @@ trait Enumerable
      */
     private static function toConstantCase(string $string): string
     {
-        return ltrim(strtoupper(preg_replace('/[A-Z]+/', '_\0', $string)), '_');
+        $string = preg_replace('/[A-Z]+/', '_\0', $string);
+        assert(!is_null($string));
+        return ltrim(strtoupper($string), '_');
     }
 
     /**
+     * @param mixed $value
      * @return void
      */
     private function __construct($value)
