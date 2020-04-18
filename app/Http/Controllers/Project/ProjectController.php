@@ -6,22 +6,19 @@ namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project as ProjectRequest;
-use App\Repositories\Project\ProjectInterface;
 use App\Repositories\User\UserInterface;
-use App\Services\Form\Project\ProjectForm;
-use App\Models\Project;
-use Webloyer\App\Recipe;
-use Webloyer\App\Server;
+use Webloyer\App\Project as ProjectApplication;
+use Webloyer\App\Recipe as RecipeApplication;
+use Webloyer\App\Server as ServerApplication;
+use Webloyer\Domain\Model\Project as ProjectDomainModel;
 
 class ProjectController extends Controller
 {
-    /** @var ProjectInterface */
-    private $project;
-    /** @var ProjectForm */
-    private $projectForm;
-    /** @var Recipe\RecipeService */
+    /** @var ProjectApplication\ProjectService */
+    private $projectService;
+    /** @var RecipeApplication\RecipeService */
     private $recipeService;
-    /** @var Server\ServerService */
+    /** @var ServerApplication\ServerService */
     private $serverService;
     /** @var UserInterface */
     private $user;
@@ -29,28 +26,25 @@ class ProjectController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Project\ProjectInterface $project
-     * @param \App\Services\Form\Project\ProjectForm     $projectForm
-     * @param Recipe\RecipeService                       $recipeService
-     * @param Server\ServerService                       $serverService
-     * @param \App\Repositories\User\UserInterface       $user
+     * @param ProjectApplication\ProjectService $projectService
+     * @param RecipeApplication\RecipeService   $recipeService
+     * @param ServerApplication\ServerService   $serverService
+     * @param \App\Repositories\User\UserInterface $user
      * @return void
      */
     public function __construct(
-        ProjectInterface $project,
-        ProjectForm $projectForm,
-        Recipe\RecipeService $recipeService,
-        Server\ServerService $serverService,
+        ProjectApplication\ProjectService $projectService,
+        RecipeApplication\RecipeService $recipeService,
+        ServerApplication\ServerService $serverService,
         UserInterface $user
     ) {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->project       = $project;
-        $this->projectForm   = $projectForm;
-        $this->recipeService = $recipeService;
-        $this->serverService = $serverService;
-        $this->user          = $user;
+        $this->projectService = $projectService;
+        $this->recipeService  = $recipeService;
+        $this->serverService  = $serverService;
+        $this->user           = $user;
     }
 
     /**
@@ -62,10 +56,13 @@ class ProjectController extends Controller
     public function index(ProjectRequest\IndexRequest $request)
     {
         $page = $request->input('page', 1);
-
         $perPage = 10;
 
-        $projects = $this->project->byPage($page, $perPage);
+        $command = (new ProjectApplication\Commands\GetProjectsCommand())
+            ->setPage($page)
+            ->setPerPage($perPage);
+
+        $projects = $this->projectService->getProjects($command);
 
         return view('projects.index')->with('projects', $projects);
     }
@@ -103,7 +100,21 @@ class ProjectController extends Controller
     {
         $input = $request->all();
 
-        $this->projectForm->save($input);
+        $command = (new ProjectApplication\Commands\CreateProjectCommand())
+            ->setName($input['name'])
+            ->setRecipeIds($input['stage'])
+            ->setServerId($input['recipe_id'])
+            ->setRepositoryUrl($input['repository'])
+            ->setStageName($input['stage'])
+            ->setDeployPath($input['deploy_path'])
+            ->setEmailNotificationRecipient($input['email_notification_recipient'])
+            ->setDeploymentKeepDays($input['days_to_keep_deployments'])
+            ->setKeepLastDeployment($input['keep_last_deployment'])
+            ->setDeploymentKeepMaxNumber($input['max_number_of_deployments_to_keep'])
+            ->setGithubWebhookSecret($input['github_webhook_secret'])
+            ->setGithubWebhookExecutor($input['']);
+
+        $this->projectService->createProject($command);
 
         return redirect()->route('projects.index');
     }
@@ -111,14 +122,14 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Project $project
+     * @param ProjectDomainModel\Project $project
      * @return Response
      */
-    public function show(Project $project)
+    public function show(ProjectDomainModel\Project $project)
     {
         $projectRecipe = $project->getRecipes()->toArray();
 
-        $serverCommand = (new Server\Commands\GetServerCommand())->setId($project->server_id);
+        $serverCommand = (new ServerApplication\Commands\GetServerCommand())->setId($project->server_id);
         $projectServer = $this->serverService->getServer($serverCommand);
 
         return view('projects.show')
@@ -130,10 +141,10 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Project $project
+     * @param ProjectDomainModel\Project $project
      * @return Response
      */
-    public function edit(Project $project)
+    public function edit(ProjectDomainModel\Project $project)
     {
         $recipes = $this->recipeService->getAllRecipes()->toArray();
         $recipes = array_column($recipes, 'name', 'id');
@@ -160,14 +171,29 @@ class ProjectController extends Controller
      * Update the specified resource in storage.
      *
      * @param ProjectRequest\UpdateRequest $request
-     * @param \App\Models\Project          $project
+     * @param ProjectDomainModel\Project   $project
      * @return Response
      */
-    public function update(ProjectRequest\UpdateRequest $request, Project $project)
+    public function update(ProjectRequest\UpdateRequest $request, ProjectDomainModel\Project $project)
     {
-        $input = array_merge($request->all(), ['id' => $project->id]);
+        $input = $request->all();
 
-        $this->projectForm->update($input);
+        $command = (new ProjectApplication\Commands\UpdateProjectCommand())
+            ->setId($project->id())
+            ->setName($input['name'])
+            ->setRecipeIds($input['stage'])
+            ->setServerId($input['recipe_id'])
+            ->setRepositoryUrl($input['repository'])
+            ->setStageName($input['stage'])
+            ->setDeployPath($input['deploy_path'])
+            ->setEmailNotificationRecipient($input['email_notification_recipient'])
+            ->setDeploymentKeepDays($input['days_to_keep_deployments'])
+            ->setKeepLastDeployment($input['keep_last_deployment'])
+            ->setDeploymentKeepMaxNumber($input['max_number_of_deployments_to_keep'])
+            ->setGithubWebhookSecret($input['github_webhook_secret'])
+            ->setGithubWebhookExecutor($input['']);
+
+        $this->projectService->updateProject($command);
 
         return redirect()->route('projects.index');
     }
@@ -175,12 +201,14 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Project $project
+     * @param ProjectDomainModel\Project $project
      * @return Response
      */
-    public function destroy(Project $project)
+    public function destroy(ProjectDomainModel\Project $project)
     {
-        $this->project->delete($project->id);
+        $command = (new ProjectApplication\Commands\DeleteProjectCommand())->setId($project->id());
+
+        $this->projectService->deleteProject($command);
 
         return redirect()->route('projects.index');
     }

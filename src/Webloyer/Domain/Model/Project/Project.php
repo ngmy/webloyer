@@ -24,6 +24,14 @@ class Project
     private $repositoryUrl;
     /** @var StageName */
     private $stageName;
+    /** @var ServerOverride\ServerOverride */
+    private $serverOverride;
+    /** @var Notification\Email\EmailNotification */
+    private $emailNotification;
+    /** @var DiscardOldDeployment\DiscardOldDeployment */
+    private $discardOldDeployment;
+    /** @var Webhook\Github\GithubWebhook */
+    private $githubWebhook;
 
     /**
      * @param string             $id
@@ -32,6 +40,13 @@ class Project
      * @param string             $serverId
      * @param string             $repositoryUrl
      * @param string             $stageName
+     * @param string|null        $deployPath
+     * @param string|null        $emailNotificationRecipient
+     * @param int|null           $deploymentKeepDays
+     * @param bool               $keepLastDeployment
+     * @param int|null           $deploymentKeepMaxNumber
+     * @param string|null        $githubWebhookSecret
+     * @param string|null        $githubWebhookExecutor
      * @return self
      */
     public static function of(
@@ -40,7 +55,14 @@ class Project
         array $recipeIds,
         string $serverId,
         string $repositoryUrl,
-        string $stageName
+        string $stageName,
+        ?string $deployPath,
+        ?string $emailNotificationRecipient,
+        ?int $deploymentKeepDays,
+        bool $keepLastDeployment,
+        ?int $deploymentKeepMaxNumber,
+        ?string $githubWebhookSecret,
+        ?string $githubWebhookExecutor
     ) {
         return new self(
             new ProjectId($id),
@@ -48,15 +70,30 @@ class Project
             Recipe\RecipeIds::of(...$recipeIds),
             new Server\ServerId($serverId),
             new RepositoryUrl($repositoryUrl),
-            new StageName($stageName)
+            new StageName($stageName),
+            ServerOverride\ServerOverride::of($deployPath),
+            Notification\Email\EmailNotification::of($emailNotificationRecipient),
+            DiscardOldDeployment\DiscardOldDeployment::of(
+                $deploymentKeepDays,
+                $keepLastDeployment,
+                $deploymentKeepMaxNumber
+            ),
+            Webhook\Github\GithubWebhook::of(
+                $githubWebhookSecret,
+                $githubWebhookExecutor
+            )
         );
     }
 
     /**
-     * @param ProjectId        $id
-     * @param ProjectName      $name
-     * @param Recipe\RecipeIds $recipeIds
-     * @param Server\ServerId  $serverId
+     * @param ProjectId                                 $id
+     * @param ProjectName                               $name
+     * @param Recipe\RecipeIds                          $recipeIds
+     * @param Server\ServerId                           $serverId
+     * @param ServerOverride\ServerOverride             $serverOverride
+     * @param Notification\Email\EmailNotification      $emailNotification
+     * @param DiscardOldDeployment\DiscardOldDeployment $discardOldDeployment
+     * @param Webhook\Github\GithubWebhook              $githubWebhook
      * @return void
      */
     public function __construct(
@@ -65,7 +102,11 @@ class Project
         Recipe\RecipeIds $recipeIds,
         Server\ServerId $serverId,
         RepositoryUrl $repositoryUrl,
-        StageName $stageName
+        StageName $stageName,
+        ServerOverride\ServerOverride $serverOverride,
+        Notification\Email\EmailNotification $emailNotification,
+        DiscardOldDeployment\DiscardOldDeployment $discardOldDeployment,
+        Webhook\Github\GithubWebhook $githubWebhook
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -73,6 +114,10 @@ class Project
         $this->serverId = $serverId;
         $this->repositoryUrl = $repositoryUrl;
         $this->stageName = $stageName;
+        $this->serverOverride = $serverOverride;
+        $this->emailNotification = $emailNotification;
+        $this->discardOldDeployment = $discardOldDeployment;
+        $this->githubWebhook = $githubWebhook;
     }
 
     /**
@@ -124,55 +169,114 @@ class Project
     }
 
     /**
-     * @param ProjectName $name
+     * @param string $name
      * @return self
      */
-    public function changeName(ProjectName $name): self
+    public function changeName(string $name): self
     {
-        $this->name = $name;
+        $this->name = new ProjectName($name);
         return $this;
     }
 
     /**
-     * @param Recipe\RecipeIds $recipeIds
+     * @param string ...$recipeIds
      * @return self
      */
-    public function changeRecipes(Recipe\RecipeIds $recipeIds): self
+    public function changeRecipes(string ...$recipeIds): self
     {
-        $this->recipeIds = $recipeIds;
+        $this->recipeIds = Recipe\RecipeIds::of(...$recipeIds);
         return $this;
     }
 
     /**
-     * @param Server\ServerId $serverId
+     * @param string $serverId
      * @return self
      */
-    public function changeServer(Server\ServerId $serverId): self
+    public function changeServer(string $serverId): self
     {
-        $this->serverId = $serverId;
+        $this->serverId = new Server\ServerId($serverId);
         return $this;
     }
 
     /**
-     * @param RepositoryUrl $repositoryUrl
+     * @param string $repositoryUrl
      * @return self
      */
-    public function changeRepositoryUrl(RepositoryUrl $repositoryUrl): self
+    public function changeRepositoryUrl(string $repositoryUrl): self
     {
-        $this->repositoryUrl = $repositoryUrl;
+        $this->repositoryUrl = new RepositoryUrl($repositoryUrl);
         return $this;
     }
 
     /**
-     * @param StageName $stageName
+     * @param string $stageName
      * @return self
      */
-    public function changeStageName(StageName $stageName): self
+    public function changeStageName(string $stageName): self
     {
-        $this->stageName = $stageName;
+        $this->stageName = new StageName($stageName);
         return $this;
     }
 
+    public function changeDeployPath(?string $deployPath): self
+    {
+        $this->serverOverride = ServerOverride\ServerOverride::of($deployPath);
+        return $this;
+    }
+
+    public function changeEmailNotificationRecipient(?string $emailNotificationRecipient): self
+    {
+        $this->emailNotification = Notification\Email\EmailNotification::of($emailNotificationRecipient);
+        return $this;
+    }
+
+    public function changeDeploymentKeepDays(?int $deploymentKeepDays): self
+    {
+        $this->discardOldDeployment = DiscardOldDeployment\DiscardOldDeployment::of(
+            $deploymentKeepDays,
+            $this->discardOldDeployment->keepLastDeployment(),
+            $this->discardOldDeployment->keepMaxNumber(),
+        );
+        return $this;
+    }
+
+    public function changeKeepLastDeployment(bool $keepLastDeployment): self
+    {
+        $this->discardOldDeployment = DiscardOldDeployment\DiscardOldDeployment::of(
+            $this->discardOldDeployment->keepDays(),
+            $keepLastDeployment,
+            $this->discardOldDeployment->keepMaxNumber(),
+        );
+        return $this;
+    }
+
+    public function changeDeploymentKeepMaxNumber(?int $deploymentKeepMaxNumber): self
+    {
+        $this->discardOldDeployment = DiscardOldDeployment\DiscardOldDeployment::of(
+            $this->discardOldDeployment->keepDays(),
+            $this->discardOldDeployment->keepLastDeployment(),
+            $deploymentKeepMaxNumber
+        );
+        return $this;
+    }
+
+    public function changeGithubWebhookSecret(?string $githubWebhookSecret): self
+    {
+        $this->githubWebhook = Webhook\Github\GithubWebhook::of(
+            $githubWebhookSecret,
+            $this->githubWebhook->executor()
+        );
+        return $this;
+    }
+
+    public function changeGithubWebhookExecutor(?string $githubWebhookExecutor): self
+    {
+        $this->githubWebhook = Webhook\Github\GithubWebhook::of(
+            $this->githubWebhook->secret(),
+            $githubWebhookExecutor
+        );
+        return $this;
+    }
 
     /**
      * @param ProjectInterest $interest
@@ -186,6 +290,10 @@ class Project
         $interest->informServerId($this->serverId());
         $interest->informRepositoryUrl($this->repositoryUrl());
         $interest->informStageName($this->stageName());
+        $this->serverOverride->provide($interest);
+        $this->emailNotification->provide($interest);
+        $this->discardOldDeployment->provide($interest);
+        $this->githubWebhook->provide($interest);
     }
 
     /**

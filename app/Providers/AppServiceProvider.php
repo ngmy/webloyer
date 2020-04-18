@@ -7,7 +7,6 @@ use App\Services\Deployment\DeployerFile;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
-use App\Services\Form\Project\ProjectForm;
 use App\Services\Form\Deployment\DeploymentForm;
 use App\Services\Form\User\UserForm;
 use App\Services\Form\Setting\MailSettingForm;
@@ -38,12 +37,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('App\Services\Deployment\DeployCommanderInterface', function ($app) {
             return new QueueDeployCommander(
                 $app->make('Illuminate\Contracts\Bus\Dispatcher')
-            );
-        });
-
-        $this->app->bind('App\Services\Form\Project\ProjectForm', function ($app) {
-            return new ProjectForm(
-                $app->make('App\Repositories\Project\ProjectInterface')
             );
         });
 

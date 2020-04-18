@@ -33,6 +33,7 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     /**
      * @param string $id
      * @return void
+     * @see ServerDomainModel\ServerInterest::informId()
      */
     public function informId(string $id): void
     {
@@ -41,6 +42,8 @@ class Server extends Model implements ServerDomainModel\ServerInterest
 
     /**
      * @param string $name
+     * @return void
+     * @see ServerDomainModel\ServerInterest::informName()
      * @return void
      */
     public function informName(string $name): void
@@ -51,6 +54,7 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     /**
      * @param string|null $description
      * @return void
+     * @see ServerDomainModel\ServerInterest::informDescription()
      */
     public function informDescription(?string $description): void
     {
@@ -60,6 +64,7 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     /**
      * @param string $body
      * @return void
+     * @see ServerDomainModel\ServerInterest::informBody()
      */
     public function informBody(string $body): void
     {

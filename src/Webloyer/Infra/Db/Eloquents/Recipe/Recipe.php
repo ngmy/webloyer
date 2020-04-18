@@ -33,6 +33,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string $id
      * @return void
+     * @see RecipeDomainModel\RecipeInterest::informId()
      */
     public function informId(string $id): void
     {
@@ -42,6 +43,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string $name
      * @return void
+     * @see RecipeDomainModel\RecipeInterest::informName()
      */
     public function informName(string $name): void
     {
@@ -51,6 +53,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string|null $description
      * @return void
+     * @see RecipeDomainModel\RecipeInterest::informDescription()
      */
     public function informDescription(?string $description): void
     {
@@ -60,6 +63,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string $body
      * @return void
+     * @see RecipeDomainModel\RecipeInterest::informBody()
      */
     public function informBody(string $body): void
     {

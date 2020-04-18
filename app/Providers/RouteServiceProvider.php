@@ -32,15 +32,11 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::bind('project', function ($id) {
-            $projectRepository = $this->app->make('App\Repositories\Project\ProjectInterface');
-
-            $project = $projectRepository->byId($id);
-
-            if (is_null($project)) {
+            $projectOrm = Eloquents\Project\Project::find($id);
+            if (is_null($projectOrm)) {
                 abort(404);
             }
-
-            return $project;
+            return $projectOrm->toEntity();
         });
 
         Route::bind('deployment', function ($num, $route) {
