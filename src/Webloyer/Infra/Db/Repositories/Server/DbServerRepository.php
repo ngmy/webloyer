@@ -26,7 +26,7 @@ class DbServerRepository implements Server\ServerRepository
     public function findAll(): Server\Servers
     {
         $serverArray = ServerOrm::orderBy('name')
-            ->all()
+            ->get()
             ->map(function (ServerOrm $serverOrm): Server\Server {
                 return $serverOrm->toEntity();
             })
