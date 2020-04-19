@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\Deployment;
 
-class DeploymentId
+class DeploymentNumber
 {
-    /** @var string */
+    /** @var int */
     private $value;
 
     /**
-     * @param string $value
+     * @param int $value
      * @return void
      */
-    public function __construct(string $value)
+    public function __construct(int $value)
     {
         $this->value = $value;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function value(): string
+    public function value(): int
     {
         return $this->value;
     }
