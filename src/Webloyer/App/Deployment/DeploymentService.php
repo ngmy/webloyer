@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Deployment;
 
+use DB;
 use InvalidArgumentException;
 use Webloyer\App\Deployment\Commands;
 use Webloyer\Domain\Model\Deployment;
@@ -49,15 +50,17 @@ class DeploymentService
      */
     public function deploy(Commands\DeployCommand $command): void
     {
-        $deployment = Deployment\Deployment::of(
-            $command->getProjectId(),
-            $command->getNumber(),
-            Deployment\DeploymentTask::rollback()->value(),
-            Deployment\DeploymentStatus::queued()->value(),
-            '',
-            $command->getExecutor()
-        );
-        $this->deploymentRepository->save($deployment);
+        DB::transaction(function () use ($command): void {
+            $deployment = Deployment\Deployment::of(
+                $command->getProjectId(),
+                $command->getNumber(),
+                Deployment\DeploymentTask::rollback()->value(),
+                Deployment\DeploymentStatus::queued()->value(),
+                '',
+                $command->getExecutor()
+            );
+            $this->deploymentRepository->save($deployment);
+        });
     }
 
     /**
@@ -66,15 +69,17 @@ class DeploymentService
      */
     public function rollback(Commands\RollbackCommand $command): void
     {
-        $deployment = Deployment\Deployment::of(
-            $command->getProjectId(),
-            $command->getNumber(),
-            Deployment\DeploymentTask::rollback()->value(),
-            Deployment\DeploymentStatus::queued()->value(),
-            '',
-            $command->getExecutor()
-        );
-        $this->deploymentRepository->save($deployment);
+        DB::transaction(function () use ($command): void {
+            $deployment = Deployment\Deployment::of(
+                $command->getProjectId(),
+                $command->getNumber(),
+                Deployment\DeploymentTask::rollback()->value(),
+                Deployment\DeploymentStatus::queued()->value(),
+                '',
+                $command->getExecutor()
+            );
+            $this->deploymentRepository->save($deployment);
+        });
     }
 
     /**
@@ -83,10 +88,12 @@ class DeploymentService
      */
     public function deleteDeployment(Commands\DeleteDeploymentCommand $command): void
     {
-        $projectId = new ProjectId($command->getProjectId());
-        $number = new Deployment\DeploymentNumber($command->getNumber());
-        $deployment = $this->getNonNullDeployment($projectId, $number);
-        $this->deploymentRepository->remove($deployment);
+        DB::transaction(function () use ($command): void {
+            $projectId = new ProjectId($command->getProjectId());
+            $number = new Deployment\DeploymentNumber($command->getNumber());
+            $deployment = $this->getNonNullDeployment($projectId, $number);
+            $this->deploymentRepository->remove($deployment);
+        });
     }
 
     /**

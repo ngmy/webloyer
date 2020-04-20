@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Server;
 
+use DB;
 use InvalidArgumentException;
 use Webloyer\App\Server\Commands;
 use Webloyer\Domain\Model\Server;
@@ -55,13 +56,15 @@ class ServerService
      */
     public function createServer(Commands\CreateServerCommand $command): void
     {
-        $server = Server\Server::of(
-            $this->serverRepository->nextId()->value(),
-            $command->getName(),
-            $command->getDescription(),
-            $command->getBody()
-        );
-        $this->serverRepository->save($server);
+        DB::transaction(function () use ($command): void {
+            $server = Server\Server::of(
+                $this->serverRepository->nextId()->value(),
+                $command->getName(),
+                $command->getDescription(),
+                $command->getBody()
+            );
+            $this->serverRepository->save($server);
+        });
     }
 
     /**
@@ -70,15 +73,17 @@ class ServerService
      */
     public function updateServer(Commands\UpdateServerCommand $command): void
     {
-        $id = new Server\ServerId($command->getId());
-        $name = new Server\ServerName($command->getName());
-        $description = new Server\ServerDescription($command->getDescription());
-        $body = new Server\ServerBody($command->getBody());
-        $server = $this->getNonNullServer($id)
-            ->changeName($name)
-            ->changeDescription($description)
-            ->changeBody($body);
-        $this->serverRepository->save($server);
+        DB::transaction(function () use ($command): void {
+            $id = new Server\ServerId($command->getId());
+            $name = new Server\ServerName($command->getName());
+            $description = new Server\ServerDescription($command->getDescription());
+            $body = new Server\ServerBody($command->getBody());
+            $server = $this->getNonNullServer($id)
+                ->changeName($name)
+                ->changeDescription($description)
+                ->changeBody($body);
+            $this->serverRepository->save($server);
+        });
     }
 
     /**
@@ -87,9 +92,11 @@ class ServerService
      */
     public function deleteServer(Commands\DeleteServerCommand $command): void
     {
-        $id = new Server\ServerId($command->getId());
-        $server = $this->getNonNullServer($id);
-        $this->serverRepository->remove($server);
+        DB::transaction(function () use ($command): void {
+            $id = new Server\ServerId($command->getId());
+            $server = $this->getNonNullServer($id);
+            $this->serverRepository->remove($server);
+        });
     }
 
     /**

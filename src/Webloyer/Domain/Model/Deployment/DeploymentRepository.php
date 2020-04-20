@@ -12,9 +12,10 @@ use Webloyer\Domain\Model\Project\ProjectId;
 interface DeploymentRepository
 {
     /**
+     * @param ProjectId $projectId
      * @return DeploymentNumber
      */
-    public function nextId(): DeploymentNumber;
+    public function nextId(ProjectId $projectId): DeploymentNumber;
     /**
      * @return Deployments
      */

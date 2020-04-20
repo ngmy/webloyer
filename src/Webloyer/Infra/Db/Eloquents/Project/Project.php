@@ -44,6 +44,14 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     }
 
     /**
+     * @return Relations\HasOne
+     */
+    public function maxDeployment(): Relations\HasOne
+    {
+        return $this->hasOne(Eloquents\Deployment\MaxDeployment::class);
+    }
+
+    /**
      * @return Relations\BelongsToMany
      */
     public function recipes(): Relations\BelongsToMany

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Project;
 
+use DB;
 use InvalidArgumentException;
 use Webloyer\App\Project\Commands;
 use Webloyer\Domain\Model\Project;
@@ -55,22 +56,24 @@ class ProjectService
      */
     public function createProject(Commands\CreateProjectCommand $command): void
     {
-        $project = Project\Project::of(
-            $this->projectRepository->nextId()->value(),
-            $command->getName(),
-            $command->getRecipeIds(),
-            $command->getServerId(),
-            $command->getRepositoryUrl(),
-            $command->getStageName(),
-            $command->getDeployPath(),
-            $command->getEmailNotificationRecipient(),
-            $command->getDeploymentKeepDays(),
-            $command->getKeepLastDeployment(),
-            $command->getDeploymentKeepMaxNumber(),
-            $command->getGithubWebhookSecret(),
-            $command->getGithubWebhookExecutor()
-        );
-        $this->projectRepository->save($project);
+        DB::transaction(function () use ($command): void {
+            $project = Project\Project::of(
+                $this->projectRepository->nextId()->value(),
+                $command->getName(),
+                $command->getRecipeIds(),
+                $command->getServerId(),
+                $command->getRepositoryUrl(),
+                $command->getStageName(),
+                $command->getDeployPath(),
+                $command->getEmailNotificationRecipient(),
+                $command->getDeploymentKeepDays(),
+                $command->getKeepLastDeployment(),
+                $command->getDeploymentKeepMaxNumber(),
+                $command->getGithubWebhookSecret(),
+                $command->getGithubWebhookExecutor()
+            );
+            $this->projectRepository->save($project);
+        });
     }
 
     /**
@@ -79,21 +82,23 @@ class ProjectService
      */
     public function updateProject(Commands\UpdateProjectCommand $command): void
     {
-        $id = new Project\ProjectId($command->getId());
-        $project = $this->getNonNullProject($id)
-            ->changeName($command->getName())
-            ->changeRecipes(...$command->getRecipeIds())
-            ->changeServer($command->getServerId())
-            ->changeRepositoryUrl($command->getRepositoryUrl())
-            ->changeStageName($command->getStageName())
-            ->changeDeployPath($command->getDeployPath())
-            ->changeEmailNotificationRecipient($command->getEmailNotificationRecipient())
-            ->changeDeploymentKeepDays($command->getDeploymentKeepDays())
-            ->changeKeepLastDeployment($command->getKeepLastDeployment())
-            ->changeDeploymentKeepMaxNumber($command->getDeploymentKeepMaxNumber())
-            ->changeGithubWebhookSecret($command->getGithubWebhookSecret())
-            ->changeGithubWebhookExecutor($command->getGithubWebhookExecutor());
-        $this->projectRepository->save($project);
+        DB::transaction(function () use ($command): void {
+            $id = new Project\ProjectId($command->getId());
+            $project = $this->getNonNullProject($id)
+                ->changeName($command->getName())
+                ->changeRecipes(...$command->getRecipeIds())
+                ->changeServer($command->getServerId())
+                ->changeRepositoryUrl($command->getRepositoryUrl())
+                ->changeStageName($command->getStageName())
+                ->changeDeployPath($command->getDeployPath())
+                ->changeEmailNotificationRecipient($command->getEmailNotificationRecipient())
+                ->changeDeploymentKeepDays($command->getDeploymentKeepDays())
+                ->changeKeepLastDeployment($command->getKeepLastDeployment())
+                ->changeDeploymentKeepMaxNumber($command->getDeploymentKeepMaxNumber())
+                ->changeGithubWebhookSecret($command->getGithubWebhookSecret())
+                ->changeGithubWebhookExecutor($command->getGithubWebhookExecutor());
+            $this->projectRepository->save($project);
+        });
     }
 
     /**
@@ -102,9 +107,11 @@ class ProjectService
      */
     public function deleteProject(Commands\DeleteProjectCommand $command): void
     {
-        $id = new Project\ProjectId($command->getId());
-        $project = $this->getNonNullProject($id);
-        $this->projectRepository->remove($project);
+        DB::transaction(function () use ($command): void {
+            $id = new Project\ProjectId($command->getId());
+            $project = $this->getNonNullProject($id);
+            $this->projectRepository->remove($project);
+        });
     }
 
     /**

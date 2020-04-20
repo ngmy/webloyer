@@ -120,7 +120,7 @@ class User
      */
     public function provide(UserInterest $interest): void
     {
-        $interest->informId($this->email());
+        $interest->informEmail($this->email());
         $interest->informName($this->name());
         $interest->informPassword($this->password());
         $interest->informApiToken($this->apiToken());

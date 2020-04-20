@@ -25,13 +25,13 @@ class DbProjectRepository implements Project\ProjectRepository
      */
     public function findAll(): Project\Projects
     {
-        $recipeArray = ProjectOrm::orderBy('name')
+        $projectArray = ProjectOrm::orderBy('name')
             ->get()
-            ->map(function (ProjectOrm $recipeOrm): Project\Project {
-                return $recipeOrm->toEntity();
+            ->map(function (ProjectOrm $projectOrm): Project\Project {
+                return $projectOrm->toEntity();
             })
             ->toArray();
-        return new Project\Projects(...$recipeArray);
+        return new Project\Projects(...$projectArray);
     }
 
     /**
@@ -45,15 +45,15 @@ class DbProjectRepository implements Project\ProjectRepository
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
 
-        $recipeArray = ProjectOrm::orderBy('name')
+        $projectArray = ProjectOrm::orderBy('name')
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
-            ->map(function (ProjectOrm $recipeOrm): Project\Project {
-                return $recipeOrm->toEntity();
+            ->map(function (ProjectOrm $projectOrm): Project\Project {
+                return $projectOrm->toEntity();
             })
             ->toArray();
-        return new Project\Projects(...$recipeArray);
+        return new Project\Projects(...$projectArray);
     }
 
     /**
@@ -63,36 +63,39 @@ class DbProjectRepository implements Project\ProjectRepository
      */
     public function findById(Project\ProjectId $id): ?Project\Project
     {
-        $recipeOrm = ProjectOrm::ofId($id->value())->first();
-        if (is_null($recipeOrm)) {
+        $projectOrm = ProjectOrm::ofId($id->value())->first();
+        if (is_null($projectOrm)) {
             return null;
         }
-        return $recipeOrm->toEntity();
+        return $projectOrm->toEntity();
     }
 
     /**
-     * @param Project\Project $recipe
+     * @param Project\Project $project
      * @return void
      * @see Project\ProjectRepository::remove()
      */
-    public function remove(Project\Project $recipe): void
+    public function remove(Project\Project $project): void
     {
-        $recipeOrm = ProjectOrm::ofId($recipe->id())->first();
-        if (is_null($recipeOrm)) {
+        $projectOrm = ProjectOrm::ofId($project->id())->first();
+        if (is_null($projectOrm)) {
             return;
         }
-        $recipeOrm->delete();
+        $projectOrm->delete();
     }
 
     /**
-     * @param Project\Project $recipe
+     * @param Project\Project $project
      * @return void
      * @see Project\ProjectRepository::save()
      */
-    public function save(Project\Project $recipe): void
+    public function save(Project\Project $project): void
     {
-        $recipeOrm = ProjectOrm::firstOrNew(['uuid' => $recipe->id()]);
-        $recipe->provide($recipeOrm);
-        $recipeOrm->save();
+        $projectOrm = ProjectOrm::firstOrNew(['uuid' => $project->id()]);
+        if ($projectOrm->wasRecentlyCreated) {
+            $projectOrm->maxDeployment()->create(['project_id' => $project->surrogateId()]);
+        }
+        $project->provide($projectOrm);
+        $projectOrm->save();
     }
 }

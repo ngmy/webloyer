@@ -21,7 +21,7 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
         'number',
         'task',
         'status',
-        'message',
+        'log',
         'user_id',
     ];
 
@@ -101,7 +101,7 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
      */
     public function informLog(string $log): void
     {
-        $this->message = $log;
+        $this->log = $log;
     }
 
     /**
@@ -111,11 +111,11 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
     public function informExecutor(string $executor): void
     {
         // TODO ユーザ削除されたら？
-        $userOrm = Eloquents\User\User::ofId($executor)->first();
+        $userOrm = Eloquents\User\User::ofEmail($executor)->first();
         if (is_null($userOrm)) {
             throw new InvalidArgumentException(
                 'User does not exists.' . PHP_EOL .
-                'User Id: ' . $executor
+                'User Email: ' . $executor
             );
         }
         $this->user_id = $userOrm->id;
