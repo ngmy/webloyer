@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\User;
 
-class UserId
+class UserEmail
 {
     /** @var string */
     private $value;

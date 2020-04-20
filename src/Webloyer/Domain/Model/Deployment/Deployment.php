@@ -7,7 +7,7 @@ namespace Webloyer\Domain\Model\Deployment;
 use Common\Domain\Model\Event\DomainEventPublisher;
 use Common\Domain\Model\Identifiable;
 use Webloyer\Domain\Model\Project\ProjectId;
-use Webloyer\Domain\Model\User\UserId;
+use Webloyer\Domain\Model\User\UserEmail;
 
 class Deployment
 {
@@ -23,7 +23,7 @@ class Deployment
     private $status;
     /** @var DeploymentLog */
     private $log;
-    /** @var UserId */
+    /** @var UserEmail */
     private $executor;
 
     /**
@@ -49,7 +49,7 @@ class Deployment
             DeploymentTask::$task(),
             DeploymentStatus::$status(),
             new DeploymentLog($log),
-            new UserId($executor)
+            new UserEmail($executor)
         );
     }
 
@@ -59,7 +59,7 @@ class Deployment
      * @param DeploymentTask   $task
      * @param DeploymentStatus $status
      * @param DeploymentLog    $log
-     * @param UserId           $executor
+     * @param UserEmail           $executor
      * @return void
      */
     public function __construct(
@@ -68,7 +68,7 @@ class Deployment
         DeploymentTask $task,
         DeploymentStatus $status,
         DeploymentLog $log,
-        UserId $executor
+        UserEmail $executor
     ) {
         $this->projectId = $projectId;
         $this->number = $number;

@@ -39,16 +39,15 @@ class RouteServiceProvider extends ServiceProvider
             return $projectOrm->toEntity();
         });
 
-        Route::bind('deployment', function ($num, $route) {
+        Route::bind('deployment', function ($number, $route) {
             $project = $route->parameter('project');
-
-            $deployment = $project->getDeploymentByNumber($num);
-
-            if (is_null($deployment)) {
+            $deploymentOrm = Eloquents\Deployment\Deployment::where('project_id', $project->id())
+                ->where('number', $number)
+                ->first();
+            if (is_null($deploymentOrm)) {
                 abort(404);
             }
-
-            return $deployment;
+            return $deploymentOrm->toEntity();
         });
 
         Route::bind('recipe', function (int $id) {
@@ -68,15 +67,11 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('user', function ($id) {
-            $userRepository = $this->app->make('App\Repositories\User\UserInterface');
-
-            $user = $userRepository->byId($id);
-
-            if (is_null($user)) {
+            $userOrm = Eloquents\User\User::find($id);
+            if (is_null($userOrm)) {
                 abort(404);
             }
-
-            return $user;
+            return $userOrm->toEntity();
         });
 
         parent::boot();

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Project\Webhook\Github;
 
 use Webloyer\Domain\Model\Project\ProjectInterest;
-use Webloyer\Domain\Model\User\UserId;
+use Webloyer\Domain\Model\User\UserEmail;
 
 class GithubWebhook
 {
     /** @var GithubWebhookSecret|null */
     private $secret;
-    /** @var UserId|null */
+    /** @var UserEmail|null */
     private $executor;
 
     /**
@@ -25,18 +25,18 @@ class GithubWebhook
     ): self {
         return new self(
             isset($secret) ? new GithubWebhookSecret($secret) : null,
-            isset($executor) ? new UserId($executor) : null
+            isset($executor) ? new UserEmail($executor) : null
         );
     }
 
     /**
      * @param GithubWebhookSecret|null $secret
-     * @param UserId|null              $executor
+     * @param UserEmail|null              $executor
      * @return void
      */
     public function __construct(
         ?GithubWebhookSecret $secret,
-        ?UserId $executor
+        ?UserEmail $executor
     ) {
         $this->secret = $secret;
         $this->executor = $executor;

@@ -19,6 +19,13 @@ class Recipe
     /** @var RecipeBody */
     private $body;
 
+    /**
+     * @param string      $id
+     * @param string      $name
+     * @param string|null $description
+     * @param string      $body
+     * @return self
+     */
     public static function of(
         string $id,
         string $name,
