@@ -90,15 +90,26 @@ class User extends Authenticatable implements UserDomainModel\UserInterest
     }
 
     /**
+     * @param array<int, string> $roles
+     * @return void
+     */
+    public function informRoles(array $roles): void
+    {
+        $this->revokeAllRoles();
+        $this->assignRole($roles);
+    }
+
+    /**
      * @return UserDomainModel\User
      */
     public function toEntity(): UserDomainModel\User
     {
-        return UserDomainModel\User::of(
+        return UserDomainModel\User::ofWithRole(
             $this->email,
             $this->name,
             $this->password,
-            $this->api_token
+            $this->api_token,
+            $this->getRoles()
         )->setSurrogateId($this->id);
     }
 }

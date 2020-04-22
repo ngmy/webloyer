@@ -29,4 +29,9 @@ interface UserInterest
      * @return void
      */
     public function informApiToken(string $apiToken): void;
+    /**
+     * @param array<int, string> $roles
+     * @return void
+     */
+    public function informRoles(array $roles): void;
 }

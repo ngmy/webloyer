@@ -6,26 +6,101 @@ namespace Webloyer\Domain\Model\User;
 
 use Common\Domain\Model\Identifiable;
 
-class User
+abstract class User
 {
     use Identifiable;
 
     /** @var UserEmail */
-    private $email;
+    protected $email;
     /** @var UserName */
-    private $name;
+    protected $name;
     /** @var UserPassword */
-    private $password;
+    protected $password;
     /** @var UserApiToken */
-    private $apiToken;
+    protected $apiToken;
+    /** @var UserRoles */
+    protected $roles;
 
+    /**
+     * @return string
+     */
+    abstract public function email(): string;
+    /**
+     * @return string
+     */
+    abstract public function name(): string;
+    /**
+     * @return string
+     */
+    abstract public function password(): string;
+    /**
+     * @return string
+     */
+    abstract public function apiToken(): string;
+    /**
+     * @return array<int, string>
+     */
+    abstract public function roles(): array;
+    /**
+     * @param string $name
+     * @return self
+     */
+    abstract public function changeName(string $name): self;
+    /**
+     * @param string $password
+     * @return self
+     */
+    abstract public function changePassword(string $password): self;
+    /**
+     * @param string $apiToken
+     * @return self
+     */
+    abstract public function changeApiToken(string $apiToken): self;
+    /**
+     * @param UserInterest $interest
+     * @return void
+     */
+    abstract public function provide(UserInterest $interest): void;
+    /**
+     * @param mixed $object
+     * @return bool
+     */
+    abstract public function equals($object): bool;
+    /**
+     * @param UserRoleSpecification $roleSpec
+     * @return void
+     */
+    abstract public function addRole(UserRoleSpecification $roleSpec): void;
+    /**
+     * @param UserRoleSpecification $roleSpec
+     * @return bool
+     */
+    abstract public function hasRole(UserRoleSpecification $roleSpec): bool;
+    /**
+     * @param UserRoleSpecification $roleSpec
+     * @return void
+     */
+    abstract public function removeRole(UserRoleSpecification $roleSpec): void;
+    /**
+     * @param UserRoleSpecification $roleSpec
+     * @return UserRole|null
+     */
+    abstract public function getRole(UserRoleSpecification $roleSpec): ?UserRole;
+
+    /**
+     * @param string $email
+     * @param string $name
+     * @param string $password
+     * @param string $apiToken
+     * @return UserCore
+     */
     public static function of(
         string $email,
         string $name,
         string $password,
         string $apiToken
-    ): self {
-        return new self(
+    ): UserCore {
+        return new UserCore(
             new UserEmail($email),
             new UserName($name),
             new UserPassword($password),
@@ -34,110 +109,29 @@ class User
     }
 
     /**
-     * @param UserEmail    $email
-     * @param UserName     $name
-     * @param UserPassword $password
-     * @param UserApiToken $apiToken
-     * @return void
+     * @param string             $email
+     * @param string             $name
+     * @param string             $password
+     * @param string             $apiToken
+     * @param array<int, string> $roles
+     * @return UserCore
      */
-    public function __construct(
-        UserEmail $email,
-        UserName $name,
-        UserPassword $password,
-        UserApiToken $apiToken
-    ) {
-        $this->email = $email;
-        $this->name = $name;
-        $this->password = $password;
-        $this->apiToken = $apiToken;
-    }
-
-    /**
-     * @return string
-     */
-    public function email(): string
-    {
-        return $this->email->value();
-    }
-
-    /**
-     * @return string
-     */
-    public function name(): string
-    {
-        return $this->name->value();
-    }
-
-    /**
-     * @return string
-     */
-    public function password(): string
-    {
-        return $this->password->value();
-    }
-
-    /**
-     * @return string
-     */
-    public function apiToken(): string
-    {
-        return $this->apiToken->value();
-    }
-
-    /**
-     * @param string $name
-     * @return self
-     */
-    public function changeName(string $name): self
-    {
-        $this->name = new UserName($name);
-        return $this;
-    }
-
-    /**
-     * @param string $password
-     * @return self
-     */
-    public function changePassword(string $password): self
-    {
-        $this->password = new UserPassword($password);
-        return $this;
-    }
-
-    /**
-     * @param string $apiToken
-     * @return self
-     */
-    public function changeApiToken(string $apiToken): self
-    {
-        $this->apiToken = new UserApiToken($apiToken);
-        return $this;
-    }
-
-    /**
-     * @param UserInterest $interest
-     * @return void
-     */
-    public function provide(UserInterest $interest): void
-    {
-        $interest->informEmail($this->email());
-        $interest->informName($this->name());
-        $interest->informPassword($this->password());
-        $interest->informApiToken($this->apiToken());
-    }
-
-    /**
-     * @param mixed $object
-     * @return bool
-     */
-    public function equals($object): bool
-    {
-        $equalObjects = false;
-
-        if ($object instanceof self) {
-            $equalObjects = $object->email == $this->email;
-        }
-
-        return $equalObjects;
+    public static function ofWithRole(
+        string $email,
+        string $name,
+        string $password,
+        string $apiToken,
+        array $roles
+    ): UserCore {
+        $user = self::of(
+            $email,
+            $name,
+            $password,
+            $apiToken
+        );
+        array_map(function (string $role) use ($user) {
+            $user->addRole(UserRoleSpecification::$role());
+        }, $roles);
+        return $user;
     }
 }

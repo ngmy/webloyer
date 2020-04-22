@@ -15,13 +15,13 @@ class DbUserRepository implements User\UserRepository
      */
     public function findAll(): User\Users
     {
-        $recipeArray = UserOrm::orderBy('name')
+        $userArray = UserOrm::orderBy('name')
             ->get()
-            ->map(function (UserOrm $recipeOrm): User\User {
-                return $recipeOrm->toEntity();
+            ->map(function (UserOrm $userOrm): User\User {
+                return $userOrm->toEntity();
             })
             ->toArray();
-        return new User\Users(...$recipeArray);
+        return new User\Users(...$userArray);
     }
 
     /**
@@ -35,15 +35,15 @@ class DbUserRepository implements User\UserRepository
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
 
-        $recipeArray = UserOrm::orderBy('name')
+        $userArray = UserOrm::orderBy('name')
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
-            ->map(function (UserOrm $recipeOrm): User\User {
-                return $recipeOrm->toEntity();
+            ->map(function (UserOrm $userOrm): User\User {
+                return $userOrm->toEntity();
             })
             ->toArray();
-        return new User\Users(...$recipeArray);
+        return new User\Users(...$userArray);
     }
 
     /**
@@ -53,36 +53,36 @@ class DbUserRepository implements User\UserRepository
      */
     public function findByEmail(User\UserEmail $email): ?User\User
     {
-        $recipeOrm = UserOrm::ofEmail($email->value())->first();
-        if (is_null($recipeOrm)) {
+        $userOrm = UserOrm::ofEmail($email->value())->first();
+        if (is_null($userOrm)) {
             return null;
         }
-        return $recipeOrm->toEntity();
+        return $userOrm->toEntity();
     }
 
     /**
-     * @param User\User $recipe
+     * @param User\User $user
      * @return void
      * @see User\UserRepository::remove()
      */
-    public function remove(User\User $recipe): void
+    public function remove(User\User $user): void
     {
-        $recipeOrm = UserOrm::ofEmail($recipe->email())->first();
-        if (is_null($recipeOrm)) {
+        $userOrm = UserOrm::ofEmail($user->email())->first();
+        if (is_null($userOrm)) {
             return;
         }
-        $recipeOrm->delete();
+        $userOrm->delete();
     }
 
     /**
-     * @param User\User $recipe
+     * @param User\User $user
      * @return void
      * @see User\UserRepository::save()
      */
-    public function save(User\User $recipe): void
+    public function save(User\User $user): void
     {
-        $recipeOrm = UserOrm::firstOrNew(['email' => $recipe->email()]);
-        $recipe->provide($recipeOrm);
-        $recipeOrm->save();
+        $userOrm = UserOrm::firstOrNew(['email' => $user->email()]);
+        $user->provide($userOrm);
+        $userOrm->save();
     }
 }
