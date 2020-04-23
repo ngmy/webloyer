@@ -6,36 +6,31 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User as UserRequest;
-use App\Models\User;
 use App\Repositories\Role\RoleInterface;
-use App\Repositories\User\UserInterface;
-use App\Services\Form\User\UserForm;
+use Webloyer\App\User as UserApplication;
+use Webloyer\Domain\Model\User as UserDomainModel;
 
 class UserController extends Controller
 {
-    /** @var UserInterface */
-    private $user;
-    /** @var UserForm */
-    private $userForm;
+    /** @var UserApplication */
+    private $userService;
     /** @var RoleInterface */
     private $role;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\User\UserInterface $user
-     * @param \App\Services\Form\User\UserForm     $userForm
+     * @param UserApplication\UserService $userService
      * @param \App\Repositories\Role\RoleInterface $role
      * @return void
      */
-    public function __construct(UserInterface $user, UserForm $userForm, RoleInterface $role)
+    public function __construct(UserApplication\UserService $userService, RoleInterface $role)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->user     = $user;
-        $this->userForm = $userForm;
-        $this->role     = $role;
+        $this->userService = $userService;
+        $this->role = $role;
     }
 
     /**
@@ -50,7 +45,7 @@ class UserController extends Controller
 
         $perPage = 10;
 
-        $users = $this->user->byPage($page, $perPage);
+        $users = $this->userService->byPage($page, $perPage);
 
         return view('users.index')->with('users', $users);
     }
@@ -78,7 +73,7 @@ class UserController extends Controller
     {
         $input = $request->all();
 
-        $this->userForm->save($input);
+        $this->userService->save($input);
 
         return redirect()->route('users.index');
     }
@@ -86,10 +81,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param UserDomainModel\User $user
      * @return Response
      */
-    public function show(User $user)
+    public function show(UserDomainModel\User $user)
     {
         return redirect()->route('users.edit', [$user]);
     }
@@ -97,10 +92,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param UserDomainModel\User $user
      * @return Response
      */
-    public function edit(User $user)
+    public function edit(UserDomainMode\User $user)
     {
         return view('users.edit')->with('user', $user);
     }
@@ -109,14 +104,14 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param UserRequest\UpdateRequest $request
-     * @param \App\Models\User         $user
+     * @param UserDomainModel\User      $user
      * @return Response
      */
-    public function update(UserRequest\UpdateRequest $request, User $user)
+    public function update(UserRequest\UpdateRequest $request, UserDomainModel\User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        $this->userForm->update($input);
+        $this->userService->update($input);
 
         return redirect()->route('users.index');
     }
@@ -124,10 +119,10 @@ class UserController extends Controller
     /**
      * Show the form for changing the password of the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param UserDomainModel\User $user
      * @return Response
      */
-    public function changePassword(User $user)
+    public function changePassword(UserDomainMode\User $user)
     {
         return view('users.change_password')->with('user', $user);
     }
@@ -136,14 +131,14 @@ class UserController extends Controller
      * Update the password of the specified resource in storage.
      *
      * @param UserRequest\UpdatePasswordRequest $request
-     * @param \App\Models\User         $user
+     * @param UserDomainModel\User              $user
      * @return Response
      */
-    public function updatePassword(UserRequest\UpdatePasswordRequest $request, User $user)
+    public function updatePassword(UserRequest\UpdatePasswordRequest $request, UserDomainModel\User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        $this->userForm->updatePassword($input);
+        $this->userService->updatePassword($input);
 
         return redirect()->route('users.index');
     }
@@ -151,10 +146,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the role of the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param UserDomainModel\User $user
      * @return Response
      */
-    public function editRole(User $user)
+    public function editRole(UserDomainModel\User $user)
     {
         $roles = $this->role->all();
 
@@ -167,14 +162,14 @@ class UserController extends Controller
      * Update the role of the specified resource in storage.
      *
      * @param UserRequest\UpdateRoleRequest $request
-     * @param \App\Models\User         $user
+     * @param UserDomainModel\User          $user
      * @return Response
      */
-    public function updateRole(UserRequest\UpdateRoleRequest $request, User $user)
+    public function updateRole(UserRequest\UpdateRoleRequest $request, UserDomainModel\User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        $this->userForm->updateRole($input);
+        $this->userService->updateRole($input);
 
         return redirect()->route('users.index');
     }
@@ -182,10 +177,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the API token of the specified resource.
      *
-     * @param \App\Models\User $user
+     * @param UserDomainModel\User $user
      * @return Response
      */
-    public function editApiToken(User $user)
+    public function editApiToken(UserDomainModel\User $user)
     {
         return view('users.edit_api_token')
             ->with('user', $user);
@@ -195,14 +190,14 @@ class UserController extends Controller
      * Regenerate the API token of the specified resource in storage.
      *
      * @param UserRequest\RegenerateApiTokenRequest $request
-     * @param \App\Models\User         $user
+     * @param UserDomainModel\User                  $user
      * @return Response
      */
-    public function regenerateApiToken(UserRequest\RegenerateApiTokenRequest $request, User $user)
+    public function regenerateApiToken(UserRequest\RegenerateApiTokenRequest $request, UserDomainModel\User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
 
-        $this->userForm->regenerateApiToken($input);
+        $this->userService->regenerateApiToken($input);
 
         return redirect()->route('users.index');
     }
@@ -210,12 +205,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\User $user
+     * @param UserDomainModel\User $user
      * @return Response
      */
-    public function destroy(User $user)
+    public function destroy(UserDomainModel\User $user)
     {
-        $this->user->delete($user->id);
+        $this->userService->delete($user->id);
 
         return redirect()->route('users.index');
     }

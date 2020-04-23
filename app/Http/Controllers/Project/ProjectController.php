@@ -6,10 +6,10 @@ namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project as ProjectRequest;
-use App\Repositories\User\UserInterface;
 use Webloyer\App\Project as ProjectApplication;
 use Webloyer\App\Recipe as RecipeApplication;
 use Webloyer\App\Server as ServerApplication;
+use Webloyer\App\User as UserApplication;
 use Webloyer\Domain\Model\Project as ProjectDomainModel;
 
 class ProjectController extends Controller
@@ -21,7 +21,7 @@ class ProjectController extends Controller
     /** @var ServerApplication\ServerService */
     private $serverService;
     /** @var UserInterface */
-    private $user;
+    private $userService;
 
     /**
      * Create a new controller instance.
@@ -29,14 +29,14 @@ class ProjectController extends Controller
      * @param ProjectApplication\ProjectService $projectService
      * @param RecipeApplication\RecipeService   $recipeService
      * @param ServerApplication\ServerService   $serverService
-     * @param \App\Repositories\User\UserInterface $user
+     * @param UserApplication\UserService       $userService
      * @return void
      */
     public function __construct(
         ProjectApplication\ProjectService $projectService,
         RecipeApplication\RecipeService $recipeService,
         ServerApplication\ServerService $serverService,
-        UserInterface $user
+        UserApplication\UserService $userService
     ) {
         $this->middleware('auth');
         $this->middleware('acl');
@@ -44,7 +44,7 @@ class ProjectController extends Controller
         $this->projectService = $projectService;
         $this->recipeService  = $recipeService;
         $this->serverService  = $serverService;
-        $this->user           = $user;
+        $this->userService = $userService;
     }
 
     /**
@@ -80,7 +80,7 @@ class ProjectController extends Controller
         $servers = $this->serverService->getAllServers()->toArray();
         $servers = array_column($servers, 'name', 'id');
 
-        $users = $this->user->all()->toArray();
+        $users = $this->userService->getAllUsers()->toArray();
         $users = array_column($users, 'email', 'id');
         $users = ['' => ''] + $users;
 
@@ -155,7 +155,7 @@ class ProjectController extends Controller
         $projectRecipe = $project->getRecipes()->toArray();
         $projectRecipe = array_column($projectRecipe, 'id');
 
-        $users = $this->user->all()->toArray();
+        $users = $this->userService->getAllUsers()->toArray();
         $users = array_column($users, 'email', 'id');
         $users = ['' => ''] + $users;
 

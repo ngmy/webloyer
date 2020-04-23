@@ -8,7 +8,6 @@ use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Form\Deployment\DeploymentForm;
-use App\Services\Form\User\UserForm;
 use App\Services\Form\Setting\MailSettingForm;
 use App\Services\Notification\MailNotifier;
 use App\Services\Config\DotenvReader;
@@ -44,12 +43,6 @@ class AppServiceProvider extends ServiceProvider
             return new DeploymentForm(
                 $app->make('App\Repositories\Project\ProjectInterface'),
                 $app->make('App\Services\Deployment\DeployCommanderInterface')
-            );
-        });
-
-        $this->app->bind('App\Services\Form\User\UserForm', function ($app) {
-            return new UserForm(
-                $app->make('App\Repositories\User\UserInterface')
             );
         });
 
