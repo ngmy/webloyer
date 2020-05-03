@@ -78,7 +78,7 @@ class Deployment
         $this->executor = $executor;
 
         DomainEventPublisher::getInstance()->publish(
-            new DeployedEvent($projectId, $number)
+            new DeploymentWasCreatedEvent($projectId, $number, $task)
         );
     }
 

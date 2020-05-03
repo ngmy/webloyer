@@ -56,7 +56,9 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
      */
     public function recipes(): Relations\BelongsToMany
     {
-        return $this->belongsToMany(Eloquents\Recipe\Recipe::class);
+        return $this->belongsToMany(Eloquents\Recipe\Recipe::class)
+            ->withPivot('recipe_order')
+            ->orderBy('recipe_order');
     }
 
     /**
