@@ -64,6 +64,7 @@ class DeploymentProjection implements Deployment\DeploymentProjection
         foreach ($recipeFiles as $recipeFile) {
             $contents[] = "require '" . $recipeFile->getPath() . "';";
         }
+        $contents[] = "set('default_stage', '" . $project->stage() . "');";
         $contents[] = "set('repository', '" . $project->repository() . "');";
         $contents[] = "serverList('" . $serverFile->getPath() . "');";
         $deployerFileName = sprintf('deployer_%s_%s.php', $project->id(), $deployment->number());

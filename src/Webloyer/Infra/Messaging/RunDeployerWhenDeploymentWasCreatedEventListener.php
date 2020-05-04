@@ -41,12 +41,8 @@ class RunDeployerWhenDeploymentWasCreatedEventListener implements ShouldQueue
      */
     public function handle(Deployment\DeploymentWasCreatedEvent $event): void
     {
-        $deployment = $this->deploymentRepository->findById(new Deployment\DeploymentNumber($event->number()));
-        $project = $this->projectRepository->findById(new Project\ProjectId($event->projecId()));
-
         $deployerFileName = sprintf('%s_%s.php', $event->projectId(), $event->number());
         $task = $event->task();
-        $stage = $project->stage();
 
         try {
             // Create the deployer process
@@ -57,11 +53,11 @@ class RunDeployerWhenDeploymentWasCreatedEventListener implements ShouldQueue
                 '-n',
                 '-vvv',
                 $task,
-                $stage,
             ]);
             $process->setTimeout(600);
 
             // Run the deployer process and update the deployment log
+            $deployment = $this->deploymentRepository->findById(new Deployment\DeploymentNumber($event->number()));
             $log = '';
             $process->run(function (string $type, string $buffer) use (&$log, $deployment) {
                 $log .= $buffer;
