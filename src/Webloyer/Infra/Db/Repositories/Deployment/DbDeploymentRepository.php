@@ -123,8 +123,10 @@ class DbDeploymentRepository implements Deployment\DeploymentRepository
             'project_id' => $deployment->projectId(),
             'number' => $deployment->number(),
         ]);
+        if ($deployment->wasRecentlyCreated) {
+            $this->deploymentProjection->project($deployment);
+        }
         $deployment->provide($deploymentOrm);
         $deploymentOrm->save();
-        $this->deploymentProjection->project($deployment);
     }
 }
