@@ -20,7 +20,7 @@ class ProjectController extends Controller
     private $recipeService;
     /** @var ServerApplication\ServerService */
     private $serverService;
-    /** @var UserInterface */
+    /** @var UserApplication\UserService */
     private $userService;
 
     /**
