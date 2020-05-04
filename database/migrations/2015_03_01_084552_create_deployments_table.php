@@ -19,7 +19,7 @@ class CreateDeploymentsTable extends Migration
             $table->integer('number')->unsigned();
             $table->string('task');
             $table->string('status');
-            $table->logText('log')->nullable();
+            $table->longText('log')->nullable();
             $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
 
