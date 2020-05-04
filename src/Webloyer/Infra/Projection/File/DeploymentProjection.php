@@ -26,7 +26,7 @@ class DeploymentProjection implements Deployment\DeploymentProjection
      * @return void
      */
     public function __construct(
-        Project\ProjectRepositoryt $projectRepository,
+        Project\ProjectRepository $projectRepository,
         Recipe\RecipeRepository $recipeRepository,
         Server\ServerRepository $serverRepository
     ) {
@@ -39,7 +39,7 @@ class DeploymentProjection implements Deployment\DeploymentProjection
      * @param Deployment\Deployment $deployment
      * @return void
      */
-    public function projectDeploymentWasCreated(Deployment\Deployment $deployment): void
+    public function project(Deployment\Deployment $deployment): void
     {
         $project = $this->projectRepository->findById(new Project\ProjectId($deployment->projecId()));
         $recipes = array_map(function (string $recipeId): Recipe\Recipe {

@@ -13,5 +13,5 @@ interface DeploymentProjection
      * @param Deployment $deployment
      * @return void
      */
-    public function projectDeploymentWasCreated(Deployment $deployment): void;
+    public function project(Deployment $deployment): void;
 }
