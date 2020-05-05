@@ -51,7 +51,7 @@ class OldDeploymentSpecificaiton implements DeploymentSpecificaiton
 
         if ($discardOldDeployment->isKeepDays()) {
             $baseDate = $this->currentDate->modify('-' . $discardOldDeployment->keepDays() . ' days');
-            $isSatisfied = $deployment->completionDate() < $baseDate;
+            $isSatisfied = $deployment->finishDate() < $baseDate;
         }
 
         return $isSatisfied;

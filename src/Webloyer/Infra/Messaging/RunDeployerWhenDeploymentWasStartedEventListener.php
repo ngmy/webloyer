@@ -10,37 +10,30 @@ use Illuminate\Queue\InteractsWithQueue;
 use Storage;
 use Symfony\Component\Process\Process;
 use Webloyer\Domain\Model\Deployment;
-use Webloyer\Domain\Model\Project;
 
-class RunDeployerWhenDeploymentWasCreatedEventListener implements ShouldQueue
+class RunDeployerWhenDeploymentWasStartedEventListener implements ShouldQueue
 {
     /** @var Deployment\DeploymentRepository */
     private $deploymentRepository;
-    /** @var Project\ProjectRepository */
-    private $projectRepository;
 
     /**
      * Create the event listener.
      *
-     * @param Project\ProjectRepository       $projectRepository
      * @param Deployment\DeploymentRepository $deploymentRepository
      * @return void
      */
-    public function __construct(
-        Project\ProjectRepositoryt $projectRepository,
-        Deployment\DeploymentRepository $deploymentRepository
-    ) {
-        $this->projectRepository = $projectRepository;
+    public function __construct(Deployment\DeploymentRepository $deploymentRepository)
+    {
         $this->deploymentRepository = $deploymentRepository;
     }
 
     /**
      * Handle the event.
      *
-     * @param Deployment\DeploymentWasCreatedEvent $event
+     * @param Deployment\DeploymentWasStartedEvent $event
      * @return void
      */
-    public function handle(Deployment\DeploymentWasCreatedEvent $event): void
+    public function handle(Deployment\DeploymentWasStartedEvent $event): void
     {
         $deployerFileName = sprintf('%s_%s.php', $event->projectId(), $event->number());
         $task = $event->task();
@@ -59,11 +52,9 @@ class RunDeployerWhenDeploymentWasCreatedEventListener implements ShouldQueue
 
             // Run the deployer process and update the deployment log
             $deployment = $this->deploymentRepository->findById(new Deployment\DeploymentNumber($event->number()));
-            $log = '';
-            $process->run(function (string $type, string $buffer) use (&$log, $deployment) {
+            $process->run(function (string $type, string $buffer) use ($deployment) {
                 DB::trancation(function () use (&$log, $deployment) {
-                    $log .= $buffer;
-                    $deployment->changeLog($log);
+                    $deployment->appendLog($buffer);
                     $this->deploymentRepository->save($deployment);
                 });
             });
@@ -72,8 +63,10 @@ class RunDeployerWhenDeploymentWasCreatedEventListener implements ShouldQueue
             DB::transaction(function () use ($process, $deployment) {
                 $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
                 $status = $process->getExitCode();
-                $deployment->changeLog($log);
-                $deployment->complete($status);
+                $deployment->changeLog($log)
+                    ->changeStatus($status)
+                    ->changeFinishDate('now')
+                    ->finish();
                 $this->deploymentRepository->save($deployment);
             });
         } catch (Exception $e) {

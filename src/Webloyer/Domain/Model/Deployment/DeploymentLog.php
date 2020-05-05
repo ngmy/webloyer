@@ -25,4 +25,9 @@ class DeploymentLog
     {
         return $this->value;
     }
+
+    public function append(string $value): self
+    {
+        return new self($this->value . $value);
+    }
 }

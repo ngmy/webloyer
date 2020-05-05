@@ -58,8 +58,10 @@ class DeploymentService
                 Deployment\DeploymentStatus::queued()->value(),
                 '',
                 $command->getExecutor(),
+                'now',
                 null
             );
+            $deployment->start();
             $this->deploymentRepository->save($deployment);
         });
     }
@@ -78,8 +80,10 @@ class DeploymentService
                 Deployment\DeploymentStatus::queued()->value(),
                 '',
                 $command->getExecutor(),
+                'now',
                 null
             );
+            $deployment->start();
             $this->deploymentRepository->save($deployment);
         });
     }

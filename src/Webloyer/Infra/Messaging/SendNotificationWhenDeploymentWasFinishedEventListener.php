@@ -10,12 +10,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Webloyer\Domain\Model\Deployment;
 use Webloyer\Domain\Model\Project;
 use Webloyer\Infra\Notification\Laravel\{
-    DeploymentWasCompletedNotifiable,
-    DeploymentWasCompletedNotification,
-    DeploymentWasCompletedNotificationDto,
+    DeploymentWasFinishedNotifiable,
+    DeploymentWasFinishedNotification,
+    DeploymentWasFinishedNotificationDto,
 };
 
-class SendNotificationWhenDeploymentWasCompletedEventListener implements ShouldQueue
+class SendNotificationWhenDeploymentWasFinishedEventListener implements ShouldQueue
 {
     /** @var Deployment\DeploymentRepository */
     private $deploymentRepository;
@@ -40,10 +40,10 @@ class SendNotificationWhenDeploymentWasCompletedEventListener implements ShouldQ
     /**
      * Handle the event.
      *
-     * @param Deployment\DeploymentWasCompletedEvent $event
+     * @param Deployment\DeploymentWasFinishedEvent $event
      * @return void
      */
-    public function handle(Deployment\DeploymentWasCompletedEvent $event): void
+    public function handle(Deployment\DeploymentWasFinishedEvent $event): void
     {
         $deployment = $tthis->deploymentRepository->findById(
             new Project\ProjectId($event->projectId()),
@@ -53,13 +53,13 @@ class SendNotificationWhenDeploymentWasCompletedEventListener implements ShouldQ
             new Project\ProjectId($event->projectId())
         );
 
-        $notifiable = new DeploymentWasCompletedNotifiable();
+        $notifiable = new DeploymentWasFinishedNotifiable();
         $project->provide($notifiable);
 
-        $dto = new DeploymentWasCompletedNotificationDto();
+        $dto = new DeploymentWasFinishedNotificationDto();
         $deployment->provide($dto);
         $project->provide($dto);
 
-        $notifiable->notify(new DeploymentWasCompletedNotification($dto));
+        $notifiable->notify(new DeploymentWasFinishedNotification($dto));
     }
 }

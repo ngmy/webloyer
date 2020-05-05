@@ -26,9 +26,4 @@ trait Identifiable
         $this->surrogateId = $surrogateId;
         return $this;
     }
-
-    public function isIdentified(): bool
-    {
-        return $this->surrogateId() != -1;
-    }
 }

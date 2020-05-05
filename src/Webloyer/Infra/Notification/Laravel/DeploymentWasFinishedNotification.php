@@ -8,9 +8,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Webloyer\Infra\Notification\Laravel\DeploymentWasCompletedNotificationDto;
+use Webloyer\Infra\Notification\Laravel\DeploymentWasFinishedNotificationDto;
 
-class DeploymentWasCompletedNotification extends Notification
+class DeploymentWasFinishedNotification extends Notification
 {
     use Queueable;
 
@@ -19,7 +19,7 @@ class DeploymentWasCompletedNotification extends Notification
      *
      * @return void
      */
-    public function __construct(DeploymentWasCompletedNotificationDto $dto)
+    public function __construct(DeploymentWasFinishedNotificationDto $dto)
     {
         $this->dto = $dto;
     }
@@ -56,7 +56,7 @@ class DeploymentWasCompletedNotification extends Notification
         return (new MailMessage())
             ->subject($subject)
             ->greeting('Hello!')
-            ->line('Deploymeny was completed!')
+            ->line('Deploymeny was finished!')
             ->action('Show Deployment', $url)
             ->line('Task: ' . $dto->task)
             ->line('Log: ' . $dto->log)

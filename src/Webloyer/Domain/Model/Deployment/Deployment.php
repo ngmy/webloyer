@@ -6,6 +6,7 @@ namespace Webloyer\Domain\Model\Deployment;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
 use Common\Domain\Model\Identifiable;
+use LogicException;
 use Webloyer\Domain\Model\Project\ProjectId;
 use Webloyer\Domain\Model\User\UserEmail;
 
@@ -25,8 +26,10 @@ class Deployment
     private $log;
     /** @var UserEmail */
     private $executor;
-    /** @var DeploymentCompletionDate|null */
-    private $completionDate;
+    /** @var DeploymentStartDate */
+    private $startDate;
+    /** @var DeploymentFinishDate|null */
+    private $finishDate;
 
     /**
      * @param string      $projectId
@@ -35,7 +38,8 @@ class Deployment
      * @param string      $status
      * @param string      $log
      * @param string      $executor
-     * @param string|null $completionDate
+     * @param string      $startDate
+     * @param string|null $finishDate
      * @return self
      */
     public static function of(
@@ -45,7 +49,8 @@ class Deployment
         string $status,
         string $log,
         string $executor,
-        ?string $completionDate
+        string $startDate,
+        ?string $finishDate
     ): self {
         return new self(
             new ProjectId($projectId),
@@ -54,18 +59,20 @@ class Deployment
             DeploymentStatus::$status(),
             new DeploymentLog($log),
             new UserEmail($executor),
-            isset($completionDate) ? DeploymentCompletionDate::of($completionDate) : null
+            DeplotmentStartDate::of($startDate),
+            isset($finishDate) ? DeploymentFinishDate::of($finishDate) : null
         );
     }
 
     /**
-     * @param ProjectId                     $projectId
-     * @param DeploymentNumber              $number
-     * @param DeploymentTask                $task
-     * @param DeploymentStatus              $status
-     * @param DeploymentLog                 $log
-     * @param UserEmail                     $executor
-     * @param DeploymentCompletionDate|null $completionDate
+     * @param ProjectId                 $projectId
+     * @param DeploymentNumber          $number
+     * @param DeploymentTask            $task
+     * @param DeploymentStatus          $status
+     * @param DeploymentLog             $log
+     * @param UserEmail                 $executor
+     * @param DeploymentStartDate       $startDate
+     * @param DeploymentFinishDate|null $finishDate
      * @return void
      */
     public function __construct(
@@ -75,7 +82,8 @@ class Deployment
         DeploymentStatus $status,
         DeploymentLog $log,
         UserEmail $executor,
-        ?DeploymentCompletionDate $completionDate
+        DeploymentStartDate $startDate,
+        ?DeploymentFinishDate $finishDate
     ) {
         $this->projectId = $projectId;
         $this->number = $number;
@@ -83,13 +91,8 @@ class Deployment
         $this->status = $status;
         $this->log = $log;
         $this->executor = $executor;
-        $this->completationDate = $complationDate;
-
-        if (!$this->isIdentified()) {
-            DomainEventPublisher::getInstance()->publish(
-                new DeploymentWasCreatedEvent($projectId, $number, $task)
-            );
-        }
+        $this->startDate = $startDate;
+        $this->finishDate = $finishDate;
     }
 
     /**
@@ -140,9 +143,14 @@ class Deployment
         return $this->executor->value();
     }
 
-    public function completionDate(): ?string
+    public function startDate(): string
     {
-        return isset($this->completionDate) ? $this->completionDate->toString() : null;
+        return $this->startDate->toString();
+    }
+
+    public function finishDate(): ?string
+    {
+        return isset($this->finishDate) ? $this->finishDate->toString() : null;
     }
 
     /**
@@ -152,6 +160,12 @@ class Deployment
     public function changeStatus(string $status): self
     {
         $this->status = DeploymentStatus::$status();
+        return $this;
+    }
+
+    public function appendLog(string $log): self
+    {
+        $this->log = $this->log->append($log);
         return $this;
     }
 
@@ -165,24 +179,36 @@ class Deployment
         return $this;
     }
 
-    public function changeCompletionDate(string $completionDate): self
+    public function changeFinishDate(string $finishDate): self
     {
-        $this->log = DeploymentCompletionDate::of($completionDate);
+        $this->log = DeploymentFinishDate::of($finishDate);
         return $this;
     }
 
-    public function complete(string $status): void
+    public function start(): void
     {
-        $this->changeStatus($status);
-        $this->changeCompletionDate(DeploymentCompletionDate::now());
         DomainEventPublisher::getInstance()->publish(
-            new DeploymentWasCompletedEvent(
+            new DeploymentWasStartedEvent($projectId, $number, $task)
+        );
+    }
+
+    public function finish(): void
+    {
+        if (!$this->status->isFinished()) {
+            throw new LogicException();
+        }
+        if (is_null($this->finishDate)) {
+            throw new LogicException();
+        }
+        DomainEventPublisher::getInstance()->publish(
+            new DeploymentWasFinishedEvent(
                 $this->projectId,
                 $this->number,
                 $this->task,
                 $this->status,
                 $this->log,
-                $this->completionDate
+                $this->startDate,
+                $this->finishDate
             )
         );
     }
@@ -199,7 +225,8 @@ class Deployment
         $interest->informStatus($this->status());
         $interest->informLog($this->log());
         $interest->informExecutor($this->executor());
-        $interest->informCompletionDate($this->completionDate());
+        $interest->informStartDate($this->startDate());
+        $interest->informFinishDate($this->finishDate());
     }
 
     /**

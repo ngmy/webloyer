@@ -10,7 +10,7 @@ use Common\Domain\Model\Event\{
 };
 use Webloyer\Domain\Model\Project\ProjectId;
 
-class DeploymentWasCreatedEvent implements DomainEvent, PublishableDomainEvent
+class DeploymentWasFinishedEvent implements DomainEvent, PublishableDomainEvent
 {
     /** @var ProjectId */
     private $projectId;
@@ -18,6 +18,9 @@ class DeploymentWasCreatedEvent implements DomainEvent, PublishableDomainEvent
     private $number;
     /** @var DeploymentTask */
     private $task;
+    private $log;
+    private $status;
+    private $finishDate;
 
     /**
      * @param ProjectId $projectId
@@ -28,11 +31,17 @@ class DeploymentWasCreatedEvent implements DomainEvent, PublishableDomainEvent
     public function __construct(
         ProjectId $projectId,
         DeploymentNumber $number,
-        DeploymentTask $task
+        DeploymentTask $task,
+        DeploymentLog $log,
+        DeploymentStatus $status,
+        DeplotmentFinishDate $finishDate
     ) {
         $this->projectId = $projectId;
         $this->number = $number;
         $this->task = $task;
+        $this->log = $log;
+        $this->status = $status;
+        $this->finishDate = $finishDate;
     }
 
     /**
@@ -57,5 +66,20 @@ class DeploymentWasCreatedEvent implements DomainEvent, PublishableDomainEvent
     public function task(): string
     {
         return $this->task->value();
+    }
+
+    public function log(): string
+    {
+        return $this->log->value();
+    }
+
+    public function status(): string
+    {
+        return $this->status->value();
+    }
+
+    public function finishDate(): string
+    {
+        return $this->finishDate->toString();
     }
 }

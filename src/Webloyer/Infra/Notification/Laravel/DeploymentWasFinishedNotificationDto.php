@@ -7,7 +7,7 @@ namespace Webloyer\Infra\Notification\Laravel;
 use Webloyer\Domain\Model\Deployment;
 use Webloyer\Domain\Model\Project;
 
-class DeploymentWasCompletedNotificationDto implements Deployment\DeploymentInterest, Project\ProjectInterest
+class DeploymentWasFinishedNotificationDto implements Deployment\DeploymentInterest, Project\ProjectInterest
 {
     /**
      * @param string $projectId
@@ -63,9 +63,14 @@ class DeploymentWasCompletedNotificationDto implements Deployment\DeploymentInte
         $this->executor = $executor;
     }
 
-    public function informCompletionDate(?string $completionDate): void
+    public function informStartDate(string $startDate): void
     {
-        $this->completionDate = $completionDate;
+        $this->startDate = $startDate;
+    }
+
+    public function informFinishDate(?string $finishDate): void
+    {
+        $this->finishDate = $finishDate;
     }
 
     /**

@@ -6,7 +6,7 @@ namespace Webloyer\Domain\Model\Deployment;
 
 use DateTimeImmutable;
 
-class DeploymentCompletionDate
+class DeploymentStartDate
 {
     /** @var DateTimeImmutable */
     private $value;

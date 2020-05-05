@@ -7,7 +7,7 @@ namespace Webloyer\Infra\Notification\Laravel;
 use Illuminate\Notifications\Notifiable;
 use Webloyer\Domain\Model\Project;
 
-class DeploymentWasCompletedDto implements Project\ProjectInterest
+class DeploymentWasFinishedDto implements Project\ProjectInterest
 {
     use Notifiable;
 
