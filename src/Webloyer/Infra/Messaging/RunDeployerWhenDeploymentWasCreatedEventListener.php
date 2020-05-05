@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Messaging;
 
+use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Storage;
@@ -60,19 +61,21 @@ class RunDeployerWhenDeploymentWasCreatedEventListener implements ShouldQueue
             $deployment = $this->deploymentRepository->findById(new Deployment\DeploymentNumber($event->number()));
             $log = '';
             $process->run(function (string $type, string $buffer) use (&$log, $deployment) {
-                $log .= $buffer;
-                $deployment->changeLog($log);
-                $this->deploymentRepository->save($deployment);
+                DB::trancation(function () use (&$log, $deployment) {
+                    $log .= $buffer;
+                    $deployment->changeLog($log);
+                    $this->deploymentRepository->save($deployment);
+                });
             });
 
             // Update the deployment log and status
-            $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
-            $status = $process->getExitCode();
-            $deployment->changeLog($log);
-            $deployment->changeStatus($status);
-            $this->deploymentRepository->save($deployment);
-
-            // TODO Notify
+            DB::transaction(function () use ($process, $deployment) {
+                $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
+                $status = $process->getExitCode();
+                $deployment->changeLog($log);
+                $deployment->changeStatus($status);
+                $this->deploymentRepository->save($deployment);
+            });
         } catch (Exception $e) {
             throw $e;
         } finally {

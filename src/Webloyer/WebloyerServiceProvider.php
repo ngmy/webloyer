@@ -7,6 +7,7 @@ namespace Webloyer;
 use Event;
 use Illuminate\Support\ServiceProvider;
 use Webloyer\Domain\Model\Deployment\DeploymentRepository;
+use Webloyer\Domain\Model\Deployment\DeploymentWasCompletedEvent;
 use Webloyer\Domain\Model\Deployment\DeploymentWasCreatedEvent;
 use Webloyer\Domain\Model\Project\ProjectRepository;
 use Webloyer\Domain\Model\Recipe\RecipeRepository;
@@ -14,6 +15,7 @@ use Webloyer\Domain\Model\Server\ServerRepository;
 use Webloyer\Domain\Model\Setting\Mail\MailSettingRepository;
 use Webloyer\Domain\Model\User\UserRepository;
 use Webloyer\Infra\Messaging\RunDeployerWhenDeploymentWasCreatedEventListener;
+use Webloyer\Infra\Messaging\SendNotificationWhenDeploymentWasCompletedEventListener;
 use Webloyer\Infra\Db\Repositories\Deployment\DbDeploymentRepository;
 use Webloyer\Infra\Db\Repositories\Project\DbProjectRepository;
 use Webloyer\Infra\Db\Repositories\Recipe\DbRecipeRepository;
@@ -45,6 +47,7 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Event::listen(DeploymentWasCompletedEvent::class, SendNotificationWhenDeploymentWasCompletedEventListener::class);
         Event::listen(DeploymentWasCreatedEvent::class, RunDeployerWhenDeploymentWasCreatedEventListener::class);
     }
 }

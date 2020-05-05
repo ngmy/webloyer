@@ -24,4 +24,10 @@ class DeploymentStatus
     private const SUCCEEDED = 'succeeded';
     /** @var string */
     private const FAILED = 'failed';
+
+    public function isCompleted(): bool
+    {
+        return $this->value == self::SUCCEEDED
+            || $this->value == self::FAILED;
+    }
 }

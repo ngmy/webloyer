@@ -137,6 +137,17 @@ class Deployment
     public function changeStatus(string $status): self
     {
         $this->status = DeploymentStatus::$status();
+        if ($status->isCompleted()) {
+            DomainEventPublisher::getInstance()->publish(
+                new DeploymentWasCompletedEvent(
+                    $this->projectId,
+                    $this->number,
+                    $this->task,
+                    $this->status,
+                    $this->log,
+                )
+            );
+        }
         return $this;
     }
 
