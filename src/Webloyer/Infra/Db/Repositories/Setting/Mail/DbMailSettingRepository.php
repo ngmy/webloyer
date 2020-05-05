@@ -14,6 +14,12 @@ class DbMailSettingRepository implements Mail\MailSettingRepository
      */
     public function findAll(): Mail\MailSettings
     {
-        return SettingOrm::mailSetting()->first()->toMailSettingEntities();
+        $mailSettingOrm = SettingOrm::mailSetting()->first();
+
+        if (is_null($mailSettingOrm)) {
+            return Mail\MailSettings::empty();
+        }
+
+        return $mailSettingOrm->toMailSettingEntities();
     }
 }
