@@ -7,7 +7,11 @@ namespace Webloyer\Domain\Model\Deployment;
 use Common\Domain\Model\Event\DomainEventPublisher;
 use Common\Domain\Model\Identifiable;
 use LogicException;
+use Webloyer\Domain\Model\Project\Project;
 use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Recipe\Recipes;
+use Webloyer\Domain\Model\Server\Server;
+use Webloyer\Domain\Model\User\User;
 use Webloyer\Domain\Model\User\UserEmail;
 
 class Deployment
@@ -185,15 +189,29 @@ class Deployment
         return $this;
     }
 
-    public function start(): void
-    {
+    public function start(
+        Project $project,
+        Recipes $recipes,
+        Server $server,
+        User $executor
+    ): void {
         DomainEventPublisher::getInstance()->publish(
-            new DeploymentWasStartedEvent($projectId, $number, $task)
+            new DeploymentWasStartedEvent(
+                $this,
+                $project,
+                $recipes,
+                $server,
+                $executor
+            )
         );
     }
 
-    public function finish(): void
-    {
+    public function finish(
+        Project $project,
+        Recipes $recipes,
+        Server $server,
+        User $executor
+    ): void {
         if (!$this->status->isFinished()) {
             throw new LogicException();
         }
@@ -202,13 +220,11 @@ class Deployment
         }
         DomainEventPublisher::getInstance()->publish(
             new DeploymentWasFinishedEvent(
-                $this->projectId,
-                $this->number,
-                $this->task,
-                $this->status,
-                $this->log,
-                $this->startDate,
-                $this->finishDate
+                $this,
+                $project,
+                $recipes,
+                $server,
+                $executor
             )
         );
     }

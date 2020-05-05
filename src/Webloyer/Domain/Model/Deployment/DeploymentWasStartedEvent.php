@@ -8,17 +8,14 @@ use Common\Domain\Model\Event\{
     DomainEvent,
     PublishableDomainEvent,
 };
+use Webloyer\Domain\Model\Project\Project;
 use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Recipe\Recipes;
+use Webloyer\Domain\Model\Server\Server;
+use Webloyer\Domain\Model\User\User;
 
 class DeploymentWasStartedEvent implements DomainEvent, PublishableDomainEvent
 {
-    /** @var ProjectId */
-    private $projectId;
-    /** @var DeploymentNumber */
-    private $number;
-    /** @var DeploymentTask */
-    private $task;
-
     /**
      * @param ProjectId $projectId
      * @param DeploymentNumber $number
@@ -26,36 +23,41 @@ class DeploymentWasStartedEvent implements DomainEvent, PublishableDomainEvent
      * @return void
      */
     public function __construct(
-        ProjectId $projectId,
-        DeploymentNumber $number,
-        DeploymentTask $task
+        Deployment $deployment,
+        Project $project,
+        Recipes $recipes,
+        Server $server,
+        User $executor
     ) {
-        $this->projectId = $projectId;
-        $this->number = $number;
-        $this->task = $task;
+        $this->deployment = $deployment;
+        $this->project = $project;
+        $this->recipes = $recipes;
+        $this->server = $server;
+        $this->executor = $executor;
     }
 
-    /**
-     * @return string
-     */
-    public function projectId(): string
+    public function deployment(): Deployment
     {
-        return $this->projectId->value();
+        return $this->deployment;
     }
 
-    /**
-     * @return int
-     */
-    public function number(): int
+    public function project(): Project
     {
-        return $this->number->value();
+        return $this->project;
     }
 
-    /**
-     * @return string
-     */
-    public function task(): string
+    public function recipes(): Recipes
     {
-        return $this->task->value();
+        return $this->recipes;
+    }
+
+    public function server(): Server
+    {
+        return $this->server;
+    }
+
+    public function executor(): Executor
+    {
+        return $this->executor;
     }
 }

@@ -8,19 +8,14 @@ use Common\Domain\Model\Event\{
     DomainEvent,
     PublishableDomainEvent,
 };
+use Webloyer\Domain\Model\Project\Project;
 use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Recipe\Recipes;
+use Webloyer\Domain\Model\Server\Server;
+use Webloyer\Domain\Model\User\User;
 
 class DeploymentWasFinishedEvent implements DomainEvent, PublishableDomainEvent
 {
-    /** @var ProjectId */
-    private $projectId;
-    /** @var DeploymentNumber */
-    private $number;
-    /** @var DeploymentTask */
-    private $task;
-    private $log;
-    private $status;
-    private $finishDate;
 
     /**
      * @param ProjectId $projectId
@@ -29,57 +24,41 @@ class DeploymentWasFinishedEvent implements DomainEvent, PublishableDomainEvent
      * @return void
      */
     public function __construct(
-        ProjectId $projectId,
-        DeploymentNumber $number,
-        DeploymentTask $task,
-        DeploymentLog $log,
-        DeploymentStatus $status,
-        DeplotmentFinishDate $finishDate
+        Deployment $deployment,
+        Project $project,
+        Recipes $recipes,
+        Server $server,
+        User $executor
     ) {
-        $this->projectId = $projectId;
-        $this->number = $number;
-        $this->task = $task;
-        $this->log = $log;
-        $this->status = $status;
-        $this->finishDate = $finishDate;
+        $this->deployment = $deployment;
+        $this->project = $project;
+        $this->recipes = $recipes;
+        $this->server = $server;
+        $this->executor = $executor;
     }
 
-    /**
-     * @return string
-     */
-    public function projectId(): string
+    public function deployment(): Deployment
     {
-        return $this->projectId->value();
+        return $this->deployment;
     }
 
-    /**
-     * @return int
-     */
-    public function number(): int
+    public function project(): Project
     {
-        return $this->number->value();
+        return $this->project;
     }
 
-    /**
-     * @return string
-     */
-    public function task(): string
+    public function recipes(): Recipes
     {
-        return $this->task->value();
+        return $this->recipes;
     }
 
-    public function log(): string
+    public function server(): Server
     {
-        return $this->log->value();
+        return $this->server;
     }
 
-    public function status(): string
+    public function executor(): Executor
     {
-        return $this->status->value();
-    }
-
-    public function finishDate(): string
-    {
-        return $this->finishDate->toString();
+        return $this->executor;
     }
 }

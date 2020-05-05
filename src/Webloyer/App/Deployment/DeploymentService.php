@@ -9,19 +9,40 @@ use InvalidArgumentException;
 use Webloyer\App\Deployment\Commands;
 use Webloyer\Domain\Model\Deployment;
 use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Project\ProjectRepository;
+use Webloyer\Domain\Model\Recipe\Recipe;
+use Webloyer\Domain\Model\Recipe\RecipeId;
+use Webloyer\Domain\Model\Recipe\RecipeRepository;
+use Webloyer\Domain\Model\Server\ServerId;
+use Webloyer\Domain\Model\Server\ServerRepository;
+use Webloyer\Domain\Model\User\UserId;
+use Webloyer\Domain\Model\User\UserRepository;
 
 class DeploymentService
 {
     /** @var Deployment\DeploymentRepository */
     private $deploymentRepository;
+    private $projectRepository;
+    private $recipeRepository;
+    private $serverRepository;
+    private $userRepository;
 
     /**
      * @param Deployment\DeploymentRepository $deploymentRepository
      * @return void
      */
-    public function __construct(Deployment\DeploymentRepository $deploymentRepository)
-    {
+    public function __construct(
+        Deployment\DeploymentRepository $deploymentRepository,
+        ProjectRepository $projectRepository,
+        RecipeRepository $recipeRepository,
+        ServerRepository $serverRepository,
+        UserRepository $userRepository
+    ) {
         $this->deploymentRepository = $deploymentRepository;
+        $this->projectRepository = $projectRepository;
+        $this->recipeRepository = $recipeRepository;
+        $this->serverRepository = $serverRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -61,7 +82,7 @@ class DeploymentService
                 'now',
                 null
             );
-            $deployment->start();
+            $this->startDeployment($deployment);
             $this->deploymentRepository->save($deployment);
         });
     }
@@ -83,7 +104,7 @@ class DeploymentService
                 'now',
                 null
             );
-            $deployment->start();
+            $this->startDeployment($deployment);
             $this->deploymentRepository->save($deployment);
         });
     }
@@ -121,5 +142,22 @@ class DeploymentService
             );
         }
         return $deployment;
+    }
+
+    private function startDeployment(Deployment\Deployment $deployment): void
+    {
+        $project = $this->projectRepository->findById(new ProjectId($deployment->projectId()));
+        $recipes = array_map(function (string $recipeId): Recipe {
+            return $this->recipeRepository->findById(new RecipeId($recipeId));
+        }, $project->recipeIds());
+        $server = $this->serverRepository->findById(new ServerId($project->serverId()));
+        $executor = $this->userRepository->findByEmail(new UserId($deployment->executor()));
+
+        $deployment->start(
+            $project,
+            $recipes,
+            $server,
+            $executor
+        );
     }
 }
