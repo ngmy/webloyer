@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Project;
 
 use Common\Domain\Model\Identifiable;
+use Webloyer\Domain\Model\Deployment;
 use Webloyer\Domain\Model\Recipe;
 use Webloyer\Domain\Model\Server;
 
@@ -166,6 +167,11 @@ class Project
     public function stageName(): string
     {
         return $this->stageName->value();
+    }
+
+    public function discardOldDeployment(): DiscardOldDeployment\DiscardOldDeployment
+    {
+        return $this->discardOldDeployment;
     }
 
     /**

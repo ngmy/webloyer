@@ -23,7 +23,18 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
         'status',
         'log',
         'user_id',
+        'compleation_date'
     ];
+
+    /**
+     * @param Builder $query
+     * @param string  $projectId
+     * @return Builder
+     */
+    public function scopeOfProjectId(Builder $query, string $projectId, int $number): Builder
+    {
+        return $query->where('project_id', $projectId);
+    }
 
     /**
      * @param Builder $query
@@ -33,7 +44,7 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
      */
     public function scopeOfId(Builder $query, string $projectId, int $number): Builder
     {
-        return $query->where('project_id', $projectId)->where('number', $number);
+        return $query->ofProjectId($projectId)->where('number', $number);
     }
 
     /**
@@ -121,6 +132,11 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
         $this->user_id = $userOrm->id;
     }
 
+    public function informCompletionDate(?string $completionDate): void
+    {
+        $this->completion_date = $completionDate;
+    }
+
     /**
      * @return DeploymentDomainModel\Deployment
      */
@@ -134,7 +150,8 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
             $this->task,
             $this->status,
             $this->log,
-            $this->user->id
+            $this->user->id,
+            $this->completion_date
         );
     }
 }

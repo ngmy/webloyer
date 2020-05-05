@@ -73,7 +73,7 @@ class RunDeployerWhenDeploymentWasCreatedEventListener implements ShouldQueue
                 $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
                 $status = $process->getExitCode();
                 $deployment->changeLog($log);
-                $deployment->changeStatus($status);
+                $deployment->complete($status);
                 $this->deploymentRepository->save($deployment);
             });
         } catch (Exception $e) {

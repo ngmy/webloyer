@@ -57,7 +57,8 @@ class DeploymentService
                 Deployment\DeploymentTask::rollback()->value(),
                 Deployment\DeploymentStatus::queued()->value(),
                 '',
-                $command->getExecutor()
+                $command->getExecutor(),
+                null
             );
             $this->deploymentRepository->save($deployment);
         });
@@ -76,7 +77,8 @@ class DeploymentService
                 Deployment\DeploymentTask::rollback()->value(),
                 Deployment\DeploymentStatus::queued()->value(),
                 '',
-                $command->getExecutor()
+                $command->getExecutor(),
+                null
             );
             $this->deploymentRepository->save($deployment);
         });

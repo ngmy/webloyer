@@ -20,6 +20,7 @@ class DeploymentWasCompletedEvent implements DomainEvent, PublishableDomainEvent
     private $task;
     private $log;
     private $status;
+    private $completionDate;
 
     /**
      * @param ProjectId $projectId
@@ -32,13 +33,15 @@ class DeploymentWasCompletedEvent implements DomainEvent, PublishableDomainEvent
         DeploymentNumber $number,
         DeploymentTask $task,
         DeploymentLog $log,
-        DeploymentStatus $status
+        DeploymentStatus $status,
+        DeplotmentCompletionDate $completionDate
     ) {
         $this->projectId = $projectId;
         $this->number = $number;
         $this->task = $task;
         $this->log = $log;
         $this->status = $status;
+        $this->completionDate = $completionDate;
     }
 
     /**
@@ -73,5 +76,10 @@ class DeploymentWasCompletedEvent implements DomainEvent, PublishableDomainEvent
     public function status(): string
     {
         return $this->status->value();
+    }
+
+    public function completionDate(): string
+    {
+        return $this->completionDate->toString();
     }
 }

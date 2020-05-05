@@ -63,6 +63,11 @@ class DeploymentWasCompletedNotificationDto implements Deployment\DeploymentInte
         $this->executor = $executor;
     }
 
+    public function informCompletionDate(?string $completionDate): void
+    {
+        $this->completionDate = $completionDate;
+    }
+
     /**
      * @param string $id
      * @return void

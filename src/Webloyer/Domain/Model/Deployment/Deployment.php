@@ -25,14 +25,17 @@ class Deployment
     private $log;
     /** @var UserEmail */
     private $executor;
+    /** @var DeploymentCompletionDate|null */
+    private $completionDate;
 
     /**
-     * @param string $projectId
-     * @param int    $number
-     * @param string $task
-     * @param string $status
-     * @param string $log
-     * @param string $executor
+     * @param string      $projectId
+     * @param int         $number
+     * @param string      $task
+     * @param string      $status
+     * @param string      $log
+     * @param string      $executor
+     * @param string|null $completionDate
      * @return self
      */
     public static function of(
@@ -41,7 +44,8 @@ class Deployment
         string $task,
         string $status,
         string $log,
-        string $executor
+        string $executor,
+        ?string $completionDate
     ): self {
         return new self(
             new ProjectId($projectId),
@@ -49,17 +53,19 @@ class Deployment
             DeploymentTask::$task(),
             DeploymentStatus::$status(),
             new DeploymentLog($log),
-            new UserEmail($executor)
+            new UserEmail($executor),
+            isset($completionDate) ? DeploymentCompletionDate::of($completionDate) : null
         );
     }
 
     /**
-     * @param ProjectId        $projectId
-     * @param DeploymentNumber $number
-     * @param DeploymentTask   $task
-     * @param DeploymentStatus $status
-     * @param DeploymentLog    $log
-     * @param UserEmail           $executor
+     * @param ProjectId                     $projectId
+     * @param DeploymentNumber              $number
+     * @param DeploymentTask                $task
+     * @param DeploymentStatus              $status
+     * @param DeploymentLog                 $log
+     * @param UserEmail                     $executor
+     * @param DeploymentCompletionDate|null $completionDate
      * @return void
      */
     public function __construct(
@@ -68,7 +74,8 @@ class Deployment
         DeploymentTask $task,
         DeploymentStatus $status,
         DeploymentLog $log,
-        UserEmail $executor
+        UserEmail $executor,
+        ?DeploymentCompletionDate $completionDate
     ) {
         $this->projectId = $projectId;
         $this->number = $number;
@@ -76,10 +83,13 @@ class Deployment
         $this->status = $status;
         $this->log = $log;
         $this->executor = $executor;
+        $this->completationDate = $complationDate;
 
-        DomainEventPublisher::getInstance()->publish(
-            new DeploymentWasCreatedEvent($projectId, $number, $task)
-        );
+        if (!$this->isIdentified()) {
+            DomainEventPublisher::getInstance()->publish(
+                new DeploymentWasCreatedEvent($projectId, $number, $task)
+            );
+        }
     }
 
     /**
@@ -130,6 +140,11 @@ class Deployment
         return $this->executor->value();
     }
 
+    public function completionDate(): ?string
+    {
+        return isset($this->completionDate) ? $this->completionDate->toString() : null;
+    }
+
     /**
      * @param string $status
      * @return self
@@ -137,17 +152,6 @@ class Deployment
     public function changeStatus(string $status): self
     {
         $this->status = DeploymentStatus::$status();
-        if ($status->isCompleted()) {
-            DomainEventPublisher::getInstance()->publish(
-                new DeploymentWasCompletedEvent(
-                    $this->projectId,
-                    $this->number,
-                    $this->task,
-                    $this->status,
-                    $this->log,
-                )
-            );
-        }
         return $this;
     }
 
@@ -159,6 +163,28 @@ class Deployment
     {
         $this->log = new DeploymentLog($log);
         return $this;
+    }
+
+    public function changeCompletionDate(string $completionDate): self
+    {
+        $this->log = DeploymentCompletionDate::of($completionDate);
+        return $this;
+    }
+
+    public function complete(string $status): void
+    {
+        $this->changeStatus($status);
+        $this->changeCompletionDate(DeploymentCompletionDate::now());
+        DomainEventPublisher::getInstance()->publish(
+            new DeploymentWasCompletedEvent(
+                $this->projectId,
+                $this->number,
+                $this->task,
+                $this->status,
+                $this->log,
+                $this->completionDate
+            )
+        );
     }
 
     /**
@@ -173,6 +199,7 @@ class Deployment
         $interest->informStatus($this->status());
         $interest->informLog($this->log());
         $interest->informExecutor($this->executor());
+        $interest->informCompletionDate($this->completionDate());
     }
 
     /**

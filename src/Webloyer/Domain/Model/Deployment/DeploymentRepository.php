@@ -17,15 +17,17 @@ interface DeploymentRepository
      */
     public function nextId(ProjectId $projectId): DeploymentNumber;
     /**
+     * @param ProjectId $projectId
      * @return Deployments
      */
-    public function findAll(): Deployments;
+    public function findAllByProjectId(ProjectId $projectId): Deployments;
     /**
+     * @param ProjectId $projectId
      * @param int|null $page
      * @param int|null $perPage
      * @return Deployments
      */
-    public function findAllByPage(?int $page, ?int $perPage): Deployments;
+    public function findAllByProjectIdAndPage(ProjectId $projectId, ?int $page, ?int $perPage): Deployments;
     /**
      * @param ProjectId        $projectId
      * @param DeploymentNumber $number
@@ -42,4 +44,9 @@ interface DeploymentRepository
      * @return void
      */
     public function save(Deployment $deployment): void;
+    /**
+     * @param DeploymentSpecificaiton $spec
+     * @return Deployments
+     */
+    public function satisfyingDeployments(DeploymentSpecification $spec): Deployments;
 }

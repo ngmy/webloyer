@@ -9,6 +9,11 @@ class Deployments
     /** @var array<int, Deployment> */
     private $deployments;
 
+    public static function empty(): self
+    {
+        return new self(...[]);
+    }
+
     /**
      * @param Deployment ...$deployments
      * @return void
@@ -24,5 +29,31 @@ class Deployments
     public function toArray(): array
     {
         return $this->deployments;
+    }
+
+    public function last(): Deployment
+    {
+        $count = count($this->deployments);
+        return $this->deployments[$count - 1];
+    }
+
+    public function indexOf(Deployment $needle): int
+    {
+        foreach ($this->deployments as $i => $deployment) {
+            if ($needle->equals($deployment)) {
+                return $i;
+            }
+        }
+        return -1;
+    }
+
+    public function lastIndexOf(Deployment $needle): int
+    {
+        foreach (array_reverse($this->deployments) as $i => $deployment) {
+            if ($needle->equals($deployment)) {
+                return $i;
+            }
+        }
+        return -1;
     }
 }

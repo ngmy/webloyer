@@ -39,4 +39,9 @@ interface DeploymentInterest
      * @return void
      */
     public function informExecutor(string $executor): void;
+    /**
+     * @param string|null $completionDate
+     * @return void
+     */
+    public function informCompletionDate(?string $completionDate): void;
 }

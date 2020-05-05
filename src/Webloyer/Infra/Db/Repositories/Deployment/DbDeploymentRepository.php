@@ -47,12 +47,14 @@ class DbDeploymentRepository implements Deployment\DeploymentRepository
     }
 
     /**
+     * @param ProjectId $projectId
      * @return Deployment\Deployments
-     * @see Deployment\DeploymentRepository::findAll()
+     * @see Deployment\DeploymentRepository::findAllByProjectId()
      */
-    public function findAll(): Deployment\Deployments
+    public function findAllByProjectId(ProjectId $projectId): Deployment\Deployments
     {
-        $deploymentArray = DeploymentOrm::orderBy('number')
+        $deploymentArray = DeploymentOrm::ofProjectId($projectId)
+            ->orderBy('number')
             ->get()
             ->map(function (DeploymentOrm $deploymentOrm): Deployment\Deployment {
                 return $deploymentOrm->toEntity();
@@ -62,17 +64,19 @@ class DbDeploymentRepository implements Deployment\DeploymentRepository
     }
 
     /**
-     * @param int|null $page
-     * @param int|null $perPage
+     * @param ProjectId $projectId
+     * @param int|null  $page
+     * @param int|null  $perPage
      * @return Deployment\Deployments
-     * @see Deployment\DeploymentRepository::findAllByPage()
+     * @see Deployment\DeploymentRepository::findAllByProjectIdAndPage()
      */
-    public function findAllByPage(?int $page, ?int $perPage): Deployment\Deployments
+    public function findAllByProjectIdAndPage(ProjectId $projectId, ?int $page, ?int $perPage): Deployment\Deployments
     {
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
 
-        $deploymentArray = DeploymentOrm::orderBy('number')
+        $deploymentArray = DeploymentOrm::ofProjectId($projectId)
+            ->orderBy('number')
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
@@ -128,5 +132,14 @@ class DbDeploymentRepository implements Deployment\DeploymentRepository
         }
         $deployment->provide($deploymentOrm);
         $deploymentOrm->save();
+    }
+
+    /**
+     * @param Deployment\DeploymentSpecificaiton $spec
+     * @return Deployment\Deployments
+     */
+    public function satisfyingDeployments(Deployment\DeploymentSpecification $spec): Deployment\Deployments
+    {
+        return $spec->satisfyingElementsFrom($this);
     }
 }
