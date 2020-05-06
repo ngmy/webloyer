@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Infra\Notification\Laravel;
+namespace Webloyer\Infra\Notification\LaravelNotification;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Webloyer\Infra\Notification\Laravel\DeploymentWasFinishedNotificationDto;
+use Webloyer\Infra\Notification\Laravel\LaravelNotificationDeploymentCompletedDto;
 
-class DeploymentWasFinishedNotification extends Notification
+class LaravelNotificationDeploymentCompleted extends Notification
 {
     use Queueable;
 
@@ -19,7 +19,7 @@ class DeploymentWasFinishedNotification extends Notification
      *
      * @return void
      */
-    public function __construct(DeploymentWasFinishedNotificationDto $dto)
+    public function __construct(LaravelNotificationDeploymentCompletedDto $dto)
     {
         $this->dto = $dto;
     }
@@ -43,7 +43,7 @@ class DeploymentWasFinishedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $subject = sprintf('Deployment of %s #%s finished: %s',
+        $subject = sprintf('Deployment of %s #%s completed: %s',
             $dto->name,
             $dto->number,
             $dto->status,
@@ -56,7 +56,7 @@ class DeploymentWasFinishedNotification extends Notification
         return (new MailMessage())
             ->subject($subject)
             ->greeting('Hello!')
-            ->line('Deploymeny was finished!')
+            ->line('Deployment completed!')
             ->action('Show Deployment', $url)
             ->line('Task: ' . $dto->task)
             ->line('Log: ' . $dto->log)

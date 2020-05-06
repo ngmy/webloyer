@@ -80,9 +80,10 @@ class DeploymentService
                 '',
                 $command->getExecutor(),
                 'now',
+                null,
                 null
             );
-            $this->startDeployment($deployment);
+            $this->requestDeployment($deployment);
             $this->deploymentRepository->save($deployment);
         });
     }
@@ -102,9 +103,10 @@ class DeploymentService
                 '',
                 $command->getExecutor(),
                 'now',
+                null,
                 null
             );
-            $this->startDeployment($deployment);
+            $this->requestDeployment($deployment);
             $this->deploymentRepository->save($deployment);
         });
     }
@@ -144,7 +146,7 @@ class DeploymentService
         return $deployment;
     }
 
-    private function startDeployment(Deployment\Deployment $deployment): void
+    private function requestDeployment(Deployment\Deployment $deployment): void
     {
         $project = $this->projectRepository->findById(new ProjectId($deployment->projectId()));
         $recipes = array_map(function (string $recipeId): Recipe {
@@ -153,7 +155,7 @@ class DeploymentService
         $server = $this->serverRepository->findById(new ServerId($project->serverId()));
         $executor = $this->userRepository->findByEmail(new UserId($deployment->executor()));
 
-        $deployment->start(
+        $deployment->request(
             $project,
             $recipes,
             $server,

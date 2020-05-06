@@ -2,32 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Infra\Messaging;
+namespace Deployer\Infra\Messaging\LaravelQueue;
 
-use DB;
+use Common\Domain\Model\Event\DomainEventPublisher;
+use DateTimeImmutable;
+use Deployer\Domain\Model\{
+    DeployerFinished,
+    DeployerProgressed,
+    DeployerStarted,
+};
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Storage;
 use Symfony\Component\Process\Process;
-use Webloyer\Domain\Model\Deployment;
+use Webloyer\Domain\Model\Deployment\DeploymentStarted;
 
-class RunDeployerWhenDeploymentWasStartedEventListener implements ShouldQueue
+class LaravelQueueDeploymentRequestedListener implements ShouldQueue
 {
-    /** @var Deployment\DeploymentRepository */
-    private $deploymentRepository;
-
     private $createdFiles = [];
-
-    /**
-     * Create the event listener.
-     *
-     * @param Deployment\DeploymentRepository $deploymentRepository
-     * @return void
-     */
-    public function __construct(Deployment\DeploymentRepository $deploymentRepository)
-    {
-        $this->deploymentRepository = $deploymentRepository;
-    }
 
     public function __destruct()
     {
@@ -42,20 +34,20 @@ class RunDeployerWhenDeploymentWasStartedEventListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param Deployment\DeploymentWasStartedEvent $event
+     * @param DeploymentStarted $event
      * @return void
      */
-    public function handle(Deployment\DeploymentWasStartedEvent $event): void
+    public function handle(DeploymentStarted $event): void
     {
         $this->createDeployerFile($event);
         $this->runDeployer($event);
     }
 
     /**
-     * @param Deployment\Deployment $deployment
+     * @param DeploymentStarted $event
      * @return void
      */
-    public function createDeployerFile(Deployment\DeploymentWasStartedEvent $event): void
+    public function createDeployerFile(DeploymentStarted $event): void
     {
         // Create recipe files
         foreach ($this->getRecipeFileNames() as $recipeFileName) {
@@ -76,9 +68,12 @@ class RunDeployerWhenDeploymentWasStartedEventListener implements ShouldQueue
         $this->createFile($this->getDeployerFileName(), implode(PHP_EOL, $contents));
     }
 
-    public function runDeployer(Deployment\DeploymentWasStartedEvent $event): void
+    /**
+     * @param DeploymentStarted $event
+     * @return void
+     */
+    public function runDeployer(DeploymentStarted $event): void
     {
-        // Create the deployer process
         $process = new Process([
             base_path('vendor/bin/dep'),
             '-f=' . $this->getDeployerFileName(),
@@ -89,39 +84,35 @@ class RunDeployerWhenDeploymentWasStartedEventListener implements ShouldQueue
             $event->project()->stage(),
         ]);
         $process->setTimeout(600);
+        DomainEventPublisher::getInstance()->publish(
+            new DeployerStarted(
+            )
+        );
 
-        // Run the deployer process and update the deployment log
-        $deployment = $event->deployment();
-        $process->run(function (string $type, string $buffer) use ($deployment) {
-            DB::trancation(function () use ($deployment) {
-                $deployment->appendLog($buffer);
-                $this->deploymentRepository->save($deployment);
-            });
+        $log = '';
+        $process->run(function (string $type, string $buffer) use (&$log) {
+            $log .= $buffer;
+            DomainEventPublisher::getInstance()->publish(
+                new DeployerProgressed(
+                )
+            );
         });
 
-        // Update the deployment log and status
-        DB::transaction(function () use ($process, $deployment) {
-            $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
-            $status = $process->getExitCode();
-            $deployment->changeLog($log)
-                ->changeStatus($status)
-                ->changeFinishDate('now')
-                ->finish(
-                    $event->project(),
-                    $event->recipes(),
-                    $event->server(),
-                    $event->executor()
-                );
-            $this->deploymentRepository->save($deployment);
-        });
+        $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
+        $status = $process->getExitCode();
+        $finishDate = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        DomainEventPublisher::getInstance()->publish(
+            new DeployerFinished(
+            )
+        );
     }
 
-    public function getServerFileName(Deployment\DeploymentWasStartedEvent $event): string
+    public function getServerFileName(DeploymentStarted $event): string
     {
         return sprintf('server_%s_%s_%s.yaml', $event->deployment()->projectId(), $event->deployment()->number());
     }
 
-    public function getRecipeFileNames(Deployment\DeploymentWasStartedEvent $event): array
+    public function getRecipeFileNames(DeploymentStarted $event): array
     {
         $i = 1;
         return array_map(function (Recipe\Recipe $recipe) use ($event, $i): string {
@@ -129,12 +120,12 @@ class RunDeployerWhenDeploymentWasStartedEventListener implements ShouldQueue
         }, $event->recipes()->toArray());
     }
 
-    public function getRecipeFileName(Deployment\DeploymentWasStartedEvent $event, int $i): string
+    public function getRecipeFileName(DeploymentStarted $event, int $i): string
     {
         return sprintf('server_%s_%s_%s.php', $event->deployment()->projectId(), $event->deployment()->number(), $i++);
     }
 
-    public function getDeployerFileName(Deployment\DeploymentWasStartedEvent $event): string
+    public function getDeployerFileName(DeploymentStarted $event): string
     {
         return sprintf('deployer_%s_%s.php', $event->deployment()->projectId(), $event->deployment()->number());
     }

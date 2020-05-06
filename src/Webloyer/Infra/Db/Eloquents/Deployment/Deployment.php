@@ -23,6 +23,7 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
         'status',
         'log',
         'user_id',
+        'request_date',
         'start_date',
         'finish_date',
     ];
@@ -133,7 +134,12 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
         $this->user_id = $userOrm->id;
     }
 
-    public function informStartDate(string $startDate): void
+    public function informRequestDate(string $requestDate): void
+    {
+        $this->request_date = $requestDate;
+    }
+
+    public function informStartDate(?string $startDate): void
     {
         $this->start_date = $startDate;
     }
@@ -157,6 +163,7 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
             $this->status,
             $this->log,
             $this->user->id,
+            $this->request_date,
             $this->start_date,
             $this->finish_date
         );

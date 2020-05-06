@@ -14,15 +14,15 @@ use Webloyer\Infra\Notification\Laravel\{
     DeploymentWasFinishedNotificationDto,
 };
 
-class SendNotificationWhenDeploymentWasFinishedEventListener implements ShouldQueue
+class LaravelQueueDeploymentCompletedListener implements ShouldQueue
 {
     /**
      * Handle the event.
      *
-     * @param Deployment\DeploymentWasFinishedEvent $event
+     * @param Deployment\DeploymentCompleted $event
      * @return void
      */
-    public function handle(Deployment\DeploymentWasFinishedEvent $event): void
+    public function handle(Deployment\DeploymentCompleted $event): void
     {
         $notifiable = new DeploymentWasFinishedNotifiable();
         $event->project()->provide($notifiable);

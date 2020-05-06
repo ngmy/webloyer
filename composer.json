@@ -90,6 +90,7 @@
         "psr-4": {
             "App\\": "app/",
             "Common\\": "src/Common",
+            "Deployer\\": "src/Deployer",
             "Webloyer\\": "src/Webloyer"
         },
         "classmap": [

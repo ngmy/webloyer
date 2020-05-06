@@ -14,9 +14,8 @@ use Webloyer\Domain\Model\Recipe\Recipes;
 use Webloyer\Domain\Model\Server\Server;
 use Webloyer\Domain\Model\User\User;
 
-class DeploymentWasFinishedEvent implements DomainEvent, PublishableDomainEvent
+class DeploymentRequested implements DomainEvent, PublishableDomainEvent
 {
-
     /**
      * @param ProjectId $projectId
      * @param DeploymentNumber $number

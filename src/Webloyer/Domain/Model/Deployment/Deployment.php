@@ -30,6 +30,8 @@ class Deployment
     private $log;
     /** @var UserEmail */
     private $executor;
+    /** @var DeploymentRequestDate */
+    private $requestDate;
     /** @var DeploymentStartDate */
     private $startDate;
     /** @var DeploymentFinishDate|null */
@@ -42,7 +44,8 @@ class Deployment
      * @param string      $status
      * @param string      $log
      * @param string      $executor
-     * @param string      $startDate
+     * @param string      $requestDate
+     * @param string|null $startDate
      * @param string|null $finishDate
      * @return self
      */
@@ -53,7 +56,8 @@ class Deployment
         string $status,
         string $log,
         string $executor,
-        string $startDate,
+        string $requestDate,
+        ?string $startDate,
         ?string $finishDate
     ): self {
         return new self(
@@ -63,7 +67,8 @@ class Deployment
             DeploymentStatus::$status(),
             new DeploymentLog($log),
             new UserEmail($executor),
-            DeplotmentStartDate::of($startDate),
+            DeploymentRequestDate::of($requestDate),
+            isset($finishDate) ? DeplotmentStartDate::of($startDate) : null,
             isset($finishDate) ? DeploymentFinishDate::of($finishDate) : null
         );
     }
@@ -75,6 +80,7 @@ class Deployment
      * @param DeploymentStatus          $status
      * @param DeploymentLog             $log
      * @param UserEmail                 $executor
+     * @param DeploymentRequestDate     $requestDate
      * @param DeploymentStartDate       $startDate
      * @param DeploymentFinishDate|null $finishDate
      * @return void
@@ -86,7 +92,8 @@ class Deployment
         DeploymentStatus $status,
         DeploymentLog $log,
         UserEmail $executor,
-        DeploymentStartDate $startDate,
+        DeploymentRequestDate $requestDate,
+        ?DeploymentStartDate $startDate,
         ?DeploymentFinishDate $finishDate
     ) {
         $this->projectId = $projectId;
@@ -95,6 +102,7 @@ class Deployment
         $this->status = $status;
         $this->log = $log;
         $this->executor = $executor;
+        $this->requestDate = $requestDate;
         $this->startDate = $startDate;
         $this->finishDate = $finishDate;
     }
@@ -147,9 +155,14 @@ class Deployment
         return $this->executor->value();
     }
 
-    public function startDate(): string
+    public function requestDate(): string
     {
-        return $this->startDate->toString();
+        return $this->requestDate->toString();
+    }
+
+    public function startDate(): ?string
+    {
+        return isset($this->startDate) ? $this->startDate->toString() : null;
     }
 
     public function finishDate(): ?string
@@ -189,14 +202,14 @@ class Deployment
         return $this;
     }
 
-    public function start(
+    public function request(
         Project $project,
         Recipes $recipes,
         Server $server,
         User $executor
     ): void {
         DomainEventPublisher::getInstance()->publish(
-            new DeploymentWasStartedEvent(
+            new DeploymentRequested(
                 $this,
                 $project,
                 $recipes,
@@ -206,20 +219,23 @@ class Deployment
         );
     }
 
-    public function finish(
+    public function complete(
         Project $project,
         Recipes $recipes,
         Server $server,
         User $executor
     ): void {
-        if (!$this->status->isFinished()) {
+        if (!$this->status->isCompleted()) {
+            throw new LogicException();
+        }
+        if (is_null($this->startDate)) {
             throw new LogicException();
         }
         if (is_null($this->finishDate)) {
             throw new LogicException();
         }
         DomainEventPublisher::getInstance()->publish(
-            new DeploymentWasFinishedEvent(
+            new DeploymentCompleted(
                 $this,
                 $project,
                 $recipes,
@@ -241,6 +257,7 @@ class Deployment
         $interest->informStatus($this->status());
         $interest->informLog($this->log());
         $interest->informExecutor($this->executor());
+        $interest->informRequestDate($this->requestDate());
         $interest->informStartDate($this->startDate());
         $interest->informFinishDate($this->finishDate());
     }

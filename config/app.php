@@ -178,6 +178,7 @@ return [
         App\Providers\RepositoryServiceProvider::class,
 
         Common\CommonServiceProvider::class,
+        Deployer\DeployerServiceProvider::class,
         Webloyer\WebloyerServiceProvider::class,
 
     ],

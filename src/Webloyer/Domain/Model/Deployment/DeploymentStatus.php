@@ -25,7 +25,17 @@ class DeploymentStatus
     /** @var string */
     private const FAILED = 'failed';
 
-    public function isFinished(): bool
+    public function isRequested(): bool
+    {
+        return $this->value = self::QUEUED;
+    }
+
+    public function isRunning(): bool
+    {
+        return $this->value = self::Running;
+    }
+
+    public function isCompleted(): bool
     {
         return $this->value == self::SUCCEEDED
             || $this->value == self::FAILED;

@@ -2,14 +2,81 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Infra\Notification\Laravel;
+namespace Webloyer\Infra\Notification\LaravelNotification;
 
-use Illuminate\Notifications\Notifiable;
+use Webloyer\Domain\Model\Deployment;
 use Webloyer\Domain\Model\Project;
 
-class DeploymentWasFinishedDto implements Project\ProjectInterest
+class LaravelNotificationDeploymentCompletedDto implements Deployment\DeploymentInterest, Project\ProjectInterest
 {
-    use Notifiable;
+    /**
+     * @param string $projectId
+     * @return void
+     */
+    public function informProjectId(string $projectId): void
+    {
+        $this->projectId = $projectId;
+    }
+
+    /**
+     * @param int $number
+     * @return void
+     */
+    public function informNumber(int $number): void
+    {
+        $this->number = $number;
+    }
+
+    /**
+     * @param string $task
+     * @return void
+     */
+    public function informTask(string $task): void
+    {
+        $this->task = $task;
+    }
+
+    /**
+     * @param string $status
+     * @return void
+     */
+    public function informStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @param string $log
+     * @return void
+     */
+    public function informLog(string $log): void
+    {
+        $this->log = $log;
+    }
+
+    /**
+     * @param string $executor
+     * @return void
+     */
+    public function informExecutor(string $executor): void
+    {
+        $this->executor = $executor;
+    }
+
+    public function informRequestDate(string $requestDate): void
+    {
+        $this->requestDate = $requestDate;
+    }
+
+    public function informStartDate(?string $startDate): void
+    {
+        $this->startDate = $startDate;
+    }
+
+    public function informFinishDate(?string $finishDate): void
+    {
+        $this->finishDate = $finishDate;
+    }
 
     /**
      * @param string $id
@@ -25,6 +92,7 @@ class DeploymentWasFinishedDto implements Project\ProjectInterest
      */
     public function informName(string $name): void
     {
+        $this->name = $name;
     }
 
     /**
