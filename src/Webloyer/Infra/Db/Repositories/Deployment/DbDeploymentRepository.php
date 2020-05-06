@@ -12,18 +12,6 @@ use Webloyer\Infra\Db\Eloquents\Deployment\MaxDeployment as MaxDeploymentOrm;
 
 class DbDeploymentRepository implements Deployment\DeploymentRepository
 {
-    /** @var Deployment\DeploymentProjection */
-    private $deploymentProjection;
-
-    /**
-     * @param Deployment\DeploymentProjection $deploymentProjection
-     * @return void
-     */
-    public function __construct(Deployment\DeploymentProjection $deploymentProjection)
-    {
-        $this->deploymentProjection = $deploymentProjection;
-    }
-
     /**
      * @param ProjectId $projectId
      * @return Deployment\DeploymentNumber
@@ -127,9 +115,6 @@ class DbDeploymentRepository implements Deployment\DeploymentRepository
             'project_id' => $deployment->projectId(),
             'number' => $deployment->number(),
         ]);
-        if ($deployment->wasRecentlyCreated) {
-            $this->deploymentProjection->project($deployment);
-        }
         $deployment->provide($deploymentOrm);
         $deploymentOrm->save();
     }
