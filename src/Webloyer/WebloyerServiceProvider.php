@@ -4,35 +4,51 @@ declare(strict_types=1);
 
 namespace Webloyer;
 
-use Deployer\Domain\Model\{
-    DeployerFinished,
-    DeployerProgressed,
-    DeployerStarted,
-};
-use Event;
+use Common\App\Service\TransactionalApplicationService;
+use Common\Infra\App\Service\LaravelSession;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Webloyer\Domain\Model\Deployment\{
-    DeploymentCompleted,
-    DeploymentRepository,
-    DeploymentRequested,
+use Webloyer\App\Service\Deployment\{
+    CreateDeploymentService,
+    DeleteDeploymentService,
+    GetDeploymentService,
+    GetDeploymentsService,
+    RollbackDeploymentService,
 };
+use Webloyer\App\Service\Project\{
+    CreateProjectService,
+    DeleteProjectService,
+    GetAllProjectsService,
+    GetProjectService,
+    GetProjectsService,
+    UpdateProjectService,
+};
+use Webloyer\App\Service\Recipe\{
+    CreateRecipeService,
+    DeleteRecipeService,
+    GetAllRecipesService,
+    GetRecipeService,
+    GetRecipesService,
+    UpdateRecipeService,
+};
+use Webloyer\App\Service\Service\{
+    CreateServerService,
+    DeleteServerService,
+    GetAllServersService,
+    GetServerService,
+    GetServersService,
+    UpdateServerService,
+};
+use Webloyer\Domain\Model\Deployment\DeploymentRepository;
 use Webloyer\Domain\Model\Project\ProjectRepository;
 use Webloyer\Domain\Model\Recipe\RecipeRepository;
 use Webloyer\Domain\Model\Server\ServerRepository;
-use Webloyer\Domain\Model\Setting\Mail\MailSettingRepository;
 use Webloyer\Domain\Model\User\UserRepository;
-use Webloyer\Infra\Messaging\LaravelQueue\{
-    LaravelQueueDeployerFinishedListener,
-    LaravelQueueDeployerProgressedListener,
-    LaravelQueueDeployerStartedListener,
-    SendNotificationWhenDeploymentCompletedListener,
-};
-use Webloyer\Infra\Db\Repositories\Deployment\DbDeploymentRepository;
-use Webloyer\Infra\Db\Repositories\Project\DbProjectRepository;
-use Webloyer\Infra\Db\Repositories\Recipe\DbRecipeRepository;
-use Webloyer\Infra\Db\Repositories\Server\DbServerRepository;
-use Webloyer\Infra\Db\Repositories\Setting\Mail\DbMailSettingRepository;
-use Webloyer\Infra\Db\Repositories\User\DbUserRepository;
+use Webloyer\Infra\Domain\Model\Deployment\EloquentDeploymentRepository;
+use Webloyer\Infra\Domain\Model\Project\EloquentProjectRepository;
+use Webloyer\Infra\Domain\Model\Recipe\EloquentRecipeRepository;
+use Webloyer\Infra\Domain\Model\Server\EloquentServerRepository;
+use Webloyer\Infra\Domain\Model\User\EloquentUserRepository;
 
 class WebloyerServiceProvider extends ServiceProvider
 {
@@ -43,12 +59,124 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(DeploymentRepository::class, DbDeploymentRepository::class);
-        $this->app->bind(MailSettingRepository::class, DbMailSettingRepository::class);
-        $this->app->bind(ProjectRepository::class, DbProjectRepository::class);
-        $this->app->bind(RecipeRepository::class, DbRecipeRepository::class);
-        $this->app->bind(ServerRepository::class, DbServerRepository::class);
-        $this->app->bind(UserRepository::class, DbUserRepository::class);
+        // Application services
+        $this->app->bind(CreateDeploymentService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new CreateDeploymentService(
+                    $app->make(DeploymentRepository::class),
+                    $app->make(ProjectRepository::class),
+                    $app->make(RecipeRepository::class),
+                    $app->make(ServerRepository::class),
+                    $app->make(UserRepository::class),
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(DeleteDeploymentService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new DeleteDeploymentService(
+                    $app->make(DeploymentRepository::class),
+                    $app->make(ProjectRepository::class),
+                    $app->make(RecipeRepository::class),
+                    $app->make(ServerRepository::class),
+                    $app->make(UserRepository::class),
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(RollbackDeploymentService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new RollbackDeploymentService(
+                    $app->make(DeploymentRepository::class),
+                    $app->make(ProjectRepository::class),
+                    $app->make(RecipeRepository::class),
+                    $app->make(ServerRepository::class),
+                    $app->make(UserRepository::class),
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(CreateProjectService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new CreateProjectService(
+                    $app->make(ProjectRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(DeleteProjectService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new DeleteProjectService(
+                    $app->make(ProjectRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(UpdateProjectService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new UpdateProjectService(
+                    $app->make(ProjectRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(CreateRecipeService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new CreateRecipeService(
+                    $app->make(RecipeRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(DeleteRecipeService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new DeleteRecipeService(
+                    $app->make(RecipeRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(UpdateRecipeService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new UpdateRecipeService(
+                    $app->make(RecipeRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(CreateServerService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new CreateServerService(
+                    $app->make(ServerRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(DeleteServerService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new DeleteServerService(
+                    $app->make(ServerRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+        $this->app->bind(UpdateServerService::class, function (Application $app) {
+            return new TransactionalApplicationService(
+                new UpdateServerService(
+                    $app->make(ServerRepository::class)
+                ),
+                new LaravelSession()
+            );
+        });
+
+        $this->app->bind(DeploymentRepository::class, EloquentDeploymentRepository::class);
+        $this->app->bind(MailSettingRepository::class, EloquentMailSettingRepository::class);
+        $this->app->bind(ProjectRepository::class, EloquentProjectRepository::class);
+        $this->app->bind(RecipeRepository::class, EloquentRecipeRepository::class);
+        $this->app->bind(ServerRepository::class, EloquentServerRepository::class);
+        $this->app->bind(UserRepository::class, EloquentUserRepository::class);
+
+        $this->app->register(WebloyerEventServiceProvider::class);
     }
 
     /**
@@ -58,9 +186,6 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(DeploymentCompleted::class, SendNotificationWhenDeploymentCompletedListener::class);
-        Event::listen(DeployerFinished::class, LaravelQueueDeployerFinishedListener::class);
-        Event::listen(DeployerProgessed::class, LaravelQueueDeployerProgressedListener::class);
-        Event::listen(DeployerStarted::class, LaravelQueueDeployerStartedListener::class);
+        //
     }
 }

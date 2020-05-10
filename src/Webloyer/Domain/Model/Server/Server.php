@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\Server;
 
-use Common\Domain\Model\Identifiable;
+use Common\Domain\Model\Identity\Identifiable;
 
 class Server
 {

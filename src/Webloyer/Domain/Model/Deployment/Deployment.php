@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Deployment;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
-use Common\Domain\Model\Identifiable;
+use Common\Domain\Model\Identity\Identifiable;
 use LogicException;
 use Webloyer\Domain\Model\Project\Project;
 use Webloyer\Domain\Model\Project\ProjectId;

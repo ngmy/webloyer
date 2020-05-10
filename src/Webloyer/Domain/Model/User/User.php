@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\User;
 
-use Common\Domain\Model\Identifiable;
+use Common\Domain\Model\Identity\Identifiable;
 
 abstract class User
 {

@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Common;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
-use Common\Infra\Event\LaravelEventDomainEventSubscriber;
-use Common\Infra\Event\LoggerDomainEventSubscriber;
+use Common\Domain\Model\Identity\IdGenerator;
+use Common\Infra\Domain\Model\Identity\UuidIdGenerator;
+use Common\Infra\Domain\Model\Event\{
+    LaravelEventDomainEventSubscriber,
+    LoggerDomainEventSubscriber,
+};
 use Illuminate\Support\ServiceProvider;
 
 class CommonServiceProvider extends ServiceProvider
@@ -18,6 +22,7 @@ class CommonServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(IdGenerator::class, UuidIdGenerator::class);
         $this->app->singleton(DomainEventPublisher::class, function () {
             return DomainEventPublisher::getInstance();
         });

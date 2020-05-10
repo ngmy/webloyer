@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Webloyer;
+namespace Deployer;
 
-use Deployer\Infra\Messaging\LaravelQueue\LaravelQueueDeploymentRequestedListener;
-use Event;
 use Illuminate\Support\ServiceProvider;
-use Webloyer\Domain\Model\Deployment\DeploymentRequested;
 
-class WebloyerServiceProvider extends ServiceProvider
+class DeployerServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -18,7 +15,7 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->register(DeployerEventServiceProvider::class);
     }
 
     /**
@@ -28,6 +25,6 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(DeploymentRequested::class, LaravelQueueDeploymentRequestedListener::class);
+        //
     }
 }

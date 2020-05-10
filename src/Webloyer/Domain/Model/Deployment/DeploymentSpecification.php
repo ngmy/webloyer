@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\Deployment;
 
-interface DeploymentSpecificaiton
+interface DeploymentSpecification
 {
     /**
      * @param Deployment $deployment

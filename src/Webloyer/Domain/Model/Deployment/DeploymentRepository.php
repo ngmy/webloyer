@@ -45,7 +45,7 @@ interface DeploymentRepository
      */
     public function save(Deployment $deployment): void;
     /**
-     * @param DeploymentSpecificaiton $spec
+     * @param DeploymentSpecification $spec
      * @return Deployments
      */
     public function satisfyingDeployments(DeploymentSpecification $spec): Deployments;

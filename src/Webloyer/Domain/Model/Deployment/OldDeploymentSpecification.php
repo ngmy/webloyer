@@ -7,7 +7,7 @@ namespace Webloyer\Domain\Model\Deployment;
 use DateTimeInterface;
 use Webloyer\Domain\Model\Project;
 
-class OldDeploymentSpecificaiton implements DeploymentSpecificaiton
+class OldDeploymentSpecification implements DeploymentSpecification
 {
     public function __construct(
         DeploymentRepository $deploymentRepository,
