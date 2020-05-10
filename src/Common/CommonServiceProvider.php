@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Common;
 
+use Common\App\Service\TransactionalSession;
 use Common\Domain\Model\Event\DomainEventPublisher;
 use Common\Domain\Model\Identity\IdGenerator;
+use Common\Infra\App\Service\LaravelSession;
 use Common\Infra\Domain\Model\Identity\UuidIdGenerator;
 use Common\Infra\Domain\Model\Event\{
     LaravelEventDomainEventSubscriber,
@@ -22,6 +24,7 @@ class CommonServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(TransactionalSession::class, LaravelSession::class);
         $this->app->bind(IdGenerator::class, UuidIdGenerator::class);
         $this->app->singleton(DomainEventPublisher::class, function () {
             return DomainEventPublisher::getInstance();

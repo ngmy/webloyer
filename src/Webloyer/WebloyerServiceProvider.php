@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Webloyer;
 
-use Common\App\Service\TransactionalApplicationService;
-use Common\Infra\App\Service\LaravelSession;
+use Common\App\Service\{
+    ApplicationService,
+    TransactionalApplicationService,
+    TransactionalSession,
+};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Webloyer\App\Service\Deployment\{
@@ -59,8 +62,7 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Application services
-        $this->app->bind(CreateDeploymentService::class, function (Application $app) {
+        $this->app->bind(CreateDeploymentService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateDeploymentService(
                     $app->make(DeploymentRepository::class),
@@ -69,10 +71,10 @@ class WebloyerServiceProvider extends ServiceProvider
                     $app->make(ServerRepository::class),
                     $app->make(UserRepository::class),
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(DeleteDeploymentService::class, function (Application $app) {
+        $this->app->bind(DeleteDeploymentService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new DeleteDeploymentService(
                     $app->make(DeploymentRepository::class),
@@ -81,10 +83,10 @@ class WebloyerServiceProvider extends ServiceProvider
                     $app->make(ServerRepository::class),
                     $app->make(UserRepository::class),
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(RollbackDeploymentService::class, function (Application $app) {
+        $this->app->bind(RollbackDeploymentService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new RollbackDeploymentService(
                     $app->make(DeploymentRepository::class),
@@ -93,84 +95,83 @@ class WebloyerServiceProvider extends ServiceProvider
                     $app->make(ServerRepository::class),
                     $app->make(UserRepository::class),
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(CreateProjectService::class, function (Application $app) {
+        $this->app->bind(CreateProjectService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateProjectService(
                     $app->make(ProjectRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(DeleteProjectService::class, function (Application $app) {
+        $this->app->bind(DeleteProjectService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new DeleteProjectService(
                     $app->make(ProjectRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(UpdateProjectService::class, function (Application $app) {
+        $this->app->bind(UpdateProjectService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new UpdateProjectService(
                     $app->make(ProjectRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(CreateRecipeService::class, function (Application $app) {
+        $this->app->bind(CreateRecipeService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateRecipeService(
                     $app->make(RecipeRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(DeleteRecipeService::class, function (Application $app) {
+        $this->app->bind(DeleteRecipeService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new DeleteRecipeService(
                     $app->make(RecipeRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(UpdateRecipeService::class, function (Application $app) {
+        $this->app->bind(UpdateRecipeService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new UpdateRecipeService(
                     $app->make(RecipeRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(CreateServerService::class, function (Application $app) {
+        $this->app->bind(CreateServerService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateServerService(
                     $app->make(ServerRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(DeleteServerService::class, function (Application $app) {
+        $this->app->bind(DeleteServerService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new DeleteServerService(
                     $app->make(ServerRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(UpdateServerService::class, function (Application $app) {
+        $this->app->bind(UpdateServerService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new UpdateServerService(
                     $app->make(ServerRepository::class)
                 ),
-                new LaravelSession()
+                $app->make(TransactionalSession::class)
             );
         });
 
         $this->app->bind(DeploymentRepository::class, EloquentDeploymentRepository::class);
-        $this->app->bind(MailSettingRepository::class, EloquentMailSettingRepository::class);
         $this->app->bind(ProjectRepository::class, EloquentProjectRepository::class);
         $this->app->bind(RecipeRepository::class, EloquentRecipeRepository::class);
         $this->app->bind(ServerRepository::class, EloquentServerRepository::class);
