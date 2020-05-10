@@ -25,7 +25,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        /** @var \App\Models\User $user */
+        /** @var \Webloyer\Infra\Persistence\Eloquent\Models\User $user */
         $user = $this->route('user');
 
         return [
