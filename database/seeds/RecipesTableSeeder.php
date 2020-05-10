@@ -1,14 +1,35 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Webloyer\Infra\Db\Eloquents\Recipe\Recipe;
-use Webloyer\Infra\Db\Repositories\Recipe\DbRecipeRepository;
+use Illuminate\Support\Facades\DB;
+use Webloyer\Infra\Domain\Model\Recipe\EloquentRecipeRepository;
+use Webloyer\Infra\Persistence\Eloquent\Models\Recipe;
 
-class RecipeTableSeeder extends Seeder
+class RecipesTableSeeder extends Seeder
 {
     public function run()
     {
-        $deployerRecipes = [
+        DB::transaction(function () {
+            if (Recipe::count() > 0) {
+                return;
+            }
+
+            $recipes = $this->getRecipes();
+            $recipeRepository = app(EloquentRecipeRepository::class);
+            foreach ($recipes as $recipe) {
+                Recipe::create([
+                    'uuid'        => $recipeRepository->nextId()->value(),
+                    'name'        => $recipe['name'],
+                    'description' => $recipe['description'],
+                    'body'        => $recipe['body'],
+                ]);
+            }
+        });
+    }
+
+    private function getRecipes(): array
+    {
+        return [
             'cakephp' => [
                 'name'        => 'deployer-cakephp-recipe',
                 'description' => 'This recipe is specifically for deploying CakePHP 3 projects.',
@@ -154,15 +175,5 @@ EOF
                 ,
             ],
         ];
-
-        $recipeRepository = app(DbRecipeRepository::class);
-        foreach ($deployerRecipes as $recipe) {
-            Recipe::create([
-                'uuid'        => $recipeRepository->nextId()->value(),
-                'name'        => $recipe['name'],
-                'description' => $recipe['description'],
-                'body'        => $recipe['body'],
-            ]);
-        }
     }
 }

@@ -1,48 +1,53 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Kodeine\Acl\Models\Eloquent\Role;
 
 class PermissionRoleTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('permission_role')->delete();
+        DB::transaction(function () {
+            if (DB::table('permission_role')->count() > 0) {
+                return;
+            }
 
-        $roleAdmin = Role::where('name', 'Administrator')
-            ->where('slug', 'administrator')
-            ->first();
-        $roleAdmin->assignPermission([
-            'project',
-            'deployment',
-            'recipe',
-            'server',
-            'user',
-            'setting',
-        ]);
+            $adminRole = Role::where('name', 'Administrator')
+                ->where('slug', 'administrator')
+                ->first();
+            $adminRole->assignPermission([
+                'deployment',
+                'project',
+                'recipe',
+                'server',
+                'setting',
+                'user',
+            ]);
 
-        $roleDeveloper = Role::where('name', 'Developer')
-            ->where('slug', 'developer')
-            ->first();
-        $roleDeveloper->assignPermission([
-            'project',
-            'deployment',
-            'recipe',
-            'server',
-            'user.developer',
-            'setting.developer',
-        ]);
+            $developerRole = Role::where('name', 'Developer')
+                ->where('slug', 'developer')
+                ->first();
+            $developerRole->assignPermission([
+                'deployment',
+                'project',
+                'recipe',
+                'server',
+                'setting.developer',
+                'user.developer',
+            ]);
 
-        $roleModerator = Role::where('name', 'Moderator')
-            ->where('slug', 'moderator')
-            ->first();
-        $roleModerator->assignPermission([
-            'project.moderator',
-            'deployment',
-            'recipe.moderator',
-            'server.moderator',
-            'user.moderator',
-            'setting.moderator',
-        ]);
+            $moderatorRole = Role::where('name', 'Moderator')
+                ->where('slug', 'moderator')
+                ->first();
+            $moderatorRole->assignPermission([
+                'deployment',
+                'project.moderator',
+                'recipe.moderator',
+                'server.moderator',
+                'setting.moderator',
+                'user.moderator',
+            ]);
+        });
     }
 }
