@@ -2,12 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\Deployment\QueueDeployCommander;
 use App\Services\Deployment\DeployerFile;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
-use App\Services\Form\Deployment\DeploymentForm;
 use App\Services\Form\Setting\MailSettingForm;
 use App\Services\Notification\MailNotifier;
 use App\Services\Config\DotenvReader;
@@ -15,7 +13,6 @@ use App\Services\Config\DotenvWriter;
 use App\Services\Filesystem\LaravelFilesystem;
 use App\Services\Api\JsonRpc;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 
@@ -32,19 +29,6 @@ class AppServiceProvider extends ServiceProvider
             'Illuminate\Contracts\Auth\Registrar',
             'App\Services\Registrar'
         );
-
-        $this->app->bind('App\Services\Deployment\DeployCommanderInterface', function ($app) {
-            return new QueueDeployCommander(
-                $app->make('Illuminate\Contracts\Bus\Dispatcher')
-            );
-        });
-
-        $this->app->bind('App\Services\Form\Deployment\DeploymentForm', function ($app) {
-            return new DeploymentForm(
-                $app->make('App\Repositories\Project\ProjectInterface'),
-                $app->make('App\Services\Deployment\DeployCommanderInterface')
-            );
-        });
 
         $this->app->bind('App\Services\Form\Setting\MailSettingForm', function ($app) {
             return new MailSettingForm(
