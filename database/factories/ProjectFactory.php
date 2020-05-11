@@ -3,8 +3,8 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Entities\ProjectAttribute\ProjectAttributeEntity;
-use App\Models\Project;
 use Faker\Generator as Faker;
+use Webloyer\Infra\Persistence\Eloquent\Models\Project;
 
 $factory->define(Project::class, function (Faker $faker) {
     return [

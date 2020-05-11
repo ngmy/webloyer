@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\MaxDeployment;
 use Faker\Generator as Faker;
+use Webloyer\Infra\Persistence\Eloquent\Models\MaxDeployment;
 
 $factory->define(MaxDeployment::class, function (Faker $faker) {
     return [

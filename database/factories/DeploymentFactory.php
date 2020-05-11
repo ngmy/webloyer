@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Deployment;
 use Faker\Generator as Faker;
+use Webloyer\Infra\Persistence\Eloquent\Models\Deployment;
 
 $factory->define(Deployment::class, function (Faker $faker) {
     return [
