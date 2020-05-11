@@ -14,14 +14,14 @@ class CreateDeploymentService extends DeploymentService
 {
     /**
      * @param DeployRequest $request
-     * @return void
+     * @return Deployment
      */
     public function execute($request = null)
     {
         $deployment = Deployment::of(
             $request->getProjectId(),
-            $request->getNumber(),
-            DeploymentTask::rollback()->value(),
+            $this->deploymentRepository->nextId()->value(),
+            DeploymentTask::deploy()->value(),
             DeploymentStatus::queued()->value(),
             '',
             $request->getExecutor(),
@@ -31,5 +31,7 @@ class CreateDeploymentService extends DeploymentService
         );
         $this->requestDeployment($deployment);
         $this->deploymentRepository->save($deployment);
+
+        return $deployment;
     }
 }

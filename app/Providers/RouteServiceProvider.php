@@ -4,7 +4,13 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Webloyer\Infra\Db\Eloquents;
+use Webloyer\Infra\Persistence\Eloquent\Models\{
+    Deployment,
+    Project,
+    Recipe,
+    Server,
+    User,
+};
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -32,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::bind('project', function ($id) {
-            $projectOrm = Eloquents\Project\Project::find($id);
+            $projectOrm = Project::find($id);
             if (is_null($projectOrm)) {
                 abort(404);
             }
@@ -41,9 +47,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('deployment', function ($number, $route) {
             $project = $route->parameter('project');
-            $deploymentOrm = Eloquents\Deployment\Deployment::where('project_id', $project->id())
-                ->where('number', $number)
-                ->first();
+            $deploymentOrm = Deployment::ofId($project->id(), $number)->first();
             if (is_null($deploymentOrm)) {
                 abort(404);
             }
@@ -51,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('recipe', function (int $id) {
-            $recipeOrm = Eloquents\Recipe\Recipe::find($id);
+            $recipeOrm = Recipe::find($id);
             if (is_null($recipeOrm)) {
                 abort(404);
             }
@@ -59,7 +63,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('server', function ($id) {
-            $serverOrm = Eloquents\Server\Server::find($id);
+            $serverOrm = Server::find($id);
             if (is_null($serverOrm)) {
                 abort(404);
             }
@@ -67,7 +71,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('user', function ($id) {
-            $userOrm = Eloquents\User\User::find($id);
+            $userOrm = User::find($id);
             if (is_null($userOrm)) {
                 abort(404);
             }

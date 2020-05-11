@@ -6,48 +6,48 @@ namespace App\Http\Controllers\Deployment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Deployment as DeploymentRequest;
-use App\Models\Deployment;
-use App\Models\Project;
-use App\Repositories\Project\ProjectInterface;
-use App\Services\Form\Deployment\DeploymentForm;
+use Webloyer\App\Service\Deployment\{
+    CreateDeploymentRequest,
+    CreateDeploymentService,
+    GetDeploymentService,
+    GetDeploymentsRequest,
+    GetDeploymentsService,
+    RollbackDeploymentRequest,
+    RollbackDeploymentService,
+};
+use Webloyer\Domain\Model\Deployment\Deployment;
+use Webloyer\Domain\Model\Project\Project;
 
 class DeploymentController extends Controller
 {
-    /** @var ProjectInterface */
-    private $project;
-    /** @var DeploymentForm */
-    private $deploymentForm;
-
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Project\ProjectInterface   $project
-     * @param \App\Services\Form\Deployment\DeploymentForm $deploymentForm
      * @return void
      */
-    public function __construct(ProjectInterface $project, DeploymentForm $deploymentForm)
+    public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('acl');
-
-        $this->project        = $project;
-        $this->deploymentForm = $deploymentForm;
     }
 
     /**
      * Display a listing of the resource.
      *
      * @param DeploymentRequest\IndexRequest $request
-     * @param \App\Models\Project            $project
+     * @param Project                        $project
+     * @param GetDeploymentsService          $service
      * @return Response
      */
-    public function index(DeploymentRequest\IndexRequest $request, Project $project)
+    public function index(DeploymentRequest\IndexRequest $request, Project $project, GetDeploymentsService $service)
     {
         $page = $request->input('page', 1);
-
         $perPage = 10;
 
-        $deployments = $project->getDeploymentsByPage($page, $perPage);
+        $serviceRequest = (new GetDeploymentsRequest())
+            ->setPage($page)
+            ->setPerPage($perPage);
+        $deployments = $service->execute($serviceRequest);
 
         return view('deployments.index')
             ->with('deployments', $deployments)
@@ -58,35 +58,39 @@ class DeploymentController extends Controller
      * Store a newly created resource in storage.
      *
      * @param DeploymentRequest\StoreRequest $request
-     * @param \App\Models\Project            $project
+     * @param Project                        $project
+     * @param CreateDeploymentService        $service
      * @return Response
      */
-    public function store(DeploymenRequest\StoreRequest $request, Project $project)
+    public function store(DeploymenRequest\StoreRequest $request, Project $project, CreateDeploymentService $createService, RollbackDeploymentService $rollbackService)
     {
-        $input = array_merge($request->all(), [
-            'status'     => null,
-            'message'    => null,
-            'project_id' => $project->id,
-            'user_id'    => $request->user()->id,
-        ]);
+        if ($request->task == 'deploy') {
+            $createServiceRequest = (new CreateDeploymentRequest())
+                ->setProjectId($project->id())
+                ->setExecutor($request->user()->id);
+            $deployment = $createService->execute($createServiceRequest);
+        } elseif ($request->task == 'rollback') {
+            $rollbackServiceRequest = (new RollbackDeploymentRequest())
+                ->setProjectId($project->id())
+                ->setExecutor($request->user()->id);
+            $deployment = $rollbackService->execute($rollbackServiceRequest);
+        }
 
-        $this->deploymentForm->save($input);
-
-        $deployment = $project->getLastDeployment();
-        $link = link_to_route('projects.deployments.show', "#$deployment->number", [$project, $deployment->number]);
+        $link = link_to_route('projects.deployments.show', '#' . $deployment->number(), [$project->id(), $deployment->number()]);
         $request->session()->flash('status', "The deployment $link was successfully started.");
 
-        return redirect()->route('projects.deployments.index', [$project]);
+        return redirect()->route('projects.deployments.index', [$project->id()]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Project    $project
-     * @param \App\Models\Deployment $deployment
+     * @param Project              $project
+     * @param Deployment           $deployment
+     * @param GetDeploymentService $service
      * @return Response
      */
-    public function show(Project $project, Deployment $deployment)
+    public function show(Project $project, Deployment $deployment, GetDeploymentService $service)
     {
         return view('deployments.show')->with('deployment', $deployment);
     }

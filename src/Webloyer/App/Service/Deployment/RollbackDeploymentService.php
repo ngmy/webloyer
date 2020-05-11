@@ -14,13 +14,13 @@ class RollbackDeploymentService extends DeploymentService
 {
     /**
      * @param RollbackRequest $request
-     * @return void
+     * @return Deployment
      */
     public function execute($request = null)
     {
         $deployment = Deployment::of(
             $request->getProjectId(),
-            $request->getNumber(),
+            $this->deploymentRepository->nextId()->value(),
             DeploymentTask::rollback()->value(),
             DeploymentStatus::queued()->value(),
             '',
@@ -31,5 +31,7 @@ class RollbackDeploymentService extends DeploymentService
         );
         $this->requestDeployment($deployment);
         $this->deploymentRepository->save($deployment);
+
+        return $deployment;
     }
 }

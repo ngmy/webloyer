@@ -8,8 +8,6 @@ class RollbackDeploymentRequest
 {
     /** @var string */
     private $projectId;
-    /** @var int */
-    private $number;
     /** @var string */
     private $executor;
 
@@ -19,14 +17,6 @@ class RollbackDeploymentRequest
     public function getProjectId(): string
     {
         return $this->projectId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNumber(): int
-    {
-        return $this->number;
     }
 
     /**
@@ -44,16 +34,6 @@ class RollbackDeploymentRequest
     public function setProjectId(string $projectId): self
     {
         $this->projectId = $projectId;
-        return $this;
-    }
-
-    /**
-     * @param int $number
-     * @return self
-     */
-    public function setNumber(int $number): self
-    {
-        $this->number = $number;
         return $this;
     }
 
