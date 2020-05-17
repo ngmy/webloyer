@@ -11,7 +11,7 @@ use Webloyer\Domain\Model\Server\{
     ServerName,
 };
 
-class CreateServerService extends ServerService
+class UpdateServerService extends ServerService
 {
     /**
      * @param UpdateServerRequest $request
