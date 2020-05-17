@@ -9,6 +9,8 @@ use Artisan;
 use Hash;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Webloyer\App\Service\User\CreateUserRequest;
+use Webloyer\App\Service\User\CreateUserService;
 
 class Install extends Command
 {
@@ -39,15 +41,11 @@ class Install extends Command
     /**
      * Execute the console command.
      *
-     * @param \App\Repositories\Setting\AppSettingInterface $appSetting
-     * @param \App\Repositories\Setting\DbSettingInterface  $dbSetting
-     * @param \App\Repositories\User\UserInterface          $userRepository
+     * @param CrateUserService $createUserService
      * @return void
      */
     public function handle(
-        AppSettingInterface $appSetting,
-        DbSettingInterface $dbSetting,
-        UserInterface $userRepository
+        UserInterface $createUserService
     ) {
         $config['app']['url'] = $this->ask(trans('webloyer.enter_webloyer_url'));
 
@@ -118,7 +116,7 @@ class Install extends Command
         $config['admin']['password'] = Hash::make($config['admin']['password']);
         $config['admin']['api_token'] = Str::random(60);
 
-        $user = $userRepository->create($config['admin']);
+        $user = $createUserService->execute($config['admin']);
         $user->assignRole('administrator');
     }
 }
