@@ -2,7 +2,6 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Entities\ProjectAttribute\ProjectAttributeEntity;
 use Faker\Generator as Faker;
 use Webloyer\Infra\Persistence\Eloquent\Models\Project;
 
@@ -13,7 +12,7 @@ $factory->define(Project::class, function (Faker $faker) {
         'server_id' => null,
         'repository' => $faker->url,
         'email_notification_recipient' => $faker->safeEmail,
-        'attributes' => new ProjectAttributeEntity(),
+        'attributes' => [],
         'days_to_keep_deployments' => 3,
         'max_number_of_deployments_to_keep' => 10,
         'keep_last_deployment' => false,
