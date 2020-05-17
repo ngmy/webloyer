@@ -175,8 +175,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        App\Providers\RepositoryServiceProvider::class,
-
         Common\CommonServiceProvider::class,
         Deployer\DeployerServiceProvider::class,
         Webloyer\WebloyerServiceProvider::class,
