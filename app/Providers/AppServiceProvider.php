@@ -6,7 +6,6 @@ use App\Services\Deployment\DeployerFile;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
-use App\Services\Form\Setting\MailSettingForm;
 use App\Services\Notification\MailNotifier;
 use App\Services\Config\DotenvReader;
 use App\Services\Config\DotenvWriter;
@@ -29,12 +28,6 @@ class AppServiceProvider extends ServiceProvider
             'Illuminate\Contracts\Auth\Registrar',
             'App\Services\Registrar'
         );
-
-        $this->app->bind('App\Services\Form\Setting\MailSettingForm', function ($app) {
-            return new MailSettingForm(
-                $app->make('App\Repositories\Setting\SettingInterface')
-            );
-        });
 
         $this->app->bind('App\Services\Notification\NotifierInterface', function ($app) {
             return new MailNotifier();

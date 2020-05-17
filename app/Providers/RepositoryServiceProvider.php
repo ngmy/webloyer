@@ -8,9 +8,6 @@ use App\Models\User;
 use App\Repositories\Project\EloquentProject;
 use App\Repositories\User\EloquentUser;
 use App\Repositories\Role\EloquentRole;
-use App\Repositories\Setting\ConfigAppSetting;
-use App\Repositories\Setting\ConfigDbSetting;
-use App\Repositories\Setting\EloquentSetting;
 use Kodeine\Acl\Models\Eloquent\Role;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,24 +40,6 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Repositories\Role\RoleInterface', function ($app) {
             return new EloquentRole(new Role());
-        });
-
-        $this->app->bind('App\Repositories\Setting\SettingInterface', function ($app) {
-            return new EloquentSetting(new Setting());
-        });
-
-        $this->app->bind('App\Repositories\Setting\DbSettingInterface', function ($app) {
-            return new ConfigDbSetting(
-                $app->make('App\Services\Config\ConfigReaderInterface'),
-                $app->make('App\Services\Config\ConfigWriterInterface')
-            );
-        });
-
-        $this->app->bind('App\Repositories\Setting\AppSettingInterface', function ($app) {
-            return new ConfigAppSetting(
-                $app->make('App\Services\Config\ConfigReaderInterface'),
-                $app->make('App\Services\Config\ConfigWriterInterface')
-            );
         });
     }
 }
