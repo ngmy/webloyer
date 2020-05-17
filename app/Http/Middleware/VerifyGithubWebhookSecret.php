@@ -3,17 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Repositories\Project\ProjectInterface;
 
 class VerifyGithubWebhookSecret
 {
-    protected $projectRepository;
-
-    public function __construct(ProjectInterface $projectRepository)
-    {
-        $this->projectRepository = $projectRepository;
-    }
-
     /**
      * Handle an incoming request.
      *
@@ -23,7 +15,7 @@ class VerifyGithubWebhookSecret
      */
     public function handle($request, Closure $next)
     {
-        $secret = $request->project->github_webhook_secret;
+        $secret = $request->project->githubWebhookSecret();
 
         if (isset($secret)) {
             $signature = 'sha1=' . hash_hmac('sha1', $request->getContent(), $secret);
