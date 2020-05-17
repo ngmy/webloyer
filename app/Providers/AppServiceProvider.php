@@ -7,8 +7,6 @@ use App\Services\Deployment\DeployerDeploymentFileBuilder;
 use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
 use App\Services\Notification\MailNotifier;
-use App\Services\Config\DotenvReader;
-use App\Services\Config\DotenvWriter;
 use App\Services\Filesystem\LaravelFilesystem;
 use App\Services\Api\JsonRpc;
 use Illuminate\Support\ServiceProvider;
@@ -31,24 +29,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Services\Notification\NotifierInterface', function ($app) {
             return new MailNotifier();
-        });
-
-        $this->app->bind('App\Services\Config\ConfigReaderInterface', function ($app) {
-            $path = base_path('.env');
-
-            return new DotenvReader(
-                new LaravelFilesystem($app['files']),
-                $path
-            );
-        });
-
-        $this->app->bind('App\Services\Config\ConfigWriterInterface', function ($app) {
-            $path = base_path('.env');
-
-            return new DotenvWriter(
-                new LaravelFilesystem($app['files']),
-                $path
-            );
         });
 
         $this->app->bind('App\Services\Deployment\DeployerServerListFileBuilder', function ($app) {
