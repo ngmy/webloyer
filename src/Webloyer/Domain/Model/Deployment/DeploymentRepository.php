@@ -40,6 +40,11 @@ interface DeploymentRepository
      */
     public function remove(Deployment $deployment): void;
     /**
+     * @param Deployments $deployments
+     * @return void
+     */
+    public function removeAll(Deployments $deployments): void;
+    /**
      * @param Deployment $deployment
      * @return void
      */

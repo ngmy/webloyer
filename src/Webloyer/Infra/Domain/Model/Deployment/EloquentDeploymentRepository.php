@@ -107,6 +107,18 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
     }
 
     /**
+     * @param Deployment\Deployments $deployments
+     * @return void
+     * @see Deployment\DeploymentRepository::removeAll()
+     */
+    public function removeAll(Deployment\Deployments $deployments): void
+    {
+        foreach ($deployments->toArray() as $deployment) {
+            $this->remove($deployment);
+        }
+    }
+
+    /**
      * @param Deployment\Deployment $deployment
      * @return void
      * @see Deployment\DeploymentRepository::save()

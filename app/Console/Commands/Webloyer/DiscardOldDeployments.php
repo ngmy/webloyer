@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands\Webloyer;
 
-use App\Repositories\Project\ProjectInterface;
-use App\Specifications\OldDeploymentSpecification;
 use Illuminate\Console\Command;
-use DB;
-use DateTime;
+use Webloyer\App\Service\Deployment\DeleteOldDeploymentsRequest;
+use Webloyer\App\Service\Deployment\DeleteOldDeploymentsService;
 
 class DiscardOldDeployments extends Command
 {
@@ -24,39 +22,14 @@ class DiscardOldDeployments extends Command
      */
     protected $description = 'Discard old deployments';
 
-    protected $projectRepository;
-
-    protected $spec;
-
-    /**
-     * Create a new command instance.
-     *
-     * @param \App\Repositories\Project\ProjectInterface $projectRepository
-     * @return void
-     */
-    public function __construct(ProjectInterface $projectRepository)
-    {
-        parent::__construct();
-
-        $this->projectRepository = $projectRepository;
-        $this->spec = new OldDeploymentSpecification(new DateTime());
-    }
-
     /**
      * Execute the console command.
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(DeleteOldDeploymentsService $service)
     {
-        DB::transaction(function () {
-            $projects = $this->projectRepository->all();
-            foreach ($projects as $project) {
-                $oldDeployments = $project->getSatisfyingDeployments($this->spec);
-                if (!$oldDeployments->isEmpty()) {
-                    $project->deleteDeployments($oldDeployments);
-                }
-            }
-        });
+        $request = (new DeleteOldDeploymentsRequest())->setDateTime('now');
+        $service->execute($request);
     }
 }
