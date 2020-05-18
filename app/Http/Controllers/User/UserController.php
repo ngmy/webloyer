@@ -33,7 +33,6 @@ class UserController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param UserApplication\UserService $userService
      * @param \App\Repositories\Role\RoleInterface $role
      * @return void
      */

@@ -6,45 +6,38 @@ namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project as ProjectRequest;
-use Webloyer\App\Project as ProjectApplication;
-use Webloyer\App\Recipe as RecipeApplication;
-use Webloyer\App\Server as ServerApplication;
-use Webloyer\App\User as UserApplication;
+use Webloyer\App\Service\Project\{
+    CreateProjectRequest,
+    CreateProjectService,
+    DeleteProjectRequest,
+    DeleteProjectService,
+    GetProjectRequest,
+    GetProjectService,
+    GetProjectsRequest,
+    GetProjectsService,
+    UpdateProjectRequest,
+    UpdateProjectService,
+};
+use Webloyer\App\Service\Recipe\GetAllRecipesService;
+use Webloyer\App\Service\Server\{
+    GetAllServersService,
+    GetServerRequest,
+    GetServerService,
+};
+use Webloyer\App\Service\User\GetAllUsersService;
 use Webloyer\Domain\Model\Project as ProjectDomainModel;
 
 class ProjectController extends Controller
 {
-    /** @var ProjectApplication\ProjectService */
-    private $projectService;
-    /** @var RecipeApplication\RecipeService */
-    private $recipeService;
-    /** @var ServerApplication\ServerService */
-    private $serverService;
-    /** @var UserApplication\UserService */
-    private $userService;
-
     /**
      * Create a new controller instance.
      *
-     * @param ProjectApplication\ProjectService $projectService
-     * @param RecipeApplication\RecipeService   $recipeService
-     * @param ServerApplication\ServerService   $serverService
-     * @param UserApplication\UserService       $userService
      * @return void
      */
-    public function __construct(
-        ProjectApplication\ProjectService $projectService,
-        RecipeApplication\RecipeService $recipeService,
-        ServerApplication\ServerService $serverService,
-        UserApplication\UserService $userService
-    ) {
+    public function __construct()
+    {
         $this->middleware('auth');
         $this->middleware('acl');
-
-        $this->projectService = $projectService;
-        $this->recipeService  = $recipeService;
-        $this->serverService  = $serverService;
-        $this->userService = $userService;
     }
 
     /**
@@ -53,16 +46,15 @@ class ProjectController extends Controller
      * @param ProjectRequest\IndexRequest $request
      * @return Response
      */
-    public function index(ProjectRequest\IndexRequest $request)
+    public function index(ProjectRequest\IndexRequest $request, GetProjectsService $service)
     {
         $page = $request->input('page', 1);
         $perPage = 10;
 
-        $command = (new ProjectApplication\Commands\GetProjectsCommand())
+        $serviceRequest = (new GetProjectsRequest())
             ->setPage($page)
             ->setPerPage($perPage);
-
-        $projects = $this->projectService->getProjects($command);
+        $projects = $service->execute($serviceRequest);
 
         return view('projects.index')->with('projects', $projects);
     }
@@ -72,15 +64,15 @@ class ProjectController extends Controller
      *
      * @return Response
      */
-    public function create()
+    public function create(GetAllRecipesService $recipeService, GetAllServersService $serverService, GetAllUsersService $userService)
     {
-        $recipes = $this->recipeService->getAllRecipes()->toArray();
+        $recipes = $recipeService->getAllRecipes()->toArray();
         $recipes = array_column($recipes, 'name', 'id');
 
-        $servers = $this->serverService->getAllServers()->toArray();
+        $servers = $serverService->getAllServers()->toArray();
         $servers = array_column($servers, 'name', 'id');
 
-        $users = $this->userService->getAllUsers()->toArray();
+        $users = $userService->getAllUsers()->toArray();
         $users = array_column($users, 'email', 'id');
         $users = ['' => ''] + $users;
 
@@ -96,11 +88,11 @@ class ProjectController extends Controller
      * @param ProjectRequest\StoreRequest $request
      * @return Response
      */
-    public function store(ProjectRequest\StoreRequest $request)
+    public function store(ProjectRequest\StoreRequest $request, CreateProjectService $service)
     {
         $input = $request->all();
 
-        $command = (new ProjectApplication\Commands\CreateProjectCommand())
+        $serviceRequest = (new CreateProjectRequest())
             ->setName($input['name'])
             ->setRecipeIds($input['stage'])
             ->setServerId($input['recipe_id'])
@@ -114,7 +106,7 @@ class ProjectController extends Controller
             ->setGithubWebhookSecret($input['github_webhook_secret'])
             ->setGithubWebhookExecutor($input['']);
 
-        $this->projectService->createProject($command);
+        $service->execute($serviceRequest);
 
         return redirect()->route('projects.index');
     }
@@ -125,12 +117,12 @@ class ProjectController extends Controller
      * @param ProjectDomainModel\Project $project
      * @return Response
      */
-    public function show(ProjectDomainModel\Project $project)
+    public function show(ProjectDomainModel\Project $project, GetServerService $serverService)
     {
         $projectRecipe = $project->getRecipes()->toArray();
 
-        $serverCommand = (new ServerApplication\Commands\GetServerCommand())->setId($project->server_id);
-        $projectServer = $this->serverService->getServer($serverCommand);
+        $serverServiceRequest = (new GetServerRequest())->setId($project->server_id);
+        $projectServer = $serverService->getServer($serverServiceRequest);
 
         return view('projects.show')
             ->with('project', $project)
@@ -144,18 +136,18 @@ class ProjectController extends Controller
      * @param ProjectDomainModel\Project $project
      * @return Response
      */
-    public function edit(ProjectDomainModel\Project $project)
+    public function edit(ProjectDomainModel\Project $project, GetAllRecipesService $recipeService, GetAllServersService $serverService, GetAllUsersService $userService)
     {
-        $recipes = $this->recipeService->getAllRecipes()->toArray();
+        $recipes = $recipeService->getAllRecipes()->toArray();
         $recipes = array_column($recipes, 'name', 'id');
 
-        $servers = $this->serverService->getAllServers()->toArray();
+        $servers = $serverService->getAllServers()->toArray();
         $servers = array_column($servers, 'name', 'id');
 
         $projectRecipe = $project->getRecipes()->toArray();
         $projectRecipe = array_column($projectRecipe, 'id');
 
-        $users = $this->userService->getAllUsers()->toArray();
+        $users = $userService->getAllUsers()->toArray();
         $users = array_column($users, 'email', 'id');
         $users = ['' => ''] + $users;
 
@@ -174,11 +166,11 @@ class ProjectController extends Controller
      * @param ProjectDomainModel\Project   $project
      * @return Response
      */
-    public function update(ProjectRequest\UpdateRequest $request, ProjectDomainModel\Project $project)
+    public function update(ProjectRequest\UpdateRequest $request, ProjectDomainModel\Project $project, UpdateProjectService $service)
     {
         $input = $request->all();
 
-        $command = (new ProjectApplication\Commands\UpdateProjectCommand())
+        $serviceRequest = (new UpdateProjectRequest())
             ->setId($project->id())
             ->setName($input['name'])
             ->setRecipeIds($input['stage'])
@@ -193,7 +185,7 @@ class ProjectController extends Controller
             ->setGithubWebhookSecret($input['github_webhook_secret'])
             ->setGithubWebhookExecutor($input['']);
 
-        $this->projectService->updateProject($command);
+        $service->execute($serviceRequest);
 
         return redirect()->route('projects.index');
     }
@@ -204,11 +196,11 @@ class ProjectController extends Controller
      * @param ProjectDomainModel\Project $project
      * @return Response
      */
-    public function destroy(ProjectDomainModel\Project $project)
+    public function destroy(ProjectDomainModel\Project $project, DeleteProjectService $service)
     {
-        $command = (new ProjectApplication\Commands\DeleteProjectCommand())->setId($project->id());
+        $serviceRequest = (new DeleteProjectRequest())->setId($project->id());
 
-        $this->projectService->deleteProject($command);
+        $service->execute($serviceRequest);
 
         return redirect()->route('projects.index');
     }

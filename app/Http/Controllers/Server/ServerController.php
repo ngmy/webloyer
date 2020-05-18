@@ -6,26 +6,31 @@ namespace App\Http\Controllers\Server;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Server as ServerRequest;
-use Webloyer\App\Server as ServerApplication;
+use Webloyer\App\Service\Server\{
+    CreateServerRequest,
+    CreateServerService,
+    DeleteServerRequest,
+    DeleteServerService,
+    GetServerRequest,
+    GetServerService,
+    GetServersRequest,
+    GetServersService,
+    UpdateServerRequest,
+    UpdateServerService,
+};
 use Webloyer\Domain\Model\Server as ServerDomainModel;
 
 class ServerController extends Controller
 {
-    /** @var ServerApplication\ServerService */
-    private $serverService;
-
     /**
      * Create a new controller instance.
      *
-     * @param ServerApplication\ServerService $serverService
      * @return void
      */
-    public function __construct(ServerApplication\ServerService $serverService)
+    public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('acl');
-
-        $this->serverService = $serverService;
     }
 
     /**
@@ -34,16 +39,15 @@ class ServerController extends Controller
      * @param ServerRequest\IndexRequest $request
      * @return Response
      */
-    public function index(ServerRequest\IndexRequest $request)
+    public function index(ServerRequest\IndexRequest $request, GetServersService $service)
     {
         $page = $request->input('page', 1);
         $perPage = 10;
 
-        $command = (new ServerApplication\Commands\GetServersCommand())
+        $serviceRequest = (new GetServersRequest())
             ->setPage($page)
             ->setPerPage($perPage);
-
-        $servers = $this->serverService->getServers($command);
+        $servers = $service->execute($serviceRequest);
 
         return view('servers.index')->with('servers', $servers);
     }
@@ -64,16 +68,15 @@ class ServerController extends Controller
      * @param ServerRequest\StoreRequest $request
      * @return Response
      */
-    public function store(ServerRequest\StoreRequest $request)
+    public function store(ServerRequest\StoreRequest $request, CreateServerService $service)
     {
         $input = $request->all();
 
-        $command = (new ServerApplication\Commands\CreateServerCommand())
+        $serviceRequest = (new CreateServerRequest())
             ->setName($input['name'])
             ->setDescription($input['description'])
             ->setBody($input['body']);
-
-        $this->serverService->createServer($command);
+        $service->execute($serviceRequest);
 
         return redirect()->route('servers.index');
     }
@@ -107,17 +110,16 @@ class ServerController extends Controller
      * @param ServerDomainModel\Server    $server
      * @return Response
      */
-    public function update(ServerRequest\UpdateRequest $request, ServerDomainModel\Server $server)
+    public function update(ServerRequest\UpdateRequest $request, ServerDomainModel\Server $server, UpdateServerService $service)
     {
         $input = $request->all();
 
-        $command = (new ServerApplication\Commands\UpdateServerCommand())
+        $serviceRequest = (new UpdateServerRequest())
             ->setId($server->id())
             ->setName($input['name'])
             ->setDescription($input['description'])
             ->setBody($input['body']);
-
-        $this->serverService->updateServer($command);
+        $service->execute($serviceRequest);
 
         return redirect()->route('servers.index');
     }
@@ -128,11 +130,10 @@ class ServerController extends Controller
      * @param ServerDomainModel\Server $server
      * @return Response
      */
-    public function destroy(ServerDomainModel\Server $server)
+    public function destroy(ServerDomainModel\Server $server, DeleteServerService $service)
     {
-        $command = (new ServerApplication\Commands\DeleteServerCommand())->setId($server->id());
-
-        $this->serverService->deleteServer($command);
+        $serviceRequest = (new DeleteServerRequest())->setId($server->id());
+        $service->execute($serviceRequest);
 
         return redirect()->route('servers.index');
     }
