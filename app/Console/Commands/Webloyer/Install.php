@@ -2,15 +2,14 @@
 
 namespace App\Console\Commands\Webloyer;
 
-use App\Repositories\Setting\AppSettingInterface;
-use App\Repositories\Setting\DbSettingInterface;
-use App\Repositories\User\UserInterface;
 use Artisan;
 use Hash;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Webloyer\App\Service\User\CreateUserRequest;
-use Webloyer\App\Service\User\CreateUserService;
+use Webloyer\App\Service\User\{
+    CreateUserRequest,
+    CreateUserService,
+};
 
 class Install extends Command
 {
@@ -41,11 +40,11 @@ class Install extends Command
     /**
      * Execute the console command.
      *
-     * @param CrateUserService $createUserService
+     * @param CreateUserService $createUserService
      * @return void
      */
     public function handle(
-        UserInterface $createUserService
+        CreateUserService $createUserService
     ) {
         $config['app']['url'] = $this->ask(trans('webloyer.enter_webloyer_url'));
 
@@ -113,10 +112,12 @@ class Install extends Command
         ]);
 
         // Create admin user
-        $config['admin']['password'] = Hash::make($config['admin']['password']);
-        $config['admin']['api_token'] = Str::random(60);
-
-        $user = $createUserService->execute($config['admin']);
+        $createUserRequest = (new CreateUserRequest())
+            ->setEmail($config['admin']['email'])
+            ->setName($config['admin']['name'])
+            ->setPassword(Hash::make($config['admin']['password']))
+            ->serApiToken(Str::random(60));
+        $user = $createUserService->execute($createUserRequest);
         $user->assignRole('administrator');
     }
 }
