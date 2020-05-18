@@ -7,13 +7,26 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User as UserRequest;
 use App\Repositories\Role\RoleInterface;
-use Webloyer\App\User as UserApplication;
+use Webloyer\App\Service\User\{
+    CreateUserRequest,
+    CreateUserService,
+    DeleteUserRequest,
+    DeleteUserService,
+    GetUserRequest,
+    GetUserService,
+    GetUsersRequest,
+    GetUsersService,
+    RegenerateApiTokenRequest,
+    RegenerateApiTokenService,
+    UpdatePasswordRequest,
+    UpdatePasswordService,
+    UpdateUserRequest,
+    UpdateUserService,
+};
 use Webloyer\Domain\Model\User as UserDomainModel;
 
 class UserController extends Controller
 {
-    /** @var UserApplication */
-    private $userService;
     /** @var RoleInterface */
     private $role;
 
@@ -24,12 +37,11 @@ class UserController extends Controller
      * @param \App\Repositories\Role\RoleInterface $role
      * @return void
      */
-    public function __construct(UserApplication\UserService $userService, RoleInterface $role)
+    public function __construct(RoleInterface $role)
     {
         $this->middleware('auth');
         $this->middleware('acl');
 
-        $this->userService = $userService;
         $this->role = $role;
     }
 
@@ -39,13 +51,15 @@ class UserController extends Controller
      * @param UserRequest\IndexRequest $request
      * @return Response
      */
-    public function index(UserRequest\IndexRequest $request)
+    public function index(UserRequest\IndexRequest $request, GetUsersService $service)
     {
         $page = $request->input('page', 1);
-
         $perPage = 10;
 
-        $users = $this->userService->byPage($page, $perPage);
+        $serviceRequest = (new GetUsersService())
+            ->setPage($page)
+            ->setPerPage($perPage);
+        $users = $service->execute($page, $perPage);
 
         return view('users.index')->with('users', $users);
     }
@@ -69,11 +83,16 @@ class UserController extends Controller
      * @param UserRequest\StoreRequest $request
      * @return Response
      */
-    public function store(UserRequest\StoreRequest $request)
+    public function store(UserRequest\StoreRequest $request, CreateUserService $service)
     {
         $input = $request->all();
 
-        $this->userService->save($input);
+        $serviceRequest = (new CreateUserRequest())
+            ->setEmail($input['email'])
+            ->setName($input['name'])
+            ->setPassword('password')
+            ->setApiToken(Str::random(60));
+        $service->execute($serviceRequest);
 
         return redirect()->route('users.index');
     }
@@ -107,11 +126,13 @@ class UserController extends Controller
      * @param UserDomainModel\User      $user
      * @return Response
      */
-    public function update(UserRequest\UpdateRequest $request, UserDomainModel\User $user)
+    public function update(UserRequest\UpdateRequest $request, UserDomainModel\User $user, UpdateUserService $service)
     {
-        $input = array_merge($request->all(), ['id' => $user->id]);
-
-        $this->userService->update($input);
+        $serviceRequest = (new UpdateUserService())
+//            ->setEmail($input['email'])
+            ->setEmail($user->email())
+            ->setName($input['name']);
+        $service->execute($serviceRequest);
 
         return redirect()->route('users.index');
     }
@@ -134,11 +155,12 @@ class UserController extends Controller
      * @param UserDomainModel\User              $user
      * @return Response
      */
-    public function updatePassword(UserRequest\UpdatePasswordRequest $request, UserDomainModel\User $user)
+    public function updatePassword(UserRequest\UpdatePasswordRequest $request, UserDomainModel\User $user, UpdatePasswordService $service)
     {
-        $input = array_merge($request->all(), ['id' => $user->id]);
-
-        $this->userService->updatePassword($input);
+        $serviceRequest = (new UpdatePasswordRequest())
+            ->setEmail($user->email())
+            ->setPassword($input['name']);
+        $service->execute($serviceRequest);
 
         return redirect()->route('users.index');
     }
@@ -193,11 +215,12 @@ class UserController extends Controller
      * @param UserDomainModel\User                  $user
      * @return Response
      */
-    public function regenerateApiToken(UserRequest\RegenerateApiTokenRequest $request, UserDomainModel\User $user)
+    public function regenerateApiToken(UserRequest\RegenerateApiTokenRequest $request, UserDomainModel\User $user, RegenerateApiTokenService $service)
     {
-        $input = array_merge($request->all(), ['id' => $user->id]);
-
-        $this->userService->regenerateApiToken($input);
+        $serviceRequest = (new RegenerateApiTokenRequest())
+            ->setEmail($user->email())
+            ->setApiToken(Str::random(60));
+        $service->execute($serviceRequest);
 
         return redirect()->route('users.index');
     }
@@ -208,9 +231,11 @@ class UserController extends Controller
      * @param UserDomainModel\User $user
      * @return Response
      */
-    public function destroy(UserDomainModel\User $user)
+    public function destroy(UserDomainModel\User $user, DeleteUserService $service)
     {
-        $this->userService->delete($user->id);
+        $serviceRequest = (new DeleteUserRequest())
+            ->setEmail($user->email());
+        $service->execute($serviceRequest);
 
         return redirect()->route('users.index');
     }
