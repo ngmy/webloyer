@@ -6,6 +6,7 @@ use Artisan;
 use Hash;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Jackiedo\DotenvEditor\DotenvEditor;
 use Webloyer\App\Service\User\{
     CreateUserRequest,
     CreateUserService,
@@ -44,80 +45,82 @@ class Install extends Command
      * @return void
      */
     public function handle(
-        CreateUserService $createUserService
+        CreateUserService $createUserService,
+        DotenvEditor $dotenvEditor
     ) {
-        $config['app']['url'] = $this->ask(trans('webloyer.enter_webloyer_url'));
+        $env['APP_URL'] = $this->ask(trans('webloyer.enter_webloyer_url'));
 
-        $config['db']['driver'] = $this->choice(trans('webloyer.enter_db_system'), [
+        $env['DB_CONNECTION'] = $this->choice(trans('webloyer.enter_db_system'), [
             'mysql'  => 'MySQL',
             'pgsql'  => 'Postgres',
             'sqlite' => 'SQLite',
             'sqlsrv' => 'SQL Server',
         ], 'mysql');
 
-        if ($config['db']['driver'] !== 'sqlite') {
-            $config['db']['host']     = $this->ask(trans('webloyer.enter_db_host'), 'localhost');
-            $config['db']['database'] = $this->ask(trans('webloyer.enter_db_name'), 'webloyer');
-            $config['db']['username'] = $this->ask(trans('webloyer.enter_db_username'), 'webloyer');
-            $config['db']['password'] = $this->ask(trans('webloyer.enter_db_password'), false);
+        if ($env['DB_CONNECTION'] == 'sqlite') {
+            $env['DB_HOST']     = null;
+            $env['DB_DATABASE'] = $this->ask(trans('webloyer.enter_db_name_sqlite'), storage_path('webloyer.sqlite'));
+            $env['DB_USERNAME'] = null;
+            $env['DB_PASSWORD'] = null;
         } else {
-            $config['db']['host']     = null;
-            $config['db']['database'] = $this->ask(
-                trans('webloyer.enter_db_name_sqlite'),
-                storage_path('webloyer.sqlite')
-            );
-            $config['db']['username'] = null;
-            $config['db']['password'] = null;
+            $env['DB_HOST']     = $this->ask(trans('webloyer.enter_db_host'), 'localhost');
+            $env['DB_DATABASE'] = $this->ask(trans('webloyer.enter_db_name'), 'webloyer');
+            $env['DB_USERNAME'] = $this->ask(trans('webloyer.enter_db_username'), 'webloyer');
+            $env['DB_PASSWORD'] = $this->ask(trans('webloyer.enter_db_password'), false);
         }
 
-        $config['admin']['name']     = $this->ask(trans('webloyer.enter_admin_name'));
-        $config['admin']['email']    = $this->ask(trans('webloyer.enter_admin_email'));
-        $config['admin']['password'] = $this->ask(trans('webloyer.enter_admin_password'));
+        $admin['name']     = $this->ask(trans('webloyer.enter_admin_name'));
+        $admin['email']    = $this->ask(trans('webloyer.enter_admin_email'));
+        $admin['password'] = $this->ask(trans('webloyer.enter_admin_password'));
 
-        // Set configuration to .env
-        $appSetting->update($config['app']);
-        $dbSetting->update($config['db']);
+        // Set the env buffer to the config in the current request
+        config(['database.default', $env['DB_CONNECTION']]);
+        config(['database.connections.' . $env['DB_CONNECTION'] . '.host'     => $env['DB_HOST']]);
+        config(['database.connections.' . $env['DB_CONNECTION'] . '.database' => $env['DB_DATABASE']]);
+        config(['database.connections.' . $env['DB_CONNECTION'] . '.username' => $env['DB_USERNAME']]);
+        config(['database.connections.' . $env['DB_CONNECTION'] . '.password' => $env['DB_PASSWORD']]);
 
-        config(['database.default'                                              => $config['db']['driver']]);
-        config(['database.connections.' . $config['db']['driver'] . '.host'     => $config['db']['host']]);
-        config(['database.connections.' . $config['db']['driver'] . '.database' => $config['db']['database']]);
-        config(['database.connections.' . $config['db']['driver'] . '.username' => $config['db']['username']]);
-        config(['database.connections.' . $config['db']['driver'] . '.password' => $config['db']['password']]);
+        DB::transaction(function () use ($env, $admin, $createUserService, $dotenvEditor) {
+            // Migrate and seed database
+            Artisan::call('migrate:refresh', [
+                '--force'          => true,
+                '--no-interaction' => true,
+            ]);
+            Artisan::call('db:seed', [
+                '--force'          => true,
+                '--no-interaction' => true,
+                '--class'          => 'RecipeTableSeeder',
+            ]);
+            Artisan::call('db:seed', [
+                '--force'          => true,
+                '--no-interaction' => true,
+                '--class'          => 'RoleTableSeeder',
+            ]);
+            Artisan::call('db:seed', [
+                '--force'          => true,
+                '--no-interaction' => true,
+                '--class'          => 'PermissionTableSeeder',
+            ]);
+            Artisan::call('db:seed', [
+                '--force'          => true,
+                '--no-interaction' => true,
+                '--class'          => 'PermissionRoleTableSeeder',
+            ]);
 
-        // Migrate and seed database
-        Artisan::call('migrate:refresh', [
-            '--force'          => true,
-            '--no-interaction' => true,
-        ]);
+            // Create the admin user
+            $createUserRequest = (new CreateUserRequest())
+                ->setEmail($admin['email'])
+                ->setName($admin['name'])
+                ->setPassword(Hash::make($admin['password']))
+                ->serApiToken(Str::random(60));
+            $user = $createUserService->execute($createUserRequest);
+            $user->assignRole('administrator');
 
-        Artisan::call('db:seed', [
-            '--force'          => true,
-            '--no-interaction' => true,
-            '--class'          => 'RecipeTableSeeder',
-        ]);
-        Artisan::call('db:seed', [
-            '--force'          => true,
-            '--no-interaction' => true,
-            '--class'          => 'RoleTableSeeder',
-        ]);
-        Artisan::call('db:seed', [
-            '--force'          => true,
-            '--no-interaction' => true,
-            '--class'          => 'PermissionTableSeeder',
-        ]);
-        Artisan::call('db:seed', [
-            '--force'          => true,
-            '--no-interaction' => true,
-            '--class'          => 'PermissionRoleTableSeeder',
-        ]);
-
-        // Create admin user
-        $createUserRequest = (new CreateUserRequest())
-            ->setEmail($config['admin']['email'])
-            ->setName($config['admin']['name'])
-            ->setPassword(Hash::make($config['admin']['password']))
-            ->serApiToken(Str::random(60));
-        $user = $createUserService->execute($createUserRequest);
-        $user->assignRole('administrator');
+            // Save the env buffer to the .env file
+            foreach ($env as $key => $value) {
+                $dotenvEditor->setKey($key, $value);
+            }
+            $dotenvEditor->save();
+        });
     }
 }
