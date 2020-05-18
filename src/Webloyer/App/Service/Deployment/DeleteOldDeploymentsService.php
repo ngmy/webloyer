@@ -7,7 +7,7 @@ namespace Webloyer\App\Service\Deployment;
 use DateTimeImmutable;
 use Webloyer\Domain\Model\Deployment\OldDeploymentSpecification;
 
-class DeleteOldDeploymentService extends DeploymentService
+class DeleteOldDeploymentsService extends DeploymentService
 {
     /**
      * @param DeleteOldDeploymentsRequest $request

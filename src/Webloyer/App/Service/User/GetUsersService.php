@@ -6,7 +6,7 @@ namespace Webloyer\App\Service\User;
 
 use Webloyer\Domain\Model\User\Users;
 
-class UserService extends UserService
+class GetUsersService extends UserService
 {
     /**
      * @param GetUsersRequest $request
