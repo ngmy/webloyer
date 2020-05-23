@@ -14,11 +14,12 @@ class CreateUserService extends UserService
      */
     public function execute($request = null)
     {
-        $user = User::of(
+        $user = User::ofWithRole(
             $request->getEmail(),
             $request->getName(),
             $request->getPassword(),
-            $request->getApiToken()
+            $request->getApiToken(),
+            $request->getRoles()
         );
         $this->userRepository->save($user);
     }

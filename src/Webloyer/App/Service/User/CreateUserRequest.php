@@ -14,6 +14,8 @@ class CreateUserRequest
     private $password;
     /** @var string */
     private $apiToken;
+    /** @var array<int, string> */
+    private $roles = [];
 
     /**
      * @return string
@@ -45,6 +47,14 @@ class CreateUserRequest
     public function getApiToken(): string
     {
         return $this->apiToken;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
     }
 
     /**
@@ -84,6 +94,16 @@ class CreateUserRequest
     public function setApiToken(string $apiToken): self
     {
         $this->apiToken = $apiToken;
+        return $this;
+    }
+
+    /**
+     * @param array<int, string> $roles
+     * @return self
+     */
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
         return $this;
     }
 }

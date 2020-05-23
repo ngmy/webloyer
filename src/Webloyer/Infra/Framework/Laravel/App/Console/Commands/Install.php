@@ -96,20 +96,20 @@ class Install extends Command
             $migrationsTable = config('database.migrations');
             $isDbEmpty = !Schema::hasTable($migrationsTable) || DB::table($migrationsTable)->count() == 0;
             if ($isDbEmpty || $this->confirm(trans('webloyer::confirm_recreate_db'))) {
-                // Drop all tables
-                Artisan::call('migrate:fresh', [
+                // Rollback and re-migrate
+                Artisan::call('migrate:refresh', [
                     '--force'          => true,
                     '--no-interaction' => true,
                 ]);
 
-//                // Create the admin user
-//                $createUserRequest = (new CreateUserRequest())
-//                    ->setEmail($admin['email'])
-//                    ->setName($admin['name'])
-//                    ->setPassword(Hash::make($admin['password']))
-//                    ->setApiToken(Str::random(60));
-//                $user = $createUserService->execute($createUserRequest);
-//                $user->assignRole('administrator');
+                // Create the admin user
+                $createUserRequest = (new CreateUserRequest())
+                    ->setEmail($admin['email'])
+                    ->setName($admin['name'])
+                    ->setPassword(Hash::make($admin['password']))
+                    ->setApiToken(Str::random(60))
+                    ->setRoles(['administrator']);
+                $user = $createUserService->execute($createUserRequest);
 
                 // Insert data. Nothing is inserted into the user table because the admin user is already inserted
                 Artisan::call('db:seed', [
