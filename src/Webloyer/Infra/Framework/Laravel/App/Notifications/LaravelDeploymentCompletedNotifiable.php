@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Infra\Notification\Laravel;
+namespace Webloyer\Infra\Framework\Laravel\App\Notifications;
 
 use Illuminate\Notifications\Notifiable;
 use Webloyer\Domain\Model\Project;

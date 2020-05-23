@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Infra\Messaging\Laravel;
+namespace Webloyer\Infra\Framework\Laravel\App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
