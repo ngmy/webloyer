@@ -91,10 +91,11 @@ class Install extends Command
             config(['database.connections.' . $env['DB_CONNECTION'] . '.password' => $env['DB_PASSWORD']]);
         }
 
-        $migrationsTable = config('database.migrations');
-        $isDbEmpty = !Schema::hasTable($migrationsTable) || DB::table($migrationsTable)->count() == 0;
-        if ($isDbEmpty || $this->confirm(trans('webloyer::confirm_recreate_db'))) {
-            DB::transaction(function () use ($env, $admin, $createUserService, $dotenvEditor) {
+        DB::transaction(function () use ($env, $admin, $createUserService, $dotenvEditor) {
+            // Create the database if the database is empty or you want to re-create
+            $migrationsTable = config('database.migrations');
+            $isDbEmpty = !Schema::hasTable($migrationsTable) || DB::table($migrationsTable)->count() == 0;
+            if ($isDbEmpty || $this->confirm(trans('webloyer::confirm_recreate_db'))) {
                 // Drop all tables
                 Artisan::call('migrate:fresh', [
                     '--force'          => true,
@@ -116,13 +117,13 @@ class Install extends Command
                     '--no-interaction' => true,
                     '--class'          => DatabaseSeeder::class,
                 ]);
+            }
 
-                // Save the env buffer to the .env file
-                foreach ($env as $key => $value) {
-                    $dotenvEditor->setKey($key, $value);
-                }
-                $dotenvEditor->save();
-            });
-        }
+            // Save the env buffer to the .env file
+            foreach ($env as $key => $value) {
+                $dotenvEditor->setKey($key, $value);
+            }
+            $dotenvEditor->save();
+        });
     }
 }
