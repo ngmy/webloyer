@@ -13,8 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\Webloyer\Install',
-        'App\Console\Commands\Webloyer\DiscardOldDeployments',
+        //
     ];
 
     /**
@@ -25,9 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('webloyer:discard-old-deployments')
-            ->everyMinute()
-            ->withoutOverlapping();
+        // $schedule->command('inspire')
+        //          ->hourly();
     }
 
     /**

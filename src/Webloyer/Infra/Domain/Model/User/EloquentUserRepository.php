@@ -61,6 +61,20 @@ class EloquentUserRepository implements User\UserRepository
     }
 
     /**
+     * @param User\UserApiToken $apiToken
+     * @return User\User|null
+     * @see User\UserRepository::findByEmail()
+     */
+    public function findByApiToken(User\UserApiToken $apiToken): ?User\User
+    {
+        $userOrm = UserOrm::where('api_token', $apiToken->value())->first();
+        if (is_null($userOrm)) {
+            return null;
+        }
+        return $userOrm->toEntity();
+    }
+
+    /**
      * @param User\User $user
      * @return void
      * @see User\UserRepository::remove()

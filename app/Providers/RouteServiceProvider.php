@@ -4,13 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Webloyer\Infra\Persistence\Eloquent\Models\{
-    Deployment,
-    Project,
-    Recipe,
-    Server,
-    User,
-};
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -28,7 +21,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/projects';
+    public const HOME = '/home';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -37,46 +30,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::bind('project', function ($id) {
-            $projectOrm = Project::find($id);
-            if (is_null($projectOrm)) {
-                abort(404);
-            }
-            return $projectOrm->toEntity();
-        });
-
-        Route::bind('deployment', function ($number, $route) {
-            $project = $route->parameter('project');
-            $deploymentOrm = Deployment::ofId($project->id(), $number)->first();
-            if (is_null($deploymentOrm)) {
-                abort(404);
-            }
-            return $deploymentOrm->toEntity();
-        });
-
-        Route::bind('recipe', function (int $id) {
-            $recipeOrm = Recipe::find($id);
-            if (is_null($recipeOrm)) {
-                abort(404);
-            }
-            return $recipeOrm->toEntity();
-        });
-
-        Route::bind('server', function ($id) {
-            $serverOrm = Server::find($id);
-            if (is_null($serverOrm)) {
-                abort(404);
-            }
-            return $serverOrm->toEntity();
-        });
-
-        Route::bind('user', function ($id) {
-            $userOrm = User::find($id);
-            if (is_null($userOrm)) {
-                abort(404);
-            }
-            return $userOrm->toEntity();
-        });
+        //
 
         parent::boot();
     }
@@ -93,7 +47,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         //
-        $this->mapWebhookRoutes();
     }
 
     /**
@@ -121,18 +74,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
              ->middleware('api')
-             ->namespace($this->namespace . '\Api')
+             ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
-    }
-
-    /**
-     * @return void
-     */
-    protected function mapWebhookRoutes()
-    {
-        Route::prefix('webhook')
-             ->middleware('api')
-             ->namespace($this->namespace . '\Webhook')
-             ->group(base_path('routes/webhook.php'));
     }
 }

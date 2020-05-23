@@ -177,7 +177,7 @@ return [
 
         Common\CommonServiceProvider::class,
         Deployer\DeployerServiceProvider::class,
-        Webloyer\WebloyerServiceProvider::class,
+        Webloyer\Infra\Framework\Laravel\App\Providers\WebloyerServiceProvider::class,
 
     ],
 

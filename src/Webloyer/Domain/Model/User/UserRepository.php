@@ -25,6 +25,11 @@ interface UserRepository
      */
     public function findByEmail(UserEmail $email): ?User;
     /**
+     * @param UserApiToken $apiToken
+     * @return User|null
+     */
+    public function findByApiToken(UserApiToken $apiToken): ?User;
+    /**
      * @param User $recipe
      * @return void
      */
