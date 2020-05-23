@@ -8,9 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Webloyer\Domain\Model\Deployment;
 use Webloyer\Infra\Notification\Laravel\{
-    DeploymentWasFinishedNotifiable,
-    DeploymentWasFinishedNotification,
-    DeploymentWasFinishedNotificationDto,
+    DeploymentWasCompletedNotifiable,
+    DeploymentWasCompletedNotification,
+    DeploymentWasCompletedNotificationDto,
 };
 
 class LaravelDeploymentCompletedListener implements ShouldQueue
@@ -23,13 +23,13 @@ class LaravelDeploymentCompletedListener implements ShouldQueue
      */
     public function handle(Deployment\DeploymentCompleted $event): void
     {
-        $notifiable = new DeploymentWasFinishedNotifiable();
+        $notifiable = new DeploymentWasCompletedNotifiable();
         $event->project()->provide($notifiable);
 
-        $dto = new DeploymentWasFinishedNotificationDto();
+        $dto = new DeploymentWasCompletedNotificationDto();
         $event->deployment()->provide($dto);
         $event->project()->provide($dto);
 
-        $notifiable->notify(new DeploymentWasFinishedNotification($dto));
+        $notifiable->notify(new DeploymentWasCompletedNotification($dto));
     }
 }
