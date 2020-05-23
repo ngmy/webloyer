@@ -9,7 +9,7 @@ use Webloyer\Domain\Model\User\{
     UserApiToken,
 };
 
-class GetUserService extends UserService
+class GetUserByApiTokenService extends UserService
 {
     /**
      * @param GetUserRequest $request

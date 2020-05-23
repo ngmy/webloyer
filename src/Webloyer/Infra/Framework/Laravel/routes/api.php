@@ -1,7 +1,7 @@
 <?php
 
-use App;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use JsonRPC\Server as JsonRpcServer;
 use Webloyer\Infra\Ui\Api\JsonRpc\Api as JsonRpcApi;
 

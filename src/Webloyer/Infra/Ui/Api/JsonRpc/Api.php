@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Infra\Ui\Api\JsonRpc\Controllers;
+namespace Webloyer\Infra\Ui\Api\JsonRpc;
 
 use InvalidArgumentException;
 use Webloyer\App\Service\Deployment\{
