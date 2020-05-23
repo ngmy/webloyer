@@ -182,6 +182,7 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->register(WebloyerEventServiceProvider::class);
         $this->app->register(WebloyerMiddlewareServiceProvider::class);
         $this->app->register(WebloyerRouteServiceProvider::class);
+        $this->app->register(WebloyerTranslationServiceProvider::class);
         $this->app->register(WebloyerViewServiceProvider::class);
     }
 

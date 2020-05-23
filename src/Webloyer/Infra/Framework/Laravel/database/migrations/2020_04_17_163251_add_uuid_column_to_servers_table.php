@@ -14,7 +14,12 @@ class AddUuidColumnToServersTable extends Migration
     public function up()
     {
         Schema::table('servers', function (Blueprint $table) {
-            $table->string('uuid', 36)->after('id')->unique();
+            $table->string('uuid', 36)->after('id')->unique()->nullable();
+        });
+
+        // HACK: for "SQLSTATE[HY000]: General error: 1 Cannot add a NOT NULL column with default value NULL"
+        Schema::table('servers', function (Blueprint $table) {
+            $table->string('uuid')->nullable(false)->change();
         });
     }
 

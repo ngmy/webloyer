@@ -1,4 +1,4 @@
-@extends('app')
+@extends('webloyer::app')
 
 @section('content')
 <div class="container-fluid">

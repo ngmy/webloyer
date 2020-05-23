@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Console\Commands;
 
-use Artisan;
-use Hash;
+use Illuminate\Support\Facades\{
+    Artisan,
+    DB,
+    Hash,
+};
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\DotenvEditor;
@@ -50,9 +53,9 @@ class Install extends Command
         CreateUserService $createUserService,
         DotenvEditor $dotenvEditor
     ) {
-        $env['APP_URL'] = $this->ask(trans('webloyer.enter_webloyer_url'));
+        $env['APP_URL'] = $this->ask(trans('webloyer::install.enter_webloyer_url'));
 
-        $env['DB_CONNECTION'] = $this->choice(trans('webloyer.enter_db_system'), [
+        $env['DB_CONNECTION'] = $this->choice(trans('webloyer::install.enter_db_system'), [
             'mysql'  => 'MySQL',
             'pgsql'  => 'Postgres',
             'sqlite' => 'SQLite',
@@ -61,26 +64,30 @@ class Install extends Command
 
         if ($env['DB_CONNECTION'] == 'sqlite') {
             $env['DB_HOST']     = null;
-            $env['DB_DATABASE'] = $this->ask(trans('webloyer.enter_db_name_sqlite'), storage_path('webloyer.sqlite'));
+            $env['DB_DATABASE'] = $this->ask(trans('webloyer::install.enter_db_name_sqlite'), database_path('webloyer.sqlite'));
             $env['DB_USERNAME'] = null;
             $env['DB_PASSWORD'] = null;
         } else {
-            $env['DB_HOST']     = $this->ask(trans('webloyer.enter_db_host'), 'localhost');
-            $env['DB_DATABASE'] = $this->ask(trans('webloyer.enter_db_name'), 'webloyer');
-            $env['DB_USERNAME'] = $this->ask(trans('webloyer.enter_db_username'), 'webloyer');
-            $env['DB_PASSWORD'] = $this->ask(trans('webloyer.enter_db_password'), false);
+            $env['DB_HOST']     = $this->ask(trans('webloyer::install.enter_db_host'), 'localhost');
+            $env['DB_DATABASE'] = $this->ask(trans('webloyer::install.enter_db_name'), 'webloyer');
+            $env['DB_USERNAME'] = $this->ask(trans('webloyer::install.enter_db_username'), 'webloyer');
+            $env['DB_PASSWORD'] = $this->ask(trans('webloyer::install.enter_db_password'), false);
         }
 
-        $admin['name']     = $this->ask(trans('webloyer.enter_admin_name'));
-        $admin['email']    = $this->ask(trans('webloyer.enter_admin_email'));
-        $admin['password'] = $this->ask(trans('webloyer.enter_admin_password'));
+        $admin['name']     = $this->ask(trans('webloyer::install.enter_admin_name'));
+        $admin['email']    = $this->ask(trans('webloyer::install.enter_admin_email'));
+        $admin['password'] = $this->ask(trans('webloyer::install.enter_admin_password'));
 
         // Set the env buffer to the config in the current request
         config(['database.default', $env['DB_CONNECTION']]);
-        config(['database.connections.' . $env['DB_CONNECTION'] . '.host'     => $env['DB_HOST']]);
-        config(['database.connections.' . $env['DB_CONNECTION'] . '.database' => $env['DB_DATABASE']]);
-        config(['database.connections.' . $env['DB_CONNECTION'] . '.username' => $env['DB_USERNAME']]);
-        config(['database.connections.' . $env['DB_CONNECTION'] . '.password' => $env['DB_PASSWORD']]);
+        if ($env['DB_CONNECTION'] == 'sqlite') {
+            config(['database.connections.' . $env['DB_CONNECTION'] . '.database' => $env['DB_DATABASE']]);
+        } else {
+            config(['database.connections.' . $env['DB_CONNECTION'] . '.host'     => $env['DB_HOST']]);
+            config(['database.connections.' . $env['DB_CONNECTION'] . '.database' => $env['DB_DATABASE']]);
+            config(['database.connections.' . $env['DB_CONNECTION'] . '.username' => $env['DB_USERNAME']]);
+            config(['database.connections.' . $env['DB_CONNECTION'] . '.password' => $env['DB_PASSWORD']]);
+        }
 
         DB::transaction(function () use ($env, $admin, $createUserService, $dotenvEditor) {
             // Migrate and seed database
@@ -91,12 +98,12 @@ class Install extends Command
             Artisan::call('db:seed', [
                 '--force'          => true,
                 '--no-interaction' => true,
-                '--class'          => 'RecipeTableSeeder',
+                '--class'          => 'RecipesTableSeeder',
             ]);
             Artisan::call('db:seed', [
                 '--force'          => true,
                 '--no-interaction' => true,
-                '--class'          => 'RoleTableSeeder',
+                '--class'          => 'RolesTableSeeder',
             ]);
             Artisan::call('db:seed', [
                 '--force'          => true,

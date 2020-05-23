@@ -1,6 +1,6 @@
 <?php
 
-use App\Providers\RouteServiceProvider;
+use Webloyer\Infra\Framework\Laravel\App\Providers\WebloyerRouteServiceProvider as RouteServiceProvider;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,18 +17,16 @@ Route::get('/', function () {
     return redirect(RouteServiceProvider::HOME);
 });
 
-Route::namespace('\App\Http\Controllers')->group(function () {
-    Auth::routes();
-    Route::namespace('Auth')->group(function () {
-        Route::get('register', function () {
-            abort(404);
-        })->name('register');
-        Route::post('register', function () {
-            abort(404);
-        });
-        Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.forgot');
-        Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+Auth::routes();
+Route::namespace('Auth')->group(function () {
+    Route::get('register', function () {
+        abort(404);
+    })->name('register');
+    Route::post('register', function () {
+        abort(404);
     });
+    Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.forgot');
+    Route::get('password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
 });
 
 Route::group([
