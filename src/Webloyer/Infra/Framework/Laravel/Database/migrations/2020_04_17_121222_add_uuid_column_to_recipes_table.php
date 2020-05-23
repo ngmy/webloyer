@@ -19,7 +19,7 @@ class AddUuidColumnToRecipesTable extends Migration
 
         // HACK: for "SQLSTATE[HY000]: General error: 1 Cannot add a NOT NULL column with default value NULL"
         Schema::table('recipes', function (Blueprint $table) {
-            $table->string('uuid')->nullable(false)->change();
+            $table->string('uuid', 36)->nullable(false)->change();
         });
     }
 

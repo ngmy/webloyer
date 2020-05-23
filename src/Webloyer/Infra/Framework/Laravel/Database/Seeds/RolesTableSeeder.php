@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Webloyer\Infra\Framework\Laravel\Database\Seeds;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Kodeine\Acl\Models\Eloquent\Role;
@@ -25,7 +29,7 @@ class RolesTableSeeder extends Seeder
                 'description' => 'Manage developer privileges.',
             ]);
 
-            Role::reate([
+            Role::create([
                 'name'        => 'Moderator',
                 'slug'        => 'moderator',
                 'description' => 'Manage moderator privileges.',

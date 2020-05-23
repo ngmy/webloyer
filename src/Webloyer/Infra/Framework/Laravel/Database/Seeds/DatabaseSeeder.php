@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Webloyer\Infra\Framework\Laravel\Database\Seeds;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,12 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            UserTableSeeder::class,
-            RoleTableSeeder::class,
-            PermissionTableSeeder::class,
+            UsersTableSeeder::class,
+            RolesTableSeeder::class,
+            PermissionsTableSeeder::class,
             RoleUserTableSeeder::class,
             PermissionRoleTableSeeder::class,
-            RecipeTableSeeder::class,
+            RecipesTableSeeder::class,
         ]);
     }
 }

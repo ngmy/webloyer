@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\{
     Artisan,
     DB,
     Hash,
+    Schema,
 };
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -16,6 +17,7 @@ use Webloyer\App\Service\User\{
     CreateUserRequest,
     CreateUserService,
 };
+use Webloyer\Infra\Framework\Laravel\Database\Seeds\DatabaseSeeder;
 
 class Install extends Command
 {
@@ -89,47 +91,38 @@ class Install extends Command
             config(['database.connections.' . $env['DB_CONNECTION'] . '.password' => $env['DB_PASSWORD']]);
         }
 
-        DB::transaction(function () use ($env, $admin, $createUserService, $dotenvEditor) {
-            // Migrate and seed database
-            Artisan::call('migrate:refresh', [
-                '--force'          => true,
-                '--no-interaction' => true,
-            ]);
-            Artisan::call('db:seed', [
-                '--force'          => true,
-                '--no-interaction' => true,
-                '--class'          => 'RecipesTableSeeder',
-            ]);
-            Artisan::call('db:seed', [
-                '--force'          => true,
-                '--no-interaction' => true,
-                '--class'          => 'RolesTableSeeder',
-            ]);
-            Artisan::call('db:seed', [
-                '--force'          => true,
-                '--no-interaction' => true,
-                '--class'          => 'PermissionTableSeeder',
-            ]);
-            Artisan::call('db:seed', [
-                '--force'          => true,
-                '--no-interaction' => true,
-                '--class'          => 'PermissionRoleTableSeeder',
-            ]);
+        $migrationsTable = config('database.migrations');
+        $isDbEmpty = !Schema::hasTable($migrationsTable) || DB::table($migrationsTable)->count() == 0;
+        if ($isDbEmpty || $this->confirm(trans('webloyer::confirm_recreate_db'))) {
+            DB::transaction(function () use ($env, $admin, $createUserService, $dotenvEditor) {
+                // Drop all tables
+                Artisan::call('migrate:fresh', [
+                    '--force'          => true,
+                    '--no-interaction' => true,
+                ]);
 
-            // Create the admin user
-            $createUserRequest = (new CreateUserRequest())
-                ->setEmail($admin['email'])
-                ->setName($admin['name'])
-                ->setPassword(Hash::make($admin['password']))
-                ->serApiToken(Str::random(60));
-            $user = $createUserService->execute($createUserRequest);
-            $user->assignRole('administrator');
+//                // Create the admin user
+//                $createUserRequest = (new CreateUserRequest())
+//                    ->setEmail($admin['email'])
+//                    ->setName($admin['name'])
+//                    ->setPassword(Hash::make($admin['password']))
+//                    ->setApiToken(Str::random(60));
+//                $user = $createUserService->execute($createUserRequest);
+//                $user->assignRole('administrator');
 
-            // Save the env buffer to the .env file
-            foreach ($env as $key => $value) {
-                $dotenvEditor->setKey($key, $value);
-            }
-            $dotenvEditor->save();
-        });
+                // Insert data. Nothing is inserted into the user table because the admin user is already inserted
+                Artisan::call('db:seed', [
+                    '--force'          => true,
+                    '--no-interaction' => true,
+                    '--class'          => DatabaseSeeder::class,
+                ]);
+
+                // Save the env buffer to the .env file
+                foreach ($env as $key => $value) {
+                    $dotenvEditor->setKey($key, $value);
+                }
+                $dotenvEditor->save();
+            });
+        }
     }
 }
