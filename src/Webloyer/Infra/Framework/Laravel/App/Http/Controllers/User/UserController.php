@@ -52,10 +52,10 @@ class UserController extends Controller
         $page = $request->input('page', 1);
         $perPage = 10;
 
-        $serviceRequest = (new GetUsersService())
+        $serviceRequest = (new GetUsersRequest())
             ->setPage($page)
             ->setPerPage($perPage);
-        $users = $service->execute($page, $perPage);
+        $users = $service->execute($serviceRequest);
 
         return view('webloyer::users.index')->with('users', $users);
     }
