@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\Server;
 
-use Webloyer\Domain\Model\Server\Servers;
+use Webloyer\Domain\Model\Server\{
+    Server,
+    Servers,
+};
 
 class GetServersService extends ServerService
 {
     /**
      * @param GetServersRequest $request
-     * @return Servers
+     * @return mixed
      */
     public function execute($request = null)
     {
-        return $this->serverRepository->findAllByPage($request->getPage(), $request->getPerPage());
+        $servers = $this->serverRepository->findAllByPage($request->getPage(), $request->getPerPage());
+        return array_map(function (Server $server): object {
+            return $this->serverDataTransformer->write($server)->read();
+        }, $servers->toArray());
     }
 }

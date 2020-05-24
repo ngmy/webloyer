@@ -13,11 +13,12 @@ class GetServerService extends ServerService
 {
     /**
      * @param GetServerRequest $request
-     * @return Server
+     * @return mixed
      */
     public function execute($request = null)
     {
         $id = new ServerId($request->getId());
-        return $this->getNonNullServer($id);
+        $server = $this->getNonNullServer($id);
+        return $this->serverDataTransformer->write($server)->read();
     }
 }

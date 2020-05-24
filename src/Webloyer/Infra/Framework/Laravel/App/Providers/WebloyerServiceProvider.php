@@ -11,6 +11,10 @@ use Common\App\Service\{
 };
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Webloyer\App\DataTransformer\Server\{
+    DtoServerDataTransformer,
+    ServerDataTransformer,
+};
 use Webloyer\App\Service\Deployment\{
     CreateDeploymentService,
     DeleteDeploymentService,
@@ -34,7 +38,7 @@ use Webloyer\App\Service\Recipe\{
     GetRecipesService,
     UpdateRecipeService,
 };
-use Webloyer\App\Service\Service\{
+use Webloyer\App\Service\Server\{
     CreateServerService,
     DeleteServerService,
     GetAllServersService,
@@ -62,6 +66,10 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // data transformers
+        $this->app->bind(ServerDataTransformer::class, DtoServerDataTransformer::class);
+
+        // deployment app services
         $this->app->bind(CreateDeploymentService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateDeploymentService(
@@ -98,6 +106,8 @@ class WebloyerServiceProvider extends ServiceProvider
                 $app->make(TransactionalSession::class)
             );
         });
+
+        // project app services
         $this->app->bind(CreateProjectService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateProjectService(
@@ -122,6 +132,8 @@ class WebloyerServiceProvider extends ServiceProvider
                 $app->make(TransactionalSession::class)
             );
         });
+
+        // recipe app services
         $this->app->bind(CreateRecipeService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateRecipeService(
@@ -146,10 +158,13 @@ class WebloyerServiceProvider extends ServiceProvider
                 $app->make(TransactionalSession::class)
             );
         });
+
+        // server app services
         $this->app->bind(CreateServerService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateServerService(
-                    $app->make(ServerRepository::class)
+                    $app->make(ServerRepository::class),
+                    $app->make(ServerDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
@@ -157,7 +172,8 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(DeleteServerService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new DeleteServerService(
-                    $app->make(ServerRepository::class)
+                    $app->make(ServerRepository::class),
+                    $app->make(ServerDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
@@ -165,18 +181,21 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(UpdateServerService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new UpdateServerService(
-                    $app->make(ServerRepository::class)
+                    $app->make(ServerRepository::class),
+                    $app->make(ServerDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
         });
 
+        // repositories
         $this->app->bind(DeploymentRepository::class, EloquentDeploymentRepository::class);
         $this->app->bind(ProjectRepository::class, EloquentProjectRepository::class);
         $this->app->bind(RecipeRepository::class, EloquentRecipeRepository::class);
         $this->app->bind(ServerRepository::class, EloquentServerRepository::class);
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
 
+        // other service providers
         $this->app->register(WebloyerCommandServiceProvider::class);
         $this->app->register(WebloyerDatabaseServiceProvider::class);
         $this->app->register(WebloyerEventServiceProvider::class);
