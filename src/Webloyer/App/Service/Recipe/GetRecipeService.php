@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\Recipe;
 
-use Webloyer\Domain\Model\Recipe\{
-    Recipe,
-    RecipeId,
-};
+use Webloyer\Domain\Model\Recipe\RecipeId;
 
 class GetRecipeService extends RecipeService
 {
     /**
      * @param GetRecipeRequest $request
-     * @return Recipe
+     * @return object
      */
     public function execute($request = null)
     {
         $id = new RecipeId($request->getId());
-        return $this->getNonNullRecipe($id);
+        $recipe = $this->getNonNullRecipe($id);
+        return $this->recipeDataTransformer->write($recipe)->read();
     }
 }

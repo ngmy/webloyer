@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Webloyer\Infra\Persistence\Eloquent\Models\{
     Deployment,
     Project,
-    Recipe,
     Server,
     User,
 };
@@ -54,14 +53,6 @@ class WebloyerRouteServiceProvider extends ServiceProvider
                 abort(404);
             }
             return $deploymentOrm->toEntity();
-        });
-
-        Route::bind('recipe', function (int $id) {
-            $recipeOrm = Recipe::find($id);
-            if (is_null($recipeOrm)) {
-                abort(404);
-            }
-            return $recipeOrm->toEntity();
         });
 
         Route::bind('server', function ($id) {

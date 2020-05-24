@@ -219,6 +219,7 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
 
         // other service providers
+        $this->app->register(WebloyerAssetServiceProvider::class);
         $this->app->register(WebloyerCommandServiceProvider::class);
         $this->app->register(WebloyerDatabaseServiceProvider::class);
         $this->app->register(WebloyerEventServiceProvider::class);

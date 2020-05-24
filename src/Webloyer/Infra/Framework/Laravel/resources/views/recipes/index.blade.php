@@ -30,12 +30,12 @@
                             <td>{{ $recipe->createdAt }}</td>
                             <td>{{ $recipe->updatedAt }}</td>
                             <td>
-                                {!! link_to_route('recipes.show', 'Show', [$recipe->surrogateId], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('recipes.show', 'Show', [$recipe->id], ['class' => 'btn btn-default']) !!}
                                 @if (Auth::user()->hasPermission('update.recipe'))
-                                    {!! link_to_route('recipes.edit', 'Edit', [$recipe->surrogateId], ['class' => 'btn btn-default']) !!}
+                                    {!! link_to_route('recipes.edit', 'Edit', [$recipe->id], ['class' => 'btn btn-default']) !!}
                                 @endif
                                 @if (Auth::user()->hasPermission('delete.recipe'))
-                                    {!! Form::open(['route' => ['recipes.destroy', $recipe->surrogateId], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                                    {!! Form::open(['route' => ['recipes.destroy', $recipe->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
                                     {!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
                                     {!! Form::close() !!}
                                 @endif

@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe;
 
 use App\Http\Controllers\Controller;
-use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Recipe as RecipeRequest;
 use Webloyer\App\Service\Recipe\{
     CreateRecipeRequest,
-    CreateRecipeService,
     DeleteRecipeRequest,
-    DeleteRecipeService,
     GetRecipeRequest,
     GetRecipeService,
-    GetRecipesRequest,
     GetRecipesService,
     UpdateRecipeRequest,
-    UpdateRecipeService,
 };
-use Webloyer\Domain\Model\Recipe as RecipeDomainModel;
+use Webloyer\Domain\Model\Recipe\Recipe;;
+use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Recipe\{
+    IndexRequest,
+    StoreRequest,
+    UpdateRequest,
+};
 
 class RecipeController extends Controller
 {
@@ -36,10 +36,11 @@ class RecipeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param RecipeeRequest\IndexRequest $request
+     * @param IndexRequest      $request
+     * @param GetRecipesService $service
      * @return Response
      */
-    public function index(RecipeRequest\IndexRequest $request, GetRecipesService $service)
+    public function index(IndexRequest $request, GetRecipesService $service)
     {
         $service->recipesDataTransformer()->setPerPage(10);
         $recipes = $service->execute();
@@ -60,17 +61,16 @@ class RecipeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param RecipeRequest\StoreRequest $request
+     * @param StoreRequest                    $request
+     * @param TransactionalApplicationService $service
      * @return Response
      */
-    public function store(RecipeRequest\StoreRequest $request, CreateRecipeService $service)
+    public function store(StoreRequest $request, TransactionalApplicationService $service)
     {
-        $input = $request->all();
-
         $serviceRequest = (new CreateRecipeRequest())
-            ->setName($input['name'])
-            ->setDescription($input['description'])
-            ->setBody($input['body']);
+            ->setName($request->input('name'))
+            ->setDescription($request->input('description'))
+            ->setBody($request->input('body'));
         $service->execute($serviceRequest);
 
         return redirect()->route('recipes.index');
@@ -79,44 +79,52 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param RecipeDomainModel\Recipe $recipe
+     * @param string           $id
+     * @param GetRecipeService $service
      * @return Response
      */
-    public function show(RecipeDomainModel\Recipe $recipe)
+    public function show(string $id, GetRecipeService $service)
     {
-        $recipeProject = $recipe->getProjects()->toArray();
+        //$recipeProject = $recipe->getProjects()->toArray();
+        $recipeProject = [];
+        $serviceRequest = (new GetRecipeRequest())->setId($id);
+        $recipe = $service->execute($serviceRequest);
 
-        return view('webloyer::recipes.show')->with('recipe', $recipe)
+        return view('webloyer::recipes.show')
+            ->with('recipe', $recipe)
             ->with('recipeProject', $recipeProject);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param RecipeDomainModel\Recipe $recipe
+     * @param string           $id
+     * @param GetRecipeService $service
      * @return Response
      */
-    public function edit(RecipeDomainModel\Recipe $recipe)
+    public function edit(string $id, GetRecipeService $service)
     {
+        $serviceRequest = (new GetRecipeRequest())->setId($id);
+        $recipe = $service->execute($serviceRequest);
+
         return view('webloyer::recipes.edit')->with('recipe', $recipe);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param RecipeRequest\UpdateRequest $request
-     * @param RecipeDomainModel\Recipe    $recipe
+     * @param UpdateRequest                   $request
+     * @param string                          $id
+     * @param TransactionalApplicationService $recipe
      * @return Response
      */
-    public function update(RecipeRequest\UpdateRequest $request, RecipeDomainModel\Recipe $recipe, UpdateRecipeService $service)
+    public function update(UpdateRequest $request, string $id, TransactionalApplicationService $service)
     {
-        $input = $request->all();
-
         $serviceRequest = (new UpdateRecipeRequest())
-            ->setId($recipe->id())
-            ->setName($input['name'])
-            ->setDescription($input['description'])
-            ->setBody($input['body']);
+            ->setId($id)
+            ->setName($request->input('name'))
+            ->setDescription($request->input('description'))
+            ->setBody($request->input('body'));
         $service->execute($serviceRequest);
 
         return redirect()->route('recipes.index');
@@ -125,12 +133,13 @@ class RecipeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param RecipeDomainModel\Recipe $recipe
+     * @param string                          $id
+     * @param TransactionalApplicationService $service
      * @return Response
      */
-    public function destroy(RecipeDomainModel\Recipe $recipe, DeleteRecipeService $service)
+    public function destroy(string $id, TransactionalApplicationService $service)
     {
-        $serviceRequest = (new DeleteRecipeRequest())->setId($recipe->id());
+        $serviceRequest = (new DeleteRecipeRequest())->setId($id);
         $service->execute($serviceRequest);
 
         return redirect()->route('recipes.index');
