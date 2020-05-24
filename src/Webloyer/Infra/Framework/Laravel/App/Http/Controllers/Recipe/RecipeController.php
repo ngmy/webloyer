@@ -39,7 +39,7 @@ class RecipeController extends Controller
      * @param RecipeeRequest\IndexRequest $request
      * @return Response
      */
-    public function index(RecipeRequest\IndexRequest $request, GetRecipesServie $service)
+    public function index(RecipeRequest\IndexRequest $request, GetRecipesService $service)
     {
         $page = $request->input('page', 1);
         $perPage = 10;
@@ -47,7 +47,7 @@ class RecipeController extends Controller
         $serviceRequest = (new GetRecipesRequest())
             ->setPage($page)
             ->setPerPage($perPage);
-        $recipes = $service->getRecipes($serviceRequest);
+        $recipes = $service->execute($serviceRequest);
 
         return view('webloyer::recipes.index')->with('recipes', $recipes);
     }
