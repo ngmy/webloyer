@@ -10,10 +10,11 @@ class GetRecipesService extends RecipeService
 {
     /**
      * @param GetRecipesRequest $request
-     * @return Recipes
+     * @return mixed
      */
     public function execute($request = null)
     {
-        return $this->recipeRepository->findAllByPage($request->getPage(), $request->getPerPage());
+        $recipes = $this->recipeRepository->findAll();
+        return $this->recipesDataTransformer->write($recipes)->read();
     }
 }

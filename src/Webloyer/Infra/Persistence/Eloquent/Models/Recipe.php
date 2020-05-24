@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Persistence\Eloquent\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\{
     Builder,
     Model,
@@ -71,6 +72,24 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     }
 
     /**
+     * @param string $value
+     * @return CarbonImmutable
+     */
+    public function getCreatedAtAttribute(string $value): CarbonImmutable
+    {
+        return new CarbonImmutable($value);
+    }
+
+    /**
+     * @param string $value
+     * @return CarbonImmutable
+     */
+    public function getUpdatedAtAttribute(string $value): CarbonImmutable
+    {
+        return new CarbonImmutable($value);
+    }
+
+    /**
      * @return RecipeDomainModel\Recipe
      */
     public function toEntity(): RecipeDomainModel\Recipe
@@ -80,6 +99,9 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
             $this->name,
             $this->description,
             $this->body
-        )->setSurrogateId($this->id);
+        )
+        ->setSurrogateId($this->id)
+        ->setCreatedAt($this->created_at)
+        ->setUpdatedAt($this->updated_at);
     }
 }

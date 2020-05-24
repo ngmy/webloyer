@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\App\DataTransformer\Server;
+namespace Webloyer\App\DataTransformer\Recipe;
 
-use Webloyer\Domain\Model\Server\{
-    Server,
-    ServerInterest,
+use Webloyer\Domain\Model\Recipe\{
+    Recipe,
+    RecipeInterest,
 };
 
-class DtoServerDataTransformer implements ServerDataTransformer
+class RecipeDtoDataTransformer implements RecipeDataTransformer
 {
-    private $server;
+    private $recipe;
 
     /**
-     * @param Server $server
+     * @param Recipe $recipe
      * @return self
      */
-    public function write(Server $server): self
+    public function write(Recipe $recipe): self
     {
-        $this->server = $server;
+        $this->recipe = $recipe;
         return $this;
     }
 
@@ -28,7 +28,7 @@ class DtoServerDataTransformer implements ServerDataTransformer
      */
     public function read()
     {
-        $dto = new class implements ServerInterest {
+        $dto = new class implements RecipeInterest {
             public function informId(string $id): void
             {
                 $this->id = $id;
@@ -46,7 +46,12 @@ class DtoServerDataTransformer implements ServerDataTransformer
                 $this->body = $body;
             }
         };
-        $this->server->provide($dto);
+        $this->recipe->provide($dto);
+
+        $dto->surrogateId = $this->recipe->surrogateId();
+        $dto->createdAt = $this->recipe->createdAt();
+        $dto->updatedAt = $this->recipe->updatedAt();
+
         return $dto;
     }
 }

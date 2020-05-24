@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Recipe;
 
 use Common\Domain\Model\Identity\Identifiable;
+use Common\Domain\Model\Timestamp\Timestampable;
 
 class Recipe
 {
     use Identifiable;
+    use Timestampable;
 
     /** @var RecipeId */
     private $id;

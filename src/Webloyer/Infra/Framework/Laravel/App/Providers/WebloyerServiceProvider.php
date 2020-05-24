@@ -11,9 +11,17 @@ use Common\App\Service\{
 };
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Webloyer\App\DataTransformer\Recipe\{
+    RecipeDataTransformer,
+    RecipeDtoDataTransformer,
+    RecipesDataTransformer,
+    RecipesDtoDataTransformer,
+};
 use Webloyer\App\DataTransformer\Server\{
-    DtoServerDataTransformer,
     ServerDataTransformer,
+    ServerDtoDataTransformer,
+    ServersDataTransformer,
+    ServersDtoDataTransformer,
 };
 use Webloyer\App\Service\Deployment\{
     CreateDeploymentService,
@@ -56,6 +64,7 @@ use Webloyer\Infra\Domain\Model\Project\EloquentProjectRepository;
 use Webloyer\Infra\Domain\Model\Recipe\EloquentRecipeRepository;
 use Webloyer\Infra\Domain\Model\Server\EloquentServerRepository;
 use Webloyer\Infra\Domain\Model\User\EloquentUserRepository;
+use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
 
 class WebloyerServiceProvider extends ServiceProvider
 {
@@ -66,8 +75,13 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // data transformers
-        $this->app->bind(ServerDataTransformer::class, DtoServerDataTransformer::class);
+        // server data transformers
+        $this->app->bind(ServerDataTransformer::class, ServerDtoDataTransformer::class);
+        $this->app->bind(ServersDataTransformer::class, ServersDtoDataTransformer::class);
+
+        // recipe data transformers
+        $this->app->bind(RecipeDataTransformer::class, RecipeDtoDataTransformer::class);
+        $this->app->bind(RecipesDataTransformer::class, RecipesLaravelLengthAwarePaginatorDataTransformer::class);
 
         // deployment app services
         $this->app->bind(CreateDeploymentService::class, function (Application $app): ApplicationService {
@@ -137,7 +151,9 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(CreateRecipeService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateRecipeService(
-                    $app->make(RecipeRepository::class)
+                    $app->make(RecipeRepository::class),
+                    $app->make(RecipeDataTransformer::class),
+                    $app->make(RecipesDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
@@ -145,7 +161,9 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(DeleteRecipeService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new DeleteRecipeService(
-                    $app->make(RecipeRepository::class)
+                    $app->make(RecipeRepository::class),
+                    $app->make(RecipeDataTransformer::class),
+                    $app->make(RecipesDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
@@ -153,7 +171,9 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(UpdateRecipeService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new UpdateRecipeService(
-                    $app->make(RecipeRepository::class)
+                    $app->make(RecipeRepository::class),
+                    $app->make(RecipeDataTransformer::class),
+                    $app->make(RecipesDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
@@ -164,7 +184,8 @@ class WebloyerServiceProvider extends ServiceProvider
             return new TransactionalApplicationService(
                 new CreateServerService(
                     $app->make(ServerRepository::class),
-                    $app->make(ServerDataTransformer::class)
+                    $app->make(ServerDataTransformer::class),
+                    $app->make(ServersDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
@@ -173,7 +194,8 @@ class WebloyerServiceProvider extends ServiceProvider
             return new TransactionalApplicationService(
                 new DeleteServerService(
                     $app->make(ServerRepository::class),
-                    $app->make(ServerDataTransformer::class)
+                    $app->make(ServerDataTransformer::class),
+                    $app->make(ServersDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
@@ -182,7 +204,8 @@ class WebloyerServiceProvider extends ServiceProvider
             return new TransactionalApplicationService(
                 new UpdateServerService(
                     $app->make(ServerRepository::class),
-                    $app->make(ServerDataTransformer::class)
+                    $app->make(ServerDataTransformer::class),
+                    $app->make(ServersDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );

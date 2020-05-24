@@ -6,7 +6,10 @@ namespace Webloyer\App\Service\Server;
 
 use Common\App\Service\ApplicationService;
 use InvalidArgumentException;
-use Webloyer\App\DataTransformer\Server\ServerDataTransformer;
+use Webloyer\App\DataTransformer\Server\{
+    ServerDataTransformer,
+    ServersDataTransformer,
+};
 use Webloyer\Domain\Model\Server\{
     Server,
     ServerId,
@@ -19,17 +22,23 @@ abstract class ServerService implements ApplicationService
     protected $serverRepository;
     /** @var ServerDataTransformer */
     protected $serverDataTransformer;
+    /** @var ServersDataTransformer */
+    protected $serversDataTransformer;
 
     /**
-     * @param ServerRepository $serverRepository
+     * @param ServerRepository       $serverRepository
+     * @param ServerDataTransformer  $serverDataTransformer
+     * @param ServersDataTransformer $serversDataTransformer
      * @return void
      */
     public function __construct(
         ServerRepository $serverRepository,
-        ServerDataTransformer $serverDataTransformer
+        ServerDataTransformer $serverDataTransformer,
+        ServersDataTransformer $serversDataTransformer
     ) {
         $this->serverRepository = $serverRepository;
         $this->serverDataTransformer = $serverDataTransformer;
+        $this->serversDataTransformer = $serversDataTransformer;
     }
 
     /**

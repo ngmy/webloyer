@@ -6,6 +6,10 @@ namespace Webloyer\App\Service\Recipe;
 
 use Common\App\Service\ApplicationService;
 use InvalidArgumentException;
+use Webloyer\App\DataTransformer\Recipe\{
+    RecipeDataTransformer,
+    RecipesDataTransformer,
+};
 use Webloyer\Domain\Model\Recipe\{
     Recipe,
     RecipeId,
@@ -16,14 +20,41 @@ abstract class RecipeService implements ApplicationService
 {
     /** @var RecipeRepository */
     protected $recipeRepository;
+    /** @var RecipeDataTransformer */
+    protected $recipeDataTransformer;
+    /** @var RecipesDataTransformer */
+    protected $recipesDataTransformer;
 
     /**
-     * @param RecipeRepository $recipeRepository
+     * @param RecipeRepository       $recipeRepository
+     * @param RecipeDataTransformer  $recipeDataTransformer
+     * @param RecipesDataTransformer $recipesDataTransformer
      * @return void
      */
-    public function __construct(RecipeRepository $recipeRepository)
-    {
+    public function __construct(
+        RecipeRepository $recipeRepository,
+        RecipeDataTransformer $recipeDataTransformer,
+        RecipesDataTransformer $recipesDataTransformer
+    ) {
         $this->recipeRepository = $recipeRepository;
+        $this->recipeDataTransformer = $recipeDataTransformer;
+        $this->recipesDataTransformer = $recipesDataTransformer;
+    }
+
+    /**
+     * @return RecipeDataTransformer
+     */
+    public function recipeDataTransformer(): RecipeDataTransformer
+    {
+        return $this->recipeDataTransformer;
+    }
+
+    /**
+     * @return RecipesDataTransformer
+     */
+    public function recipesDataTransformer(): RecipesDataTransformer
+    {
+        return $this->recipesDataTransformer;
     }
 
     /**
