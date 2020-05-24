@@ -8,16 +8,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests;
 use Webloyer\Infra\Framework\Laravel\App\Models\Project;
-use Webloyer\Infra\Framework\Laravel\App\Repositories\Project\ProjectInterface;
 use Webloyer\Infra\Framework\Laravel\App\Services\Form\Deployment\DeploymentForm;
 
 class DeploymentController extends Controller
 {
-    /** @var ProjectInterface */
-    private $project;
-    /** @var DeploymentForm */
-    private $deploymentForm;
-
     /**
      * Create a new controller instance.
      *
@@ -25,10 +19,8 @@ class DeploymentController extends Controller
      * @param \App\Services\Form\Deployment\DeploymentForm $deploymentForm
      * @return void
      */
-    public function __construct(ProjectInterface $project, DeploymentForm $deploymentForm)
+    public function __construct()
     {
-        $this->project        = $project;
-        $this->deploymentForm = $deploymentForm;
     }
 
     /**

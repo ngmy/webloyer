@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\Infra\App\Service;
 
 use Common\App\Service\TransactionalSession;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class LaravelSession implements TransactionalSession
 {
@@ -16,6 +16,6 @@ class LaravelSession implements TransactionalSession
      */
     public function executeAtomically(callable $operation)
     {
-        return DB::trsancation($operation);
+        return DB::transaction($operation);
     }
 }

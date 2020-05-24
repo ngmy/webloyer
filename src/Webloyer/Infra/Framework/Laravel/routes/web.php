@@ -51,7 +51,13 @@ Route::group([
     'namespace' => 'Recipe',
     'protect_alias' => 'recipe',
 ], function () {
-    Route::resource('recipes', 'RecipeController');
+    Route::get('recipes', 'IndexController')->name('recipes.index');
+    Route::get('recipes/create', 'CreateController')->name('recipes.create');
+    Route::post('recipes', 'StoreController')->name('recipes.store');
+    Route::get('recipes/{recipe}', 'ShowController')->name('recipes.show');
+    Route::get('recipes/{recipe}/edit', 'EditController')->name('recipes.edit');
+    Route::put('recipes/{recipe}', 'UpdateController')->name('recipes.update');
+    Route::delete('recipes/{recipe}', 'DestroyController')->name('recipes.destroy');
 });
 
 Route::group([

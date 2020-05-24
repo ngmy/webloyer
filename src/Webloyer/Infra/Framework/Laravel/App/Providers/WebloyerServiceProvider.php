@@ -65,6 +65,14 @@ use Webloyer\Infra\Domain\Model\Recipe\EloquentRecipeRepository;
 use Webloyer\Infra\Domain\Model\Server\EloquentServerRepository;
 use Webloyer\Infra\Domain\Model\User\EloquentUserRepository;
 use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
+use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe\{
+    DestroyController as RecipeDestroyController,
+    EditController as RecipeEditController,
+    IndexController as RecipeIndexController,
+    ShowController as RecipeShowController,
+    StoreController as RecipeStoreController,
+    UpdateController as RecipeUpdateController,
+};
 
 class WebloyerServiceProvider extends ServiceProvider
 {
@@ -148,36 +156,60 @@ class WebloyerServiceProvider extends ServiceProvider
         });
 
         // recipe app services
-        $this->app->bind(CreateRecipeService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new CreateRecipeService(
+        $this->app->when([RecipeEditController::class, RecipeShowController::class])
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetRecipeService(
                     $app->make(RecipeRepository::class),
                     $app->make(RecipeDataTransformer::class),
                     $app->make(RecipesDataTransformer::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
-        $this->app->bind(DeleteRecipeService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new DeleteRecipeService(
+                );
+            });
+        $this->app->when(RecipeDestroyController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new DeleteRecipeService(
+                        $app->make(RecipeRepository::class),
+                        $app->make(RecipeDataTransformer::class),
+                        $app->make(RecipesDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(RecipeIndexController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetRecipesService(
                     $app->make(RecipeRepository::class),
                     $app->make(RecipeDataTransformer::class),
                     $app->make(RecipesDataTransformer::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
-        $this->app->bind(UpdateRecipeService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new UpdateRecipeService(
-                    $app->make(RecipeRepository::class),
-                    $app->make(RecipeDataTransformer::class),
-                    $app->make(RecipesDataTransformer::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
+                );
+            });
+        $this->app->when(RecipeStoreController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new CreateRecipeService(
+                        $app->make(RecipeRepository::class),
+                        $app->make(RecipeDataTransformer::class),
+                        $app->make(RecipesDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(RecipeUpdateController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new UpdateRecipeService(
+                        $app->make(RecipeRepository::class),
+                        $app->make(RecipeDataTransformer::class),
+                        $app->make(RecipesDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
 
         // server app services
         $this->app->bind(CreateServerService::class, function (Application $app): ApplicationService {
