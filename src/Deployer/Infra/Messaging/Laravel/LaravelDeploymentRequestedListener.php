@@ -13,7 +13,7 @@ use Deployer\Domain\Model\{
 };
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 use Webloyer\Domain\Model\Deployment\DeploymentStarted;
 

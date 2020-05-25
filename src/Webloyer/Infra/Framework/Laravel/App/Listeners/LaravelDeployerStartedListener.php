@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Listeners;
 
-use DB;
 use Deployer\Domain\Model\DeployerStarted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\DB;
 use Webloyer\Domain\Model\Deployment;
 
 class LaravelDeployerStartedListener implements ShouldQueue
