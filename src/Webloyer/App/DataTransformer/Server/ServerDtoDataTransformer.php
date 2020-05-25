@@ -47,6 +47,11 @@ class ServerDtoDataTransformer implements ServerDataTransformer
             }
         };
         $this->server->provide($dto);
+
+        $dto->surrogateId = $this->recipe->surrogateId();
+        $dto->createdAt = $this->recipe->createdAt();
+        $dto->updatedAt = $this->recipe->updatedAt();
+
         return $dto;
     }
 }
