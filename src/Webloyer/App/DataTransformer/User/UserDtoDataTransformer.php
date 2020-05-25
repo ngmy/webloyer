@@ -47,6 +47,7 @@ class UserDtoDataTransformer implements UserDataTransformer
             }
             public function informRoles(array $roles): void
             {
+                $this->role = $roles;
             }
         };
         $this->user->provide($dto);
