@@ -10,10 +10,16 @@ use Illuminate\Database\Eloquent\{
     Relations,
 };
 use InvalidArgumentException;
-use Webloyer\Domain\Model\Deployment as DeploymentDomainModel;
+use Webloyer\Domain\Model\Deployment\{
+    Deployment as DeploymentEntity,
+    DeploymentInterest,
+};
+use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
-class Deployment extends Model implements DeploymentDomainModel\DeploymentInterest
+class Deployment extends Model implements DeploymentInterest
 {
+    use ImmutableTimestampable;
+
     /** @var array<int, string> */
     protected $fillable = [
         'project_id',
@@ -149,13 +155,13 @@ class Deployment extends Model implements DeploymentDomainModel\DeploymentIntere
     }
 
     /**
-     * @return DeploymentDomainModel\Deployment
+     * @return DeploymentEntity
      */
-    public function toEntity(): DeploymentDomainModel\Deployment
+    public function toEntity(): DeploymentEntity
     {
         // TODO ユーザ削除されたら？
         assert(!is_null($this->project));
-        return DeploymentDomainModel\Deployment::of(
+        return DeploymentEntity::of(
             $this->project->uuid,
             $this->number,
             $this->task,

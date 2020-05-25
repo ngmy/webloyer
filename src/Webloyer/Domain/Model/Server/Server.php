@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Server;
 
 use Common\Domain\Model\Identity\Identifiable;
+use Common\Domain\Model\Timestamp\Timestampable;
 
 class Server
 {
     use Identifiable;
+    use Timestampable;
 
     /** @var ServerId */
     private $id;

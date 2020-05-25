@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\User;
 
 use Common\Domain\Model\Identity\Identifiable;
+use Common\Domain\Model\Timestamp\Timestampable;
 
 abstract class User
 {
     use Identifiable;
+    use Timestampable;
 
     /** @var UserEmail */
     protected $email;

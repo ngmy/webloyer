@@ -11,10 +11,15 @@ use Illuminate\Database\Eloquent\{
 };
 use InvalidArgumentException;
 use Ngmy\EloquentSerializedLob\SerializedLobTrait;
-use Webloyer\Domain\Model\Project as ProjectDomainModel;
+use Webloyer\Domain\Model\Project\{
+    Project as ProjectEntity,
+    ProjectInterest,
+};
+use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
-class Project extends Model implements ProjectDomainModel\ProjectInterest
+class Project extends Model implements ProjectInterest
 {
+    use ImmutableTimestampable;
     use SerializedLobTrait;
 
     /** @var array<int, string> */
@@ -71,7 +76,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string $id
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informId()
+     * @see ProjectInterest::informId()
      */
     public function informId(string $id): void
     {
@@ -81,7 +86,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string $name
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informName()
+     * @see ProjectInterest::informName()
      */
     public function informName(string $name): void
     {
@@ -91,7 +96,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string ...$recipeIds
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informRecipeIds()
+     * @see ProjectInterest::informRecipeIds()
      */
     public function informRecipeIds(string ...$recipeIds): void
     {
@@ -107,7 +112,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string $serverId
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informServerId()
+     * @see ProjectInterest::informServerId()
      */
     public function informServerId(string $serverId): void
     {
@@ -124,7 +129,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string $repositoryUrl
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informRepositoryUrl()
+     * @see ProjectInterest::informRepositoryUrl()
      */
     public function informRepositoryUrl(string $repositoryUrl): void
     {
@@ -134,7 +139,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string $stageName
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informStageName()
+     * @see ProjectInterest::informStageName()
      */
     public function informStageName(string $stageName): void
     {
@@ -144,7 +149,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string|null $deployPath
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informDeployPath()
+     * @see ProjectInterest::informDeployPath()
      */
     public function informDeployPath(?string $deployPath): void
     {
@@ -156,7 +161,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string|null $emailNotificationRecipient
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informEmailNotificationRecipient()
+     * @see ProjectInterest::informEmailNotificationRecipient()
      */
     public function informEmailNotificationRecipient(?string $emailNotificationRecipient): void
     {
@@ -166,7 +171,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param int|null $deploymentKeepDays
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informDeploymentKeepDays()
+     * @see ProjectInterest::informDeploymentKeepDays()
      */
     public function informDeploymentKeepDays(?int $deploymentKeepDays): void
     {
@@ -176,7 +181,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param bool $keepLastDeployment
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informKeepLastDeployment()
+     * @see ProjectInterest::informKeepLastDeployment()
      */
     public function informKeepLastDeployment(bool $keepLastDeployment): void
     {
@@ -186,7 +191,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param int|null $deploymentKeepMaxNumber
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informDeploymentKeepMaxNumber()
+     * @see ProjectInterest::informDeploymentKeepMaxNumber()
      */
     public function informDeploymentKeepMaxNumber(?int $deploymentKeepMaxNumber): void
     {
@@ -196,7 +201,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string|null $githubWebhookSecret
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informGithubWebhookSecret()
+     * @see ProjectInterest::informGithubWebhookSecret()
      */
     public function informGithubWebhookSecret(?string $githubWebhookSecret): void
     {
@@ -206,7 +211,7 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     /**
      * @param string|null $githubWebhookExecutor
      * @return void
-     * @see ProjectDomainModel\ProjectInterest::informGithubWebhookExecutor()
+     * @see ProjectInterest::informGithubWebhookExecutor()
      */
     public function informGithubWebhookExecutor(?string $githubWebhookExecutor): void
     {
@@ -214,13 +219,13 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
     }
 
     /**
-     * @return ProjectDomainModel\Project
+     * @return ProjectEntity
      */
-    public function toEntity(): ProjectDomainModel\Project
+    public function toEntity(): ProjectEntity
     {
         assert(!empty($this->recipes->isEmpty()));
         assert(!is_null($this->server));
-        return ProjectDomainModel\Project::of(
+        return ProjectEntity::of(
             $this->uuid,
             $this->name,
             $this->recipes->map(function (Recipe $recipe) {
@@ -236,7 +241,10 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
             $this->max_number_of_deployments_to_keep,
             $this->github_webhook_secret,
             $this->github_webhook_user_id
-        );
+        )
+        ->setSurrogateId($this->id)
+        ->setCreatedAt($this->created_at)
+        ->setUpdatedAt($this->updated_at);
     }
 
     protected function getSerializationColumn(): string

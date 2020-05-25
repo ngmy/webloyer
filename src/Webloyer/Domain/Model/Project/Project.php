@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Project;
 
 use Common\Domain\Model\Identity\Identifiable;
+use Common\Domain\Model\Timestamp\Timestampable;
 use Webloyer\Domain\Model\Deployment;
 use Webloyer\Domain\Model\Recipe;
 use Webloyer\Domain\Model\Server;
@@ -12,6 +13,7 @@ use Webloyer\Domain\Model\Server;
 class Project
 {
     use Identifiable;
+    use Timestampable;
 
     /** @var ProjectId */
     private $id;

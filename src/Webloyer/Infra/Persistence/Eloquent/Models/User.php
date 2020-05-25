@@ -9,12 +9,17 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Kodeine\Acl\Traits\HasRole;
-use Webloyer\Domain\Model\User as UserDomainModel;
+use Webloyer\Domain\Model\User\{
+    User as UserEntity,
+    UserInterest,
+};
+use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
-class User extends Authenticatable implements UserDomainModel\UserInterest
+class User extends Authenticatable implements UserInterest
 {
     use Notifiable;
     use HasRole;
+    use ImmutableTimestampable;
 
     /**
      * The attributes that are mass assignable.
@@ -100,16 +105,19 @@ class User extends Authenticatable implements UserDomainModel\UserInterest
     }
 
     /**
-     * @return UserDomainModel\User
+     * @return UserEntity
      */
-    public function toEntity(): UserDomainModel\User
+    public function toEntity(): UserEntity
     {
-        return UserDomainModel\User::ofWithRole(
+        return UserEntity::ofWithRole(
             $this->email,
             $this->name,
             $this->password,
             $this->api_token,
             $this->getRoles()
-        )->setSurrogateId($this->id);
+        )
+        ->setSurrogateId($this->id)
+        ->setCreatedAt($this->created_at)
+        ->setUpdatedAt($this->updated_at);
     }
 }

@@ -8,10 +8,16 @@ use Illuminate\Database\Eloquent\{
     Builder,
     Model,
 };
-use Webloyer\Domain\Model\Server as ServerDomainModel;
+use Webloyer\Domain\Model\Server\{
+    Server as ServerEntity,
+    ServerInterest,
+};
+use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
-class Server extends Model implements ServerDomainModel\ServerInterest
+class Server extends Model implements ServerInterest
 {
+    use ImmutableTimestampable;
+
     /** @var array<int, string> */
     protected $fillable = [
         'uuid',
@@ -33,7 +39,7 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     /**
      * @param string $id
      * @return void
-     * @see ServerDomainModel\ServerInterest::informId()
+     * @see ServerInterest::informId()
      */
     public function informId(string $id): void
     {
@@ -43,7 +49,7 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     /**
      * @param string $name
      * @return void
-     * @see ServerDomainModel\ServerInterest::informName()
+     * @see ServerInterest::informName()
      * @return void
      */
     public function informName(string $name): void
@@ -54,7 +60,7 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     /**
      * @param string|null $description
      * @return void
-     * @see ServerDomainModel\ServerInterest::informDescription()
+     * @see ServerInterest::informDescription()
      */
     public function informDescription(?string $description): void
     {
@@ -64,7 +70,7 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     /**
      * @param string $body
      * @return void
-     * @see ServerDomainModel\ServerInterest::informBody()
+     * @see ServerInterest::informBody()
      */
     public function informBody(string $body): void
     {
@@ -72,15 +78,18 @@ class Server extends Model implements ServerDomainModel\ServerInterest
     }
 
     /**
-     * @return ServerDomainModel\Server
+     * @return ServerEntity
      */
-    public function toEntity(): ServerDomainModel\Server
+    public function toEntity(): ServerEntity
     {
-        return ServerDomainModel\Server::of(
+        return ServerEntity::of(
             $this->uuid,
             $this->name,
             $this->description,
             $this->body
-        )->setSurrogateId($this->id);
+        )
+        ->setSurrogateId($this->id)
+        ->setCreatedAt($this->created_at)
+        ->setUpdatedAt($this->updated_at);
     }
 }

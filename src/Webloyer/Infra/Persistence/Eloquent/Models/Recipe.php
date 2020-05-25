@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Persistence\Eloquent\Models;
 
-use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\{
     Builder,
     Model,
     Relations,
 };
-use Webloyer\Domain\Model\Recipe as RecipeDomainModel;
+use Webloyer\Domain\Model\Recipe\{
+    Recipe as RecipeEntity,
+    RecipeInterest,
+};
+use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
-class Recipe extends Model implements RecipeDomainModel\RecipeInterest
+class Recipe extends Model implements RecipeInterest
 {
+    use ImmutableTimestampable;
+
     /** @var array<int, string> */
     protected $fillable = [
         'uuid',
@@ -42,7 +47,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string $id
      * @return void
-     * @see RecipeDomainModel\RecipeInterest::informId()
+     * @see RecipeInterest::informId()
      */
     public function informId(string $id): void
     {
@@ -52,7 +57,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string $name
      * @return void
-     * @see RecipeDomainModel\RecipeInterest::informName()
+     * @see RecipeInterest::informName()
      */
     public function informName(string $name): void
     {
@@ -62,7 +67,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string|null $description
      * @return void
-     * @see RecipeDomainModel\RecipeInterest::informDescription()
+     * @see RecipeInterest::informDescription()
      */
     public function informDescription(?string $description): void
     {
@@ -72,7 +77,7 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     /**
      * @param string $body
      * @return void
-     * @see RecipeDomainModel\RecipeInterest::informBody()
+     * @see RecipeInterest::informBody()
      */
     public function informBody(string $body): void
     {
@@ -80,29 +85,11 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     }
 
     /**
-     * @param string $value
-     * @return CarbonImmutable
+     * @return RecipeEntity
      */
-    public function getCreatedAtAttribute(string $value): CarbonImmutable
+    public function toEntity(): RecipeEntity
     {
-        return new CarbonImmutable($value);
-    }
-
-    /**
-     * @param string $value
-     * @return CarbonImmutable
-     */
-    public function getUpdatedAtAttribute(string $value): CarbonImmutable
-    {
-        return new CarbonImmutable($value);
-    }
-
-    /**
-     * @return RecipeDomainModel\Recipe
-     */
-    public function toEntity(): RecipeDomainModel\Recipe
-    {
-        return RecipeDomainModel\Recipe::of(
+        return RecipeEntity::of(
             $this->uuid,
             $this->name,
             $this->description,
