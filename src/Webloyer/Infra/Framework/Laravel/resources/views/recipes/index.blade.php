@@ -16,7 +16,7 @@
                 <thead>
                     <tr>
                         <th><div align="center">Name</div></th>
-                        <th><div align="center">Users</div></th>
+                        <th><div align="center">Used By</div></th>
                         <th><div align="center">Created At</div></th>
                         <th><div align="center">Updated At</div></th>
                         <th></th>
@@ -26,7 +26,7 @@
                     @foreach ($recipes as $recipe)
                         <tr>
                             <td>{{ $recipe->name }}</td>
-                            <td><div align="right">{{ '' ?? number_format(count($recipe->getProjects())) }}</div></td>
+                            <td><div align="right">{{ number_format($recipe->projectCount) }}</div></td>
                             <td>{{ $recipe->createdAt }}</td>
                             <td>{{ $recipe->updatedAt }}</td>
                             <td>

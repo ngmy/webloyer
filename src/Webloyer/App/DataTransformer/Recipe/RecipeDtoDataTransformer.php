@@ -4,14 +4,25 @@ declare(strict_types=1);
 
 namespace Webloyer\App\DataTransformer\Recipe;
 
+use Webloyer\App\DataTransformer\Project\ProjectsDtoDataTransformer;
 use Webloyer\Domain\Model\Recipe\{
     Recipe,
+    RecipeId,
     RecipeInterest,
+    RecipeService,
 };
 
 class RecipeDtoDataTransformer implements RecipeDataTransformer
 {
     private $recipe;
+    private $recipeService;
+    private $projectsDataTransformer;
+
+    public function __construct(RecipeService $recipeService, ProjectsDtoDataTransformer $projectsDataTransformer)
+    {
+        $this->recipeService = $recipeService;
+        $this->projectsDataTransformer = $projectsDataTransformer;
+    }
 
     /**
      * @param Recipe $recipe
@@ -47,6 +58,10 @@ class RecipeDtoDataTransformer implements RecipeDataTransformer
             }
         };
         $this->recipe->provide($dto);
+
+        $projects = $this->recipeService->projectsFrom(new RecipeId($this->recipe->id()));
+        $dto->projects = $this->projectsDataTransformer->write($projects)->read();
+        $dto->projectCount = $projects->count();
 
         $dto->surrogateId = $this->recipe->surrogateId();
         $dto->createdAt = $this->recipe->createdAt();

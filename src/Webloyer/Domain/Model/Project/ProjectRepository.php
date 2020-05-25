@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\Project;
 
+use Webloyer\Domain\Model\Recipe\RecipeId;
+
 /**
  * @codeCoverageIgnore
  */
@@ -23,6 +25,11 @@ interface ProjectRepository
      * @return Projects
      */
     public function findAllByPage(?int $page, ?int $perPage): Projects;
+    /**
+     * @param RecipeId $recipeId
+     * @return Projects
+     */
+    public function findAllByRecipeId(RecipeId $recipeId): Projects;
     /**
      * @param ProjectId $id
      * @return Project|null

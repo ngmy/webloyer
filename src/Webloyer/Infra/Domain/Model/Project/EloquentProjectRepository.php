@@ -6,7 +6,9 @@ namespace Webloyer\Infra\Domain\Model\Project;
 
 use Common\Domain\Model\Identity\IdGenerator;
 use Webloyer\Domain\Model\Project;
+use Webloyer\Domain\Model\Recipe\RecipeId;
 use Webloyer\Infra\Persistence\Eloquent\Models\Project as ProjectOrm;
+use Webloyer\Infra\Persistence\Eloquent\Models\Recipe as RecipeOrm;
 
 class EloquentProjectRepository implements Project\ProjectRepository
 {
@@ -57,6 +59,26 @@ class EloquentProjectRepository implements Project\ProjectRepository
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
+            ->map(function (ProjectOrm $projectOrm): Project\Project {
+                return $projectOrm->toEntity();
+            })
+            ->toArray();
+        return new Project\Projects(...$projectArray);
+    }
+
+    /**
+     * @param RecipeId $recipeId
+     * @return Project\Projects
+     */
+    public function findAllByRecipeId(RecipeId $recipeId): Project\Projects
+    {
+        $recipe = RecipeOrm::ofId($recipeId->value())->first();
+
+        if (is_null($recipe)) {
+            return Project\Projects::empty();
+        }
+
+        $projectArray = $recipe->projects
             ->map(function (ProjectOrm $projectOrm): Project\Project {
                 return $projectOrm->toEntity();
             })

@@ -9,6 +9,11 @@ class Projects
     /** @var array<int, Project> */
     private $projects;
 
+    public static function empty(): self
+    {
+        return new self(...[]);
+    }
+
     /**
      * @param Project ...$projects
      * @return void
@@ -16,6 +21,14 @@ class Projects
     public function __construct(Project ...$projects)
     {
         $this->projects = $projects;
+    }
+
+    /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->projects);
     }
 
     /**

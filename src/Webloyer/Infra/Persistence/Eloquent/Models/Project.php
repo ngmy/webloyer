@@ -148,6 +148,9 @@ class Project extends Model implements ProjectDomainModel\ProjectInterest
      */
     public function informDeployPath(?string $deployPath): void
     {
+        if (!is_null($deployPath)) {
+            $this->attributes['deploy_path'] = $deployPath;
+        }
     }
 
     /**

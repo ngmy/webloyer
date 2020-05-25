@@ -8,6 +8,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\{
     Builder,
     Model,
+    Relations,
 };
 use Webloyer\Domain\Model\Recipe as RecipeDomainModel;
 
@@ -29,6 +30,13 @@ class Recipe extends Model implements RecipeDomainModel\RecipeInterest
     public function scopeOfId(Builder $query, string $id): Builder
     {
         return $query->where('uuid', $id);
+    }
+    /**
+     * @return Relations\BelongsToMany
+     */
+    public function projects(): Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Project::class);
     }
 
     /**
