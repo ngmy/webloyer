@@ -129,11 +129,11 @@ class Deployment extends Model implements DeploymentInterest
     public function informExecutor(string $executor): void
     {
         // TODO ユーザ削除されたら？
-        $userOrm = User::ofEmail($executor)->first();
+        $userOrm = User::ofId($executor)->first();
         if (is_null($userOrm)) {
             throw new InvalidArgumentException(
                 'User does not exists.' . PHP_EOL .
-                'User Email: ' . $executor
+                'User Id: ' . $executor
             );
         }
         $this->user_id = $userOrm->id;

@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\Server;
 
 use Webloyer\App\DataTransformer\Server\ServerDataTransformer;
-use Webloyer\Domain\Model\Server\{
-    Server,
-    ServerId,
-};
+use Webloyer\Domain\Model\Server\ServerId;
 
 class GetServerService extends ServerService
 {

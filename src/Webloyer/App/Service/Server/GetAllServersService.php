@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\Server;
 
-use Webloyer\Domain\Model\Server\Servers;
-
 class GetAllServersService extends ServerService
 {
     /**
-     * @return Servers
+     * @return mixed
      */
     public function execute($request = null)
     {
-        return $this->serverRepository->findAll();
+        $servers = $this->serverRepository->findAll();
+        return $this->serversDataTransformer->write($servers)->read();
     }
 }

@@ -96,7 +96,7 @@ abstract class DeploymentService implements ApplicationService
             return $this->recipeRepository->findById(new RecipeId($recipeId));
         }, $project->recipeIds());
         $server = $this->serverRepository->findById(new ServerId($project->serverId()));
-        $executor = $this->userRepository->findByEmail(new UserId($deployment->executor()));
+        $executor = $this->userRepository->findById(new UserId($deployment->executor()));
 
         $deployment->request(
             $project,

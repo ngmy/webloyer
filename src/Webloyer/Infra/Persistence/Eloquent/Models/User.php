@@ -27,7 +27,10 @@ class User extends Authenticatable implements UserInterest
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password', 'api_token',
+        'name',
+        'email',
+        'password',
+        'api_token',
     ];
 
     /**
@@ -36,7 +39,9 @@ class User extends Authenticatable implements UserInterest
      * @var array<int, string>
      */
     protected $hidden = [
-        'password', 'remember_token', 'api_token',
+        'password',
+        'remember_token',
+        'api_token',
     ];
 
     /**
@@ -50,12 +55,21 @@ class User extends Authenticatable implements UserInterest
 
     /**
      * @param Builder $query
-     * @param string  $email
+     * @param string  $id
      * @return Builder
      */
-    public function scopeOfEmail(Builder $query, string $email): Builder
+    public function scopeOfId(Builder $query, string $id): Builder
     {
-        return $query->where('email', $email);
+        return $query->where('uuid', $id);
+    }
+
+    /**
+     * @param string $id
+     * @return void
+     */
+    public function informId(string $id): void
+    {
+        $this->uuid = $id;
     }
 
     /**
@@ -110,6 +124,7 @@ class User extends Authenticatable implements UserInterest
     public function toEntity(): UserEntity
     {
         return UserEntity::ofWithRole(
+            $this->uuid,
             $this->email,
             $this->name,
             $this->password,

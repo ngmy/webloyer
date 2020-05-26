@@ -4,33 +4,57 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Domain\Model\User;
 
-use Webloyer\Domain\Model\User;
+use Common\Domain\Model\Identity\IdGenerator;
+use Webloyer\Domain\Model\User\{
+    User,
+    UserApiToken,
+    UserId,
+    UserRepository,
+    Users,
+};
 use Webloyer\Infra\Persistence\Eloquent\Models\User as UserOrm;
 
-class EloquentUserRepository implements User\UserRepository
+class EloquentUserRepository implements UserRepository
 {
+    /** @var IdGenerator */
+    private $idGenerator;
+
+    public function __construct(IdGenerator $idGenerator)
+    {
+        $this->idGenerator = $idGenerator;
+    }
+
     /**
-     * @return User\Users
-     * @see User\UserRepository::findAll()
+     * @return UserId
+     * @see UserRepository::nextId()
      */
-    public function findAll(): User\Users
+    public function nextId(): UserId
+    {
+        return new UserId($this->idGenerator->generate());
+    }
+
+    /**
+     * @return Users
+     * @see UserRepository::findAll()
+     */
+    public function findAll(): Users
     {
         $userArray = UserOrm::orderBy('name')
             ->get()
-            ->map(function (UserOrm $userOrm): User\User {
+            ->map(function (UserOrm $userOrm): User {
                 return $userOrm->toEntity();
             })
             ->toArray();
-        return new User\Users(...$userArray);
+        return new Users(...$userArray);
     }
 
     /**
      * @param int|null $page
      * @param int|null $perPage
-     * @return User\Users
-     * @see User\UserRepository::findAllByPage()
+     * @return Users
+     * @see UserRepository::findAllByPage()
      */
-    public function findAllByPage(?int $page, ?int $perPage): User\Users
+    public function findAllByPage(?int $page, ?int $perPage): Users
     {
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
@@ -39,21 +63,21 @@ class EloquentUserRepository implements User\UserRepository
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
-            ->map(function (UserOrm $userOrm): User\User {
+            ->map(function (UserOrm $userOrm): User {
                 return $userOrm->toEntity();
             })
             ->toArray();
-        return new User\Users(...$userArray);
+        return new Users(...$userArray);
     }
 
     /**
-     * @param User\UserEmail $email
-     * @return User\User|null
-     * @see User\UserRepository::findByEmail()
+     * @param UserId $id
+     * @return User|null
+     * @see UserRepository::findById()
      */
-    public function findByEmail(User\UserEmail $email): ?User\User
+    public function findById(UserId $id): ?User
     {
-        $userOrm = UserOrm::ofEmail($email->value())->first();
+        $userOrm = UserOrm::ofId($id->value())->first();
         if (is_null($userOrm)) {
             return null;
         }
@@ -61,11 +85,11 @@ class EloquentUserRepository implements User\UserRepository
     }
 
     /**
-     * @param User\UserApiToken $apiToken
-     * @return User\User|null
-     * @see User\UserRepository::findByEmail()
+     * @param UserApiToken $apiToken
+     * @return User|null
+     * @see UserRepository::findByApiToken()
      */
-    public function findByApiToken(User\UserApiToken $apiToken): ?User\User
+    public function findByApiToken(UserApiToken $apiToken): ?User
     {
         $userOrm = UserOrm::where('api_token', $apiToken->value())->first();
         if (is_null($userOrm)) {
@@ -75,13 +99,13 @@ class EloquentUserRepository implements User\UserRepository
     }
 
     /**
-     * @param User\User $user
+     * @param User $user
      * @return void
-     * @see User\UserRepository::remove()
+     * @see UserRepository::remove()
      */
-    public function remove(User\User $user): void
+    public function remove(User $user): void
     {
-        $userOrm = UserOrm::ofEmail($user->email())->first();
+        $userOrm = UserOrm::ofId($user->id())->first();
         if (is_null($userOrm)) {
             return;
         }
@@ -89,13 +113,13 @@ class EloquentUserRepository implements User\UserRepository
     }
 
     /**
-     * @param User\User $user
+     * @param User $user
      * @return void
-     * @see User\UserRepository::save()
+     * @see UserRepository::save()
      */
-    public function save(User\User $user): void
+    public function save(User $user): void
     {
-        $userOrm = UserOrm::firstOrNew(['email' => $user->email()]);
+        $userOrm = UserOrm::firstOrNew(['uuid' => $user->id()]);
         $user->provide($userOrm);
         $userOrm->save();
     }

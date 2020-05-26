@@ -33,7 +33,13 @@ Route::group([
     'namespace' => 'Project',
     'protect_alias' => 'project',
 ], function () {
-    Route::resource('projects', 'ProjectController');
+    Route::get('projects', 'IndexController')->name('projects.index');
+    Route::get('projects/create', 'CreateController')->name('projects.create');
+    Route::post('projects', 'StoreController')->name('projects.store');
+    Route::get('projects/{project}', 'ShowController')->name('projects.show');
+    Route::get('projects/{project}/edit', 'EditController')->name('projects.edit');
+    Route::put('projects/{project}', 'UpdateController')->name('projects.update');
+    Route::delete('projects/{project}', 'DestroyController')->name('projects.destroy');
 });
 
 Route::group([
@@ -64,18 +70,30 @@ Route::group([
     'namespace' => 'Server',
     'protect_alias' => 'server',
 ], function () {
-    Route::resource('servers', 'ServerController');
+    Route::get('servers', 'IndexController')->name('servers.index');
+    Route::get('servers/create', 'CreateController')->name('servers.create');
+    Route::post('servers', 'StoreController')->name('servers.store');
+    Route::get('servers/{server}', 'ShowController')->name('servers.show');
+    Route::get('servers/{server}/edit', 'EditController')->name('servers.edit');
+    Route::put('servers/{server}', 'UpdateController')->name('servers.update');
+    Route::delete('servers/{server}', 'DestroyController')->name('servers.destroy');
 });
 
 Route::group([
     'namespace' => 'User',
     'protect_alias' => 'user',
 ], function () {
-    Route::get('users/{user}/password/change', 'UserController@changePassword')->name('users.password.change');
-    Route::put('users/{user}/password', 'UserController@updatePassword')->name('users.password.update');
-    Route::get('users/{user}/role/edit', 'UserController@editRole')->name('users.role.edit');
-    Route::put('users/{user}/role', 'UserController@updateRole')->name('users.role.update');
-    Route::get('users/{user}/api_token/edit', 'UserController@editApiToken')->name('users.api_token.edit');
-    Route::put('users/{user}/api_token', 'UserController@regenerateApiToken')->name('users.api_token.regenerate');
-    Route::resource('users', 'UserController');
+    Route::get('users', 'IndexController')->name('users.index');
+    Route::get('users/create', 'CreateController')->name('users.create');
+    Route::post('users', 'StoreController')->name('users.store');
+    Route::get('users/{user}', 'ShowController')->name('users.show');
+    Route::get('users/{user}/edit', 'EditController')->name('users.edit');
+    Route::put('users/{user}', 'UpdateController')->name('users.update');
+    Route::delete('users/{user}', 'DestroyController')->name('users.destroy');
+    Route::get('users/{user}/password/change', 'ChangePasswordController')->name('users.password.change');
+    Route::put('users/{user}/password', 'UpdatePasswordController')->name('users.password.update');
+    Route::get('users/{user}/role/edit', 'EditRoleController')->name('users.role.edit');
+    Route::put('users/{user}/role', 'UpdateRoleController')->name('users.role.update');
+    Route::get('users/{user}/api_token/edit', 'EditApiTokenController')->name('users.api_token.edit');
+    Route::put('users/{user}/api_token', 'RegenerateApiTokenController')->name('users.api_token.regenerate');
 });

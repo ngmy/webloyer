@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\User;
 
-use Webloyer\Domain\Model\User\{
-    User,
-    UserEmail,
-};
+use Webloyer\Domain\Model\User\UserId;
 
 class GetUserService extends UserService
 {
     /**
      * @param GetUserRequest $request
-     * @return User
+     * @return mixed
      */
     public function execute($request = null)
     {
-        $email = new UserEmail($request->getEmail());
-        return $this->getNonNullUser($email);
+        $id = new UserId($request->getId());
+        $user = $this->getNonNullUser($id);
+        return $this->userDataTransformer->write($user)->read();
     }
 }

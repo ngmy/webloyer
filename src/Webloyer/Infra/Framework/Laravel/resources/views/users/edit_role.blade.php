@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <label for="role" class="col-md-4 control-label">Role</label>
                             <div class="col-md-6">
-                                @foreach ($roles as $role)
+                                @foreach ($user->roles as $role)
                                     <div class="checkbox">
                                         <label>
                                             {!! Form::checkbox('role[]', $role->id, $user->hasRole($role->slug)) !!}

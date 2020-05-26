@@ -31,6 +31,14 @@ abstract class UserRole extends User
     /**
      * @return string
      */
+    public function id(): string
+    {
+        return $this->core->id();
+    }
+
+    /**
+     * @return string
+     */
     public function email(): string
     {
         return $this->core->email();

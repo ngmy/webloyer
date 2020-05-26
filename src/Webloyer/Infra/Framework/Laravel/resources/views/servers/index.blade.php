@@ -25,8 +25,8 @@
                     @foreach ($servers as $server)
                         <tr>
                             <td>{{ $server->name }}</td>
-                            <td>{{ $server->created_at }}</td>
-                            <td>{{ $server->updated_at }}</td>
+                            <td>{{ $server->createdAt }}</td>
+                            <td>{{ $server->updatedAt }}</td>
                             <td>
                                 {!! link_to_route('servers.show', 'Show', [$server->id], ['class' => 'btn btn-default']) !!}
                                 @if (Auth::user()->hasPermission('update.server'))

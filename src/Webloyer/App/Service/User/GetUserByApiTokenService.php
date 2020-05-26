@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\User;
 
-use Webloyer\Domain\Model\User\{
-    User,
-    UserApiToken,
-};
+use Webloyer\Domain\Model\User\UserApiToken;
 
 class GetUserByApiTokenService extends UserService
 {
     /**
      * @param GetUserRequest $request
-     * @return User|null
+     * @return mixed
      */
     public function execute($request = null)
     {
         $apiToken = new UserApiToken($request->getApiToken());
-        return $this->userRepository->findByApiToken($apiToken);
+        $user = $this->userRepository->findByApiToken($apiToken);
+        return $this->userDataTransformer->write($user)->read();
     }
 }

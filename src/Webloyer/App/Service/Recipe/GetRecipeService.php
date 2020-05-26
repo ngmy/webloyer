@@ -10,7 +10,7 @@ class GetRecipeService extends RecipeService
 {
     /**
      * @param GetRecipeRequest $request
-     * @return object
+     * @return mixed
      */
     public function execute($request = null)
     {

@@ -7,9 +7,19 @@ namespace Webloyer\App\Service\User;
 class UpdateUserRequest
 {
     /** @var string */
+    private $id;
+    /** @var string */
     private $email;
     /** @var string */
     private $name;
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
 
     /**
      * @return string
@@ -25,6 +35,16 @@ class UpdateUserRequest
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $id
+     * @return self
+     */
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**

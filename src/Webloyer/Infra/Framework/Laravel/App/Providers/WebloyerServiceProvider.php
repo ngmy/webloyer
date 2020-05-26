@@ -11,6 +11,12 @@ use Common\App\Service\{
 };
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Webloyer\App\DataTransformer\Project\{
+    ProjectDataTransformer,
+    ProjectDtoDataTransformer,
+    ProjectsDataTransformer,
+    ProjectsDtoDataTransformer,
+};
 use Webloyer\App\DataTransformer\Recipe\{
     RecipeDataTransformer,
     RecipeDtoDataTransformer,
@@ -22,6 +28,12 @@ use Webloyer\App\DataTransformer\Server\{
     ServerDtoDataTransformer,
     ServersDataTransformer,
     ServersDtoDataTransformer,
+};
+use Webloyer\App\DataTransformer\User\{
+    UserDataTransformer,
+    UserDtoDataTransformer,
+    UsersDataTransformer,
+    UsersDtoDataTransformer,
 };
 use Webloyer\App\Service\Deployment\{
     CreateDeploymentService,
@@ -54,6 +66,17 @@ use Webloyer\App\Service\Server\{
     GetServersService,
     UpdateServerService,
 };
+use Webloyer\App\Service\User\{
+    CreateUserService,
+    DeleteUserService,
+    GetAllUsersService,
+    GetUserService,
+    GetUsersService,
+    UpdateUserService,
+    UpdatePasswordService,
+    UpdateRoleService,
+    RegenerateApiTokenService,
+};
 use Webloyer\Domain\Model\Deployment\DeploymentRepository;
 use Webloyer\Domain\Model\Project\ProjectRepository;
 use Webloyer\Domain\Model\Recipe\RecipeRepository;
@@ -64,7 +87,18 @@ use Webloyer\Infra\Domain\Model\Project\EloquentProjectRepository;
 use Webloyer\Infra\Domain\Model\Recipe\EloquentRecipeRepository;
 use Webloyer\Infra\Domain\Model\Server\EloquentServerRepository;
 use Webloyer\Infra\Domain\Model\User\EloquentUserRepository;
+use Webloyer\Infra\App\DataTransformer\Project\ProjectsLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
+use Webloyer\Infra\App\DataTransformer\Server\ServersLaravelLengthAwarePaginatorDataTransformer;
+use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
+use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project\{
+    DestroyController as ProjectDestroyController,
+    EditController as ProjectEditController,
+    IndexController as ProjectIndexController,
+    ShowController as ProjectShowController,
+    StoreController as ProjectStoreController,
+    UpdateController as ProjectUpdateController,
+};
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe\{
     DestroyController as RecipeDestroyController,
     EditController as RecipeEditController,
@@ -72,6 +106,28 @@ use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe\{
     ShowController as RecipeShowController,
     StoreController as RecipeStoreController,
     UpdateController as RecipeUpdateController,
+};
+use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server\{
+    DestroyController as ServerDestroyController,
+    EditController as ServerEditController,
+    IndexController as ServerIndexController,
+    ShowController as ServerShowController,
+    StoreController as ServerStoreController,
+    UpdateController as ServerUpdateController,
+};
+use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User\{
+    ChangePasswordController as UserChangePasswordController,
+    DestroyController as UserDestroyController,
+    EditController as UserEditController,
+    EditApiTokenController as UserEditApiTokenController,
+    EditRoleController as UserEditRoleController,
+    IndexController as UserIndexController,
+    ShowController as UserShowController,
+    StoreController as UserStoreController,
+    RegenerateApiTokenController as UserRegenerateApiTokenController,
+    UpdateController as UserUpdateController,
+    UpdatePasswordController as UserUpdatePassowrdController,
+    UpdateRoleController as UserUpdateRoleController,
 };
 
 class WebloyerServiceProvider extends ServiceProvider
@@ -83,13 +139,21 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // project data transformers
+        $this->app->bind(ProjectDataTransformer::class, ProjectDtoDataTransformer::class);
+        $this->app->bind(ProjectsDataTransformer::class, ProjectsLaravelLengthAwarePaginatorDataTransformer::class);
+
         // server data transformers
         $this->app->bind(ServerDataTransformer::class, ServerDtoDataTransformer::class);
-        $this->app->bind(ServersDataTransformer::class, ServersDtoDataTransformer::class);
+        $this->app->bind(ServersDataTransformer::class, ServersLaravelLengthAwarePaginatorDataTransformer::class);
 
         // recipe data transformers
         $this->app->bind(RecipeDataTransformer::class, RecipeDtoDataTransformer::class);
         $this->app->bind(RecipesDataTransformer::class, RecipesLaravelLengthAwarePaginatorDataTransformer::class);
+
+        // user data transformers
+        $this->app->bind(UserDataTransformer::class, UserDtoDataTransformer::class);
+        $this->app->bind(UsersDataTransformer::class, UsersLaravelLengthAwarePaginatorDataTransformer::class);
 
         // deployment app services
         $this->app->bind(CreateDeploymentService::class, function (Application $app): ApplicationService {
@@ -212,36 +276,158 @@ class WebloyerServiceProvider extends ServiceProvider
             });
 
         // server app services
-        $this->app->bind(CreateServerService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new CreateServerService(
+        $this->app->when([ServerEditController::class, ServerShowController::class])
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetServerService(
                     $app->make(ServerRepository::class),
                     $app->make(ServerDataTransformer::class),
                     $app->make(ServersDataTransformer::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
-        $this->app->bind(DeleteServerService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new DeleteServerService(
+                );
+            });
+        $this->app->when(ServerDestroyController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new DeleteServerService(
+                        $app->make(ServerRepository::class),
+                        $app->make(ServerDataTransformer::class),
+                        $app->make(ServersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(ServerIndexController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetServersService(
                     $app->make(ServerRepository::class),
                     $app->make(ServerDataTransformer::class),
                     $app->make(ServersDataTransformer::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
-        $this->app->bind(UpdateServerService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new UpdateServerService(
-                    $app->make(ServerRepository::class),
-                    $app->make(ServerDataTransformer::class),
-                    $app->make(ServersDataTransformer::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
+                );
+            });
+        $this->app->when(ServerStoreController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new CreateServerService(
+                        $app->make(ServerRepository::class),
+                        $app->make(ServerDataTransformer::class),
+                        $app->make(ServersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(ServerUpdateController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new UpdateServerService(
+                        $app->make(ServerRepository::class),
+                        $app->make(ServerDataTransformer::class),
+                        $app->make(ServersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+
+        // user app services
+        $this->app->when([
+            UserChangePasswordController::class,
+            UserEditController::class,
+            UserEditApiTokenController::class,
+            UserEditRoleController::class,
+            UserShowController::class,
+        ])
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetUserService(
+                    $app->make(UserRepository::class),
+                    $app->make(UserDataTransformer::class),
+                    $app->make(UsersDataTransformer::class)
+                );
+            });
+        $this->app->when(UserDestroyController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new DeleteUserService(
+                        $app->make(UserRepository::class),
+                        $app->make(UserDataTransformer::class),
+                        $app->make(UsersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(UserIndexController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetUsersService(
+                    $app->make(UserRepository::class),
+                    $app->make(UserDataTransformer::class),
+                    $app->make(UsersDataTransformer::class)
+                );
+            });
+        $this->app->when(UserStoreController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new CreateUserService(
+                        $app->make(UserRepository::class),
+                        $app->make(UserDataTransformer::class),
+                        $app->make(UsersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(UserUpdateController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new UpdateUserService(
+                        $app->make(UserRepository::class),
+                        $app->make(UserDataTransformer::class),
+                        $app->make(UsersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(UserUpdatePassowordController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new UpdatePasswordService(
+                        $app->make(UserRepository::class),
+                        $app->make(UserDataTransformer::class),
+                        $app->make(UsersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(UserUpdateRoleController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new UpdateRoleService(
+                        $app->make(UserRepository::class),
+                        $app->make(UserDataTransformer::class),
+                        $app->make(UsersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(UserRegenerateApiTokenController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new RegenerateApiTokenService(
+                        $app->make(UserRepository::class),
+                        $app->make(UserDataTransformer::class),
+                        $app->make(UsersDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
 
         // repositories
         $this->app->bind(DeploymentRepository::class, EloquentDeploymentRepository::class);

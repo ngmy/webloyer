@@ -7,6 +7,7 @@ namespace Webloyer\Domain\Model\User;
 class UserCore extends User
 {
     /**
+     * @param UserId       $id
      * @param UserEmail    $email
      * @param UserName     $name
      * @param UserPassword $password
@@ -14,16 +15,26 @@ class UserCore extends User
      * @return void
      */
     public function __construct(
+        UserId $id,
         UserEmail $email,
         UserName $name,
         UserPassword $password,
         UserApiToken $apiToken
     ) {
+        $this->id = $id;
         $this->email = $email;
         $this->name = $name;
         $this->password = $password;
         $this->apiToken = $apiToken;
         $this->roles = UserRoles::empty();
+    }
+
+    /**
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->id->value();
     }
 
     /**
@@ -102,10 +113,12 @@ class UserCore extends User
      */
     public function provide(UserInterest $interest): void
     {
+        $interest->informId($this->id());
         $interest->informEmail($this->email());
         $interest->informName($this->name());
         $interest->informPassword($this->password());
         $interest->informApiToken($this->apiToken());
+        $interest->informRoles($this->roles());
     }
 
     /**
@@ -117,7 +130,7 @@ class UserCore extends User
         $equalObjects = false;
 
         if ($object instanceof self) {
-            $equalObjects = $object->email == $this->email;
+            $equalObjects = $object->id == $this->id;
         }
 
         return $equalObjects;

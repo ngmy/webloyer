@@ -12,7 +12,7 @@ use Webloyer\Domain\Model\Project\ProjectId;
 use Webloyer\Domain\Model\Recipe\Recipes;
 use Webloyer\Domain\Model\Server\Server;
 use Webloyer\Domain\Model\User\User;
-use Webloyer\Domain\Model\User\UserEmail;
+use Webloyer\Domain\Model\User\UserId;
 
 class Deployment
 {
@@ -28,7 +28,7 @@ class Deployment
     private $status;
     /** @var DeploymentLog */
     private $log;
-    /** @var UserEmail */
+    /** @var UserId */
     private $executor;
     /** @var DeploymentRequestDate */
     private $requestDate;
@@ -66,7 +66,7 @@ class Deployment
             DeploymentTask::$task(),
             DeploymentStatus::$status(),
             new DeploymentLog($log),
-            new UserEmail($executor),
+            new UserId($executor),
             DeploymentRequestDate::of($requestDate),
             isset($finishDate) ? DeplotmentStartDate::of($startDate) : null,
             isset($finishDate) ? DeploymentFinishDate::of($finishDate) : null
@@ -79,7 +79,7 @@ class Deployment
      * @param DeploymentTask            $task
      * @param DeploymentStatus          $status
      * @param DeploymentLog             $log
-     * @param UserEmail                 $executor
+     * @param UserId                    $executor
      * @param DeploymentRequestDate     $requestDate
      * @param DeploymentStartDate       $startDate
      * @param DeploymentFinishDate|null $finishDate
@@ -91,7 +91,7 @@ class Deployment
         DeploymentTask $task,
         DeploymentStatus $status,
         DeploymentLog $log,
-        UserEmail $executor,
+        UserId $executor,
         DeploymentRequestDate $requestDate,
         ?DeploymentStartDate $startDate,
         ?DeploymentFinishDate $finishDate

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\User;
 
-use Webloyer\Domain\Model\User;
+use Webloyer\Domain\Model\User\UserId;
 
 class UpdateUserService extends UserService
 {
@@ -14,8 +14,9 @@ class UpdateUserService extends UserService
      */
     public function execute($request = null)
     {
-        $email = new UserEmail($request->getEmail());
-        $user = $this->getNonNullUser($email)
+        $id = new UserId($request->getId());
+        $user = $this->getNonNullUser($id)
+            ->changeEmail($request->getEmail())
             ->changeName($request->getName());
         $this->userRepository->save($user);
     }

@@ -10,6 +10,11 @@ namespace Webloyer\Domain\Model\User;
 interface UserInterest
 {
     /**
+     * @param string $id
+     * @return void
+     */
+    public function informId(string $id): void;
+    /**
      * @param string $email
      * @return void
      */

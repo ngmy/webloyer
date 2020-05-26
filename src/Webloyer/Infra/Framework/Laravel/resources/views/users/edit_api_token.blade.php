@@ -31,7 +31,7 @@
                         <div class="form-group required">
                             <label for="api_token" class="col-md-4 control-label">API Token</label>
                             <div class="col-md-6 input-group">
-                                {!! Form::text('api_token', $user->api_token, ['class' => 'form-control', 'id' => 'api_token', 'readonly' => 'readonly']) !!}
+                                {!! Form::text('api_token', $user->apiToken, ['class' => 'form-control', 'id' => 'api_token', 'readonly' => 'readonly']) !!}
                                 <div class="input-group-btn">
                                     <button type="button" class="btn btn-default" aria-label="Copy API Token" data-toggle="tooltip" data-placement="bottom" title="Copy API Token", data-clipboard-target="#api_token">
                                         <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>

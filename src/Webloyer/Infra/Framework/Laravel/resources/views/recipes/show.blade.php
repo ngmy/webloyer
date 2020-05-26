@@ -18,18 +18,18 @@
                         <th>Body</th>
                         <td><pre><code>{{ $recipe->body }}</code></pre></td>
                     </tr>
-                    @if (count($recipeProject) === 0)
+                    @if ($recipe->projectCount == 0)
                         <tr>
                             <th>Used By</th>
                             <td></td>
                         </tr>
                     @else
-                        @foreach ($recipeProject as $i => $project)
+                        @foreach ($recipe->projects as $i => $project)
                             <tr>
                                 @if ($i === 0)
-                                    <th rowspan="{{ count($recipeProject) }}">Used By</th>
+                                    <th rowspan="{{ $recipe->projectCount }}">Used By</th>
                                 @endif
-                                <td>{!! link_to_route('projects.show', $project['name'], $project['id']) !!}</td>
+                                <td>{!! link_to_route('projects.show', $project->name, $project->id) !!}</td>
                             </tr>
                         @endforeach
                     @endif

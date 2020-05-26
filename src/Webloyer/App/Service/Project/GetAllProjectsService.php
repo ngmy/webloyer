@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\Project;
 
-use Webloyer\Domain\Model\Project\Projects;
-
 class GetAllProjectsService extends ProjectService
 {
     /**
-     * @return Projects
+     * @return mixed
      */
     public function execute($request = null)
     {
-        return $this->projectRepository->findAll();
+        $projects = $this->projectRepository->findAll();
+        return $this->projectsDataTransformer->write($projects)->read();
     }
 }

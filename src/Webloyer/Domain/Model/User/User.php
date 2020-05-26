@@ -12,6 +12,8 @@ abstract class User
     use Identifiable;
     use Timestampable;
 
+    /** @var UserId */
+    protected $id;
     /** @var UserEmail */
     protected $email;
     /** @var UserName */
@@ -23,6 +25,10 @@ abstract class User
     /** @var UserRoles */
     protected $roles;
 
+    /**
+     * @return string
+     */
+    abstract public function id(): string;
     /**
      * @return string
      */
@@ -90,6 +96,7 @@ abstract class User
     abstract public function getRole(UserRoleSpecification $roleSpec): ?UserRole;
 
     /**
+     * @param string $id
      * @param string $email
      * @param string $name
      * @param string $password
@@ -97,12 +104,14 @@ abstract class User
      * @return UserCore
      */
     public static function of(
+        string $id,
         string $email,
         string $name,
         string $password,
         string $apiToken
     ): UserCore {
         return new UserCore(
+            new UserId($id),
             new UserEmail($email),
             new UserName($name),
             new UserPassword($password),
@@ -111,6 +120,7 @@ abstract class User
     }
 
     /**
+     * @param string             $id
      * @param string             $email
      * @param string             $name
      * @param string             $password
@@ -119,6 +129,7 @@ abstract class User
      * @return UserCore
      */
     public static function ofWithRole(
+        string $id,
         string $email,
         string $name,
         string $password,
@@ -126,6 +137,7 @@ abstract class User
         array $roles
     ): UserCore {
         $user = self::of(
+            $id,
             $email,
             $name,
             $password,

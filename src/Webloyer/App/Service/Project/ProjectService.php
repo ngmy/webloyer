@@ -6,6 +6,10 @@ namespace Webloyer\App\Service\Project;
 
 use Common\App\Service\ApplicationService;
 use InvalidArgumentException;
+use Webloyer\App\DataTransformer\Project\{
+    ProjectDataTransformer,
+    ProjectsDataTransformer,
+};
 use Webloyer\Domain\Model\Project\{
     Project,
     ProjectId,
@@ -16,14 +20,41 @@ abstract class ProjectService implements ApplicationService
 {
     /** @var ProjectRepository */
     protected $projectRepository;
+    /** @var ProjectDataTransformer */
+    protected $projectDataTransformer;
+    /** @var ProjectsDataTransformer */
+    protected $projectsDataTransformer;
 
     /**
-     * @param ProjectRepository $projectRepository
+     * @param ProjectRepository       $projectRepository
+     * @param ProjectDataTransformer  $projectDataTransformer
+     * @param ProjectsDataTransformer $projectsDataTransformer
      * @return void
      */
-    public function __construct(ProjectRepository $projectRepository)
-    {
+    public function __construct(
+        ProjectRepository $projectRepository,
+        ProjectDataTransformer $projectDataTransformer,
+        ProjectsDataTransformer $projectsDataTransformer
+    ) {
         $this->projectRepository = $projectRepository;
+        $this->projectDataTransformer = $projectDataTransformer;
+        $this->projectsDataTransformer = $projectsDataTransformer;
+    }
+
+    /**
+     * @return ProjectDataTransformer
+     */
+    public function projectDataTransformer(): ProjectDataTransformer
+    {
+        return $this->projectDataTransformer;
+    }
+
+    /**
+     * @return ProjectsDataTransformer
+     */
+    public function projectsDataTransformer(): ProjectsDataTransformer
+    {
+        return $this->projectsDataTransformer;
     }
 
     /**

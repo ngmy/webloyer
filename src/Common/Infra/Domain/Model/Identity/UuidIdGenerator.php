@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Common\Infra\Domain\Model\Identity;
 
 use Common\Domain\Model\Identity\IdGenerator;
-use lluminate\Support\Str;
+use Illuminate\Support\Str;
 
 class UuidIdGenerator implements IdGenerator
 {

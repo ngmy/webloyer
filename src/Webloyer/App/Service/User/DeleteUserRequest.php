@@ -7,23 +7,23 @@ namespace Webloyer\App\Service\User;
 class DeleteUserRequest
 {
     /** @var string */
-    private $email;
+    private $id;
 
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getId(): string
     {
-        return $this->email;
+        return $this->id;
     }
 
     /**
-     * @param string $email
+     * @param string $id
      * @return self
      */
-    public function setEmail(string $email): self
+    public function setId(string $id): self
     {
-        $this->email = $email;
+        $this->id = $id;
         return $this;
     }
 }

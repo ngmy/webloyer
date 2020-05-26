@@ -46,9 +46,6 @@
                         @if (Auth::user()->hasPermission('view.user'))
                             <li><a href="{{ url('/users') }}">Users</a></li>
                         @endif
-                        @if (Auth::user()->hasPermission('view.setting'))
-                            <li><a href="{{ url('/settings/email') }}">Settings</a></li>
-                        @endif
                     </ul>
                 @endif
 

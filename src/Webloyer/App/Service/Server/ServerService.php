@@ -42,6 +42,22 @@ abstract class ServerService implements ApplicationService
     }
 
     /**
+     * @return ServerDataTransformer
+     */
+    public function serverDataTransformer(): ServerDataTransformer
+    {
+        return $this->serverDataTransformer;
+    }
+
+    /**
+     * @return ServersDataTransformer
+     */
+    public function serversDataTransformer(): ServersDataTransformer
+    {
+        return $this->serversDataTransformer;
+    }
+
+    /**
      * @param ServerId $id
      * @return Server
      * @throws InvalidArgumentException

@@ -38,8 +38,8 @@
                                     ({!! link_to_route('projects.deployments.show', "#{$project->getLastDeployment()->number}", [$project->id,  $project->getLastDeployment()->number]) !!})
                                 @endif
                             </td>
-                            <td>{{ $project->created_at }}</td>
-                            <td>{{ $project->updated_at }}</td>
+                            <td>{{ $project->createdAt }}</td>
+                            <td>{{ $project->updatedAt }}</td>
                             <td>
                                 {!! link_to_route('projects.deployments.index', 'Deployments', [$project->id], ['class' => 'btn btn-default']) !!}
                                 {!! link_to_route('projects.show', 'Show', [$project->id], ['class' => 'btn btn-default']) !!}

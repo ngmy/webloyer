@@ -29,6 +29,10 @@ class UserDtoDataTransformer implements UserDataTransformer
     public function read()
     {
         $dto = new class implements UserInterest {
+            public function informId(string $id): void
+            {
+                $this->id = $id;
+            }
             public function informEmail(string $email): void
             {
                 $this->email = $email;
@@ -47,14 +51,14 @@ class UserDtoDataTransformer implements UserDataTransformer
             }
             public function informRoles(array $roles): void
             {
-                $this->role = $roles;
+                $this->roles = $roles;
             }
         };
         $this->user->provide($dto);
 
-        $dto->surrogateId = $this->recipe->surrogateId();
-        $dto->createdAt = $this->recipe->createdAt();
-        $dto->updatedAt = $this->recipe->updatedAt();
+        $dto->surrogateId = $this->user->surrogateId();
+        $dto->createdAt = $this->user->createdAt();
+        $dto->updatedAt = $this->user->updatedAt();
 
         return $dto;
     }

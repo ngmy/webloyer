@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Webloyer\Infra\Persistence\Eloquent\Models\{
     Deployment,
     Project,
-    Server,
-    User,
 };
 
 class WebloyerRouteServiceProvider extends ServiceProvider
@@ -53,22 +51,6 @@ class WebloyerRouteServiceProvider extends ServiceProvider
                 abort(404);
             }
             return $deploymentOrm->toEntity();
-        });
-
-        Route::bind('server', function ($id) {
-            $serverOrm = Server::find($id);
-            if (is_null($serverOrm)) {
-                abort(404);
-            }
-            return $serverOrm->toEntity();
-        });
-
-        Route::bind('user', function ($id) {
-            $userOrm = User::find($id);
-            if (is_null($userOrm)) {
-                abort(404);
-            }
-            return $userOrm->toEntity();
         });
 
         parent::boot();

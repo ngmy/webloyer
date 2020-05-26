@@ -7,16 +7,16 @@ namespace Webloyer\App\Service\User;
 class UpdatePasswordRequest
 {
     /** @var string */
-    private $email;
+    private $id;
     /** @var string */
     private $password;
 
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getId(): string
     {
-        return $this->email;
+        return $this->id;
     }
 
     /**
@@ -28,12 +28,12 @@ class UpdatePasswordRequest
     }
 
     /**
-     * @param string $email
+     * @param string $id
      * @return self
      */
-    public function setEmail(string $email): self
+    public function setId(string $id): self
     {
-        $this->email = $email;
+        $this->id = $id;
         return $this;
     }
 

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\User;
 
-use Webloyer\Domain\Model\User\{
-    UserEmail,
-};
+use Webloyer\Domain\Model\User\UserId;
 
 class RegenerateApiTokenService extends UserService
 {
@@ -16,8 +14,8 @@ class RegenerateApiTokenService extends UserService
      */
     public function execute($request = null)
     {
-        $email = new UserEmail($request->getEmail());
-        $user = $this->getNonNullUser($email);
+        $id = new UserId($request->getId());
+        $user = $this->getNonNullUser($id);
         $user->changeApiToken($request->getApiToken());
         $this->userRepository->save($user);
     }

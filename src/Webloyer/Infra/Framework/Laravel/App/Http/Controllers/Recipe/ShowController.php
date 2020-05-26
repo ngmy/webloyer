@@ -16,13 +16,9 @@ class ShowController extends BaseController
      */
     public function __invoke(string $id)
     {
-        //$recipeProject = $recipe->getProjects()->toArray();
-        $recipeProject = [];
         $serviceRequest = (new GetRecipeRequest())->setId($id);
         $recipe = $this->service->execute($serviceRequest);
 
-        return view('webloyer::recipes.show')
-            ->with('recipe', $recipe)
-            ->with('recipeProject', $recipeProject);
+        return view('webloyer::recipes.show')->with('recipe', $recipe);
     }
 }

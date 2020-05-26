@@ -10,6 +10,10 @@ namespace Webloyer\Domain\Model\User;
 interface UserRepository
 {
     /**
+     * @return UserId
+     */
+    public function nextId(): UserId;
+    /**
      * @return Users
      */
     public function findAll(): Users;
@@ -20,10 +24,10 @@ interface UserRepository
      */
     public function findAllByPage(?int $page, ?int $perPage): Users;
     /**
-     * @param UserEmail $email
+     * @param UserId $id
      * @return User|null
      */
-    public function findByEmail(UserEmail $email): ?User;
+    public function findById(UserId $id): ?User;
     /**
      * @param UserApiToken $apiToken
      * @return User|null
