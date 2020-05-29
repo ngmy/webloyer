@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\App\DataTransformer\Recipe;
 
+use Webloyer\App\DataTransformer\Project\ProjectsDataTransformer;
 use Webloyer\Domain\Model\Recipe\Recipe;
 
 /**
@@ -20,4 +21,9 @@ interface RecipeDataTransformer
      * @return mixed
      */
     public function read();
+    /**
+     * @param ProjectsDataTransformer $projectsDataTransformer
+     * @return self
+     */
+    public function setProjectsDataTransformer(ProjectsDataTransformer $projectsDataTransformer): self;
 }

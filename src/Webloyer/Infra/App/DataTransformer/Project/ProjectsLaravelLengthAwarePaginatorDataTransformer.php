@@ -6,6 +6,7 @@ namespace Webloyer\Infra\App\DataTransformer\Project;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Webloyer\App\DataTransformer\Project\{
+    ProjectDataTransformer,
     ProjectsDataTransformer,
     ProjectsDtoDataTransformer,
 };
@@ -66,5 +67,13 @@ class ProjectsLaravelLengthAwarePaginatorDataTransformer implements ProjectsData
             $this->currentPage,
             $this->options
         );
+    }
+
+    /**
+     * @return ProjectDataTransformer
+     */
+    public function projectDataTransformer(): ProjectDataTransformer
+    {
+        return $this->projectsDataTransformer->projectDataTransformer();
     }
 }

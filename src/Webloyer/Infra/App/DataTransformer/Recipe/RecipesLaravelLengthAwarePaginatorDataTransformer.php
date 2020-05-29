@@ -6,6 +6,7 @@ namespace Webloyer\Infra\App\DataTransformer\Recipe;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Webloyer\App\DataTransformer\Recipe\{
+    RecipeDataTransformer,
     RecipesDataTransformer,
     RecipesDtoDataTransformer,
 };
@@ -66,5 +67,13 @@ class RecipesLaravelLengthAwarePaginatorDataTransformer implements RecipesDataTr
             $this->currentPage,
             $this->options
         );
+    }
+
+    /**
+     * @return RecipeDataTransformer
+     */
+    public function recipeDataTransformer(): RecipeDataTransformer
+    {
+        return $this->recipesDataTransformer->recipeDataTransformer();
     }
 }

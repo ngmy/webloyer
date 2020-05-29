@@ -10,53 +10,53 @@
                         <th>Project Name</th>
                         <td>{{ $project->name }}</td>
                     </tr>
-                    @foreach ($projectRecipe as $i => $recipe)
+                    @foreach ($project->recipes as $recipe)
                         <tr>
-                            @if ($i === 0)
-                                <th rowspan="{{ count($projectRecipe) }}">Recipe</th>
+                            @if ($loop->first)
+                                <th rowspan="{{ count($project->recipes) }}">Recipe</th>
                             @endif
-                            <td>{{ $recipe['name'] }}</td>
+                            <td>{{ $recipe->name }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <th>Server</th>
-                        <td>{{ $projectServer->name }}</td>
+                        <td>{{ $project->server->name }}</td>
                     </tr>
                     <tr>
                         <th>Repository URL</th>
-                        <td>{{ $project->repository }}</td>
+                        <td>{{ $project->repositoryUrl }}</td>
                     </tr>
                     <tr>
                         <th>Stage</th>
-                        <td>{{ $project->stage }}</td>
+                        <td>{{ $project->stageName }}</td>
                     </tr>
                     <tr>
                         <th>Deploy Path</th>
-                        <td>{{ $project->attributes->getDeployPath() }}</td>
+                        <td>{{ $project->deployPath }}</td>
                     </tr>
                     <tr>
                         <th>E-Mail Notification Recipient</th>
-                        <td>{{ $project->email_notification_recipient }}</td>
+                        <td>{{ $project->emailNotificationRecipient }}</td>
                     </tr>
                     <tr>
                         <th>Days To Keep Deployments</th>
-                        <td>{{ $project->days_to_keep_deployments }}</td>
+                        <td>{{ $project->deploymentKeepDays }}</td>
                     </tr>
                     <tr>
                         <th>Keep Last Deployment</th>
-                        <td>{{ $project->keep_last_deployment }}</td>
+                        <td>{{ (int) $project->keepLastDeployment }}</td>
                     </tr>
                     <tr>
                         <th>Max # Of Deployments To Keep</th>
-                        <td>{{ $project->max_number_of_deployments_to_keep }}</td>
+                        <td>{{ $project->deploymentKeepMaxNumber }}</td>
                     </tr>
                     <tr>
                         <th>GitHub Webhook Secret</th>
-                        <td>{{ $project->github_webhook_secret }}</td>
+                        <td>{{ $project->githubWebhookSecret }}</td>
                     </tr>
                     <tr>
                         <th>GitHub Webhook Execute By</th>
-                        <td>{{ is_null($project->getGithubWebhookUser()) ? '' : $project->getGithubWebhookUser()->email }}</td>
+                        <td>{{ $project->githubWebhookUser ? $project->githubWebhookUser->email : '' }}</td>
                     </tr>
                 </tbody>
             </table>

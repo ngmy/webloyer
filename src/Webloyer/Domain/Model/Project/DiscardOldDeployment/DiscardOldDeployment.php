@@ -80,7 +80,7 @@ class DiscardOldDeployment
 
     public function isKeepMaxNumber(): bool
     {
-        return isset($this->keepDays);
+        return isset($this->keepMaxNumber);
     }
 
     public function isEnable(): bool

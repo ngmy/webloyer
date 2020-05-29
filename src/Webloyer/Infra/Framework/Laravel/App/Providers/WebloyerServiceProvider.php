@@ -92,6 +92,7 @@ use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginator
 use Webloyer\Infra\App\DataTransformer\Server\ServersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project\{
+    CreateController as ProjectCreateController,
     DestroyController as ProjectDestroyController,
     EditController as ProjectEditController,
     IndexController as ProjectIndexController,
@@ -194,32 +195,71 @@ class WebloyerServiceProvider extends ServiceProvider
         });
 
         // project app services
-        $this->app->bind(CreateProjectService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new CreateProjectService(
-                    $app->make(ProjectRepository::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
-        $this->app->bind(DeleteProjectService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new DeleteProjectService(
-                    $app->make(ProjectRepository::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
-        $this->app->bind(UpdateProjectService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new UpdateProjectService(
-                    $app->make(ProjectRepository::class)
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
+        $this->app->when([ProjectEditController::class, ProjectShowController::class])
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetProjectService(
+                    $app->make(ProjectRepository::class),
+                    $app->make(ProjectDataTransformer::class),
+                    $app->make(ProjectsDataTransformer::class)
+                );
+            });
+        $this->app->when(ProjectDestroyController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new DeleteProjectService(
+                        $app->make(ProjectRepository::class),
+                        $app->make(ProjectDataTransformer::class),
+                        $app->make(ProjectsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(ProjectIndexController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetProjectsService(
+                    $app->make(ProjectRepository::class),
+                    $app->make(ProjectDataTransformer::class),
+                    $app->make(ProjectsDataTransformer::class)
+                );
+            });
+        $this->app->when(ProjectStoreController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new CreateProjectService(
+                        $app->make(ProjectRepository::class),
+                        $app->make(ProjectDataTransformer::class),
+                        $app->make(ProjectsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(ProjectUpdateController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new UpdateProjectService(
+                        $app->make(ProjectRepository::class),
+                        $app->make(ProjectDataTransformer::class),
+                        $app->make(ProjectsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
 
         // recipe app services
+        $this->app->when([ProjectCreateController::class, ProjectEditController::class])
+            ->needs(GetRecipesService::class)
+            ->give(function (Application $app): ApplicationService { 
+                return new GetRecipesService(
+                    $app->make(RecipeRepository::class),
+                    $app->make(RecipeDataTransformer::class),
+                    $app->make(RecipesDtoDataTransformer::class)
+                );
+            });
         $this->app->when([RecipeEditController::class, RecipeShowController::class])
             ->needs(ApplicationService::class)
             ->give(function (Application $app): ApplicationService {
@@ -276,6 +316,15 @@ class WebloyerServiceProvider extends ServiceProvider
             });
 
         // server app services
+        $this->app->when([ProjectCreateController::class, ProjectEditController::class])
+            ->needs(GetServersService::class)
+            ->give(function (Application $app): ApplicationService { 
+                return new GetServersService(
+                    $app->make(ServerRepository::class),
+                    $app->make(ServerDataTransformer::class),
+                    $app->make(ServersDtoDataTransformer::class)
+                );
+            });
         $this->app->when([ServerEditController::class, ServerShowController::class])
             ->needs(ApplicationService::class)
             ->give(function (Application $app): ApplicationService {
@@ -332,6 +381,15 @@ class WebloyerServiceProvider extends ServiceProvider
             });
 
         // user app services
+        $this->app->when([ProjectCreateController::class, ProjectEditController::class])
+            ->needs(GetUsersService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetUsersService(
+                    $app->make(UserRepository::class),
+                    $app->make(UserDataTransformer::class),
+                    $app->make(UsersDtoDataTransformer::class)
+                );
+            });
         $this->app->when([
             UserChangePasswordController::class,
             UserEditController::class,

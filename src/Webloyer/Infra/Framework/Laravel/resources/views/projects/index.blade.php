@@ -27,15 +27,15 @@
                     @foreach ($projects as $project)
                         <tr>
                             <td>
-                                @if (!empty($project->getLastDeployment()))
-                                    {!! $project->getLastDeployment()->getPresenter()->status() !!}
+                                @if (!empty($project->getLastDeployment))
+                                    {!! $project->lastDeployment->getPresenter()->status() !!}
                                 @endif
                             </td>
                             <td>{{ $project->name }}</td>
                             <td>
-                                @if (!empty($project->getLastDeployment()))
-                                    {{ $project->getLastDeployment()->updated_at }}
-                                    ({!! link_to_route('projects.deployments.show', "#{$project->getLastDeployment()->number}", [$project->id,  $project->getLastDeployment()->number]) !!})
+                                @if (!empty($project->lastDeployment))
+                                    {{ $project->lastDeployment->updatedAt }}
+                                    ({!! link_to_route('projects.deployments.show', "#{$project->lastDeployment->number}", [$project->id,  $project->lastDeployment->number]) !!})
                                 @endif
                             </td>
                             <td>{{ $project->createdAt }}</td>

@@ -20,4 +20,8 @@ interface RecipesDataTransformer
      * @return mixed
      */
     public function read();
+    /**
+     * @return RecipeDataTransformer
+     */
+    public function recipeDataTransformer(): RecipeDataTransformer;
 }

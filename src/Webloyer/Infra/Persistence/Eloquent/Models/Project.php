@@ -7,7 +7,11 @@ namespace Webloyer\Infra\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\{
     Builder,
     Model,
-    Relations,
+};
+use Illuminate\Database\Eloquent\Relations\{
+    BelongsTo,
+    BelongsToMany,
+    HasOne,
 };
 use InvalidArgumentException;
 use Ngmy\EloquentSerializedLob\SerializedLobTrait;
@@ -48,17 +52,17 @@ class Project extends Model implements ProjectInterest
     }
 
     /**
-     * @return Relations\HasOne
+     * @return HasOne
      */
-    public function maxDeployment(): Relations\HasOne
+    public function maxDeployment(): HasOne
     {
         return $this->hasOne(MaxDeployment::class);
     }
 
     /**
-     * @return Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function recipes(): Relations\BelongsToMany
+    public function recipes(): BelongsToMany
     {
         return $this->belongsToMany(Recipe::class)
             ->withPivot('recipe_order')
@@ -66,11 +70,19 @@ class Project extends Model implements ProjectInterest
     }
 
     /**
-     * @return Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function server(): Relations\BelongsTo
+    public function server(): BelongsTo
     {
         return $this->belongsTo(Server::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'github_webhook_user_id');
     }
 
     /**
@@ -104,9 +116,13 @@ class Project extends Model implements ProjectInterest
             throw new InvalidArgumentException('Recipe is required.');
         }
         foreach ($recipeIds as $i => $recipeId) {
-            $syncRecipeIds[$recipeId] = ['recipe_order' => $i + 1];
+            $recipeOrm = Recipe::ofId($recipeId)->first();
+            $syncRecipeIds[$recipeOrm->id] = ['recipe_order' => $i + 1];
         }
-        $this->recipes()->sync($syncRecipeIds);
+
+        self::saved(function (Project $project) use ($syncRecipeIds) {
+            $project->recipes()->sync($syncRecipeIds);
+        });
     }
 
     /**
@@ -153,9 +169,22 @@ class Project extends Model implements ProjectInterest
      */
     public function informDeployPath(?string $deployPath): void
     {
-        if (!is_null($deployPath)) {
-            $this->attributes['deploy_path'] = $deployPath;
+        // NOTE "attributes" is reserved word
+        $rawAttributes = $this->getAttributeFromArray('attributes');
+
+        // NOTE If the "attributes" column is null,
+        //      deserialzie will cause an error, so initialize
+        if (is_null($rawAttributes)) {
+            $this->setAttribute('attributes', []);
         }
+
+        $attributes = $this->getAttribute('attributes');
+        if (is_null($deployPath)) {
+            unset($attributes['deploy_path']);
+        } else {
+            $attributes['deploy_path'] = $deployPath;
+        }
+        $this->setAttribute('attributes', $attributes);
     }
 
     /**
@@ -215,7 +244,19 @@ class Project extends Model implements ProjectInterest
      */
     public function informGithubWebhookExecutor(?string $githubWebhookExecutor): void
     {
-        $this->github_webhook_user_id = $githubWebhookExecutor;
+        if (is_null($githubWebhookExecutor)) {
+            $this->github_webhook_user_id = null;
+            return;
+        }
+
+        $userOrm = User::ofId($githubWebhookExecutor)->first();
+        if (is_null($userOrm)) {
+            throw new InvalidArgumentException(
+                'User does not exists.' . PHP_EOL .
+                'User Id: ' . $githubWebhookExecutor
+            );
+        }
+        $this->github_webhook_user_id = $userOrm->id;
     }
 
     /**
@@ -234,13 +275,13 @@ class Project extends Model implements ProjectInterest
             $this->server->uuid,
             $this->repository,
             $this->stage,
-            $this->attributes['deploy_path'] ?? null,
+            $this->getAttribute('attributes')['deploy_path'] ?? null,
             $this->email_notification_recipient,
-            $this->days_to_keep_deployments,
+            $this->days_to_keep_deployments ? (int) $this->days_to_keep_deployments : null,
             (bool) $this->keep_last_deployment,
-            $this->max_number_of_deployments_to_keep,
+            $this->max_number_of_deployments_to_keep ? (int) $this->max_number_of_deployments_to_keep : null,
             $this->github_webhook_secret,
-            $this->github_webhook_user_id
+            $this->user ? $this->user->uuid : null
         )
         ->setSurrogateId($this->id)
         ->setCreatedAt($this->created_at)

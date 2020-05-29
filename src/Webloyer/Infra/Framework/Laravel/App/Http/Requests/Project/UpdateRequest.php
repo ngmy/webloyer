@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Requests\Project;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Webloyer\Infra\Persistence\Eloquent\Models;
 
 class UpdateRequest extends FormRequest
 {
@@ -55,16 +54,11 @@ class UpdateRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        $recipes = Recipe::whereIn('id', explode(',', $this->recipe_id_order))->get();
-        $server = Server::find($this->server_id);
-        assert(!$recipes->isEmpty());
-        assert(!is_null($server));
         $this->merge([
-            'recipe_id' => $recipes->map(function (Recipe $recipe) {
-                return $recipe->uuid;
-            })->toArray(),
-            'server_id' => $server->uuid,
+            'days_to_keep_deployments' => $this->days_to_keep_deployments ? (int) $this->days_to_keep_deployments : null,
             'keep_last_deployment' => (bool) $this->keep_last_deployment,
+            'max_number_of_deployments_to_keep' => $this->max_number_of_deployments_to_keep ? (int) $this->max_number_of_deployments_to_keep : null,
+            'recipe_id' => $this->recipe_id_order ? explode(',', $this->recipe_id_order) : [],
         ]);
     }
 }

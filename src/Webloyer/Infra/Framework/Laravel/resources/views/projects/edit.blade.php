@@ -28,25 +28,25 @@
                         <div class="form-group required">
                             <label for="recipe_id" class="col-md-4 control-label">Recipe</label>
                             <div class="col-md-6">
-                                {!! Form::select('recipe_id[]', $recipes, $projectRecipe, ['class' => 'form-control multi-select', 'id' => 'recipe_id', 'multiple' => 'multiple']) !!}
+                                {!! Form::select('recipe_id[]', $recipes, $project->recipeIds, ['class' => 'form-control multi-select', 'id' => 'recipe_id', 'multiple' => 'multiple']) !!}
                             </div>
                         </div>
                         <div class="form-group required">
                             <label for="server_id" class="col-md-4 control-label">Server</label>
                             <div class="col-md-6">
-                                {!! Form::select('server_id', $servers, $project->server_id, ['class' => 'form-control', 'id' => 'server_id']) !!}
+                                {!! Form::select('server_id', $servers, $project->serverId, ['class' => 'form-control', 'id' => 'server_id']) !!}
                             </div>
                         </div>
                         <div class="form-group required">
                             <label for="repository" class="col-md-4 control-label">Repository URL</label>
                             <div class="col-md-6">
-                                {!! Form::text('repository', $project->repository, ['class' => 'form-control', 'id' => 'repository']) !!}
+                                {!! Form::text('repository', $project->repositoryUrl, ['class' => 'form-control', 'id' => 'repository']) !!}
                             </div>
                         </div>
                         <div class="form-group required">
                             <label for="stage" class="col-md-4 control-label">Stage</label>
                             <div class="col-md-6">
-                                {!! Form::text('stage', $project->stage, ['class' => 'form-control', 'id' => 'stage']) !!}
+                                {!! Form::text('stage', $project->stageName, ['class' => 'form-control', 'id' => 'stage']) !!}
                             </div>
                         </div>
                         <hr>
@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <label for="deploy_path" class="col-md-4 control-label">Deploy Path</label>
                             <div class="col-md-6">
-                                {!! Form::text('deploy_path', $project->attributes->getDeployPath(), ['class' => 'form-control', 'id' => 'deploy_path']) !!}
+                                {!! Form::text('deploy_path', $project->deployPath, ['class' => 'form-control', 'id' => 'deploy_path']) !!}
                             </div>
                         </div>
                         <hr>
@@ -62,7 +62,7 @@
                         <div class="form-group">
                             <label for="email_notification_recipient" class="col-md-4 control-label">Recipient</label>
                             <div class="col-md-6">
-                                {!! Form::email('email_notification_recipient', $project->email_notification_recipient, ['class' => 'form-control', 'id' => 'email_notification_recipient']) !!}
+                                {!! Form::email('email_notification_recipient', $project->emailNotificationRecipient, ['class' => 'form-control', 'id' => 'email_notification_recipient']) !!}
                             </div>
                         </div>
                         <hr>
@@ -70,12 +70,12 @@
                         <div class="form-group">
                             <label for="days_to_keep_deployments" class="col-md-4 control-label">Days To Keep Deployments</label>
                             <div class="col-md-6">
-                                {!! Form::text('days_to_keep_deployments', $project->days_to_keep_deployments, ['class' => 'form-control', 'id' => 'days_to_keep_deployments']) !!}
+                                {!! Form::text('days_to_keep_deployments', $project->deploymentKeepDays, ['class' => 'form-control', 'id' => 'days_to_keep_deployments']) !!}
                             </div>
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">
                                     <label class"col-md-4">
-                                        {!! Form::checkbox('keep_last_deployment', $project->keep_last_deployment, $project->keep_last_deployment) !!}
+                                        {!! Form::checkbox('keep_last_deployment', true, $project->keepLastDeployment) !!}
                                         Keep Last Deployment
                                     </label>
                                 </div>
@@ -84,7 +84,7 @@
                         <div class="form-group">
                             <label for="max_number_of_deployments_to_keep" class="col-md-4 control-label">Max # Of Deployments To Keep</label>
                             <div class="col-md-6">
-                                {!! Form::text('max_number_of_deployments_to_keep', $project->max_number_of_deployments_to_keep, ['class' => 'form-control', 'id' => 'max_number_of_deployments_to_keep']) !!}
+                                {!! Form::text('max_number_of_deployments_to_keep', $project->deploymentKeepMaxNumber, ['class' => 'form-control', 'id' => 'max_number_of_deployments_to_keep']) !!}
                             </div>
                         </div>
                         <hr>
@@ -92,13 +92,13 @@
                         <div class="form-group">
                             <label for="github_webhook_secret" class="col-md-4 control-label">Secret</label>
                             <div class="col-md-6">
-                                {!! Form::text('github_webhook_secret', $project->github_webhook_secret, ['class' => 'form-control', 'id' => 'github_webhook_secret']) !!}
+                                {!! Form::text('github_webhook_secret', $project->githubWebhookSecret, ['class' => 'form-control', 'id' => 'github_webhook_secret']) !!}
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="github_webhook_user_id" class="col-md-4 control-label">Execute By</label>
                             <div class="col-md-6">
-                                {!! Form::select('github_webhook_user_id', $users, $project->github_webhook_user_id, ['class' => 'form-control', 'id' => 'github_webhook_user_id']) !!}
+                                {!! Form::select('github_webhook_user_id', $users, $project->githubWebhookUserId, ['class' => 'form-control', 'id' => 'github_webhook_user_id']) !!}
                             </div>
                         </div>
                         <div class="form-group">
@@ -107,7 +107,7 @@
                                 {!! form::submit('update', ['class' => 'btn btn-primary']) !!}
                             </div>
                         </div>
-                        {!! Form::hidden('recipe_id_order', implode(',', $projectRecipe), ['id' => 'recipe_id_order']) !!}
+                        {!! Form::hidden('recipe_id_order', implode(',', $project->recipeIds), ['id' => 'recipe_id_order']) !!}
                     {!! Form::close() !!}
                 </div>
             </div>

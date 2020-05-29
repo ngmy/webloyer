@@ -40,4 +40,12 @@ class RecipesDtoDataTransformer implements RecipesDataTransformer
             return $this->recipeDataTransformer->write($recipe)->read();
         }, $this->recipes->toArray());
     }
+
+    /**
+     * @return RecipeDataTransformer
+     */
+    public function recipeDataTransformer(): RecipeDataTransformer
+    {
+        return $this->recipeDataTransformer;
+    }
 }

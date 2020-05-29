@@ -40,4 +40,12 @@ class ProjectsDtoDataTransformer implements ProjectsDataTransformer
             return $this->projectDataTransformer->write($project)->read();
         }, $this->projects->toArray());
     }
+
+    /**
+     * @return ProjectDataTransformer
+     */
+    public function projectDataTransformer(): ProjectDataTransformer
+    {
+        return $this->projectDataTransformer;
+    }
 }

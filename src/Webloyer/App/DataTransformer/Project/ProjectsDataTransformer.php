@@ -20,4 +20,8 @@ interface ProjectsDataTransformer
      * @return mixed
      */
     public function read();
+    /**
+     * @return ProjectDataTransformer
+     */
+    public function projectDataTransformer(): ProjectDataTransformer;
 }

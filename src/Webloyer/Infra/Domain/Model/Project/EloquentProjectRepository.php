@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Domain\Model\Project;
 
 use Common\Domain\Model\Identity\IdGenerator;
-use Webloyer\Domain\Model\Project;
+use Webloyer\Domain\Model\Project\{
+    Project,
+    ProjectId,
+    ProjectRepository,
+    Projects,
+};
 use Webloyer\Domain\Model\Recipe\RecipeId;
 use Webloyer\Infra\Persistence\Eloquent\Models\Project as ProjectOrm;
 use Webloyer\Infra\Persistence\Eloquent\Models\Recipe as RecipeOrm;
 
-class EloquentProjectRepository implements Project\ProjectRepository
+class EloquentProjectRepository implements ProjectRepository
 {
     /** @var IdGenerator */
     private $idGenerator;
@@ -21,36 +26,36 @@ class EloquentProjectRepository implements Project\ProjectRepository
     }
 
     /**
-     * @return Project\ProjectId
-     * @see Project\ProjectRepository::nextId()
+     * @return ProjectId
+     * @see ProjectRepository::nextId()
      */
-    public function nextId(): Project\ProjectId
+    public function nextId(): ProjectId
     {
-        return new Project\ProjectId($this->idGenerator->generate());
+        return new ProjectId($this->idGenerator->generate());
     }
 
     /**
-     * @return Project\Projects
-     * @see Project\ProjectRepository::findAll()
+     * @return Projects
+     * @see ProjectRepository::findAll()
      */
-    public function findAll(): Project\Projects
+    public function findAll(): Projects
     {
         $projectArray = ProjectOrm::orderBy('name')
             ->get()
-            ->map(function (ProjectOrm $projectOrm): Project\Project {
+            ->map(function (ProjectOrm $projectOrm): Project {
                 return $projectOrm->toEntity();
             })
             ->toArray();
-        return new Project\Projects(...$projectArray);
+        return new Projects(...$projectArray);
     }
 
     /**
      * @param int|null $page
      * @param int|null $perPage
-     * @return Project\Projects
-     * @see Project\ProjectRepository::findAllByPage()
+     * @return Projects
+     * @see ProjectRepository::findAllByPage()
      */
-    public function findAllByPage(?int $page, ?int $perPage): Project\Projects
+    public function findAllByPage(?int $page, ?int $perPage): Projects
     {
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
@@ -59,39 +64,39 @@ class EloquentProjectRepository implements Project\ProjectRepository
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
-            ->map(function (ProjectOrm $projectOrm): Project\Project {
+            ->map(function (ProjectOrm $projectOrm): Project {
                 return $projectOrm->toEntity();
             })
             ->toArray();
-        return new Project\Projects(...$projectArray);
+        return new Projects(...$projectArray);
     }
 
     /**
      * @param RecipeId $recipeId
-     * @return Project\Projects
+     * @return Projects
      */
-    public function findAllByRecipeId(RecipeId $recipeId): Project\Projects
+    public function findAllByRecipeId(RecipeId $recipeId): Projects
     {
         $recipe = RecipeOrm::ofId($recipeId->value())->first();
 
         if (is_null($recipe)) {
-            return Project\Projects::empty();
+            return Projects::empty();
         }
 
         $projectArray = $recipe->projects
-            ->map(function (ProjectOrm $projectOrm): Project\Project {
+            ->map(function (ProjectOrm $projectOrm): Project {
                 return $projectOrm->toEntity();
             })
             ->toArray();
-        return new Project\Projects(...$projectArray);
+        return new Projects(...$projectArray);
     }
 
     /**
-     * @param Project\ProjectId $id
-     * @return Project\Project|null
-     * @see Project\ProjectRepository::findById()
+     * @param ProjectId $id
+     * @return Project|null
+     * @see ProjectRepository::findById()
      */
-    public function findById(Project\ProjectId $id): ?Project\Project
+    public function findById(ProjectId $id): ?Project
     {
         $projectOrm = ProjectOrm::ofId($id->value())->first();
         if (is_null($projectOrm)) {
@@ -101,11 +106,11 @@ class EloquentProjectRepository implements Project\ProjectRepository
     }
 
     /**
-     * @param Project\Project $project
+     * @param Project $project
      * @return void
-     * @see Project\ProjectRepository::remove()
+     * @see ProjectRepository::remove()
      */
-    public function remove(Project\Project $project): void
+    public function remove(Project $project): void
     {
         $projectOrm = ProjectOrm::ofId($project->id())->first();
         if (is_null($projectOrm)) {
@@ -115,11 +120,11 @@ class EloquentProjectRepository implements Project\ProjectRepository
     }
 
     /**
-     * @param Project\Project $project
+     * @param Project $project
      * @return void
-     * @see Project\ProjectRepository::save()
+     * @see ProjectRepository::save()
      */
-    public function save(Project\Project $project): void
+    public function save(Project $project): void
     {
         $projectOrm = ProjectOrm::firstOrNew(['uuid' => $project->id()]);
         if ($projectOrm->wasRecentlyCreated) {
