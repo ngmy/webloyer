@@ -1,7 +1,6 @@
 <?php
 
 use Webloyer\Infra\Framework\Laravel\App\Providers\WebloyerRouteServiceProvider as RouteServiceProvider;
-use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Deployment\StoreRequest as DeploymentStoreRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,8 +47,8 @@ Route::group([
     'protect_alias' => 'deployment',
 ], function () {
     Route::get('projects/{project}/deployments', 'IndexController')->name('projects.deployments.index');
-    Route::post('projects/{project}/deployments', function (DeploymentStoreRequest $request) {
-    })->name('projects.deployments.store');
+    Route::post('projects/{project}/deployments/deploy', 'DeployController')->name('projects.deployments.deploy');
+    Route::post('projects/{project}/deployments/rollback', 'RollbackController')->name('projects.deployments.rollback');
     Route::get('projects/{project}/deployments/{deployment}', 'ShowController')->name('projects.deployments.show');
 });
 

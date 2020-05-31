@@ -4,28 +4,21 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment;
 
-use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Deployment\StoreRequest;
-use Webloyer\App\Service\Deployment\{
-    CreateDeploymentRequest,
-    RollbackDeploymentRequest,
-};
+use Illuminate\Http\Request;
+use Webloyer\App\Service\Deployment\RollbackDeploymentRequest;
 
-class StoreController extends BaseController
+class RollbackController extends BaseController
 {
     /**
      * Handle the incoming request.
      *
-     * @param StoreRequest $request
-     * @param string       $projectId
+     * @param Request $request
+     * @param string  $projectId
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(StoreRequest $request, string $projectId)
+    public function __invoke(Request $request, string $projectId)
     {
-        $serviceRequest = (
-            $request->input('task') == 'deploy'
-                ? new CreateDeploymentRequest()
-                : new RollbackDeploymentRequest()
-            )
+        $serviceRequest = (new RollbackDeploymentRequest())
             ->setProjectId($projectId)
             ->setExecutor($request->user()->id);
         $deployment = $this->service->execute($serviceRequest);

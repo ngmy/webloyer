@@ -14,13 +14,11 @@
             <h1 class="page-header">Deployments</h1>
 
             <div class="pull-right margin-bottom-lg">
-                {!! Form::open(['route' => ['projects.deployments.store', $projectId], 'method' => 'post', 'style' => 'display:inline']) !!}
-                {!! Form::hidden('task', 'deploy') !!}
-                {!! Form::submit('Deploy', ['class' => 'btn btn-primary btn-lg']) !!}
+                {!! Form::open(['route' => ['projects.deployments.deploy', $projectId], 'method' => 'post', 'style' => 'display:inline']) !!}
+                    {!! Form::submit('Deploy', ['class' => 'btn btn-primary btn-lg']) !!}
                 {!! Form::close() !!}
-                {!! Form::open(['route' => ['projects.deployments.store', $projectId], 'method' => 'post', 'style' => 'display:inline']) !!}
-                {!! Form::hidden('task', 'rollback') !!}
-                {!! Form::submit('Rollback', ['class' => 'btn btn-danger btn-lg']) !!}
+                {!! Form::open(['route' => ['projects.deployments.rollback', $projectId], 'method' => 'post', 'style' => 'display:inline']) !!}
+                    {!! Form::submit('Rollback', ['class' => 'btn btn-danger btn-lg']) !!}
                 {!! Form::close() !!}
             </div>
 

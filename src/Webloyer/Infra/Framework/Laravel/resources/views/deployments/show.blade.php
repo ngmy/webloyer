@@ -16,27 +16,27 @@
                     </tr>
                     <tr>
                         <th>Status</th>
-                        <td>{{ $deployment->statusText() }}</td>
+                        <td>{{ $deployment->status }}</td>
                     </tr>
                     <tr>
                         <th>Message</th>
-                        <td><pre class="ansi_box"><code>{!! $deployment->message() !!}</code></pre></td>
+                        <td><pre class="ansi_box"><code>{!! $deployment->log !!}</code></pre></td>
                     </tr>
                     <tr>
                         <th>Started At</th>
-                        <td>{{ $deployment->created_at }}</td>
+                        <td>{{ $deployment->startDate }}</td>
                     </tr>
                     <tr>
                         <th>Finished At</th>
-                        <td>{{ $deployment->updated_at }}</td>
+                        <td>{{ $deployment->finishDate }}</td>
                     </tr>
                     <tr>
                         <th>Executed By</th>
-                        <td>{{ is_null($deployment->user) ? '' : $deployment->user->email }}</td>
+                        <td>{{ $deployment->user->email }}</td>
                     </tr>
                 </tbody>
             </table>
-            {!! link_to_route('projects.deployments.index', 'Back', [$deployment->project_id], ['class' => 'btn btn-danger']) !!}
+            {!! link_to_route('projects.deployments.index', 'Back', [$deployment->projectId], ['class' => 'btn btn-danger']) !!}
         </div>
     </div>
 </div>
