@@ -6,7 +6,6 @@ namespace Webloyer\Infra\Framework\Laravel\App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Webloyer\Infra\Persistence\Eloquent\Models\Deployment;
 
 class WebloyerRouteServiceProvider extends ServiceProvider
 {
@@ -33,14 +32,7 @@ class WebloyerRouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::bind('deployment', function ($number, $route) {
-            $project = $route->parameter('project');
-            $deploymentOrm = Deployment::ofId($project->id(), $number)->first();
-            if (is_null($deploymentOrm)) {
-                abort(404);
-            }
-            return $deploymentOrm->toEntity();
-        });
+        //
 
         parent::boot();
     }

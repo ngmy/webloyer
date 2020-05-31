@@ -40,4 +40,12 @@ class UsersDtoDataTransformer implements UsersDataTransformer
             return $this->userDataTransformer->write($user)->read();
         }, $this->users->toArray());
     }
+
+    /**
+     * @return UserDataTransformer
+     */
+    public function userDataTransformer(): UserDataTransformer
+    {
+        return $this->userDataTransformer;
+    }
 }

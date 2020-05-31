@@ -43,7 +43,7 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
      */
     public function findAllByProjectId(ProjectId $projectId): Deployment\Deployments
     {
-        $deploymentArray = DeploymentOrm::ofProjectId($projectId)
+        $deploymentArray = DeploymentOrm::ofProjectId($projectId->value())
             ->orderBy('number')
             ->get()
             ->map(function (DeploymentOrm $deploymentOrm): Deployment\Deployment {
@@ -65,7 +65,7 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
 
-        $deploymentArray = DeploymentOrm::ofProjectId($projectId)
+        $deploymentArray = DeploymentOrm::ofProjectId($projectId->value())
             ->orderBy('number')
             ->skip($perPage * ($page - 1))
             ->take($perPage)

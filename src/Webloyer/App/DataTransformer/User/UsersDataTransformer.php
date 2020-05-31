@@ -20,4 +20,8 @@ interface UsersDataTransformer
      * @return mixed
      */
     public function read();
+    /**
+     * @return UserDataTransformer
+     */
+    public function userDataTransformer(): UserDataTransformer;
 }

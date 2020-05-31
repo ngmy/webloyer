@@ -11,6 +11,12 @@ use Common\App\Service\{
 };
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Webloyer\App\DataTransformer\Deployment\{
+    DeploymentDataTransformer,
+    DeploymentDtoDataTransformer,
+    DeploymentsDataTransformer,
+    DeploymentsDtoDataTransformer,
+};
 use Webloyer\App\DataTransformer\Project\{
     ProjectDataTransformer,
     ProjectDtoDataTransformer,
@@ -87,10 +93,16 @@ use Webloyer\Infra\Domain\Model\Project\EloquentProjectRepository;
 use Webloyer\Infra\Domain\Model\Recipe\EloquentRecipeRepository;
 use Webloyer\Infra\Domain\Model\Server\EloquentServerRepository;
 use Webloyer\Infra\Domain\Model\User\EloquentUserRepository;
+use Webloyer\Infra\App\DataTransformer\Deployment\DeploymentsLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\Project\ProjectsLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\Server\ServersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
+use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment\{
+    IndexController as DeploymentIndexController,
+    ShowController as DeploymentShowController,
+    StoreController as DeploymentStoreController,
+};
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project\{
     CreateController as ProjectCreateController,
     DestroyController as ProjectDestroyController,
@@ -140,6 +152,10 @@ class WebloyerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // deployment data transformers
+        $this->app->bind(DeploymentDataTransformer::class, DeploymentDtoDataTransformer::class);
+        $this->app->bind(DeploymentsDataTransformer::class, DeploymentsLaravelLengthAwarePaginatorDataTransformer::class);
+
         // project data transformers
         $this->app->bind(ProjectDataTransformer::class, ProjectDtoDataTransformer::class);
         $this->app->bind(ProjectsDataTransformer::class, ProjectsLaravelLengthAwarePaginatorDataTransformer::class);
@@ -157,6 +173,19 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(UsersDataTransformer::class, UsersLaravelLengthAwarePaginatorDataTransformer::class);
 
         // deployment app services
+        $this->app->when(DeploymentIndexController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetDeploymentsService(
+                    $app->make(DeploymentRepository::class),
+                    $app->make(ProjectRepository::class),
+                    $app->make(RecipeRepository::class),
+                    $app->make(ServerRepository::class),
+                    $app->make(UserRepository::class),
+                    $app->make(DeploymentDataTransformer::class),
+                    $app->make(DeploymentsDataTransformer::class)
+                );
+            });
         $this->app->bind(CreateDeploymentService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new CreateDeploymentService(

@@ -38,7 +38,7 @@ class Deployment extends Model implements DeploymentInterest
      * @param string  $projectId
      * @return Builder
      */
-    public function scopeOfProjectId(Builder $query, string $projectId, int $number): Builder
+    public function scopeOfProjectId(Builder $query, string $projectId): Builder
     {
         return $query->where('project_id', $projectId);
     }

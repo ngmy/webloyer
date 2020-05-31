@@ -6,6 +6,7 @@ namespace Webloyer\Infra\App\DataTransformer\User;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Webloyer\App\DataTransformer\User\{
+    UserDataTransformer,
     UsersDataTransformer,
     UsersDtoDataTransformer,
 };
@@ -66,5 +67,13 @@ class UsersLaravelLengthAwarePaginatorDataTransformer implements UsersDataTransf
             $this->currentPage,
             $this->options
         );
+    }
+
+    /**
+     * @return UserDataTransformer
+     */
+    public function userDataTransformer(): UserDataTransformer
+    {
+        return $this->usersDataTransformer->userDataTransformer();
     }
 }

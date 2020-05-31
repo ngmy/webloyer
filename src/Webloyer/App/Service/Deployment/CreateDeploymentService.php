@@ -14,7 +14,7 @@ class CreateDeploymentService extends DeploymentService
 {
     /**
      * @param DeployRequest $request
-     * @return Deployment
+     * @return mixed
      */
     public function execute($request = null)
     {
@@ -32,6 +32,6 @@ class CreateDeploymentService extends DeploymentService
         $this->requestDeployment($deployment);
         $this->deploymentRepository->save($deployment);
 
-        return $deployment;
+        return $this->deploymentDataTransformer->write($deployment)->read(); // TODO surrogateIdがない
     }
 }

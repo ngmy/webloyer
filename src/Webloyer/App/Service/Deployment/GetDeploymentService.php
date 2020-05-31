@@ -14,12 +14,13 @@ class GetDeploymentService extends DeploymentService
 {
     /**
      * @param GetDeploymentRequest $request
-     * @return Deployment
+     * @return mixed
      */
     public function execute($request = null)
     {
         $projectId = new ProjectId($request->getProjectId());
         $number = new DeploymentNumber($request->getNumber());
-        return $this->getNonNullDeployment($projectId, $number);
+        $deployment = $this->getNonNullDeployment($projectId, $number);
+        return $this->deploymentDataTransformer->write($deployment)->read();
     }
 }

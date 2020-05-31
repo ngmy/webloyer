@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\Deployment;
 
 use Webloyer\Domain\Model\Deployment\Deployments;
+use Webloyer\Domain\Model\Project\ProjectId;
 
 class GetDeploymentsService extends DeploymentService
 {
     /**
      * @param GetDeploymentsRequest $request
-     * @return Deployments
+     * @return mixed
      */
     public function execute($request = null)
     {
-        return $this->deploymentRepository->findAllByPage($request->getPage(), $request->getPerPage());
+        $deployments = $this->deploymentRepository->findAllByProjectId(new ProjectId($request->getProjectId()));
+        return $this->deploymentsDataTransformer->write($deployments)->read();
     }
 }

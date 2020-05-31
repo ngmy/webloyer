@@ -40,4 +40,12 @@ class ServersDtoDataTransformer implements ServersDataTransformer
             return $this->serverDataTransformer->write($server)->read();
         }, $this->servers->toArray());
     }
+
+    /**
+     * @return ServerDataTransformer
+     */
+    public function serverDataTransformer(): ServerDataTransformer
+    {
+        return $this->serverDataTransformer;
+    }
 }

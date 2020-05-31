@@ -6,6 +6,7 @@ namespace Webloyer\Infra\App\DataTransformer\Server;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Webloyer\App\DataTransformer\Server\{
+    ServerDataTransformer,
     ServersDataTransformer,
     ServersDtoDataTransformer,
 };
@@ -66,5 +67,13 @@ class ServersLaravelLengthAwarePaginatorDataTransformer implements ServersDataTr
             $this->currentPage,
             $this->options
         );
+    }
+
+    /**
+     * @return ServerDataTransformer
+     */
+    public function serverDataTransformer(): ServerDataTransformer
+    {
+        return $this->serversDataTransformer->serverDataTransformer();
     }
 }

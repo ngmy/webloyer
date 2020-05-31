@@ -6,6 +6,10 @@ namespace Webloyer\App\Service\Deployment;
 
 use Common\App\Service\ApplicationService;
 use InvalidArgumentException;
+use Webloyer\App\DataTransformer\Deployment\{
+    DeploymentDataTransformer,
+    DeploymentsDataTransformer,
+};
 use Webloyer\Domain\Model\Deployment\{
     Deployment,
     DeploymentNumber,
@@ -41,6 +45,10 @@ abstract class DeploymentService implements ApplicationService
     protected $serverRepository;
     /** @var UserRepository */
     protected $userRepository;
+    /** @var $deploymentDataTransformer */
+    protected $deploymentDataTransformer;
+    /** @var $deploymentsDataTransformer */
+    protected $deploymentsDataTransformer;
 
     /**
      * @param DeploymentRepository $deploymentRepository
@@ -48,6 +56,8 @@ abstract class DeploymentService implements ApplicationService
      * @param RecipeRepository $recipeRepository
      * @param ServerRepository $serverRepository
      * @param UserRepository $userRepository
+     * @param DeploymentDataTransformer $deploymentDataTransformer
+     * @param DeploymentsDataTransformer $deploymentsDataTransformer
      * @return void
      */
     public function __construct(
@@ -55,13 +65,33 @@ abstract class DeploymentService implements ApplicationService
         ProjectRepository $projectRepository,
         RecipeRepository $recipeRepository,
         ServerRepository $serverRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        DeploymentDataTransformer $deploymentDataTransformer,
+        DeploymentsDataTransformer $deploymentsDataTransformer
     ) {
         $this->deploymentRepository = $deploymentRepository;
         $this->projectRepository = $projectRepository;
         $this->recipeRepository = $recipeRepository;
         $this->serverRepository = $serverRepository;
         $this->userRepository = $userRepository;
+        $this->deploymentDataTransformer = $deploymentDataTransformer;
+        $this->deploymentsDataTransformer = $deploymentsDataTransformer;
+    }
+
+    /**
+     * @return DeploymentDataTransformer
+     */
+    public function deploymentDataTransformer(): DeploymentDataTransformer
+    {
+        return $this->deploymentDataTransformer;
+    }
+
+    /**
+     * @return DeploymentsDataTransformer
+     */
+    public function deploymentsDataTransformer(): DeploymentsDataTransformer
+    {
+        return $this->deploymentsDataTransformer;
     }
 
     /**

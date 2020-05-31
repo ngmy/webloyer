@@ -20,4 +20,8 @@ interface ServersDataTransformer
      * @return mixed
      */
     public function read();
+    /**
+     * @return ServerDataTransformer
+     */
+    public function serverDataTransformer(): ServerDataTransformer;
 }

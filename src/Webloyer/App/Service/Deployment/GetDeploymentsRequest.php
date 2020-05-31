@@ -6,10 +6,20 @@ namespace Webloyer\App\Service\Deployment;
 
 class GetDeploymentsRequest
 {
+    /** @var string */
+    private $projectId;
     /** @var int|null */
     private $page;
     /** @var int|null */
     private $perPage;
+
+    /**
+     * @return string
+     */
+    public function getProjectId(): string
+    {
+        return $this->projectId;
+    }
 
     /**
      * @return int|null
@@ -25,6 +35,16 @@ class GetDeploymentsRequest
     public function getPerPage(): ?int
     {
         return $this->perPage;
+    }
+
+    /**
+     * @param string $projectId
+     * @return self
+     */
+    public function setProjectId(string $projectId): self
+    {
+        $this->projectId = $projectId;
+        return $this;
     }
 
     /**
