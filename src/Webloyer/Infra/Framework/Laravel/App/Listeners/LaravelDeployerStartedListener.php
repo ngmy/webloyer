@@ -34,7 +34,7 @@ class LaravelDeployerStartedListener implements ShouldQueue
      */
     public function handle(DeployerStarted $event): void
     {
-        DB::trancation(function () use ($event) {
+        DB::transaction(function () use ($event) {
             $deployment = $event->deployment();
             $deployment->changeStatus();
             $deployment->changeStartDate();

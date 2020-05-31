@@ -12,7 +12,7 @@ use Deployer\Domain\Model\{
 use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Webloyer\Domain\Model\Deployment\DeploymentCompleted;
-use Webloyer\Infra\Messaging\Laravel\{
+use Webloyer\Infra\Framework\Laravel\App\Listeners\{
     LaravelDeployerFinishedListener,
     LaravelDeployerProgressedListener,
     LaravelDeployerStartedListener,

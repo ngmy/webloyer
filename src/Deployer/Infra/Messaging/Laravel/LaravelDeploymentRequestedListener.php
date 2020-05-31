@@ -15,7 +15,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
-use Webloyer\Domain\Model\Deployment\DeploymentStarted;
+use Webloyer\Domain\Model\Deployment\DeploymentRequested;
+use Webloyer\Domain\Model\Recipe\Recipe;
 
 class LaravelDeploymentRequestedListener implements ShouldQueue
 {
@@ -34,54 +35,55 @@ class LaravelDeploymentRequestedListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param DeploymentStarted $event
+     * @param DeploymentRequested $event
      * @return void
      */
-    public function handle(DeploymentStarted $event): void
+    public function handle(DeploymentRequested $event): void
     {
         $this->createDeployerFile($event);
         $this->runDeployer($event);
     }
 
     /**
-     * @param DeploymentStarted $event
+     * @param DeploymentRequested $event
      * @return void
      */
-    public function createDeployerFile(DeploymentStarted $event): void
+    public function createDeployerFile(DeploymentRequested $event): void
     {
         // Create recipe files
-        foreach ($this->getRecipeFileNames() as $recipeFileName) {
-            $this->createFile($recipeFileName, $event->recipe()->body());
+        $i = 1;
+        foreach ($event->recipes()->toArray() as $recipe) {
+            $this->createFile($this->getRecipeFileName($event, $i++), $recipe->body());
         }
 
         // Create the server file
-        $this->createFile($this->getServerFileName(), $event->server()->body());
+        $this->createFile($this->getServerFileName($event), $event->server()->body());
 
         // Create the deployer file
         $contents[] = '<?php';
         $contents[] = 'namespace Deployer;';
-        foreach ($this->getRecipeFileNames() as $recipeFileName) {
+        foreach ($this->getRecipeFileNames($event) as $recipeFileName) {
             $contents[] = "require '" . $recipeFileName . "';";
         }
-        $contents[] = "set('repository', '" . $event->project()->repository() . "');";
-        $contents[] = "serverList('" . $this->getServerFileName() . "');";
-        $this->createFile($this->getDeployerFileName(), implode(PHP_EOL, $contents));
+        $contents[] = "set('repository', '" . $event->project()->repositoryUrl() . "');";
+        $contents[] = "serverList('" . $this->getServerFileName($event) . "');";
+        $this->createFile($this->getDeployerFileName($event), implode(PHP_EOL, $contents));
     }
 
     /**
-     * @param DeploymentStarted $event
+     * @param DeploymentRequested $event
      * @return void
      */
-    public function runDeployer(DeploymentStarted $event): void
+    public function runDeployer(DeploymentRequested $event): void
     {
         $process = new Process([
             base_path('vendor/bin/dep'),
-            '-f=' . $this->getDeployerFileName(),
+            '-f=' . $this->getDeployerFileName($event),
             '--ansi',
             '-n',
             '-vvv',
             $event->deployment()->task(),
-            $event->project()->stage(),
+            $event->project()->stageName(),
         ]);
         $process->setTimeout(600);
         DomainEventPublisher::getInstance()->publish(
@@ -107,25 +109,25 @@ class LaravelDeploymentRequestedListener implements ShouldQueue
         );
     }
 
-    public function getServerFileName(DeploymentStarted $event): string
+    public function getServerFileName(DeploymentRequested $event): string
     {
-        return sprintf('server_%s_%s_%s.yaml', $event->deployment()->projectId(), $event->deployment()->number());
+        return sprintf('server_%s_%s.yaml', $event->deployment()->projectId(), $event->deployment()->number());
     }
 
-    public function getRecipeFileNames(DeploymentStarted $event): array
+    public function getRecipeFileNames(DeploymentRequested $event): array
     {
         $i = 1;
-        return array_map(function (Recipe\Recipe $recipe) use ($event, $i): string {
-            return $this->getRecipeFileName($event, $i);
+        return array_map(function (Recipe $recipe) use ($event, $i): string {
+            return $this->getRecipeFileName($event, $i++);
         }, $event->recipes()->toArray());
     }
 
-    public function getRecipeFileName(DeploymentStarted $event, int $i): string
+    public function getRecipeFileName(DeploymentRequested $event, int $i): string
     {
-        return sprintf('server_%s_%s_%s.php', $event->deployment()->projectId(), $event->deployment()->number(), $i++);
+        return sprintf('server_%s_%s_%s.php', $event->deployment()->projectId(), $event->deployment()->number(), $i);
     }
 
-    public function getDeployerFileName(DeploymentStarted $event): string
+    public function getDeployerFileName(DeploymentRequested $event): string
     {
         return sprintf('deployer_%s_%s.php', $event->deployment()->projectId(), $event->deployment()->number());
     }
