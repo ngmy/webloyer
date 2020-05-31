@@ -9,6 +9,7 @@ use Webloyer\Domain\Model\Deployment\{
     DeploymentStatus,
     DeploymentTask,
 };
+use Webloyer\Domain\Model\Project\ProjectId;
 
 class RollbackDeploymentService extends DeploymentService
 {
@@ -20,7 +21,7 @@ class RollbackDeploymentService extends DeploymentService
     {
         $deployment = Deployment::of(
             $request->getProjectId(),
-            $this->deploymentRepository->nextId()->value(),
+            $this->deploymentRepository->nextId(new ProjectId($request->getProjectId()))->value(),
             DeploymentTask::rollback()->value(),
             DeploymentStatus::queued()->value(),
             '',

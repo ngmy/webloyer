@@ -23,6 +23,7 @@ use Webloyer\Domain\Model\Recipe\{
     Recipe,
     RecipeId,
     RecipeRepository,
+    Recipes,
 };
 use Webloyer\Domain\Model\Server\{
     ServerId,
@@ -122,9 +123,9 @@ abstract class DeploymentService implements ApplicationService
     protected function requestDeployment(Deployment $deployment): void
     {
         $project = $this->projectRepository->findById(new ProjectId($deployment->projectId()));
-        $recipes = array_map(function (string $recipeId): Recipe {
+        $recipes = new Recipes(...array_map(function (string $recipeId): Recipe {
             return $this->recipeRepository->findById(new RecipeId($recipeId));
-        }, $project->recipeIds());
+        }, $project->recipeIds()));
         $server = $this->serverRepository->findById(new ServerId($project->serverId()));
         $executor = $this->userRepository->findById(new UserId($deployment->executor()));
 

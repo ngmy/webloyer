@@ -10,6 +10,7 @@ use Webloyer\Domain\Model\Project\ProjectId;
 use Webloyer\Infra\Persistence\Eloquent\Models\{
     Deployment as DeploymentOrm,
     MaxDeployment as MaxDeploymentOrm,
+    Project as ProjectOrm,
 };
 
 class EloquentDeploymentRepository implements Deployment\DeploymentRepository
@@ -22,7 +23,8 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
     public function nextId(ProjectId $projectId): Deployment\DeploymentNumber
     {
         // Lock the row until transaction is committed
-        $maxDeploymentOrm = MaxDeploymentOrm::where('project_id', $projectId->value())
+        $projectOrm = ProjectOrm::ofId($projectId->value())->first();
+        $maxDeploymentOrm = MaxDeploymentOrm::where('project_id', $projectOrm->id)
             ->lockForUpdate()
             ->first();
         if (is_null($maxDeploymentOrm)) {

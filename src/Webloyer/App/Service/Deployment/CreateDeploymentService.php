@@ -9,6 +9,7 @@ use Webloyer\Domain\Model\Deployment\{
     DeploymentStatus,
     DeploymentTask,
 };
+use Webloyer\Domain\Model\Project\ProjectId;
 
 class CreateDeploymentService extends DeploymentService
 {
@@ -20,7 +21,7 @@ class CreateDeploymentService extends DeploymentService
     {
         $deployment = Deployment::of(
             $request->getProjectId(),
-            $this->deploymentRepository->nextId()->value(),
+            $this->deploymentRepository->nextId(new ProjectId($request->getProjectId()))->value(),
             DeploymentTask::deploy()->value(),
             DeploymentStatus::queued()->value(),
             '',

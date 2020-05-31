@@ -12,8 +12,10 @@ use Webloyer\Domain\Model\Project\{
     Projects,
 };
 use Webloyer\Domain\Model\Recipe\RecipeId;
-use Webloyer\Infra\Persistence\Eloquent\Models\Project as ProjectOrm;
-use Webloyer\Infra\Persistence\Eloquent\Models\Recipe as RecipeOrm;
+use Webloyer\Infra\Persistence\Eloquent\Models\{
+    Project as ProjectOrm,
+    Recipe as RecipeOrm,
+};
 
 class EloquentProjectRepository implements ProjectRepository
 {
@@ -117,6 +119,7 @@ class EloquentProjectRepository implements ProjectRepository
             return;
         }
         $projectOrm->delete();
+        $projectOrm->maxDeployment()->delete();
     }
 
     /**
@@ -127,10 +130,10 @@ class EloquentProjectRepository implements ProjectRepository
     public function save(Project $project): void
     {
         $projectOrm = ProjectOrm::firstOrNew(['uuid' => $project->id()]);
-        if ($projectOrm->wasRecentlyCreated) {
-            $projectOrm->maxDeployment()->create(['project_id' => $project->surrogateId()]);
-        }
         $project->provide($projectOrm);
         $projectOrm->save();
+        if ($projectOrm->wasRecentlyCreated) {
+            $projectOrm->maxDeployment()->create(['project_id' => $projectOrm->id]);
+        }
     }
 }

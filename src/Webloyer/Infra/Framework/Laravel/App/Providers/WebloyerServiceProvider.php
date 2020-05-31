@@ -99,9 +99,10 @@ use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginator
 use Webloyer\Infra\App\DataTransformer\Server\ServersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment\{
+    DeployController as DeploymentDeployController,
     IndexController as DeploymentIndexController,
+    RollbackController as DeploymentRollbackController,
     ShowController as DeploymentShowController,
-    StoreController as DeploymentStoreController,
 };
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project\{
     CreateController as ProjectCreateController,
@@ -186,18 +187,22 @@ class WebloyerServiceProvider extends ServiceProvider
                     $app->make(DeploymentsDataTransformer::class)
                 );
             });
-        $this->app->bind(CreateDeploymentService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new CreateDeploymentService(
-                    $app->make(DeploymentRepository::class),
-                    $app->make(ProjectRepository::class),
-                    $app->make(RecipeRepository::class),
-                    $app->make(ServerRepository::class),
-                    $app->make(UserRepository::class),
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
+        $this->app->when(DeploymentDeployController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new CreateDeploymentService(
+                        $app->make(DeploymentRepository::class),
+                        $app->make(ProjectRepository::class),
+                        $app->make(RecipeRepository::class),
+                        $app->make(ServerRepository::class),
+                        $app->make(UserRepository::class),
+                        $app->make(DeploymentDataTransformer::class),
+                        $app->make(DeploymentsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
         $this->app->bind(DeleteDeploymentService::class, function (Application $app): ApplicationService {
             return new TransactionalApplicationService(
                 new DeleteDeploymentService(
@@ -206,22 +211,28 @@ class WebloyerServiceProvider extends ServiceProvider
                     $app->make(RecipeRepository::class),
                     $app->make(ServerRepository::class),
                     $app->make(UserRepository::class),
+                    $app->make(DeploymentDataTransformer::class),
+                    $app->make(DeploymentsDataTransformer::class)
                 ),
                 $app->make(TransactionalSession::class)
             );
         });
-        $this->app->bind(RollbackDeploymentService::class, function (Application $app): ApplicationService {
-            return new TransactionalApplicationService(
-                new RollbackDeploymentService(
-                    $app->make(DeploymentRepository::class),
-                    $app->make(ProjectRepository::class),
-                    $app->make(RecipeRepository::class),
-                    $app->make(ServerRepository::class),
-                    $app->make(UserRepository::class),
-                ),
-                $app->make(TransactionalSession::class)
-            );
-        });
+        $this->app->when(DeploymentRollbackController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new RollbackDeploymentService(
+                        $app->make(DeploymentRepository::class),
+                        $app->make(ProjectRepository::class),
+                        $app->make(RecipeRepository::class),
+                        $app->make(ServerRepository::class),
+                        $app->make(UserRepository::class),
+                        $app->make(DeploymentDataTransformer::class),
+                        $app->make(DeploymentsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
 
         // project app services
         $this->app->when([ProjectEditController::class, ProjectShowController::class])
