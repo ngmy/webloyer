@@ -41,14 +41,14 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Manage project permissions.',
             ]);
             Permission::create([
-                'name'        => 'project.moderator',
+                'name'        => 'project.operator',
                 'slug'        => [
                     'create' => false,
                     'update' => false,
                     'delete' => false,
                 ],
                 'inherit_id'  => $projectPermission->getKey(),
-                'description' => 'Moderator project permissions.',
+                'description' => 'Operator project permissions.',
             ]);
 
             // Recipe permission
@@ -63,14 +63,14 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Manage recipe permissions.',
             ]);
             Permission::create([
-                'name'        => 'recipe.moderator',
+                'name'        => 'recipe.operator',
                 'slug'        => [
                     'create' => false,
                     'update' => false,
                     'delete' => false,
                 ],
                 'inherit_id'  => $recipePermission->getKey(),
-                'description' => 'Moderator recipe permissions.',
+                'description' => 'Operator recipe permissions.',
             ]);
 
             // Server permission
@@ -85,14 +85,14 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Manage server permissions.',
             ]);
             Permission::create([
-                'name'        => 'server.moderator',
+                'name'        => 'server.operator',
                 'slug'        => [
                     'create' => false,
                     'update' => false,
                     'delete' => false,
                 ],
                 'inherit_id'  => $serverPermission->getKey(),
-                'description' => 'Moderator server permissions.',
+                'description' => 'Operator server permissions.',
             ]);
 
             // Setting permission
@@ -118,7 +118,7 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Developer setting permissions.',
             ]);
             Permission::create([
-                'name'        => 'setting.moderator',
+                'name'        => 'setting.operator',
                 'slug'        => [
                     'create' => false,
                     'view'   => false,
@@ -126,7 +126,7 @@ class PermissionsTableSeeder extends Seeder
                     'delete' => false,
                 ],
                 'inherit_id'  => $settingPermission->getKey(),
-                'description' => 'Moderator setting permissions.',
+                'description' => 'Operator setting permissions.',
             ]);
 
             // User permission
@@ -152,7 +152,7 @@ class PermissionsTableSeeder extends Seeder
                 'description' => 'Developer user permissions.',
             ]);
             Permission::create([
-                'name'        => 'user.moderator',
+                'name'        => 'user.operator',
                 'slug'        => [
                     'create' => false,
                     'view'   => false,
@@ -160,7 +160,7 @@ class PermissionsTableSeeder extends Seeder
                     'delete' => false,
                 ],
                 'inherit_id'  => $userPermission->getKey(),
-                'description' => 'Moderator user permissions.',
+                'description' => 'Operator user permissions.',
             ]);
         });
     }

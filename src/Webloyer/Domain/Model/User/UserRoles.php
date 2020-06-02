@@ -68,6 +68,11 @@ class UserRoles
         unset($this->roles[$spec->value()]);
     }
 
+    public function removeAll(): void
+    {
+        $this->roles = [];
+    }
+
     /**
      * @param UserRoleSpecification $spec
      * @return UserRole|null

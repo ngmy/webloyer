@@ -169,6 +169,11 @@ class UserCore extends User
         $this->roles->remove($roleSpec);
     }
 
+    public function removeAllRoles(): void
+    {
+        $this->roles->removeAll();
+    }
+
     /**
      * @param UserRoleSpecification $roleSpec
      * @return UserRole|null

@@ -22,6 +22,23 @@ class UserRoleSpecification
     /** @var string */
     private const OPERATOR = Roles\OperatorRole::class;
 
+    private static $slugs = [
+        self::ADMINISTRATOR => 'administrator',
+        self::DEVELOPER => 'developer',
+        self::OPERATOR => 'operator',
+    ];
+
+    private static $names = [
+        self::ADMINISTRATOR => 'Administrator',
+        self::DEVELOPER => 'Developer',
+        self::OPERATOR => 'Operator',
+    ];
+
+    public static function slugs(): array
+    {
+        return array_combine(self::$names, self::$slugs);
+    }
+
     public function create(): UserRole
     {
         $class = $this->value();
@@ -30,15 +47,7 @@ class UserRoleSpecification
 
     public function slug(): string
     {
-        if ($this->value() == self::ADMINISTRATOR) {
-            return 'administrator';
-        }
-        if ($this->value() == self::DEVELOPER) {
-            return 'developer';
-        }
-        if ($this->value() == self::OPERATOR) {
-            return 'operator';
-        }
-        throw new \LogicException();
+        return self::$slugs[$this->value()];
     }
+
 }

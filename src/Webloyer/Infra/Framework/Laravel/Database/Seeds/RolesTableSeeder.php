@@ -30,9 +30,9 @@ class RolesTableSeeder extends Seeder
             ]);
 
             Role::create([
-                'name'        => 'Moderator',
-                'slug'        => 'moderator',
-                'description' => 'Manage moderator privileges.',
+                'name'        => 'Operator',
+                'slug'        => 'operator',
+                'description' => 'Manage operator privileges.',
             ]);
         });
     }

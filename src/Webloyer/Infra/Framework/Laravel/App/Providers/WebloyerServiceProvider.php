@@ -140,7 +140,7 @@ use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User\{
     StoreController as UserStoreController,
     RegenerateApiTokenController as UserRegenerateApiTokenController,
     UpdateController as UserUpdateController,
-    UpdatePasswordController as UserUpdatePassowrdController,
+    UpdatePasswordController as UserUpdatePassowordController,
     UpdateRoleController as UserUpdateRoleController,
 };
 
