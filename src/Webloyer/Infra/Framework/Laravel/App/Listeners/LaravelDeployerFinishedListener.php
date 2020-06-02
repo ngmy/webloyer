@@ -35,16 +35,11 @@ class LaravelDeployerFinishedListener implements ShouldQueue
     public function handle(DeployerFinished $event): void
     {
         DB::transaction(function () use ($event) {
-            $deployment = $event->deployment();
+            $deployment = $this->deploymentRepository->findById($event->projectId(), $event->number());
             $deployment->changeLog($event->log())
-                ->changeStatus($event->status())
+                ->changeStatus($event->status() === '0' ? 'succeeded' : 'failed')
                 ->changeFinishDate($event->finishDate())
-                ->complete(
-                    $event->project(),
-                    $event->recipes(),
-                    $event->server(),
-                    $event->executor()
-                );
+                ->complete();
             $this->deploymentRepository->save($deployment);
         });
     }

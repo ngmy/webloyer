@@ -176,6 +176,16 @@ class Project
         return $this->discardOldDeployment;
     }
 
+    public function emailNotification(): Notification\Email\EmailNotification
+    {
+        return $this->emailNotification;
+    }
+
+    public function serverOverride(): ServerOverride\ServerOverride
+    {
+        return $this->serverOverride;
+    }
+
     /**
      * @param string $name
      * @return self

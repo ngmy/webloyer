@@ -23,7 +23,7 @@ class RollbackController extends BaseController
             ->setExecutor($request->user()->toEntity()->id());
         $deployment = $this->service->execute($serviceRequest);
 
-        $link = link_to_route('projects.deployments.show', '#' . $deployment->number(), [$project->id(), $deployment->number()]);
+        $link = link_to_route('projects.deployments.show', '#' . $deployment->number, [$projectId, $deployment->number]);
         $request->session()->flash('status', "The deployment $link was successfully started.");
 
         return redirect()->route('projects.deployments.index', [$projectId]);

@@ -25,4 +25,11 @@ class Recipes
     {
         return $this->recipes;
     }
+
+    public function bodies(): RecipeBodies
+    {
+        return RecipeBodies::of(...array_map(function (Recipe $recipe): string {
+            return $recipe->body();
+        }, $this->recipes));
+    }
 }

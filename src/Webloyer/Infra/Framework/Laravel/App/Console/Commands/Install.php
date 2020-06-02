@@ -102,6 +102,13 @@ class Install extends Command
                     '--no-interaction' => true,
                 ]);
 
+                // Insert data. Nothing is inserted into the user table because the admin user is already inserted
+                Artisan::call('db:seed', [
+                    '--force'          => true,
+                    '--no-interaction' => true,
+                    '--class'          => DatabaseSeeder::class,
+                ]);
+
                 // Create the admin user
                 $createUserRequest = (new CreateUserRequest())
                     ->setEmail($admin['email'])
@@ -110,13 +117,6 @@ class Install extends Command
                     ->setApiToken(Str::random(60))
                     ->setRoles(['administrator']);
                 $user = $createUserService->execute($createUserRequest);
-
-                // Insert data. Nothing is inserted into the user table because the admin user is already inserted
-                Artisan::call('db:seed', [
-                    '--force'          => true,
-                    '--no-interaction' => true,
-                    '--class'          => DatabaseSeeder::class,
-                ]);
             }
 
             // Save the env buffer to the .env file

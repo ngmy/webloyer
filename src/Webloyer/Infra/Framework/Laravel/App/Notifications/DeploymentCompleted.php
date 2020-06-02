@@ -8,9 +8,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Webloyer\Infra\Notification\Laravel\LaravelDeploymentCompletedDto;
+use Webloyer\Domain\Model\Deployment\DeploymentCompleted as DeploymentCompletedEvent;
 
-class LaravelDeploymentCompleted extends Notification
+class DeploymentCompleted extends Notification
 {
     use Queueable;
 
@@ -19,9 +19,14 @@ class LaravelDeploymentCompleted extends Notification
      *
      * @return void
      */
-    public function __construct(LaravelDeploymentCompletedDto $dto)
-    {
-        $this->dto = $dto;
+    public function __construct(
+        DeploymentCompletedEvent $event,
+        object $project,
+        object $user
+    ) {
+        $this->event = $event;
+        $this->project = $project;
+        $this->user = $user;
     }
 
     /**
@@ -44,13 +49,13 @@ class LaravelDeploymentCompleted extends Notification
     public function toMail($notifiable)
     {
         $subject = sprintf('Deployment of %s #%s completed: %s',
-            $dto->name,
-            $dto->number,
-            $dto->status,
+            $this->project->name,
+            $this->event->number(),
+            $this->event->status(),
         );
         $url = route('projects.deployments.show', [
-            'project' => $dto->projectId,
-            'deployment' => $dto->number,
+            'project' => $this->event->projectId(),
+            'deployment' => $this->event->number(),
         ]);
 
         return (new MailMessage())
@@ -58,9 +63,9 @@ class LaravelDeploymentCompleted extends Notification
             ->greeting('Hello!')
             ->line('Deployment completed!')
             ->action('Show Deployment', $url)
-            ->line('Task: ' . $dto->task)
-            ->line('Log: ' . $dto->log)
-            ->line('Status: ' . $dto->status)
+            ->line('Task: ' . $this->event->task())
+            ->line('Log: ' . $this->event->log())
+            ->line('Status: ' . $this->event->status())
             ;
     }
 

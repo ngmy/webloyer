@@ -40,7 +40,8 @@ class Deployment extends Model implements DeploymentInterest
      */
     public function scopeOfProjectId(Builder $query, string $projectId): Builder
     {
-        return $query->where('project_id', $projectId);
+        $projectOrm = Project::ofId($projectId)->first();
+        return $query->where('project_id', $projectOrm->id);
     }
 
     /**
@@ -163,14 +164,17 @@ class Deployment extends Model implements DeploymentInterest
         assert(!is_null($this->project));
         return DeploymentEntity::of(
             $this->project->uuid,
-            $this->number,
+            (int) $this->number,
             $this->task,
             $this->status,
             $this->log,
-            $this->user->id,
+            $this->user->uuid,
             $this->request_date,
             $this->start_date,
             $this->finish_date
-        );
+        )
+        ->setSurrogateId($this->id)
+        ->setCreatedAt($this->created_at)
+        ->setUpdatedAt($this->updated_at);
     }
 }

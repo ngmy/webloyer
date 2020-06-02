@@ -6,17 +6,23 @@ namespace Webloyer\Domain\Model\Deployment;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
 use Common\Domain\Model\Identity\Identifiable;
+use Common\Domain\Model\Timestamp\Timestampable;
 use LogicException;
 use Webloyer\Domain\Model\Project\Project;
 use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Project\RepositoryUrl;
+use Webloyer\Domain\Model\Project\StageName;
 use Webloyer\Domain\Model\Recipe\Recipes;
 use Webloyer\Domain\Model\Server\Server;
+use Webloyer\Domain\Model\Server\ServerBody;
 use Webloyer\Domain\Model\User\User;
 use Webloyer\Domain\Model\User\UserId;
+use Webloyer\Domain\Model\User\UserEmail;
 
 class Deployment
 {
     use Identifiable;
+    use Timestampable;
 
     /** @var ProjectId */
     private $projectId;
@@ -68,7 +74,7 @@ class Deployment
             new DeploymentLog($log),
             new UserId($executor),
             DeploymentRequestDate::of($requestDate),
-            isset($finishDate) ? DeplotmentStartDate::of($startDate) : null,
+            isset($startDate) ? DeploymentStartDate::of($startDate) : null,
             isset($finishDate) ? DeploymentFinishDate::of($finishDate) : null
         );
     }
@@ -196,9 +202,15 @@ class Deployment
         return $this;
     }
 
+    public function changeStartDate(string $startDate): self
+    {
+        $this->startDate = DeploymentStartDate::of($startDate);
+        return $this;
+    }
+
     public function changeFinishDate(string $finishDate): self
     {
-        $this->log = DeploymentFinishDate::of($finishDate);
+        $this->finishDate = DeploymentFinishDate::of($finishDate);
         return $this;
     }
 
@@ -210,21 +222,21 @@ class Deployment
     ): void {
         DomainEventPublisher::getInstance()->publish(
             new DeploymentRequested(
-                $this,
-                $project,
-                $recipes,
-                $server,
-                $executor
+                $this->projectId,
+                $this->number,
+                $this->task,
+                new RepositoryUrl($project->repositoryUrl()),
+                new StageName($project->stageName()),
+                $project->serverOverride(),
+                $project->emailNotification(),
+                $recipes->bodies(),
+                new ServerBody($server->body()),
+                new UserEmail($executor->email())
             )
         );
     }
 
-    public function complete(
-        Project $project,
-        Recipes $recipes,
-        Server $server,
-        User $executor
-    ): void {
+    public function complete(): void {
         if (!$this->status->isCompleted()) {
             throw new LogicException();
         }
@@ -236,11 +248,12 @@ class Deployment
         }
         DomainEventPublisher::getInstance()->publish(
             new DeploymentCompleted(
-                $this,
-                $project,
-                $recipes,
-                $server,
-                $executor
+                $this->projectId(),
+                $this->number(),
+                $this->task(),
+                $this->status(),
+                $this->log(),
+                $this->executor()
             )
         );
     }

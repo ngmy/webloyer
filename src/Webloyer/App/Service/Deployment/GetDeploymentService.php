@@ -6,7 +6,7 @@ namespace Webloyer\App\Service\Deployment;
 
 use Webloyer\Domain\Model\Deployment\{
     Deployment,
-    DeploymenNumber,
+    DeploymentNumber,
 };
 use Webloyer\Domain\Model\Project\ProjectId;
 

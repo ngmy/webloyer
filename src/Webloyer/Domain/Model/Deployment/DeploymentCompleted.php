@@ -8,15 +8,9 @@ use Common\Domain\Model\Event\{
     DomainEvent,
     PublishableDomainEvent,
 };
-use Webloyer\Domain\Model\Project\Project;
-use Webloyer\Domain\Model\Project\ProjectId;
-use Webloyer\Domain\Model\Recipe\Recipes;
-use Webloyer\Domain\Model\Server\Server;
-use Webloyer\Domain\Model\User\User;
 
 class DeploymentCompleted implements DomainEvent, PublishableDomainEvent
 {
-
     /**
      * @param ProjectId $projectId
      * @param DeploymentNumber $number
@@ -24,41 +18,60 @@ class DeploymentCompleted implements DomainEvent, PublishableDomainEvent
      * @return void
      */
     public function __construct(
-        Deployment $deployment,
-        Project $project,
-        Recipes $recipes,
-        Server $server,
-        User $executor
+        string $projectId,
+        int $number,
+        string $task,
+        string $status,
+        string $log,
+        string $userId
     ) {
-        $this->deployment = $deployment;
-        $this->project = $project;
-        $this->recipes = $recipes;
-        $this->server = $server;
-        $this->executor = $executor;
+        $this->projectId = $projectId;
+        $this->number = $number;
+        $this->task = $task;
+        $this->status = $status;
+        $this->log = $log;
+        $this->userId = $userId;
     }
 
-    public function deployment(): Deployment
+    public function projectId(): string
     {
-        return $this->deployment;
+        return $this->projectId;
     }
 
-    public function project(): Project
+    /**
+     * @return int
+     */
+    public function number(): int
     {
-        return $this->project;
+        return $this->number;
     }
 
-    public function recipes(): Recipes
+    /**
+     * @return string
+     */
+    public function task(): string
     {
-        return $this->recipes;
+        return $this->task;
     }
 
-    public function server(): Server
+    /**
+     * @return string
+     */
+    public function status(): string
     {
-        return $this->server;
+        return $this->status;
     }
 
-    public function executor(): Executor
+    /**
+     * @return string
+     */
+    public function log(): string
     {
-        return $this->executor;
+        return $this->log;
+    }
+
+    public function userId(): string
+    {
+        return $this->userId;
     }
 }

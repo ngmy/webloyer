@@ -46,7 +46,7 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
     public function findAllByProjectId(ProjectId $projectId): Deployment\Deployments
     {
         $deploymentArray = DeploymentOrm::ofProjectId($projectId->value())
-            ->orderBy('number')
+            ->orderBy('number', 'desc')
             ->get()
             ->map(function (DeploymentOrm $deploymentOrm): Deployment\Deployment {
                 return $deploymentOrm->toEntity();
@@ -68,7 +68,7 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
         $perPage = $perPage ?? 10;
 
         $deploymentArray = DeploymentOrm::ofProjectId($projectId->value())
-            ->orderBy('number')
+            ->orderBy('number', 'desc')
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
@@ -127,8 +127,9 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
      */
     public function save(Deployment\Deployment $deployment): void
     {
+        $projectOrm = ProjectOrm::ofId($deployment->projectId())->first();
         $deploymentOrm = DeploymentOrm::firstOrNew([
-            'project_id' => $deployment->projectId(),
+            'project_id' => $projectOrm->id,
             'number' => $deployment->number(),
         ]);
         $deployment->provide($deploymentOrm);

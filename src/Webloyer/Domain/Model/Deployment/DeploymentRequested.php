@@ -8,56 +8,99 @@ use Common\Domain\Model\Event\{
     DomainEvent,
     PublishableDomainEvent,
 };
-use Webloyer\Domain\Model\Project\Project;
+use Webloyer\Domain\Model\Project\Notification\Email\EmailNotification;
 use Webloyer\Domain\Model\Project\ProjectId;
-use Webloyer\Domain\Model\Recipe\Recipes;
-use Webloyer\Domain\Model\Server\Server;
-use Webloyer\Domain\Model\User\User;
+use Webloyer\Domain\Model\Project\RepositoryUrl;
+use Webloyer\Domain\Model\Project\StageName;
+use Webloyer\Domain\Model\Project\ServerOverride\ServerOverride;
+use Webloyer\Domain\Model\Recipe\RecipeBodies;
+use Webloyer\Domain\Model\Server\ServerBody;
+use Webloyer\Domain\Model\User\UserEmail;
 
 class DeploymentRequested implements DomainEvent, PublishableDomainEvent
 {
-    /**
-     * @param ProjectId $projectId
-     * @param DeploymentNumber $number
-     * @param DeploymentTask $task
-     * @return void
-     */
+    private $projectId;
+    private $number;
+    private $task;
+    private $repositoryUrl;
+    private $stageName;
+    private $serverOverride;
+    private $emailNotification;
+    private $recipeBodies;
+    private $serverBody;
+    private $userEmail;
+
     public function __construct(
-        Deployment $deployment,
-        Project $project,
-        Recipes $recipes,
-        Server $server,
-        User $executor
+        ProjectId $projectId,
+        DeploymentNumber $number,
+        DeploymentTask $task,
+        RepositoryUrl $repositoryUrl,
+        StageName $stageName,
+        ServerOverride $serverOverride,
+        EmailNotification $emailNotification,
+        RecipeBodies $recipeBodies,
+        ServerBody $serverBody,
+        UserEmail $userEmail
     ) {
-        $this->deployment = $deployment;
-        $this->project = $project;
-        $this->recipes = $recipes;
-        $this->server = $server;
-        $this->executor = $executor;
+        $this->projectId = $projectId;
+        $this->number = $number;
+        $this->task = $task;
+        $this->repositoryUrl = $repositoryUrl;
+        $this->stageName = $stageName;
+        $this->serverOverride = $serverOverride;
+        $this->emailNotification = $emailNotification;
+        $this->recipeBodies = $recipeBodies;
+        $this->serverBody = $serverBody;
+        $this->userEmail = $userEmail;
     }
 
-    public function deployment(): Deployment
+    public function projectId(): ProjectId
     {
-        return $this->deployment;
+        return $this->projectId;
     }
 
-    public function project(): Project
+    public function number(): DeploymentNumber
     {
-        return $this->project;
+        return $this->number;
     }
 
-    public function recipes(): Recipes
+    public function task(): DeploymentTask
     {
-        return $this->recipes;
+        return $this->task;
     }
 
-    public function server(): Server
+    public function repositoryUrl(): RepositoryUrl
     {
-        return $this->server;
+        return $this->repositoryUrl;
     }
 
-    public function executor(): Executor
+    public function stageName(): StageName
     {
-        return $this->executor;
+        return $this->stageName;
+    }
+
+    public function serverOverride(): ServerOverride
+    {
+        return $this->serverOverride;
+    }
+
+    public function recipeBodies(): RecipeBodies
+    {
+        return $this->recipeBodies;
+    }
+
+    public function serverBody(): ServerBody
+    {
+        return $this->serverBody;
+    }
+
+    public function userEmail(): UserEmail
+    {
+        return $this->userEmail;
+    }
+
+    public function emailNotification(): EmailNotification
+    {
+        return $this->emailNotification;
     }
 }

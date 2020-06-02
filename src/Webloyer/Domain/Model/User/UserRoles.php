@@ -44,7 +44,7 @@ class UserRoles
         if ($this->has($spec)) {
             return;
         }
-        $this->roles[$spec->value()] = $role;
+        $this->roles[$spec->slug()] = $role;
     }
 
     /**

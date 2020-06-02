@@ -114,8 +114,10 @@ class User extends Authenticatable implements UserInterest
      */
     public function informRoles(array $roles): void
     {
-        $this->revokeAllRoles();
-        $this->assignRole($roles);
+        self::saved(function (User $user) use ($roles) {
+            $this->revokeAllRoles();
+            $this->assignRole($roles);
+        });
     }
 
     /**

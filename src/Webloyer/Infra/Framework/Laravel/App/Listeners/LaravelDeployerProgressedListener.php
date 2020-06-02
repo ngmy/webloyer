@@ -35,7 +35,7 @@ class LaravelDeployerProgressedListener implements ShouldQueue
     public function handle(DeployerProgressed $event): void
     {
         DB::transaction(function () use ($event) {
-            $deployment = $event->deployment();
+            $deployment = $this->deploymentRepository->findById($event->projectId(), $event->number());
             $deployment->appendLog($event->log());
             $this->deploymentRepository->save($deployment);
         });

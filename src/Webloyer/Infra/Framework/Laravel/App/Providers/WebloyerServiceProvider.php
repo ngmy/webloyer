@@ -233,6 +233,19 @@ class WebloyerServiceProvider extends ServiceProvider
                     $app->make(TransactionalSession::class)
                 );
             });
+        $this->app->when(DeploymentShowController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new GetDeploymentService(
+                    $app->make(DeploymentRepository::class),
+                    $app->make(ProjectRepository::class),
+                    $app->make(RecipeRepository::class),
+                    $app->make(ServerRepository::class),
+                    $app->make(UserRepository::class),
+                    $app->make(DeploymentDataTransformer::class),
+                    $app->make(DeploymentsDataTransformer::class)
+                );
+            });
 
         // project app services
         $this->app->when([ProjectEditController::class, ProjectShowController::class])

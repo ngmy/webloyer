@@ -27,4 +27,18 @@ class UserRoleSpecification
         $class = $this->value();
         return new $class();
     }
+
+    public function slug(): string
+    {
+        if ($this->value() == self::ADMINISTRATOR) {
+            return 'administrator';
+        }
+        if ($this->value() == self::DEVELOPER) {
+            return 'developer';
+        }
+        if ($this->value() == self::OPERATOR) {
+            return 'operator';
+        }
+        throw new \LogicException();
+    }
 }

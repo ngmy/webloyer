@@ -52,12 +52,12 @@ class LaravelDeploymentRequestedListener implements ShouldQueue
     {
         // Create recipe files
         $i = 1;
-        foreach ($event->recipes()->toArray() as $recipe) {
-            $this->createFile($this->getRecipeFileName($event, $i++), $recipe->body());
+        foreach ($event->recipeBodies()->toArray() as $recipeBody) {
+            $this->createFile($this->getRecipeFileName($event, $i++), $recipeBody);
         }
 
         // Create the server file
-        $this->createFile($this->getServerFileName($event), $event->server()->body());
+        $this->createFile($this->getServerFileName($event), $event->serverBody()->value());
 
         // Create the deployer file
         $contents[] = '<?php';
@@ -65,7 +65,7 @@ class LaravelDeploymentRequestedListener implements ShouldQueue
         foreach ($this->getRecipeFileNames($event) as $recipeFileName) {
             $contents[] = "require '" . $recipeFileName . "';";
         }
-        $contents[] = "set('repository', '" . $event->project()->repositoryUrl() . "');";
+        $contents[] = "set('repository', '" . $event->repositoryUrl()->value() . "');";
         $contents[] = "serverList('" . $this->getServerFileName($event) . "');";
         $this->createFile($this->getDeployerFileName($event), implode(PHP_EOL, $contents));
     }
@@ -82,20 +82,26 @@ class LaravelDeploymentRequestedListener implements ShouldQueue
             '--ansi',
             '-n',
             '-vvv',
-            $event->deployment()->task(),
-            $event->project()->stageName(),
+            $event->task()->value(),
+            $event->stageName()->value(),
         ]);
         $process->setTimeout(600);
         DomainEventPublisher::getInstance()->publish(
             new DeployerStarted(
+                $event->projectId(),
+                $event->number(),
+                (new DateTimeImmutable())->format('Y-m-d H:i:s')
             )
         );
 
         $log = '';
-        $process->run(function (string $type, string $buffer) use (&$log) {
+        $process->run(function (string $type, string $buffer) use ($event, &$log) {
             $log .= $buffer;
             DomainEventPublisher::getInstance()->publish(
                 new DeployerProgressed(
+                    $event->projectId(),
+                    $event->number(),
+                    $log
                 )
             );
         });
@@ -105,31 +111,36 @@ class LaravelDeploymentRequestedListener implements ShouldQueue
         $finishDate = (new DateTimeImmutable())->format('Y-m-d H:i:s');
         DomainEventPublisher::getInstance()->publish(
             new DeployerFinished(
+                $event->projectId(),
+                $event->number(),
+                $log,
+                $status,
+                'now'
             )
         );
     }
 
     public function getServerFileName(DeploymentRequested $event): string
     {
-        return sprintf('server_%s_%s.yaml', $event->deployment()->projectId(), $event->deployment()->number());
+        return sprintf('server_%s_%s.yaml', $event->projectId()->value(), $event->number()->value());
     }
 
     public function getRecipeFileNames(DeploymentRequested $event): array
     {
         $i = 1;
-        return array_map(function (Recipe $recipe) use ($event, $i): string {
+        return array_map(function (string $recipeBody) use ($event, $i): string {
             return $this->getRecipeFileName($event, $i++);
-        }, $event->recipes()->toArray());
+        }, $event->recipeBodies()->toArray());
     }
 
     public function getRecipeFileName(DeploymentRequested $event, int $i): string
     {
-        return sprintf('server_%s_%s_%s.php', $event->deployment()->projectId(), $event->deployment()->number(), $i);
+        return sprintf('server_%s_%s_%s.php', $event->projectId()->value(), $event->number()->value(), $i);
     }
 
     public function getDeployerFileName(DeploymentRequested $event): string
     {
-        return sprintf('deployer_%s_%s.php', $event->deployment()->projectId(), $event->deployment()->number());
+        return sprintf('deployer_%s_%s.php', $event->projectId()->value(), $event->number()->value());
     }
 
     public function createFile(string $fileName, string $contents): void

@@ -78,8 +78,8 @@ class DeploymentDtoDataTransformer implements DeploymentDataTransformer
         $this->deployment->provide($dto);
 
         if (isset($this->userDataTransformer)) {
-            $user = $this->deploymentService(new UserId($this->deployment->executor()));
-            $dto->user = '';
+            $user = $this->deploymentService->userFrom(new UserId($this->deployment->executor()));
+            $dto->user = $this->userDataTransformer->write($user)->read();
         }
 
         $dto->surrogateId = $this->deployment->surrogateId();

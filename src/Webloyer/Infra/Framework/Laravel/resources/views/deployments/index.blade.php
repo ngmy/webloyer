@@ -44,7 +44,7 @@
                             <td>{{ $deployment->finishDate }}</td>
                             <td>{{ $deployment->user->email }}</td>
                             <td>
-                                {!! link_to_route('projects.deployments.show', 'Show', [$project, $deployment->number], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('projects.deployments.show', 'Show', [$projectId, $deployment->number], ['class' => 'btn btn-default']) !!}
                             </td>
                         </tr>
                     @endforeach
