@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
 use Webloyer\App\Service\Server\GetServerRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\ShowViewModel;
 
 class ShowController extends BaseController
 {
@@ -19,6 +20,6 @@ class ShowController extends BaseController
         $serviceRequest = (new GetServerRequest())->setId($id);
         $server = $this->service->execute($serviceRequest);
 
-        return view('webloyer::servers.show')->with('server', $server);
+        return (new ShowViewModel($server))->view('webloyer::servers.show');
     }
 }

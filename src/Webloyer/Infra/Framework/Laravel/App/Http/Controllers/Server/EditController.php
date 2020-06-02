@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
 use Webloyer\App\Service\Server\GetServerRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\EditViewModel;
 
 class EditController extends BaseController
 {
@@ -19,6 +20,6 @@ class EditController extends BaseController
         $serviceRequest = (new GetServerRequest())->setId($id);
         $server = $this->service->execute($serviceRequest);
 
-        return view('webloyer::servers.edit')->with('server', $server);
+        return (new EditViewModel($server))->view('webloyer::servers.edit');
     }
 }

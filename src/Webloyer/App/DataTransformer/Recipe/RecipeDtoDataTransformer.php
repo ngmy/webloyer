@@ -61,7 +61,6 @@ class RecipeDtoDataTransformer implements RecipeDataTransformer
         if (isset($this->projectsDataTransformer)) {
             $projects = $this->recipeService->projectsFrom(new RecipeId($this->recipe->id()));
             $dto->projects = $this->projectsDataTransformer->write($projects)->read();
-            $dto->projectCount = $projects->count();
         }
 
         $dto->surrogateId = $this->recipe->surrogateId();

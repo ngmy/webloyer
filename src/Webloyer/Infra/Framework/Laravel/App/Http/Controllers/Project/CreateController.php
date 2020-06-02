@@ -7,6 +7,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 use Webloyer\App\Service\Recipe\GetRecipesService;
 use Webloyer\App\Service\Server\GetServersService;
 use Webloyer\App\Service\User\GetUsersService;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\CreateViewModel;
 
 class CreateController extends BaseController
 {
@@ -37,9 +38,10 @@ class CreateController extends BaseController
         $servers = $this->serverService->execute();
         $users = $this->userService->execute();
 
-        return view('webloyer::projects.create')
-            ->with('recipes', array_column($recipes, 'name', 'id')) // TODO view model
-            ->with('servers', array_column($servers, 'name', 'id')) // TODO view model
-            ->with('users', ['' => ''] + array_column($users, 'email', 'id')); // TODO view model
+        return (new CreateViewModel(
+            $recipes,
+            $servers,
+            $users
+        ))->view('webloyer::projects.create');
     }
 }

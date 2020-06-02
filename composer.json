@@ -46,10 +46,10 @@
     ],
     "require": {
         "php": "^7.2",
-        "ajaxorg/ace-builds": "~1.2.0",
+        "ajaxorg/ace-builds": "^1.0",
         "davejamesmiller/laravel-breadcrumbs": "^5.0",
         "deployer/deployer": "^6.0",
-        "fguillot/json-rpc": "~v1.2.1",
+        "fguillot/json-rpc": "^1.0",
         "fideloper/proxy": "^4.0",
         "kodeine/laravel-acl": "^2.0",
         "jackiedo/dotenv-editor": "^1.0",
@@ -62,6 +62,7 @@
         "ngmy/laravel-query-log-tracker": "0.2",
         "robclancy/presenter": "^1.0",
         "sensiolabs/ansi-to-html": "^1.0",
+        "spatie/laravel-view-models": "^1.0",
         "squizlabs/php_codesniffer": "^3.0",
         "symfony/yaml": "^5.0"
     },
@@ -73,7 +74,7 @@
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
         "nunomaduro/larastan": "0.5.5",
-        "php-coveralls/php-coveralls": "^2.2",
+        "php-coveralls/php-coveralls": "^2.0",
         "phpunit/phpunit": "^8.0"
     },
     "config": {

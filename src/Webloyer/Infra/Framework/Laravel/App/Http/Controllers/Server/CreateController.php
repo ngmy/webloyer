@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\CreateViewModel;
+
 class CreateController extends BaseController
 {
     /**
@@ -13,6 +15,6 @@ class CreateController extends BaseController
      */
     public function __invoke()
     {
-        return view('webloyer::servers.create');
+        return (new CreateViewModel())->view('webloyer::servers.create');
     }
 }

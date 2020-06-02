@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe;
 
 use Webloyer\App\Service\Recipe\GetRecipeRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Recipe\EditViewModel;
 
 class EditController extends BaseController
 {
@@ -19,6 +20,6 @@ class EditController extends BaseController
         $serviceRequest = (new GetRecipeRequest())->setId($id);
         $recipe = $this->service->execute($serviceRequest);
 
-        return view('webloyer::recipes.edit')->with('recipe', $recipe);
+        return (new EditViewModel($recipe))->view('webloyer::recipes.edit');
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Project\IndexRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\IndexViewModel;
 
 class IndexController extends BaseController
 {
@@ -19,6 +20,6 @@ class IndexController extends BaseController
         $this->service->projectsDataTransformer()->setPerPage(10);
         $projects = $this->service->execute();
 
-        return view('webloyer::projects.index')->with('projects', $projects);
+        return (new IndexViewModel($projects))->view('webloyer::projects.index');
     }
 }

@@ -8,6 +8,7 @@ use App;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
 use Webloyer\App\Service\Deployment\GetDeploymentsRequest;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Deployment\IndexRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Deployment\IndexViewModel;
 
 class IndexController extends BaseController
 {
@@ -28,8 +29,6 @@ class IndexController extends BaseController
             ->setUserDataTransformer(App::make(UserDtoDataTransformer::class));
         $deployments = $this->service->execute($serviceRequest);
 
-        return view('webloyer::deployments.index')
-            ->with('deployments', $deployments)
-            ->with('projectId', $projectId);
+        return (new IndexViewModel($deployments, $projectId))->view('webloyer::deployments.index');
     }
 }

@@ -9,6 +9,7 @@ use Webloyer\App\Service\Project\GetProjectRequest;
 use Webloyer\App\Service\Recipe\GetRecipesService;
 use Webloyer\App\Service\Server\GetServersService;
 use Webloyer\App\Service\User\GetUsersService;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\EditViewModel;
 
 class EditController extends BaseController
 {
@@ -44,10 +45,11 @@ class EditController extends BaseController
         $servers = $this->serverService->execute();
         $users = $this->userService->execute();
 
-        return view('webloyer::projects.edit')
-            ->with('project', $project)
-            ->with('recipes', array_column($recipes, 'name', 'id')) // TODO view model
-            ->with('servers', array_column($servers, 'name', 'id')) // TODO view model
-            ->with('users', ['' => ''] + array_column($users, 'email', 'id')); // TODO view model
+        return (new EditViewModel(
+            $project,
+            $recipes,
+            $servers,
+            $users
+        ))->view('webloyer::projects.edit');
     }
 }

@@ -9,6 +9,7 @@ use Webloyer\App\DataTransformer\Recipe\RecipesDtoDataTransformer;
 use Webloyer\App\DataTransformer\Server\ServerDtoDataTransformer;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
 use Webloyer\App\Service\Project\GetProjectRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\ShowViewModel;
 
 class ShowController extends BaseController
 {
@@ -28,6 +29,6 @@ class ShowController extends BaseController
             ->setUserDataTransformer(App::make(UserDtoDataTransformer::class));
         $project = $this->service->execute($serviceRequest);
 
-        return view('webloyer::projects.show')->with('project', $project);
+        return (new ShowViewModel($project))->view('webloyer::projects.show');
     }
 }

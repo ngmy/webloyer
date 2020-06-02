@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe;
 
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Recipe\CreateViewModel;
+
 class CreateController extends BaseController
 {
     /**
@@ -13,6 +15,6 @@ class CreateController extends BaseController
      */
     public function __invoke()
     {
-        return view('webloyer::recipes.create');
+        return (new CreateViewModel())->view('webloyer::recipes.create');
     }
 }

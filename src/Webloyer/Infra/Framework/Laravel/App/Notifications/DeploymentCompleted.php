@@ -8,7 +8,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Webloyer\Domain\Model\Deployment\DeploymentCompleted as DeploymentCompletedEvent;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Notifications\DeploymentCompletedViewModel;
 
 class DeploymentCompleted extends Notification
 {
@@ -48,24 +50,21 @@ class DeploymentCompleted extends Notification
      */
     public function toMail($notifiable)
     {
-        $subject = sprintf('Deployment of %s #%s completed: %s',
-            $this->project->name,
-            $this->event->number(),
-            $this->event->status(),
+        // TODO injection?
+        $viewModel = new DeploymentCompletedViewModel(
+            $this->event,
+            $this->project,
+            new AnsiToHtmlConverter()
         );
-        $url = route('projects.deployments.show', [
-            'project' => $this->event->projectId(),
-            'deployment' => $this->event->number(),
-        ]);
 
         return (new MailMessage())
-            ->subject($subject)
+            ->subject($viewModel->subject())
             ->greeting('Hello!')
             ->line('Deployment completed!')
-            ->action('Show Deployment', $url)
-            ->line('Task: ' . $this->event->task())
-            ->line('Log: ' . $this->event->log())
-            ->line('Status: ' . $this->event->status())
+            ->action('Show Deployment', $viewModel->deploymentUrl())
+            ->line('Task: ' . $viewModel->event()->task())
+            ->line('Log: ' . $viewModel->deploymentLog())
+            ->line('Status: ' . $viewModel->event()->status())
             ;
     }
 
