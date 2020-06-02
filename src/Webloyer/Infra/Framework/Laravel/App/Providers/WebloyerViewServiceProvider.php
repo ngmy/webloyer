@@ -25,6 +25,6 @@ class WebloyerViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'webloyer');
+        $this->loadViewsFrom(__DIR__ . '/../../Resources/views', 'webloyer');
     }
 }

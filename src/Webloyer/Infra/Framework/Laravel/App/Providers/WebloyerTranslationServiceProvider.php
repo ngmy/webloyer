@@ -25,6 +25,6 @@ class WebloyerTranslationServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'webloyer');
+        $this->loadTranslationsFrom(__DIR__ . '/../../Resources/lang', 'webloyer');
     }
 }
