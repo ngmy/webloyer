@@ -37,7 +37,7 @@
                 <tbody>
                     @foreach ($deployments as $deployment)
                         <tr>
-                            <td>{!! $deployment->status !!}</td>
+                            <td>{!! $deploymentStatus($deployment) !!}</td>
                             <td>{{ $deployment->number }}</td>
                             <td>{{ $deployment->task }}</td>
                             <td>{{ $deployment->startDate }}</td>

@@ -32,31 +32,31 @@
                     </tr>
                     <tr>
                         <th>Deploy Path</th>
-                        <td>{{ $project->deployPath }}</td>
+                        <td>{{ $hyphenIfBlank($project->deployPath) }}</td>
                     </tr>
                     <tr>
                         <th>E-Mail Notification Recipient</th>
-                        <td>{{ $project->emailNotificationRecipient }}</td>
+                        <td>{{ $hyphenIfBlank($project->emailNotificationRecipient) }}</td>
                     </tr>
                     <tr>
                         <th>Days To Keep Deployments</th>
-                        <td>{{ $project->deploymentKeepDays }}</td>
+                        <td>{{ $hyphenIfBlank($project->deploymentKeepDays) }}</td>
                     </tr>
                     <tr>
                         <th>Keep Last Deployment</th>
-                        <td>{{ (int) $project->keepLastDeployment }}</td>
+                        <td>{{ $yesOrNo($project->keepLastDeployment) }}</td>
                     </tr>
                     <tr>
                         <th>Max # Of Deployments To Keep</th>
-                        <td>{{ $project->deploymentKeepMaxNumber }}</td>
+                        <td>{{ $hyphenIfBlank($project->deploymentKeepMaxNumber) }}</td>
                     </tr>
                     <tr>
                         <th>GitHub Webhook Secret</th>
-                        <td>{{ $project->githubWebhookSecret }}</td>
+                        <td>{{ $hyphenIfBlank($project->githubWebhookSecret) }}</td>
                     </tr>
                     <tr>
                         <th>GitHub Webhook Execute By</th>
-                        <td>{{ $project->githubWebhookUser ? $project->githubWebhookUser->email : '' }}</td>
+                        <td>{{ $hyphenIfBlank($projectGithubWebhookUserEmail($project)) }}</td>
                     </tr>
                 </tbody>
             </table>

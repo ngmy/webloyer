@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <th>Message</th>
-                        <td><pre class="ansi_box"><code>{!! $deployment->log !!}</code></pre></td>
+                        <td><pre class="ansi_box"><code>{!! $deploymentLog($deployment) !!}</code></pre></td>
                     </tr>
                     <tr>
                         <th>Started At</th>
@@ -36,7 +36,7 @@
                     </tr>
                 </tbody>
             </table>
-            {!! link_to_route('projects.deployments.index', 'Back', [$deployment->projectId], ['class' => 'btn btn-danger']) !!}
+            {!! link_to_route('projects.deployments.index', 'Back', [$projectId], ['class' => 'btn btn-danger']) !!}
         </div>
     </div>
 </div>

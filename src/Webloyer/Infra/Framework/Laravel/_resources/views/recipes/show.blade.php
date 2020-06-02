@@ -18,20 +18,20 @@
                         <th>Body</th>
                         <td><pre><code>{{ $recipe->body }}</code></pre></td>
                     </tr>
-                    @if ($recipe->projectCount == 0)
-                        <tr>
-                            <th>Used By</th>
-                            <td></td>
-                        </tr>
-                    @else
-                        @foreach ($recipe->projects as $i => $project)
+                    @if ($isRecipeHasProjects($recipe))
+                        @foreach ($recipe->projects as $project)
                             <tr>
-                                @if ($i === 0)
-                                    <th rowspan="{{ $recipe->projectCount }}">Used By</th>
+                                @if ($loop->first)
+                                    <th rowspan="{{ $recipeProjectCount($recipe) }}">Used By</th>
                                 @endif
                                 <td>{!! link_to_route('projects.show', $project->name, $project->id) !!}</td>
                             </tr>
                         @endforeach
+                    @else
+                        <tr>
+                            <th>Used By</th>
+                            <td></td>
+                        </tr>
                     @endif
                 </tbody>
             </table>
