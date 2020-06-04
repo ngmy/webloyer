@@ -18,72 +18,97 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
     <link href="{{ asset('/vendor/lou/multi-select/css/multi-select.css') }}" rel="stylesheet">
+    <style>
+        html,
+        body {
+          height: 100%;
+        }
+
+        #wrap {
+            min-height: 100%;
+            height: auto;
+            margin: 0 auto -120px;
+            padding: 0 0 120px;
+        }
+
+        footer {
+            height: 120px;
+            background-color: #e7e7e7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{{ url('/') }}">Webloyer</a>
-            </div>
+    <div id="wrap">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url('/') }}">Webloyer</a>
+                </div>
 
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                @if (!Auth::guest())
-                    <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/projects') }}">Projects</a></li>
-                        @if (Auth::user()->hasPermission('view.recipe'))
-                            <li><a href="{{ url('/recipes') }}">Recipes</a></li>
-                        @endif
-                        @if (Auth::user()->hasPermission('view.server'))
-                            <li><a href="{{ url('/servers') }}">Servers</a></li>
-                        @endif
-                        @if (Auth::user()->hasPermission('view.user'))
-                            <li><a href="{{ url('/users') }}">Users</a></li>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    @if (!Auth::guest())
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{ url('/projects') }}">Projects</a></li>
+                            @if (Auth::user()->hasPermission('view.recipe'))
+                                <li><a href="{{ url('/recipes') }}">Recipes</a></li>
+                            @endif
+                            @if (Auth::user()->hasPermission('view.server'))
+                                <li><a href="{{ url('/servers') }}">Servers</a></li>
+                            @endif
+                            @if (Auth::user()->hasPermission('view.user'))
+                                <li><a href="{{ url('/users') }}">Users</a></li>
+                            @endif
+                        </ul>
+                    @endif
+
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (Auth::guest())
+                            <li><a href="{{ url('/login') }}">Login</a></li>
+                        @else
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="javascript:document.getElementById('form-logout').submit()">Logout</a>
+                                        {!! Form::open(['url' => url('/logout'), 'id' => 'form-logout']) !!}
+                                        {!! Form::close() !!}
+                                    </li>
+                                </ul>
+                            </li>
                         @endif
                     </ul>
-                @endif
+                </div>
+            </div>
+        </nav>
 
-                <ul class="nav navbar-nav navbar-right">
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="javascript:document.getElementById('form-logout').submit()">Logout</a>
-                                    {!! Form::open(['url' => url('/logout'), 'id' => 'form-logout']) !!}
-                                    {!! Form::close() !!}
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    {!! Breadcrumbs::exists() ? Breadcrumbs::render() : '' !!}
+                </div>
             </div>
         </div>
-    </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                {!! Breadcrumbs::exists() ? Breadcrumbs::render() : '' !!}
-            </div>
-        </div>
+        @yield('content')
     </div>
 
-    @yield('content')
-
-    <footer class="footer">
+    <footer>
         <div class="container text-center">
             <p class="text-muted credit">
-                <p>Webloyer is Copyright &copy; 2015 by Yuta Nagamiya hosted on <a href="https://github.com/ngmy/webloyer">GitHub</a>.</p>
-                <p>Webloyer is a Web UI for <a href="https://deployer.org/" target="_blank">Deployer</a>.</p>
+                <p><a href="https://github.com/ngmy/webloyer"><i class="fa fa-github fa-2x" aria-hidden="true" style="color: white;"></i></a></p>
+                <p>&copy; 2015 Yuta Nagamiya.</p>
+                <p>Powered by <a href="https://deployer.org/" target="_blank">Deployer</a>.</p>
             </p>
         </div>
     </footer>
