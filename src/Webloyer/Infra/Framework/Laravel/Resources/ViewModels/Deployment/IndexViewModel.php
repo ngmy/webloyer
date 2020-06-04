@@ -31,11 +31,15 @@ class IndexViewModel extends ViewModel
     public function deploymentStatus(object $deployment): string
     {
         if ($deployment->status == 'succeeded') {
-            return '<span class="glyphicon glyphicon-ok-circle green" aria-hidden="true"></span>';
+            return '<i class="fa fa-check-circle fa-lg fa-fw" aria-hidden="true" style="color: green;"></i> ' . $deployment->status;
         } elseif ($deployment->status == 'failed') {
-            return '<span class="glyphicon glyphicon-ban-circle red" aria-hidden="true"></span>';
+            return '<i class="fa fa-exclamation-circle fa-lg fa-fw" aria-hidden="true" style="color: red;"></i> ' . $deployment->status;
+        } elseif ($deployment->status == 'running') {
+            return '<i class="fa fa-refresh fa-spin fa-lg fa-fw" aria-hidden="true" style="color: blue;"></i> ' . $deployment->status;
+        } elseif ($deployment->status == 'queued') {
+            return '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i> ' . $deployment->status;
         } else {
-            return '<span></span>';
+            return '';
         }
     }
 }
