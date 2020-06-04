@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Webloyer\App\Service\User\GetUserRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\ChangePasswordViewModel;
 
 class ChangePasswordController extends BaseController
 {
@@ -19,6 +20,6 @@ class ChangePasswordController extends BaseController
         $serviceRequest = (new GetUserRequest())->setId($id);
         $user = $this->service->execute($serviceRequest);
 
-        return view('webloyer::users.change_password')->with('user', $user);
+        return (new ChangePasswordViewModel($user))->view('webloyer::users.change_password');
     }
 }

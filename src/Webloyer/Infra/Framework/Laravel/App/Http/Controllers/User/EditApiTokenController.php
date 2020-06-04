@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Webloyer\App\Service\User\GetUserRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\EditApiTokenViewModel;
 
 class EditApiTokenController extends BaseController
 {
@@ -19,6 +20,6 @@ class EditApiTokenController extends BaseController
         $serviceRequest = (new GetUserRequest())->setId($id);
         $user = $this->service->execute($serviceRequest);
 
-        return view('webloyer::users.edit_api_token')->with('user', $user);
+        return (new EditApiTokenViewModel($user))->view('webloyer::users.edit_api_token');
     }
 }

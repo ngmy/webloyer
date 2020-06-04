@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Webloyer\App\Service\User\GetUserRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\EditViewModel;
 
 class EditController extends BaseController
 {
@@ -19,6 +20,6 @@ class EditController extends BaseController
         $serviceRequest = (new GetUserRequest())->setId($id);
         $user = $this->service->execute($serviceRequest);
 
-        return view('webloyer::users.edit')->with('user', $user);
+        return (new EditViewModel($user))->view('webloyer::users.edit');
     }
 }

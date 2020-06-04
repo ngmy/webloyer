@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\IndexRequest;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\IndexViewModel;
 
 class IndexController extends BaseController
 {
@@ -19,6 +20,6 @@ class IndexController extends BaseController
         $this->service->usersDataTransformer()->setPerPage(10);
         $users = $this->service->execute();
 
-        return view('webloyer::users.index')->with('users', $users);
+        return (new IndexViewModel($users))->view('webloyer::users.index');
     }
 }
