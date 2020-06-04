@@ -49,6 +49,7 @@
         "ajaxorg/ace-builds": "^1.0",
         "davejamesmiller/laravel-breadcrumbs": "^5.0",
         "deployer/deployer": "^6.0",
+        "deployer/recipes": "^6.0",
         "fguillot/json-rpc": "^1.0",
         "fideloper/proxy": "^4.0",
         "kodeine/laravel-acl": "^2.0",
