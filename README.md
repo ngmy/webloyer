@@ -7,7 +7,7 @@
 [![Build Status](https://travis-ci.org/ngmy/webloyer.svg?branch=master)](https://travis-ci.org/ngmy/webloyer)
 [![Coverage Status](https://coveralls.io/repos/ngmy/webloyer/badge.svg?branch=master)](https://coveralls.io/r/ngmy/webloyer?branch=master)
 
-Webloyer is a Web UI for managing [Deployer](https://github.com/deployphp/deployer) deployments.
+Webloyer is a web UI for managing [Deployer](https://github.com/deployphp/deployer) deployments.
 
 ## Features
 
