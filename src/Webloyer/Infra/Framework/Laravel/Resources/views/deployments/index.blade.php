@@ -25,8 +25,8 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th><div align="center"></div></th>
-                        <th><div align="center">#</div></th>
+                        <th><div align="center">Status</div></th>
+                        <th><div align="center">Number</div></th>
                         <th><div align="center">Task</div></th>
                         <th><div align="center">Started At</div></th>
                         <th><div align="center">Finished At</div></th>
@@ -38,7 +38,7 @@
                     @foreach ($deployments as $deployment)
                         <tr>
                             <td>{!! $deploymentStatus($deployment) !!}</td>
-                            <td>{{ $deployment->number }}</td>
+                            <td style="text-align: right;">{{ $deployment->number }}</td>
                             <td>{{ $deployment->task }}</td>
                             <td>{{ $deployment->startDate }}</td>
                             <td>{{ $deployment->finishDate }}</td>
