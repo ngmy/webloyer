@@ -25,8 +25,6 @@ class WebloyerAssetServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__ . '/../../Resources/assets' => public_path('vendor/webloyer'),
-        ], 'webloyer');
+        //
     }
 }
