@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Webloyer</title>
 
-    <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/webloyer/css/app.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -19,7 +19,7 @@
     <![endif]-->
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
-    <link href="{{ asset('/vendor/lou/multi-select/css/multi-select.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/multi-select/css/multi-select.css') }}" rel="stylesheet">
     <style>
         html,
         body {
@@ -114,12 +114,11 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="{{ asset('vendor/webloyer/js/app.js') }}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
-    <script src="{{ asset('vendor/lou/multi-select/js/jquery.multi-select.js') }}"></script>
-    <script src="{{ asset('/js/vendor/ajaxorg/ace/ace.js') }}"></script>
+    <script src="{{ asset('vendor/multi-select/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ asset('vendor/ace/js/ace.js') }}"></script>
     <script>
         // Hook up ACE editor to all textareas with data-editor attribute
         $(function () {
