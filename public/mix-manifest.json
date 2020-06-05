@@ -1,4 +1,4 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/vendor/webloyer/js/app.js": "/vendor/webloyer/js/app.js",
+    "/vendor/webloyer/css/app.css": "/vendor/webloyer/css/app.css"
 }

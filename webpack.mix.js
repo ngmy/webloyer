@@ -11,5 +11,5 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .less('resources/less/app.less', 'public/css');
+mix.js('src/Webloyer/Infra/Framework/Laravel/Resources/js/app.js', 'public/vendor/webloyer/js')
+    .less('src/Webloyer/Infra/Framework/Laravel/Resources/less/app.less', 'public/vendor/webloyer/css');
