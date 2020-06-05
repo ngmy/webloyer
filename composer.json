@@ -71,6 +71,7 @@
         "barryvdh/laravel-ide-helper": "^2.6",
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.9.1",
+        "laravel/ui": "^1.0",
         "mikey179/vfsstream": "^1.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
@@ -123,20 +124,20 @@
             "@php artisan key:generate --ansi"
         ],
         "post-install-cmd": [
-            "mkdir -p public/js/vendor/ajaxorg",
-            "ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
-            "mkdir -p public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select"
+            "mkdir -p public/vendor/ace",
+            "cp -r $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/vendor/ace/js",
+            "mkdir -p public/vendor/multi-select",
+            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/multi-select",
+            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/multi-select",
+            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/multi-select"
         ],
         "post-update-cmd": [
-            "mkdir -p public/js/vendor/ajaxorg",
-            "ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
-            "mkdir -p public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select"
+            "mkdir -p public/vendor/ace",
+            "cp -r $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/vendor/ace/js",
+            "mkdir -p public/vendor/multi-select",
+            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/multi-select",
+            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/multi-select",
+            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/multi-select"
         ],
         "test": [
             "@php vendor/bin/phpunit --colors=always"
