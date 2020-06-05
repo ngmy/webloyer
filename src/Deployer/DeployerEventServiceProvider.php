@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Deployer;
 
-use Deployer\Infra\Messaging\Laravel\LaravelDeploymentRequestedListener;
+use Common\Domain\Model\Event\DomainEventPublisher;
+use Deployer\Domain\Model\{
+    DeployerFinishedSubscriber,
+    DeployerProgressedSubscriber,
+    DeployerStartedSubscriber,
+};
+use Deployer\Infra\Framework\Laravel\App\Listeners\DeploymentRequestedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Webloyer\Domain\Model\Deployment\DeploymentRequested;
@@ -18,7 +24,7 @@ class DeployerEventServiceProvider extends EventServiceProvider
      */
     protected $listen = [
         DeploymentRequested::class => [
-            LaravelDeploymentRequestedListener::class,
+            DeploymentRequestedListener::class,
         ],
     ];
 
@@ -31,6 +37,9 @@ class DeployerEventServiceProvider extends EventServiceProvider
     {
         parent::boot();
 
-        //
+        $domainEventPublisher = $this->app->make(DomainEventPublisher::class);
+        $domainEventPublisher->subscribe($this->app->make(DeployerFinishedSubscriber::class));
+        $domainEventPublisher->subscribe($this->app->make(DeployerProgressedSubscriber::class));
+        $domainEventPublisher->subscribe($this->app->make(DeployerStartedSubscriber::class));
     }
 }

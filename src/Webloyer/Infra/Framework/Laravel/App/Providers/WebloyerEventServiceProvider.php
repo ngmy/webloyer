@@ -4,20 +4,10 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Providers;
 
-use Deployer\Domain\Model\{
-    DeployerFinished,
-    DeployerProgressed,
-    DeployerStarted,
-};
+use Common\Domain\Model\Event\DomainEventPublisher;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 use Illuminate\Support\Facades\Event;
-use Webloyer\Domain\Model\Deployment\DeploymentCompleted;
-use Webloyer\Infra\Framework\Laravel\App\Listeners\{
-    LaravelDeployerFinishedListener,
-    LaravelDeployerProgressedListener,
-    LaravelDeployerStartedListener,
-    LaravelDeploymentCompletedListener,
-};
+use Webloyer\Domain\Model\Deployment\DeploymentCompletedSubscriber;
 
 class WebloyerEventServiceProvider extends EventServiceProvider
 {
@@ -26,20 +16,7 @@ class WebloyerEventServiceProvider extends EventServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        DeploymentCompleted::class => [
-            LaravelDeploymentCompletedListener::class,
-        ],
-        DeployerFinished::class => [
-            LaravelDeployerFinishedListener::class,
-        ],
-        DeployerProgessed::class => [
-            LaravelDeployerProgressedListener::class,
-        ],
-        DeployerStarted::class => [
-            LaravelDeployerStartedListener::class,
-        ],
-    ];
+    protected $listen = [];
 
     /**
      * Register any events for your application.
@@ -50,6 +27,7 @@ class WebloyerEventServiceProvider extends EventServiceProvider
     {
         parent::boot();
 
-        //
+        $domainEventPublisher = $this->app->make(DomainEventPublisher::class);
+        $domainEventPublisher->subscribe($this->app->make(DeploymentCompletedSubscriber::class));
     }
 }

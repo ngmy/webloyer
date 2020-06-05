@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Deployer\Infra\Messaging\Laravel;
+namespace Deployer\Infra\Framework\Laravel\App\Listeners;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
 use DateTimeImmutable;
@@ -13,12 +13,15 @@ use Deployer\Domain\Model\{
 };
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{
+    DB,
+    Storage,
+};
 use Symfony\Component\Process\Process;
 use Webloyer\Domain\Model\Deployment\DeploymentRequested;
 use Webloyer\Domain\Model\Recipe\Recipe;
 
-class LaravelDeploymentRequestedListener implements ShouldQueue
+class DeploymentRequestedListener implements ShouldQueue
 {
     private $createdFiles = [];
 
@@ -86,24 +89,28 @@ class LaravelDeploymentRequestedListener implements ShouldQueue
             $event->stageName()->value(),
         ]);
         $process->setTimeout(600);
-        DomainEventPublisher::getInstance()->publish(
-            new DeployerStarted(
-                $event->projectId(),
-                $event->number(),
-                (new DateTimeImmutable())->format('Y-m-d H:i:s')
-            )
-        );
+        DB::transaction(function () use ($event) {
+            DomainEventPublisher::getInstance()->publish(
+                new DeployerStarted(
+                    $event->projectId(),
+                    $event->number(),
+                    (new DateTimeImmutable())->format('Y-m-d H:i:s')
+                )
+            );
+        });
 
         $log = '';
         $process->run(function (string $type, string $buffer) use ($event, &$log) {
             $log .= $buffer;
-            DomainEventPublisher::getInstance()->publish(
-                new DeployerProgressed(
-                    $event->projectId(),
-                    $event->number(),
-                    $log
-                )
-            );
+            DB::transaction(function () use ($event, $log) {
+                DomainEventPublisher::getInstance()->publish(
+                    new DeployerProgressed(
+                        $event->projectId(),
+                        $event->number(),
+                        $log
+                    )
+                );
+            });
         });
 
         $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();

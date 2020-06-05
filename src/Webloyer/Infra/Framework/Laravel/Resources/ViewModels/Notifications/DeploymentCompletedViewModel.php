@@ -6,6 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Notifications;
 
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Spatie\ViewModels\ViewModel;
+use Webloyer\Domain\Model\Project\Project;
 use Webloyer\Domain\Model\Deployment\DeploymentCompleted;
 
 class DeploymentCompletedViewModel extends ViewModel
@@ -16,7 +17,7 @@ class DeploymentCompletedViewModel extends ViewModel
 
     public function __construct(
         DeploymentCompleted $event,
-        object $project,
+        Project $project,
         AnsiToHtmlConverter $converter
     ) {
         $this->event = $event;
@@ -29,7 +30,7 @@ class DeploymentCompletedViewModel extends ViewModel
         return $this->event;
     }
 
-    public function project(): object
+    public function project(): Project
     {
         return $this->project;
     }
@@ -37,7 +38,7 @@ class DeploymentCompletedViewModel extends ViewModel
     public function subject(): string
     {
         return sprintf('Deployment of %s #%s completed: %s',
-            $this->project->name,
+            $this->project->name(),
             $this->event->number(),
             $this->event->status(),
         );

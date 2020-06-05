@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Deployer\Domain\Model;
 
-use Common\Domain\Model\Event\{
-    DomainEvent,
-    PublishableDomainEvent,
-};
+use Common\Domain\Model\Event\DomainEvent;
 use Webloyer\Domain\Model\Project\ProjectId;
 use Webloyer\Domain\Model\Deployment\DeploymentNumber;
 
-class DeployerStarted implements DomainEvent, PublishableDomainEvent
+class DeployerStarted implements DomainEvent
 {
     private $projectId;
     private $number;

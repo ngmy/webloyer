@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\Deployment;
 
-use Common\Domain\Model\Event\{
-    DomainEvent,
-    PublishableDomainEvent,
-};
+use Common\Domain\Model\Event\DomainEvent;
 
-class DeploymentCompleted implements DomainEvent, PublishableDomainEvent
+class DeploymentCompleted implements DomainEvent
 {
     /**
      * @param ProjectId $projectId

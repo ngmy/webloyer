@@ -10,11 +10,17 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Webloyer\Domain\Model\Deployment\DeploymentCompleted as DeploymentCompletedEvent;
+use Webloyer\Domain\Model\Project\Project;
+use Webloyer\Domain\Model\User\User;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Notifications\DeploymentCompletedViewModel;
 
 class DeploymentCompleted extends Notification
 {
     use Queueable;
+
+    private $event;
+    private $project;
+    private $user;
 
     /**
      * Create a new notification instance.
@@ -23,8 +29,8 @@ class DeploymentCompleted extends Notification
      */
     public function __construct(
         DeploymentCompletedEvent $event,
-        object $project,
-        object $user
+        Project $project,
+        User $user
     ) {
         $this->event = $event;
         $this->project = $project;
