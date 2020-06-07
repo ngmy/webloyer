@@ -33,8 +33,8 @@ class ShowViewModel extends ViewModel
         return $this->projectId;
     }
 
-    public function deploymentLog(object $deployment): string
+    public function deploymentLog(): string
     {
-        return $this->converter->convert($deployment->log);
+        return $this->converter->convert($this->deployment->log);
     }
 }

@@ -28,18 +28,30 @@ class IndexViewModel extends ViewModel
         return $this->projectId;
     }
 
-    public function deploymentStatus(object $deployment): string
+    public function deploymentStatus(): array
     {
-        if ($deployment->status == 'succeeded') {
-            return '<i class="fa fa-check-circle fa-lg fa-fw" aria-hidden="true" style="color: green;"></i> ' . $deployment->status;
-        } elseif ($deployment->status == 'failed') {
-            return '<i class="fa fa-exclamation-circle fa-lg fa-fw" aria-hidden="true" style="color: red;"></i> ' . $deployment->status;
-        } elseif ($deployment->status == 'running') {
-            return '<i class="fa fa-refresh fa-spin fa-lg fa-fw" aria-hidden="true" style="color: blue;"></i> ' . $deployment->status;
-        } elseif ($deployment->status == 'queued') {
-            return '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i> ' . $deployment->status;
-        } else {
-            return '';
-        }
+        return [
+            'succeeded' => '<i class="fa fa-check-circle fa-lg fa-fw" aria-hidden="true" style="color: green;"></i> succeeded',
+            'failed' => '<i class="fa fa-exclamation-circle fa-lg fa-fw" aria-hidden="true" style="color: red;"></i> failed',
+            'running' => '<i class="fa fa-refresh fa-spin fa-lg fa-fw" aria-hidden="true" style="color: blue;"></i> running',
+            'queued' => '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i> queued',
+        ];
+    }
+
+    public function deploymentLinks(): array
+    {
+        return array_reduce($this->deployments->toArray()['data'], function (array $carry, object $deployment): array {
+            $link = link_to_route('projects.deployments.show', 'Show', [$this->projectId, $deployment->number], ['class' => 'btn btn-default']);
+            $carry[$deployment->number] = $link->toHtml();
+            return $carry;
+        }, []);
+    }
+
+    public function deploymentApiUrls(): array
+    {
+        return array_reduce($this->deployments->toArray()['data'], function (array $carry, object $deployment): array {
+            $carry[$deployment->number] = route('projects.deployments.show', [$this->projectId, $deployment->number]);
+            return $carry;
+        }, []);
     }
 }

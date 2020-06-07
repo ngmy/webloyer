@@ -19,7 +19,7 @@ class ShowController extends BaseController
      * @param int    $number
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(string $projectId, int $number)
+    public function __invoke(string $projectId, int $number, \Illuminate\Http\Request $request)
     {
         $serviceRequest = (new GetDeploymentRequest())
             ->setProjectId($projectId)
@@ -28,6 +28,14 @@ class ShowController extends BaseController
             ->deploymentDataTransformer()
             ->setUserDataTransformer(App::make(UserDtoDataTransformer::class));
         $deployment = $this->service->execute($serviceRequest);
+
+        if ($request->has('json')) {
+            return new ShowViewModel(
+                $deployment,
+                $projectId,
+                new AnsiToHtmlConverter()
+            );
+        }
 
         return (new ShowViewModel(
             $deployment,

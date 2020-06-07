@@ -22,34 +22,14 @@
                 {!! Form::close() !!}
             </div>
 
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th><div align="center">Status</div></th>
-                        <th><div align="center">Number</div></th>
-                        <th><div align="center">Task</div></th>
-                        <th><div align="center">Started At</div></th>
-                        <th><div align="center">Finished At</div></th>
-                        <th><div align="center">Executed By</div></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($deployments as $deployment)
-                        <tr>
-                            <td>{!! $deploymentStatus($deployment) !!}</td>
-                            <td style="text-align: right;">{{ $deployment->number }}</td>
-                            <td>{{ $deployment->task }}</td>
-                            <td>{{ $deployment->startDate }}</td>
-                            <td>{{ $deployment->finishDate }}</td>
-                            <td>{{ $deployment->user->email }}</td>
-                            <td>
-                                {!! link_to_route('projects.deployments.show', 'Show', [$projectId, $deployment->number], ['class' => 'btn btn-default']) !!}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div id="app">
+                <deployment-items
+                    :deployments='@json($deployments->toArray()["data"])'
+                    :deployment-status='@json($deploymentStatus)'
+                    :deployment-links='@json($deploymentLinks)'
+                    :deployment-api-urls='@json($deploymentApiUrls)'
+                ></deployment-items>
+            </div>
             <div class="text-center">
                 {!! $deployments->render() !!}
             </div>

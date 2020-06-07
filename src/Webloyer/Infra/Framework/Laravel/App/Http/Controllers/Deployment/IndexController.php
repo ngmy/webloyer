@@ -29,6 +29,10 @@ class IndexController extends BaseController
             ->setUserDataTransformer(App::make(UserDtoDataTransformer::class));
         $deployments = $this->service->execute($serviceRequest);
 
+        if ($request->has('json')) {
+            return new IndexViewModel($deployments, $projectId);
+        }
+
         return (new IndexViewModel($deployments, $projectId))->view('webloyer::deployments.index');
     }
 }

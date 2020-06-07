@@ -23,3 +23,11 @@ Route::prefix('v1')->group(function () {
         return $server->execute();
     });
 });
+
+//Route::group([
+//    'namespace' => 'Server',
+//    'protect_alias' => 'server',
+//], function () {
+//    Route::get('servers', 'IndexController')->name('servers.index');
+//    Route::get('servers/{server}', 'ShowController')->name('servers.show');
+//});
