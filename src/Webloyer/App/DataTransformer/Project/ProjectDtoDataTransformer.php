@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Webloyer\App\DataTransformer\Project;
 
+use Webloyer\App\DataTransformer\Deployment\DeploymentDataTransformer;
 use Webloyer\App\DataTransformer\Recipe\RecipesDataTransformer;
 use Webloyer\App\DataTransformer\Server\ServerDataTransformer;
 use Webloyer\App\DataTransformer\User\UserDataTransformer;
 use Webloyer\Domain\Model\Project\{
     Project,
+    ProjectId,
     ProjectInterest,
     ProjectService,
 };
@@ -20,16 +22,13 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
 {
     private $project;
     private $projectService;
+    private $deploymentDataTransformer;
     private $recipesDataTransformer;
     private $serverDataTransformer;
     private $userDataTransformer;
 
-    public function __construct(
-        ProjectService $projectService,
-        RecipesDataTransformer $recipesDataTransformer,
-        ServerDataTransformer $serverDataTransformer,
-        UserDataTransformer $userDataTransformer
-    ) {
+    public function __construct(ProjectService $projectService)
+    {
         $this->projectService = $projectService;
     }
 
@@ -104,7 +103,10 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
         };
         $this->project->provide($dto);
 
-        $this->project->lastDeployment = null; // TODO
+        if (isset($this->deploymentDataTransformer)) {
+            $deployment = $this->projectService->lastDeploymentFrom(new ProjectId($this->project->id()));
+            $dto->lastDeployment = $deployment ? $this->deploymentDataTransformer->write($deployment)->read() : null;
+        }
 
         if (isset($this->recipesDataTransformer)) {
             $recipes = $this->projectService->recipesFrom(RecipeIds::of(...$this->project->recipeIds()));
@@ -126,6 +128,16 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
         $dto->updatedAt = $this->project->updatedAt();
 
         return $dto;
+    }
+
+    /**
+     * @param DeploymentDataTransformer $deploymentDataTransformer
+     * @return self
+     */
+    public function setDeploymentDataTransformer(DeploymentDataTransformer $deploymentDataTransformer): self
+    {
+        $this->deploymentDataTransformer = $deploymentDataTransformer;
+        return $this;
     }
 
     /**

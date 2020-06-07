@@ -20,4 +20,14 @@ class IndexViewModel extends ViewModel
     {
         return $this->projects;
     }
+
+    public function deploymentStatus(): array
+    {
+        return [
+            'succeeded' => '<i class="fa fa-check-circle fa-lg fa-fw" aria-hidden="true" style="color: green;"></i>',
+            'failed' => '<i class="fa fa-exclamation-circle fa-lg fa-fw" aria-hidden="true" style="color: red;"></i>',
+            'running' => '<i class="fa fa-refresh fa-spin fa-lg fa-fw" aria-hidden="true" style="color: blue;"></i>',
+            'queued' => '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i>',
+        ];
+    }
 }

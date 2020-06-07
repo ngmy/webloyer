@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\Project;
 
+use Webloyer\Domain\Model\Deployment\{
+    Deployment,
+    DeploymentRepository,
+};
 use Webloyer\Domain\Model\Recipe\{
     RecipeRepository,
     RecipeId,
@@ -23,15 +27,18 @@ use Webloyer\Domain\Model\User\{
 
 class ProjectService
 {
+    private $deploymentRepository;
     private $recipeRepository;
     private $serverRepository;
     private $userRepository;
 
     public function __construct(
+        DeploymentRepository $deploymentRepository,
         RecipeRepository $recipeRepository,
         ServerRepository $serverRepository,
         UserRepository $userRepository
     ) {
+        $this->deploymentRepository = $deploymentRepository;
         $this->recipeRepository = $recipeRepository;
         $this->serverRepository = $serverRepository;
         $this->userRepository = $userRepository;
@@ -49,6 +56,11 @@ class ProjectService
         }, []));
     }
 
+    public function lastDeploymentFrom(ProjectId $projectId): Deployment
+    {
+        return $this->deploymentRepository->findLastByProjectId($projectId);
+    }
+
     public function serverFrom(ServerId $serverId): ?Server
     {
         return $this->serverRepository->findById($serverId);
@@ -57,10 +69,5 @@ class ProjectService
     public function userFrom(UserId $userId): ?User
     {
         return $this->userRepository->findById($userId);
-    }
-
-    public function lastDeploymentFrom(ProjectId $projectId): Deployment
-    {
-        // TODO;
     }
 }

@@ -27,8 +27,8 @@
                     @foreach ($projects as $project)
                         <tr>
                             <td>
-                                @if (!empty($project->getLastDeployment))
-                                    {!! $project->lastDeployment->getPresenter()->status() !!}
+                                @if (!empty($project->lastDeployment))
+                                    {!! $deploymentStatus[$project->lastDeployment->status] !!}
                                 @endif
                             </td>
                             <td>{{ $project->name }}</td>

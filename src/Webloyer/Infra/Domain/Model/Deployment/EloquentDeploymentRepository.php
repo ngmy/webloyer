@@ -5,7 +5,13 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Domain\Model\Deployment;
 
 use InvalidArgumentException;
-use Webloyer\Domain\Model\Deployment;
+use Webloyer\Domain\Model\Deployment\{
+    Deployment,
+    DeploymentNumber,
+    DeploymentRepository,
+    DeploymentSpecification,
+    Deployments,
+};
 use Webloyer\Domain\Model\Project\ProjectId;
 use Webloyer\Infra\Persistence\Eloquent\Models\{
     Deployment as DeploymentOrm,
@@ -13,14 +19,14 @@ use Webloyer\Infra\Persistence\Eloquent\Models\{
     Project as ProjectOrm,
 };
 
-class EloquentDeploymentRepository implements Deployment\DeploymentRepository
+class EloquentDeploymentRepository implements DeploymentRepository
 {
     /**
      * @param ProjectId $projectId
-     * @return Deployment\DeploymentNumber
-     * @see Deployment\DeploymentRepository::nextId()
+     * @return DeploymentNumber
+     * @see DeploymentRepository::nextId()
      */
-    public function nextId(ProjectId $projectId): Deployment\DeploymentNumber
+    public function nextId(ProjectId $projectId): DeploymentNumber
     {
         // Lock the row until transaction is committed
         $projectOrm = ProjectOrm::ofId($projectId->value())->first();
@@ -35,34 +41,34 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
         }
         $maxDeploymentOrm->number++;
         $maxDeploymentOrm->save();
-        return new Deployment\DeploymentNumber($maxDeploymentOrm->number);
+        return new DeploymentNumber($maxDeploymentOrm->number);
     }
 
     /**
      * @param ProjectId $projectId
-     * @return Deployment\Deployments
-     * @see Deployment\DeploymentRepository::findAllByProjectId()
+     * @return Deployments
+     * @see DeploymentRepository::findAllByProjectId()
      */
-    public function findAllByProjectId(ProjectId $projectId): Deployment\Deployments
+    public function findAllByProjectId(ProjectId $projectId): Deployments
     {
         $deploymentArray = DeploymentOrm::ofProjectId($projectId->value())
             ->orderBy('number', 'desc')
             ->get()
-            ->map(function (DeploymentOrm $deploymentOrm): Deployment\Deployment {
+            ->map(function (DeploymentOrm $deploymentOrm): Deployment {
                 return $deploymentOrm->toEntity();
             })
             ->toArray();
-        return new Deployment\Deployments(...$deploymentArray);
+        return new Deployments(...$deploymentArray);
     }
 
     /**
      * @param ProjectId $projectId
      * @param int|null  $page
      * @param int|null  $perPage
-     * @return Deployment\Deployments
-     * @see Deployment\DeploymentRepository::findAllByProjectIdAndPage()
+     * @return Deployments
+     * @see DeploymentRepository::findAllByProjectIdAndPage()
      */
-    public function findAllByProjectIdAndPage(ProjectId $projectId, ?int $page, ?int $perPage): Deployment\Deployments
+    public function findAllByProjectIdAndPage(ProjectId $projectId, ?int $page, ?int $perPage): Deployments
     {
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
@@ -72,20 +78,20 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
             ->skip($perPage * ($page - 1))
             ->take($perPage)
             ->get()
-            ->map(function (DeploymentOrm $deploymentOrm): Deployment\Deployment {
+            ->map(function (DeploymentOrm $deploymentOrm): Deployment {
                 return $deploymentOrm->toEntity();
             })
             ->toArray();
-        return new Deployment\Deployments(...$deploymentArray);
+        return new Deployments(...$deploymentArray);
     }
 
     /**
      * @param ProjectId                   $projectId
-     * @param Deployment\DeploymentNumber $number
-     * @return Deployment\Deployment|null
-     * @see Deployment\DeploymentRepository::findById()
+     * @param DeploymentNumber $number
+     * @return Deployment|null
+     * @see DeploymentRepository::findById()
      */
-    public function findById(ProjectId $projectId, Deployment\DeploymentNumber $number): ?Deployment\Deployment
+    public function findById(ProjectId $projectId, DeploymentNumber $number): ?Deployment
     {
         $deploymentOrm = DeploymentOrm::ofId($projectId->value(), $number->value())->first();
         if (is_null($deploymentOrm)) {
@@ -95,11 +101,26 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
     }
 
     /**
-     * @param Deployment\Deployment $deployment
-     * @return void
-     * @see Deployment\DeploymentRepository::remove()
+     * @param ProjectId $projectId
+     * @return Deployment|null
      */
-    public function remove(Deployment\Deployment $deployment): void
+    public function findLastByProjectId(ProjectId $projectId): ?Deployment
+    {
+        $deploymentOrm = DeploymentOrm::ofProjectId($projectId->value())
+            ->orderBy('number', 'desc')
+            ->first();
+        if (is_null($deploymentOrm)) {
+            return null;
+        }
+        return $deploymentOrm->toEntity();
+    }
+
+    /**
+     * @param Deployment $deployment
+     * @return void
+     * @see DeploymentRepository::remove()
+     */
+    public function remove(Deployment $deployment): void
     {
         $deploymentOrm = DeploymentOrm::ofId($deployment->projectId(), $deployment->number())->first();
         if (is_null($deploymentOrm)) {
@@ -109,11 +130,11 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
     }
 
     /**
-     * @param Deployment\Deployments $deployments
+     * @param Deployments $deployments
      * @return void
-     * @see Deployment\DeploymentRepository::removeAll()
+     * @see DeploymentRepository::removeAll()
      */
-    public function removeAll(Deployment\Deployments $deployments): void
+    public function removeAll(Deployments $deployments): void
     {
         foreach ($deployments->toArray() as $deployment) {
             $this->remove($deployment);
@@ -121,11 +142,11 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
     }
 
     /**
-     * @param Deployment\Deployment $deployment
+     * @param Deployment $deployment
      * @return void
-     * @see Deployment\DeploymentRepository::save()
+     * @see DeploymentRepository::save()
      */
-    public function save(Deployment\Deployment $deployment): void
+    public function save(Deployment $deployment): void
     {
         $projectOrm = ProjectOrm::ofId($deployment->projectId())->first();
         $deploymentOrm = DeploymentOrm::firstOrNew([
@@ -137,10 +158,10 @@ class EloquentDeploymentRepository implements Deployment\DeploymentRepository
     }
 
     /**
-     * @param Deployment\DeploymentSpecification $spec
-     * @return Deployment\Deployments
+     * @param DeploymentSpecification $spec
+     * @return Deployments
      */
-    public function satisfyingDeployments(Deployment\DeploymentSpecification $spec): Deployment\Deployments
+    public function satisfyingDeployments(DeploymentSpecification $spec): Deployments
     {
         return $spec->satisfyingElementsFrom($this);
     }

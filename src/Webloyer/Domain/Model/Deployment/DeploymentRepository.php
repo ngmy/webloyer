@@ -35,6 +35,11 @@ interface DeploymentRepository
      */
     public function findById(ProjectId $projectId, DeploymentNumber $number): ?Deployment;
     /**
+     * @param ProjectId $projectId
+     * @return Deployment|null
+     */
+    public function findLastByProjectId(ProjectId $projectId): ?Deployment;
+    /**
      * @param Deployment $deployment
      * @return void
      */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\App\DataTransformer\Project;
 
+use Webloyer\App\DataTransformer\Deployment\DeploymentDataTransformer;
 use Webloyer\App\DataTransformer\Recipe\RecipesDataTransformer;
 use Webloyer\App\DataTransformer\Server\ServerDataTransformer;
 use Webloyer\App\DataTransformer\User\UserDataTransformer;
@@ -23,6 +24,11 @@ interface ProjectDataTransformer
      * @return mixed
      */
     public function read();
+    /**
+     * @param DeploymentDataTransformer $deploymentDataTransformer
+     * @return self
+     */
+    public function setDeploymentDataTransformer(DeploymentDataTransformer $deploymentDataTransformer): self;
     /**
      * @param RecipesDataTransformer $recipesDataTransformer
      * @return self
