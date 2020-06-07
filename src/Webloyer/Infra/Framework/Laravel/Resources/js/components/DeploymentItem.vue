@@ -65,7 +65,13 @@
             }
         },
         methods: {
-            getProfiles: function () {
+            getDeployment: function () {
+                if (
+                    this.status1 == 'succeeded' ||
+                    this.status1 == 'failed'
+                ) {
+                    return;
+                }
                 axios.get(this.endpoint)
                     .then(res => {
                         this.status1 = res.data.deployment.status;
@@ -76,7 +82,7 @@
             }
         },
         created () {
-            setInterval(this.getProfiles, 1000)
+            setInterval(this.getDeployment, 3000)
         }
     }
 </script>

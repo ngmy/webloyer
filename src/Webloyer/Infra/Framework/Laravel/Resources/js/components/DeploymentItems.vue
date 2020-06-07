@@ -64,7 +64,7 @@
             }
         },
         created () {
-            setInterval(this.getDeployments, 1000)
+            setInterval(this.getDeployments, 3000)
         }
     }
 </script>
