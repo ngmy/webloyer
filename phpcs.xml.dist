@@ -2,7 +2,6 @@
 <ruleset name="Application Coding Standard">
   <description>The application coding standard.</description>
 
-  <file>app</file>
   <file>src</file>
   <file>tests</file>
 
