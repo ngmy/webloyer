@@ -52,11 +52,11 @@
                     </tr>
                     <tr>
                         <th>GitHub Webhook Secret</th>
-                        <td>{{ $hyphenIfBlank($project->githubWebhookSecret) }}</td>
+                        <td>{{ $hyphenIfBlank($project->gitHubWebhookSecret) }}</td>
                     </tr>
                     <tr>
                         <th>GitHub Webhook Execute By</th>
-                        <td>{{ $hyphenIfBlank($projectGithubWebhookUserEmail($project)) }}</td>
+                        <td>{{ $hyphenIfBlank($projectGitHubWebhookUserEmail($project)) }}</td>
                     </tr>
                 </tbody>
             </table>

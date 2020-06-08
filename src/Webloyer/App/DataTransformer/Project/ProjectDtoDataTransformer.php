@@ -92,13 +92,13 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
             {
                 $this->deploymentKeepMaxNumber = $deploymentKeepMaxNumber;
             }
-            public function informGithubWebhookSecret(?string $githubWebhookSecret): void
+            public function informGitHubWebhookSecret(?string $gitHubWebhookSecret): void
             {
-                $this->githubWebhookSecret = $githubWebhookSecret;
+                $this->gitHubWebhookSecret = $gitHubWebhookSecret;
             }
-            public function informGithubWebhookExecutor(?string $githubWebhookExecutor): void
+            public function informGitHubWebhookExecutor(?string $gitHubWebhookExecutor): void
             {
-                $this->githubWebhookUserId = $githubWebhookExecutor;
+                $this->gitHubWebhookUserId = $gitHubWebhookExecutor;
             }
         };
         $this->project->provide($dto);
@@ -119,8 +119,8 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
         }
 
         if (isset($this->userDataTransformer)) {
-            $user = $dto->githubWebhookUserId ? $this->projectService->userFrom(new UserId($dto->githubWebhookUserId)) : null;
-            $dto->githubWebhookUser = $user ? $this->userDataTransformer->write($user)->read() : null;
+            $user = $dto->gitHubWebhookUserId ? $this->projectService->userFrom(new UserId($dto->gitHubWebhookUserId)) : null;
+            $dto->gitHubWebhookUser = $user ? $this->userDataTransformer->write($user)->read() : null;
         }
 
         $dto->surrogateId = $this->project->surrogateId();

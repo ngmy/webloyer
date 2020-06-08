@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Domain\Model\Project\Webhook\Github;
+namespace Webloyer\Domain\Model\Project\Webhook\GitHub;
 
-class GithubWebhookSecret
+class GitHubWebhookSecret
 {
     /** @var string */
     private $value;

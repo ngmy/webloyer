@@ -92,13 +92,13 @@
                         <div class="form-group">
                             <label for="github_webhook_secret" class="col-md-4 control-label">Secret</label>
                             <div class="col-md-6">
-                                {!! Form::text('github_webhook_secret', $project->githubWebhookSecret, ['class' => 'form-control', 'id' => 'github_webhook_secret']) !!}
+                                {!! Form::text('github_webhook_secret', $project->gitHubWebhookSecret, ['class' => 'form-control', 'id' => 'github_webhook_secret']) !!}
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="github_webhook_user_id" class="col-md-4 control-label">Execute By</label>
                             <div class="col-md-6">
-                                {!! Form::select('github_webhook_user_id', $users, $project->githubWebhookUserId, ['class' => 'form-control', 'id' => 'github_webhook_user_id']) !!}
+                                {!! Form::select('github_webhook_user_id', $users, $project->gitHubWebhookUserId, ['class' => 'form-control', 'id' => 'github_webhook_user_id']) !!}
                             </div>
                         </div>
                         <div class="form-group">

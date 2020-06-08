@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Webloyer\Domain\Model\Project\Webhook\Github;
+namespace Webloyer\Domain\Model\Project\Webhook\GitHub;
 
 use Webloyer\Domain\Model\Project\ProjectInterest;
 use Webloyer\Domain\Model\User\UserEmail;
 
-class GithubWebhook
+class GitHubWebhook
 {
-    /** @var GithubWebhookSecret|null */
+    /** @var GitHubWebhookSecret|null */
     private $secret;
     /** @var UserEmail|null */
     private $executor;
@@ -24,18 +24,18 @@ class GithubWebhook
         ?string $executor
     ): self {
         return new self(
-            isset($secret) ? new GithubWebhookSecret($secret) : null,
+            isset($secret) ? new GitHubWebhookSecret($secret) : null,
             isset($executor) ? new UserEmail($executor) : null
         );
     }
 
     /**
-     * @param GithubWebhookSecret|null $secret
+     * @param GitHubWebhookSecret|null $secret
      * @param UserEmail|null              $executor
      * @return void
      */
     public function __construct(
-        ?GithubWebhookSecret $secret,
+        ?GitHubWebhookSecret $secret,
         ?UserEmail $executor
     ) {
         $this->secret = $secret;
@@ -64,7 +64,7 @@ class GithubWebhook
      */
     public function provide(ProjectInterest $interest): void
     {
-        $interest->informGithubWebhookSecret($this->secret());
-        $interest->informGithubWebhookExecutor($this->executor());
+        $interest->informGitHubWebhookSecret($this->secret());
+        $interest->informGitHubWebhookExecutor($this->executor());
     }
 }

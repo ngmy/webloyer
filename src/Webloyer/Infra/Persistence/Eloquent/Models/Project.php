@@ -228,32 +228,32 @@ class Project extends Model implements ProjectInterest
     }
 
     /**
-     * @param string|null $githubWebhookSecret
+     * @param string|null $gitHubWebhookSecret
      * @return void
-     * @see ProjectInterest::informGithubWebhookSecret()
+     * @see ProjectInterest::informGitHubWebhookSecret()
      */
-    public function informGithubWebhookSecret(?string $githubWebhookSecret): void
+    public function informGitHubWebhookSecret(?string $gitHubWebhookSecret): void
     {
-        $this->github_webhook_secret = $githubWebhookSecret;
+        $this->github_webhook_secret = $gitHubWebhookSecret;
     }
 
     /**
-     * @param string|null $githubWebhookExecutor
+     * @param string|null $gitHubWebhookExecutor
      * @return void
-     * @see ProjectInterest::informGithubWebhookExecutor()
+     * @see ProjectInterest::informGitHubWebhookExecutor()
      */
-    public function informGithubWebhookExecutor(?string $githubWebhookExecutor): void
+    public function informGitHubWebhookExecutor(?string $gitHubWebhookExecutor): void
     {
-        if (is_null($githubWebhookExecutor)) {
+        if (is_null($gitHubWebhookExecutor)) {
             $this->github_webhook_user_id = null;
             return;
         }
 
-        $userOrm = User::ofId($githubWebhookExecutor)->first();
+        $userOrm = User::ofId($gitHubWebhookExecutor)->first();
         if (is_null($userOrm)) {
             throw new InvalidArgumentException(
                 'User does not exists.' . PHP_EOL .
-                'User Id: ' . $githubWebhookExecutor
+                'User Id: ' . $gitHubWebhookExecutor
             );
         }
         $this->github_webhook_user_id = $userOrm->id;

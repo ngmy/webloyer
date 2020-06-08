@@ -21,9 +21,9 @@ class ShowViewModel extends ViewModel
         return $this->project;
     }
 
-    public function projectGithubWebhookUserEmail(object $project): string
+    public function projectGitHubWebhookUserEmail(object $project): string
     {
-        return $project->githubWebhookUser ? $project->githubWebhookUser->email : '';
+        return $project->gitHubWebhookUser ? $project->gitHubWebhookUser->email : '';
     }
 
     public function yesOrNo(bool $value): string

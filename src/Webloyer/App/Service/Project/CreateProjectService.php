@@ -26,8 +26,8 @@ class CreateProjectService extends ProjectService
             $request->getDeploymentKeepDays(),
             $request->getKeepLastDeployment(),
             $request->getDeploymentKeepMaxNumber(),
-            $request->getGithubWebhookSecret(),
-            $request->getGithubWebhookExecutor()
+            $request->getGitHubWebhookSecret(),
+            $request->getGitHubWebhookExecutor()
         );
         $this->projectRepository->save($project);
     }

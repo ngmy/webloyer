@@ -29,9 +29,9 @@ class UpdateProjectRequest
     /** @var int|null */
     private $deploymentKeepMaxNumber;
     /** @var string|null */
-    private $githubWebhookSecret;
+    private $gitHubWebhookSecret;
     /** @var string|null */
-    private $githubWebhookExecutor;
+    private $gitHubWebhookExecutor;
 
     /**
      * @return string
@@ -124,17 +124,17 @@ class UpdateProjectRequest
     /**
      * @return string|null
      */
-    public function getGithubWebhookSecret(): ?string
+    public function getGitHubWebhookSecret(): ?string
     {
-        return $this->githubWebhookSecret;
+        return $this->gitHubWebhookSecret;
     }
 
     /**
      * @return string|null
      */
-    public function getGithubWebhookExecutor(): ?string
+    public function getGitHubWebhookExecutor(): ?string
     {
-        return $this->githubWebhookExecutor;
+        return $this->gitHubWebhookExecutor;
     }
 
     /**
@@ -248,22 +248,22 @@ class UpdateProjectRequest
     }
 
     /**
-     * @param string|null $githubWebhookSecret
+     * @param string|null $gitHubWebhookSecret
      * @return self
      */
-    public function setGithubWebhookSecret(?string $githubWebhookSecret): self
+    public function setGitHubWebhookSecret(?string $gitHubWebhookSecret): self
     {
-        $this->githubWebhookSecret = $githubWebhookSecret;
+        $this->gitHubWebhookSecret = $gitHubWebhookSecret;
         return $this;
     }
 
     /**
-     * @param string|null $githubWebhookExecutor
+     * @param string|null $gitHubWebhookExecutor
      * @return self
      */
-    public function setGithubWebhookExecutor(?string $githubWebhookExecutor): self
+    public function setGitHubWebhookExecutor(?string $gitHubWebhookExecutor): self
     {
-        $this->githubWebhookExecutor = $githubWebhookExecutor;
+        $this->gitHubWebhookExecutor = $gitHubWebhookExecutor;
         return $this;
     }
 }

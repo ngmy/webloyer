@@ -28,8 +28,8 @@ class StoreController extends BaseController
             ->setDeploymentKeepDays($request->input('days_to_keep_deployments'))
             ->setKeepLastDeployment($request->input('keep_last_deployment'))
             ->setDeploymentKeepMaxNumber($request->input('max_number_of_deployments_to_keep'))
-            ->setGithubWebhookSecret($request->input('github_webhook_secret'))
-            ->setGithubWebhookExecutor($request->input('github_webhook_user_id'));
+            ->setGitHubWebhookSecret($request->input('github_webhook_secret'))
+            ->setGitHubWebhookExecutor($request->input('github_webhook_user_id'));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('projects.index');

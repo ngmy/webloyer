@@ -65,13 +65,13 @@ interface ProjectInterest
      */
     public function informDeploymentKeepMaxNumber(?int $deploymentKeepMaxNumber): void;
     /**
-     * @param string|null $githubWebhookSecret
+     * @param string|null $gitHubWebhookSecret
      * @return void
      */
-    public function informGithubWebhookSecret(?string $githubWebhookSecret): void;
+    public function informGitHubWebhookSecret(?string $gitHubWebhookSecret): void;
     /**
-     * @param string|null $githubWebhookExecutor
+     * @param string|null $gitHubWebhookExecutor
      * @return void
      */
-    public function informGithubWebhookExecutor(?string $githubWebhookExecutor): void;
+    public function informGitHubWebhookExecutor(?string $gitHubWebhookExecutor): void;
 }

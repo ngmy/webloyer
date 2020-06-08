@@ -26,8 +26,8 @@ class UpdateProjectService extends ProjectService
             ->changeDeploymentKeepDays($request->getDeploymentKeepDays())
             ->changeKeepLastDeployment($request->getKeepLastDeployment())
             ->changeDeploymentKeepMaxNumber($request->getDeploymentKeepMaxNumber())
-            ->changeGithubWebhookSecret($request->getGithubWebhookSecret())
-            ->changeGithubWebhookExecutor($request->getGithubWebhookExecutor());
+            ->changeGitHubWebhookSecret($request->getGitHubWebhookSecret())
+            ->changeGitHubWebhookExecutor($request->getGitHubWebhookExecutor());
         $this->projectRepository->save($project);
     }
 }

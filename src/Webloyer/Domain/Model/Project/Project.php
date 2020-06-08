@@ -33,8 +33,8 @@ class Project
     private $emailNotification;
     /** @var DiscardOldDeployment\DiscardOldDeployment */
     private $discardOldDeployment;
-    /** @var Webhook\Github\GithubWebhook */
-    private $githubWebhook;
+    /** @var Webhook\GitHub\GitHubWebhook */
+    private $gitHubWebhook;
 
     /**
      * @param string             $id
@@ -48,8 +48,8 @@ class Project
      * @param int|null           $deploymentKeepDays
      * @param bool               $keepLastDeployment
      * @param int|null           $deploymentKeepMaxNumber
-     * @param string|null        $githubWebhookSecret
-     * @param string|null        $githubWebhookExecutor
+     * @param string|null        $gitHubWebhookSecret
+     * @param string|null        $gitHubWebhookExecutor
      * @return self
      */
     public static function of(
@@ -64,8 +64,8 @@ class Project
         ?int $deploymentKeepDays,
         bool $keepLastDeployment,
         ?int $deploymentKeepMaxNumber,
-        ?string $githubWebhookSecret,
-        ?string $githubWebhookExecutor
+        ?string $gitHubWebhookSecret,
+        ?string $gitHubWebhookExecutor
     ) {
         return new self(
             new ProjectId($id),
@@ -81,9 +81,9 @@ class Project
                 $keepLastDeployment,
                 $deploymentKeepMaxNumber
             ),
-            Webhook\Github\GithubWebhook::of(
-                $githubWebhookSecret,
-                $githubWebhookExecutor
+            Webhook\GitHub\GitHubWebhook::of(
+                $gitHubWebhookSecret,
+                $gitHubWebhookExecutor
             )
         );
     }
@@ -96,7 +96,7 @@ class Project
      * @param ServerOverride\ServerOverride             $serverOverride
      * @param Notification\Email\EmailNotification      $emailNotification
      * @param DiscardOldDeployment\DiscardOldDeployment $discardOldDeployment
-     * @param Webhook\Github\GithubWebhook              $githubWebhook
+     * @param Webhook\GitHub\GitHubWebhook              $gitHubWebhook
      * @return void
      */
     public function __construct(
@@ -109,7 +109,7 @@ class Project
         ServerOverride\ServerOverride $serverOverride,
         Notification\Email\EmailNotification $emailNotification,
         DiscardOldDeployment\DiscardOldDeployment $discardOldDeployment,
-        Webhook\Github\GithubWebhook $githubWebhook
+        Webhook\GitHub\GitHubWebhook $gitHubWebhook
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -120,7 +120,7 @@ class Project
         $this->serverOverride = $serverOverride;
         $this->emailNotification = $emailNotification;
         $this->discardOldDeployment = $discardOldDeployment;
-        $this->githubWebhook = $githubWebhook;
+        $this->gitHubWebhook = $gitHubWebhook;
     }
 
     /**
@@ -278,20 +278,20 @@ class Project
         return $this;
     }
 
-    public function changeGithubWebhookSecret(?string $githubWebhookSecret): self
+    public function changeGitHubWebhookSecret(?string $gitHubWebhookSecret): self
     {
-        $this->githubWebhook = Webhook\Github\GithubWebhook::of(
-            $githubWebhookSecret,
-            $this->githubWebhook->executor()
+        $this->gitHubWebhook = Webhook\GitHub\GitHubWebhook::of(
+            $gitHubWebhookSecret,
+            $this->gitHubWebhook->executor()
         );
         return $this;
     }
 
-    public function changeGithubWebhookExecutor(?string $githubWebhookExecutor): self
+    public function changeGitHubWebhookExecutor(?string $gitHubWebhookExecutor): self
     {
-        $this->githubWebhook = Webhook\Github\GithubWebhook::of(
-            $this->githubWebhook->secret(),
-            $githubWebhookExecutor
+        $this->gitHubWebhook = Webhook\GitHub\GitHubWebhook::of(
+            $this->gitHubWebhook->secret(),
+            $gitHubWebhookExecutor
         );
         return $this;
     }
@@ -311,7 +311,7 @@ class Project
         $this->serverOverride->provide($interest);
         $this->emailNotification->provide($interest);
         $this->discardOldDeployment->provide($interest);
-        $this->githubWebhook->provide($interest);
+        $this->gitHubWebhook->provide($interest);
     }
 
     /**
