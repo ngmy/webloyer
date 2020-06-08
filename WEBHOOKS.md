@@ -12,5 +12,5 @@ If you want to use [GitHub webhook secret](https://developer.github.com/webhooks
 ### Endpoint
 
 ```
-/webhook/github/v1/projects/:project_id/deployments
+/webhook/v1/github/projects/:project_id/deployments
 ```
