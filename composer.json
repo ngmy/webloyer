@@ -145,7 +145,7 @@
         "lint": [
             "@php vendor/bin/phpcs --colors"
         ],
-        "findbug": [
+        "findbugs": [
             "@php vendor/bin/phpstan analyse --ansi"
         ]
     }

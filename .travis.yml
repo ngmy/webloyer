@@ -18,7 +18,7 @@ before_script:
 
 script:
   - composer lint
-  - composer findbug
+  - composer findbugs
   - composer test
 
 after_success:
