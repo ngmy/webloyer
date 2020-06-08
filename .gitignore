@@ -1,7 +1,12 @@
 /build
 /node_modules
+/public/css
+/public/fonts
 /public/hot
+/public/js
+/public/mix-manifest.json
 /public/storage
+/public/vendor
 /storage/*.key
 /storage/dotenv-editor
 /vendor
