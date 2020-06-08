@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Persistence\Eloquent\Models;
 
-use Illuminate\Database\Eloquent\{
-    Builder,
-    Model,
-    Relations,
-};
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use InvalidArgumentException;
 use Webloyer\Domain\Model\Deployment\{
     Deployment as DeploymentEntity,
@@ -56,17 +54,17 @@ class Deployment extends Model implements DeploymentInterest
     }
 
     /**
-     * @return Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function project(): Relations\BelongsTo
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
 
     /**
-     * @return Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user(): Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

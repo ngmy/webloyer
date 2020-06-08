@@ -236,7 +236,8 @@ class Deployment
         );
     }
 
-    public function complete(): void {
+    public function complete(): void
+    {
         if (!$this->status->isCompleted()) {
             throw new LogicException();
         }

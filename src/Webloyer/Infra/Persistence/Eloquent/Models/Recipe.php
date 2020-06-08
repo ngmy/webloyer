@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Persistence\Eloquent\Models;
 
-use Illuminate\Database\Eloquent\{
-    Builder,
-    Model,
-    Relations,
-};
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Webloyer\Domain\Model\Recipe\{
     Recipe as RecipeEntity,
     RecipeInterest,
@@ -36,10 +34,11 @@ class Recipe extends Model implements RecipeInterest
     {
         return $query->where('uuid', $id);
     }
+
     /**
-     * @return Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function projects(): Relations\BelongsToMany
+    public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class);
     }

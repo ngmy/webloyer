@@ -6,9 +6,12 @@ namespace Webloyer\Domain\Model\Project;
 
 use Common\Domain\Model\Identity\Identifiable;
 use Common\Domain\Model\Timestamp\Timestampable;
-use Webloyer\Domain\Model\Deployment;
-use Webloyer\Domain\Model\Recipe;
-use Webloyer\Domain\Model\Server;
+use Webloyer\Domain\Model\Project\DiscardOldDeployment\DiscardOldDeployment;
+use Webloyer\Domain\Model\Project\Notification\Email\EmailNotification;
+use Webloyer\Domain\Model\Project\ServerOverride\ServerOverride;
+use Webloyer\Domain\Model\Project\Webhook\GitHub\GitHubWebhook;
+use Webloyer\Domain\Model\Recipe\RecipeIds;
+use Webloyer\Domain\Model\Server\ServerId;
 
 class Project
 {
@@ -19,21 +22,21 @@ class Project
     private $id;
     /** @var ProjectName */
     private $name;
-    /** @var Recipe\RecipeIds */
+    /** @var RecipeIds */
     private $recipeIds;
-    /** @var Server\ServerId */
+    /** @var ServerId */
     private $serverId;
     /** @var RepositoryUrl */
     private $repositoryUrl;
     /** @var StageName */
     private $stageName;
-    /** @var ServerOverride\ServerOverride */
+    /** @var ServerOverride */
     private $serverOverride;
-    /** @var Notification\Email\EmailNotification */
+    /** @var EmailNotification */
     private $emailNotification;
-    /** @var DiscardOldDeployment\DiscardOldDeployment */
+    /** @var DiscardOldDeployment */
     private $discardOldDeployment;
-    /** @var Webhook\GitHub\GitHubWebhook */
+    /** @var GitHubWebhook */
     private $gitHubWebhook;
 
     /**
@@ -70,18 +73,18 @@ class Project
         return new self(
             new ProjectId($id),
             new ProjectName($name),
-            Recipe\RecipeIds::of(...$recipeIds),
-            new Server\ServerId($serverId),
+            RecipeIds::of(...$recipeIds),
+            new ServerId($serverId),
             new RepositoryUrl($repositoryUrl),
             new StageName($stageName),
-            ServerOverride\ServerOverride::of($deployPath),
-            Notification\Email\EmailNotification::of($emailNotificationRecipient),
-            DiscardOldDeployment\DiscardOldDeployment::of(
+            ServerOverride::of($deployPath),
+            EmailNotification::of($emailNotificationRecipient),
+            DiscardOldDeployment::of(
                 $deploymentKeepDays,
                 $keepLastDeployment,
                 $deploymentKeepMaxNumber
             ),
-            Webhook\GitHub\GitHubWebhook::of(
+            GitHubWebhook::of(
                 $gitHubWebhookSecret,
                 $gitHubWebhookExecutor
             )
@@ -89,27 +92,27 @@ class Project
     }
 
     /**
-     * @param ProjectId                                 $id
-     * @param ProjectName                               $name
-     * @param Recipe\RecipeIds                          $recipeIds
-     * @param Server\ServerId                           $serverId
-     * @param ServerOverride\ServerOverride             $serverOverride
-     * @param Notification\Email\EmailNotification      $emailNotification
-     * @param DiscardOldDeployment\DiscardOldDeployment $discardOldDeployment
-     * @param Webhook\GitHub\GitHubWebhook              $gitHubWebhook
+     * @param ProjectId            $id
+     * @param ProjectName          $name
+     * @param RecipeIds            $recipeIds
+     * @param ServerId             $serverId
+     * @param ServerOverride       $serverOverride
+     * @param EmailNotification    $emailNotification
+     * @param DiscardOldDeployment $discardOldDeployment
+     * @param GitHubWebhook        $gitHubWebhook
      * @return void
      */
     public function __construct(
         ProjectId $id,
         ProjectName $name,
-        Recipe\RecipeIds $recipeIds,
-        Server\ServerId $serverId,
+        RecipeIds $recipeIds,
+        ServerId $serverId,
         RepositoryUrl $repositoryUrl,
         StageName $stageName,
-        ServerOverride\ServerOverride $serverOverride,
-        Notification\Email\EmailNotification $emailNotification,
-        DiscardOldDeployment\DiscardOldDeployment $discardOldDeployment,
-        Webhook\GitHub\GitHubWebhook $gitHubWebhook
+        ServerOverride $serverOverride,
+        EmailNotification $emailNotification,
+        DiscardOldDeployment $discardOldDeployment,
+        GitHubWebhook $gitHubWebhook
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -171,17 +174,17 @@ class Project
         return $this->stageName->value();
     }
 
-    public function discardOldDeployment(): DiscardOldDeployment\DiscardOldDeployment
+    public function discardOldDeployment(): DiscardOldDeployment
     {
         return $this->discardOldDeployment;
     }
 
-    public function emailNotification(): Notification\Email\EmailNotification
+    public function emailNotification(): EmailNotification
     {
         return $this->emailNotification;
     }
 
-    public function serverOverride(): ServerOverride\ServerOverride
+    public function serverOverride(): ServerOverride
     {
         return $this->serverOverride;
     }
@@ -202,7 +205,7 @@ class Project
      */
     public function changeRecipes(string ...$recipeIds): self
     {
-        $this->recipeIds = Recipe\RecipeIds::of(...$recipeIds);
+        $this->recipeIds = RecipeIds::of(...$recipeIds);
         return $this;
     }
 
@@ -212,7 +215,7 @@ class Project
      */
     public function changeServer(string $serverId): self
     {
-        $this->serverId = new Server\ServerId($serverId);
+        $this->serverId = new ServerId($serverId);
         return $this;
     }
 
@@ -238,19 +241,19 @@ class Project
 
     public function changeDeployPath(?string $deployPath): self
     {
-        $this->serverOverride = ServerOverride\ServerOverride::of($deployPath);
+        $this->serverOverride = ServerOverride::of($deployPath);
         return $this;
     }
 
     public function changeEmailNotificationRecipient(?string $emailNotificationRecipient): self
     {
-        $this->emailNotification = Notification\Email\EmailNotification::of($emailNotificationRecipient);
+        $this->emailNotification = EmailNotification::of($emailNotificationRecipient);
         return $this;
     }
 
     public function changeDeploymentKeepDays(?int $deploymentKeepDays): self
     {
-        $this->discardOldDeployment = DiscardOldDeployment\DiscardOldDeployment::of(
+        $this->discardOldDeployment = DiscardOldDeployment::of(
             $deploymentKeepDays,
             $this->discardOldDeployment->keepLastDeployment(),
             $this->discardOldDeployment->keepMaxNumber(),
@@ -260,7 +263,7 @@ class Project
 
     public function changeKeepLastDeployment(bool $keepLastDeployment): self
     {
-        $this->discardOldDeployment = DiscardOldDeployment\DiscardOldDeployment::of(
+        $this->discardOldDeployment = DiscardOldDeployment::of(
             $this->discardOldDeployment->keepDays(),
             $keepLastDeployment,
             $this->discardOldDeployment->keepMaxNumber(),
@@ -270,7 +273,7 @@ class Project
 
     public function changeDeploymentKeepMaxNumber(?int $deploymentKeepMaxNumber): self
     {
-        $this->discardOldDeployment = DiscardOldDeployment\DiscardOldDeployment::of(
+        $this->discardOldDeployment = DiscardOldDeployment::of(
             $this->discardOldDeployment->keepDays(),
             $this->discardOldDeployment->keepLastDeployment(),
             $deploymentKeepMaxNumber
@@ -280,7 +283,7 @@ class Project
 
     public function changeGitHubWebhookSecret(?string $gitHubWebhookSecret): self
     {
-        $this->gitHubWebhook = Webhook\GitHub\GitHubWebhook::of(
+        $this->gitHubWebhook = GitHubWebhook::of(
             $gitHubWebhookSecret,
             $this->gitHubWebhook->executor()
         );
@@ -289,7 +292,7 @@ class Project
 
     public function changeGitHubWebhookExecutor(?string $gitHubWebhookExecutor): self
     {
-        $this->gitHubWebhook = Webhook\GitHub\GitHubWebhook::of(
+        $this->gitHubWebhook = GitHubWebhook::of(
             $this->gitHubWebhook->secret(),
             $gitHubWebhookExecutor
         );
