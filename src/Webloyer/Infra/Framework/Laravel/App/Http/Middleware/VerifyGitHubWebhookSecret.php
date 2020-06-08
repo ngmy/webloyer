@@ -6,7 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Middleware;
 
 use Closure;
 
-class VerifyGithubWebhookSecret
+class VerifyGitHubWebhookSecret
 {
     /**
      * Handle an incoming request.

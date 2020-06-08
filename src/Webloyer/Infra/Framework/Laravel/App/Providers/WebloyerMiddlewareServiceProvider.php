@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Kodeine\Acl\Middleware\HasPermission;
 use Webloyer\Infra\Framework\Laravel\App\Http\Middleware\{
     ResponseJsonIfRequestedByQueryParameter,
-    VerifyGithubWebhookSecret,
+    VerifyGitHubWebhookSecret,
 };
 
 class WebloyerMiddlewareServiceProvider extends ServiceProvider
@@ -31,7 +31,7 @@ class WebloyerMiddlewareServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app['router']->aliasMiddleware('acl', HasPermission::class);
-        $this->app['router']->aliasMiddleware('github_webhook_secret', VerifyGithubWebhookSecret::class);
+        $this->app['router']->aliasMiddleware('github_webhook_secret', VerifyGitHubWebhookSecret::class);
         $this->app['router']->aliasMiddleware('response_json', ResponseJsonIfRequestedByQueryParameter::class);
     }
 }
