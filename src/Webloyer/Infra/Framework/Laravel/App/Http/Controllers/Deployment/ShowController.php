@@ -8,6 +8,7 @@ use App;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
 use Webloyer\App\Service\Deployment\GetDeploymentRequest;
+use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Deployment\ShowRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Deployment\ShowViewModel;
 
 class ShowController extends BaseController
@@ -15,11 +16,12 @@ class ShowController extends BaseController
     /**
      * Handle the incoming request.
      *
-     * @param string $projectid
-     * @param int    $number
+     * @param ShowRequest $request
+     * @param string      $projectid
+     * @param int         $number
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(string $projectId, int $number, \Illuminate\Http\Request $request)
+    public function __invoke(ShowRequest $request, string $projectId, int $number)
     {
         $serviceRequest = (new GetDeploymentRequest())
             ->setProjectId($projectId)
@@ -28,14 +30,6 @@ class ShowController extends BaseController
             ->deploymentDataTransformer()
             ->setUserDataTransformer(App::make(UserDtoDataTransformer::class));
         $deployment = $this->service->execute($serviceRequest);
-
-        if ($request->has('json')) {
-            return new ShowViewModel(
-                $deployment,
-                $projectId,
-                new AnsiToHtmlConverter()
-            );
-        }
 
         return (new ShowViewModel(
             $deployment,

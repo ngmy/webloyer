@@ -53,7 +53,7 @@
             startedAt: String,
             finishedAt: String,
             executedBy: String,
-            endpoint: String,
+            deploymentApiUrl: String,
             linkToRoute: String,
         },
         data: function () {
@@ -72,7 +72,7 @@
                 ) {
                     return;
                 }
-                axios.get(this.endpoint)
+                axios.get(this.deploymentApiUrl)
                     .then(res => {
                         this.status1 = res.data.deployment.status;
                         this.log1 = res.data.deploymentLog;

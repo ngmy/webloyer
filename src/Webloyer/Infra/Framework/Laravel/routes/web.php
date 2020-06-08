@@ -46,10 +46,10 @@ Route::group([
     'namespace' => 'Deployment',
     'protect_alias' => 'deployment',
 ], function () {
-    Route::get('projects/{project}/deployments', 'IndexController')->name('projects.deployments.index');
+    Route::get('projects/{project}/deployments', 'IndexController')->middleware('response_json')->name('projects.deployments.index');
     Route::post('projects/{project}/deployments/deploy', 'DeployController')->name('projects.deployments.deploy');
     Route::post('projects/{project}/deployments/rollback', 'RollbackController')->name('projects.deployments.rollback');
-    Route::get('projects/{project}/deployments/{deployment}', 'ShowController')->name('projects.deployments.show');
+    Route::get('projects/{project}/deployments/{deployment}', 'ShowController')->middleware('response_json')->name('projects.deployments.show');
 });
 
 Route::group([

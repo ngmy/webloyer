@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class IndexRequest extends FormRequest
+class ShowRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +29,6 @@ class IndexRequest extends FormRequest
     {
         return [
             'format' => ['nullable', 'string', 'in:html,json'],
-            'page' => ['nullable', 'integer', 'min:1'],
         ];
     }
 
@@ -45,13 +44,5 @@ class IndexRequest extends FormRequest
         throw (new ValidationException($validator))
             ->errorBag($this->errorBag)
             ->redirectTo($this->getRedirectUrl());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getRedirectUrl(): string
-    {
-        return route('projects.deployments.index', [$this->route('project')]);
     }
 }

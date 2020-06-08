@@ -16,18 +16,10 @@ use Webloyer\Infra\Ui\Api\JsonRpc\Api as JsonRpcApi;
 |
 */
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->namespace('V1')->group(function () {
     Route::middleware('auth:api')->post('jsonrpc', function (Request $request) {
         $server = new JsonRpcServer();
         $server->getProcedureHandler()->withObject(App::make(Api::class));
         return $server->execute();
     });
 });
-
-//Route::group([
-//    'namespace' => 'Server',
-//    'protect_alias' => 'server',
-//], function () {
-//    Route::get('servers', 'IndexController')->name('servers.index');
-//    Route::get('servers/{server}', 'ShowController')->name('servers.show');
-//});

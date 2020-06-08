@@ -6,7 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Middleware;
 
 use Closure;
 
-class VerifyGithubWebhookSecret
+class ResponseJsonIfRequestedByQueryParameter
 {
     /**
      * Handle an incoming request.
@@ -17,14 +17,8 @@ class VerifyGithubWebhookSecret
      */
     public function handle($request, Closure $next)
     {
-        $secret = $request->project->githubWebhookSecret();
-
-        if (isset($secret)) {
-            $signature = 'sha1=' . hash_hmac('sha1', $request->getContent(), $secret);
-
-            if ($signature != $request->header('X-Hub-Signature')) {
-                abort(401);
-            }
+        if ($request->input('format') == 'json') {
+            $request->headers->set('Accept', 'application/json');
         }
 
         return $next($request);

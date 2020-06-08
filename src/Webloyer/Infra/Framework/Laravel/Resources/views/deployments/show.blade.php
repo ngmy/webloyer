@@ -11,7 +11,7 @@
         finished-at="{{ $deployment->finishDate }}"
         executed-by="{{ $deployment->user->email }}"
         project-id="{{ $projectId }}"
-        endpoint="{{ route('projects.deployments.show', [$projectId, $deployment->number]) }}"
+        deployment-api-url="{{ route('projects.deployments.show', [$projectId, $deployment->number]) }}"
         link-to-route="{{ route('projects.deployments.index', [$projectId]) }}"
     ></deployment-item>
 </div>

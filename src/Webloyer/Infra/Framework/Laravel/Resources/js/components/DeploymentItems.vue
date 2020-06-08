@@ -50,7 +50,7 @@
                     ) {
                         continue;
                     }
-                    axios.get(this.deploymentApiUrls[this.deployments1[i].number] + '?json=1')
+                    axios.get(this.deploymentApiUrls[this.deployments1[i].number])
                         .then(res => {
                             const newDeployment = Object.assign(this.deployments[i], {
                                 status: res.data.deployment.status,
