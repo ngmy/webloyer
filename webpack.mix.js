@@ -12,4 +12,5 @@ const mix = require('laravel-mix');
  */
 
 mix.js('src/Webloyer/Infra/Framework/Laravel/Resources/js/app.js', 'public/vendor/webloyer/js')
-    .less('src/Webloyer/Infra/Framework/Laravel/Resources/less/app.less', 'public/vendor/webloyer/css');
+    .less('src/Webloyer/Infra/Framework/Laravel/Resources/less/app.less', 'public/vendor/webloyer/css')
+    .version();

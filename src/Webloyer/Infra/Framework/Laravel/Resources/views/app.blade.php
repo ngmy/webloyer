@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Webloyer</title>
 
-    <link href="{{ asset('vendor/webloyer/css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('vendor/webloyer/css/app.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -114,7 +114,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="{{ asset('vendor/webloyer/js/app.js') }}"></script>
+    <script src="{{ mix('vendor/webloyer/js/app.js') }}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="//cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
     <script src="{{ asset('vendor/multi-select/js/jquery.multi-select.js') }}"></script>
