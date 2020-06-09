@@ -85,7 +85,7 @@ class DiscardOldDeployment
 
     public function isEnable(): bool
     {
-        return $this->isKeepDays() && $this->isKeepMaxNumber();
+        return $this->isKeepDays() || $this->isKeepMaxNumber();
     }
 
     /**

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Webloyer\App\Service\Deployment\DeleteOldDeploymentsRequest;
-use Webloyer\App\Service\Deployment\DeleteOldDeploymentsService;
+use Webloyer\App\Service\Deployment\{
+    DeleteOldDeploymentsRequest,
+    DeleteOldDeploymentsService,
+};
 
 class DiscardOldDeployments extends Command
 {

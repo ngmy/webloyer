@@ -31,8 +31,19 @@ class Deployments
         return $this->deployments;
     }
 
-    public function last(): Deployment
+    public function latest(): ?Deployment
     {
+        if (empty($this->deployments)) {
+            return null;
+        }
+        return $this->deployments[0];
+    }
+
+    public function oldest(): ?Deployment
+    {
+        if (empty($this->deployments)) {
+            return null;
+        }
         $count = count($this->deployments);
         return $this->deployments[$count - 1];
     }
@@ -55,5 +66,10 @@ class Deployments
             }
         }
         return -1;
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->deployments);
     }
 }

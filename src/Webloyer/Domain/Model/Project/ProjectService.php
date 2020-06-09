@@ -56,7 +56,7 @@ class ProjectService
         }, []));
     }
 
-    public function lastDeploymentFrom(ProjectId $projectId): Deployment
+    public function lastDeploymentFrom(ProjectId $projectId): ?Deployment
     {
         return $this->deploymentRepository->findLastByProjectId($projectId);
     }

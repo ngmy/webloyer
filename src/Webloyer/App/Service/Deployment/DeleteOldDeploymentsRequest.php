@@ -21,7 +21,7 @@ class DeleteOldDeploymentsRequest
      * @param string $dateTime
      * @return self
      */
-    public function setNumber(string $dateTime): self
+    public function setDateTime(string $dateTime): self
     {
         $this->dateTime = $dateTime;
         return $this;
