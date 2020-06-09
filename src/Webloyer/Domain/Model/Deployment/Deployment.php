@@ -291,4 +291,9 @@ class Deployment
 
         return $equalObjects;
     }
+
+    public function isCompleted(): bool
+    {
+        return $this->status->isCompleted();
+    }
 }

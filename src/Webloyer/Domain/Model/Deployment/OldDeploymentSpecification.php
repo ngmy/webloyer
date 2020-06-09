@@ -29,6 +29,10 @@ class OldDeploymentSpecification implements DeploymentSpecification
      */
     public function isSatisfiedBy(Deployment $deployment): bool
     {
+        if ($deployment->isCompleted()) {
+            return false;
+        }
+
         $project = $this->projectRepository->findById(new ProjectId($deployment->projectId()));
         $discardOldDeployment = $project->discardOldDeployment();
 
