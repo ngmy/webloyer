@@ -4,11 +4,27 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Webhook\V1\GitHub\Deployment;
 
+use Common\App\Service\ApplicationService;
 use Illuminate\Http\Request;
 use Webloyer\App\Service\Deployment\RollbackDeploymentRequest;
+use Webloyer\App\Service\Project\{
+    GetProjectRequest,
+    GetProjectService,
+};
 
 class RollbackController extends BaseController
 {
+    private $projectService;
+
+    public function __construct(
+        ApplicationService $service,
+        GetProjectService $projectService
+    ) {
+        parent::__construct($service);
+
+        $this->projectService = $projectService;
+    }
+
     /**
      * Handle the incoming request.
      *
@@ -18,14 +34,14 @@ class RollbackController extends BaseController
      */
     public function __invoke(Request $request, string $projectId)
     {
+        $projectServiceRequest = (new GetProjectRequest())->setId($projectId);
+        $project = $this->projectService->execute($projectServiceRequest);
+
         $serviceRequest = (new RollbackDeploymentRequest())
-            ->setProjectId($projectId)
-            ->setExecutor($request->user()->toEntity()->id());
+            ->setProjectId($project->id)
+            ->setExecutor($project->gitHubWebhookUserId);
         $deployment = $this->service->execute($serviceRequest);
 
-        $link = link_to_route('projects.deployments.show', '#' . $deployment->number, [$projectId, $deployment->number]);
-        $request->session()->flash('status', "The deployment $link was successfully started.");
-
-        return redirect()->route('projects.deployments.index', [$projectId]);
+        return response()->json($deployment);
     }
 }

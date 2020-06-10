@@ -143,6 +143,10 @@ use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User\{
     UpdatePasswordController as UserUpdatePassowordController,
     UpdateRoleController as UserUpdateRoleController,
 };
+use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Webhook\V1\GitHub\Deployment\{
+    DeployController as WebhookV1GitHubDeploymentDeployController,
+    RollbackController as WebhookV1GitHubDeploymentRollbackController,
+};
 
 class WebloyerServiceProvider extends ServiceProvider
 {
@@ -244,6 +248,38 @@ class WebloyerServiceProvider extends ServiceProvider
                     $app->make(UserRepository::class),
                     $app->make(DeploymentDataTransformer::class),
                     $app->make(DeploymentsDataTransformer::class)
+                );
+            });
+        $this->app->when(WebhookV1GitHubDeploymentDeployController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new CreateDeploymentService(
+                        $app->make(DeploymentRepository::class),
+                        $app->make(ProjectRepository::class),
+                        $app->make(RecipeRepository::class),
+                        $app->make(ServerRepository::class),
+                        $app->make(UserRepository::class),
+                        $app->make(DeploymentDataTransformer::class),
+                        $app->make(DeploymentsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(WebhookV1GitHubDeploymentRollbackController::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new RollbackDeploymentService(
+                        $app->make(DeploymentRepository::class),
+                        $app->make(ProjectRepository::class),
+                        $app->make(RecipeRepository::class),
+                        $app->make(ServerRepository::class),
+                        $app->make(UserRepository::class),
+                        $app->make(DeploymentDataTransformer::class),
+                        $app->make(DeploymentsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
                 );
             });
 

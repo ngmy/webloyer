@@ -20,9 +20,6 @@ class BaseController extends Controller
      */
     public function __construct(ApplicationService $service = null)
     {
-        $this->middleware('auth');
-        $this->middleware('acl');
-
         $this->service = $service;
     }
 }
