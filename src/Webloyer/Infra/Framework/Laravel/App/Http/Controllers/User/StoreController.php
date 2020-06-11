@@ -22,7 +22,8 @@ class StoreController extends BaseController
             ->setEmail($request->input('email'))
             ->setName($request->input('name'))
             ->setPassword($request->input('password'))
-            ->setApiToken(Str::random(60));
+            ->setApiToken(Str::random(60))
+            ->setRoles($request->input('role'));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('users.index');

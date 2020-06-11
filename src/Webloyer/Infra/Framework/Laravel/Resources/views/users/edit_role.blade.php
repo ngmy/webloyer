@@ -31,11 +31,11 @@
                         <div class="form-group">
                             <label for="role" class="col-md-4 control-label">Role</label>
                             <div class="col-md-6">
-                                @foreach ($user->possibleRoles as $roleName => $roleSlug)
+                                @foreach ($roles as $name => $slug)
                                     <div class="checkbox">
                                         <label>
-                                            {!! Form::checkbox('role[]', $roleSlug, in_array($roleSlug, $user->roles)) !!}
-                                            {{ $roleName }}
+                                            {!! Form::checkbox('role[]', $slug, in_array($slug, $user->roles)) !!}
+                                            {{ $name }}
                                         </label>
                                     </div>
                                 @endforeach

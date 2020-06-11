@@ -34,7 +34,7 @@ class StoreRequest extends FormRequest
 
         if (!empty($this->role)) {
             foreach (array_keys($this->role) as $index) {
-                $rules['role.' . $index] = ['required', 'exists:roles,id'];
+                $rules['role.' . $index] = ['required', 'exists:roles,slug'];
             }
         }
 

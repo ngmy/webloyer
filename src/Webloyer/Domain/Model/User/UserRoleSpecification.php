@@ -49,5 +49,4 @@ class UserRoleSpecification
     {
         return self::$slugs[$this->value()];
     }
-
 }

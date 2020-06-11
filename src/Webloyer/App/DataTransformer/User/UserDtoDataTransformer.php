@@ -7,7 +7,6 @@ namespace Webloyer\App\DataTransformer\User;
 use Webloyer\Domain\Model\User\{
     User,
     UserInterest,
-    UserRoleSpecification,
 };
 
 class UserDtoDataTransformer implements UserDataTransformer
@@ -56,8 +55,6 @@ class UserDtoDataTransformer implements UserDataTransformer
             }
         };
         $this->user->provide($dto);
-
-        $dto->possibleRoles = UserRoleSpecification::slugs(); //TODO this?
 
         $dto->surrogateId = $this->user->surrogateId();
         $dto->createdAt = $this->user->createdAt();

@@ -4,11 +4,26 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
-use Webloyer\App\Service\User\GetUserRequest;
+use Common\App\Service\ApplicationService;
+use Webloyer\App\Service\User\{
+    GetAllRolesService,
+    GetUserRequest,
+};
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\EditRoleViewModel;
 
 class EditRoleController extends BaseController
 {
+    private $roleService;
+
+    public function __construct(
+        ApplicationService $service,
+        GetAllRolesService $roleService
+    ) {
+        parent::__construct($service);
+
+        $this->roleService = $roleService;
+    }
+
     /**
      * Handle the incoming request.
      *
@@ -20,6 +35,8 @@ class EditRoleController extends BaseController
         $serviceRequest = (new GetUserRequest())->setId($id);
         $user = $this->service->execute($serviceRequest);
 
-        return (new EditRoleViewModel($user))->view('webloyer::users.edit_role');
+        $roles = $this->roleService->execute();
+
+        return (new EditRoleViewModel($user, $roles))->view('webloyer::users.edit_role');
     }
 }
