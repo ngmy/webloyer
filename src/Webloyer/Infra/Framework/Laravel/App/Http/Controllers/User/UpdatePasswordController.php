@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
+use Illuminate\Support\Facades\Hash;
 use Webloyer\App\Service\User\UpdatePasswordRequest as ServiceRequest;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\UpdatePasswordRequest;
 
@@ -20,7 +21,7 @@ class UpdatePasswordController extends BaseController
     {
         $serviceRequest = (new ServiceRequest())
             ->setId($id)
-            ->setPassword($request->input('password'));
+            ->setPassword(Hash::make($request->input('password')));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('users.index');
