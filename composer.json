@@ -38,19 +38,15 @@
                     "reference": "0.9.12"
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/matasarei/JsonRPC.git"
         }
     ],
     "require": {
         "php": "^7.2",
         "ajaxorg/ace-builds": "^1.0",
+        "datto/json-rpc": "^6.0",
         "davejamesmiller/laravel-breadcrumbs": "^5.0",
         "deployer/deployer": "^6.0",
         "deployer/recipes": "^6.0",
-        "fguillot/json-rpc": "^1.0",
         "fideloper/proxy": "^4.0",
         "kodeine/laravel-acl": "^2.0",
         "jackiedo/dotenv-editor": "^1.0",

@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use JsonRPC\Server as JsonRpcServer;
-use Webloyer\Infra\Ui\Api\JsonRpc\Api as JsonRpcApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +14,7 @@ use Webloyer\Infra\Ui\Api\JsonRpc\Api as JsonRpcApi;
 */
 
 Route::prefix('v1')->namespace('V1')->group(function () {
-    Route::middleware('auth:api')->post('jsonrpc', function (Request $request) {
-        $server = new JsonRpcServer();
-        $server->getProcedureHandler()->withObject(App::make(Api::class));
-        return $server->execute();
+    Route::middleware('auth:api')->namespace('JsonRpc')->group(function () {
+        Route::post('jsonrpc', 'JsonRpcController');
     });
 });

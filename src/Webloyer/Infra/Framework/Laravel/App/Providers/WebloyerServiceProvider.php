@@ -9,6 +9,7 @@ use Common\App\Service\{
     TransactionalApplicationService,
     TransactionalSession,
 };
+use Datto\JsonRpc\Server as JsonRpcServer;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Webloyer\App\DataTransformer\Deployment\{
@@ -98,6 +99,7 @@ use Webloyer\Infra\App\DataTransformer\Project\ProjectsLaravelLengthAwarePaginat
 use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\Server\ServersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
+use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Api\V1\JsonRpc\JsonRpcController;
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment\{
     DeployController as DeploymentDeployController,
     IndexController as DeploymentIndexController,
@@ -147,6 +149,7 @@ use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Webhook\V1\GitHub\Depl
     DeployController as WebhookV1GitHubDeploymentDeployController,
     RollbackController as WebhookV1GitHubDeploymentRollbackController,
 };
+use Webloyer\Infra\Ui\Api\JsonRpc\Api as JsonRpcApi;
 
 class WebloyerServiceProvider extends ServiceProvider
 {
@@ -176,6 +179,12 @@ class WebloyerServiceProvider extends ServiceProvider
         // user data transformers
         $this->app->bind(UserDataTransformer::class, UserDtoDataTransformer::class);
         $this->app->bind(UsersDataTransformer::class, UsersLaravelLengthAwarePaginatorDataTransformer::class);
+
+        $this->app->when(JsonRpcController::class)
+            ->needs(JsonRpcServer::class)
+            ->give(function (Application $app): JsonRpcServer {
+                return new JsonRpcServer($app->make(JsonRpcApi::class));
+            });
 
         // deployment app services
         $this->app->when(DeploymentIndexController::class)

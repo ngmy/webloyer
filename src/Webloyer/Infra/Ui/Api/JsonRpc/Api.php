@@ -4,29 +4,33 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Ui\Api\JsonRpc;
 
+use Datto\JsonRpc\Evaluator;
+use Datto\JsonRpc\Exceptions\{
+    ArgumentException,
+    MethodException,
+};
 use InvalidArgumentException;
 use Webloyer\App\Service\Deployment\{
     CreateDeploymentRequest,
-    CreateDeploymentSerivie,
+    CreateDeploymentService,
     RollbackDeploymentRequest,
-    RollbackDeploymentSerivie,
+    RollbackDeploymentService,
 };
 use Webloyer\App\Service\User\{
     GetUserByApiTokenRequest,
     GetUserByApiTokenService,
 };
-use Webloyer\Domain\Model\Deployment\Deployment;
 use Webloyer\Domain\Model\User\User;
 
-class Api
+class Api implements Evaluator
 {
     private $createDeploymentService;
     private $rollbackDeploymentService;
     private $getUserByApiTokenService;
 
-    public function __construt(
-        CreateDeploymentSerivie $createDeploymentService,
-        RollbackDeploymentSerivie $rollbackDeploymentService,
+    public function __construct(
+        CreateDeploymentService $createDeploymentService,
+        RollbackDeploymentService $rollbackDeploymentService,
         GetUserByApiTokenService $getUserByApiTokenService
     ) {
         $this->createDeploymentService = $createDeploymentService;
@@ -34,17 +38,28 @@ class Api
         $this->getUserByApiTokenService = $getUserByApiTokenService;
     }
 
+    public function evaluate($method, $arguments)
+    {
+        if ($method == 'deploy') {
+            return $this->deploy($arguments);
+        }
+        if ($method == 'rollback') {
+            return $this->rollback($arguments);
+        }
+        throw new MethodException();
+    }
+
     /**
      * Deploy a project.
      *
-     * @param int $projectId
-     * @return Deployment
+     * @param array $arguments
+     * @return object
      */
-    public function deploy($projectId)
+    public function deploy(array $arguments): object
     {
         $serviceRequest = (new CreateDeploymentRequest())
-            ->setProjectId($projectId)
-            ->setExecutor($this->nonNullUser->id());
+            ->setProjectId($arguments['project_id'])
+            ->setExecutor($this->nonNullUser()->id);
         $deployment = $this->createDeploymentService->execute($serviceRequest);
         return $deployment;
     }
@@ -52,19 +67,19 @@ class Api
     /**
      * Roll back a deployment.
      *
-     * @param int $projectId
-     * @return Deployment
+     * @param array $arguments
+     * @return object
      */
-    public function rollback($projectId)
+    public function rollback(array $arguments): object
     {
         $serviceRequest = (new RollbackDeploymentRequest())
-            ->setProjectId($projectId)
-            ->setExecutor($this->nonNullUser->id());
+            ->setProjectId($arguments['project_id'])
+            ->setExecutor($this->nonNullUser()->id);
         $deployment = $rollbackService->execute($serviceRequest);
         return $deployment;
     }
 
-    private function nonNullUser(): User
+    private function nonNullUser(): object
     {
         $serviceRequest = (new GetUserByApiTokenRequest())
             ->setApiToken($this->nonNullApiToken());
@@ -77,7 +92,7 @@ class Api
 
     private function nonNullApiToken(): string
     {
-        $header = $this->server['HTTP_AUTHORIZATION'];
+        $header = $_SERVER['HTTP_AUTHORIZATION'];
         if (strpos($header, 'Bearer ') === 0) {
             return substr($header, 7);
         } else {
