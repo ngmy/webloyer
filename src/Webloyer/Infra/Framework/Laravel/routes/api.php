@@ -14,7 +14,11 @@ use Illuminate\Http\Request;
 */
 
 Route::prefix('v1')->namespace('V1')->group(function () {
-    Route::middleware('auth:api')->namespace('JsonRpc')->group(function () {
+    Route::group([
+        'middleware' => ['auth:api', 'acl'],
+        'namespace' => 'JsonRpc',
+        'protect_alias' => 'deployment',
+    ], function () {
         Route::post('jsonrpc', 'JsonRpcController');
     });
 });
