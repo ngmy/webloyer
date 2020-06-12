@@ -9,6 +9,7 @@ use Common\App\Service\{
     TransactionalApplicationService,
     TransactionalSession,
 };
+use Common\ServiceBus\QueryBus;
 use Datto\JsonRpc\Server as JsonRpcServer;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -150,6 +151,7 @@ use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Webhook\V1\GitHub\Depl
     RollbackController as WebhookV1GitHubDeploymentRollbackController,
 };
 use Webloyer\Infra\Ui\Api\JsonRpc\Api as JsonRpcApi;
+use Webloyer\Query\AllRolesQueryHandler;
 
 class WebloyerServiceProvider extends ServiceProvider
 {
@@ -591,6 +593,13 @@ class WebloyerServiceProvider extends ServiceProvider
         $this->app->bind(RecipeRepository::class, EloquentRecipeRepository::class);
         $this->app->bind(ServerRepository::class, EloquentServerRepository::class);
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
+
+        // service bus
+        $this->app->singleton(QueryBus::class, function (Application $app): QueryBus {
+            $queryBus = new QueryBus();
+            $queryBus->register(new AllRolesQueryHandler());
+            return $queryBus;
+        });
 
         // other service providers
         $this->app->register(WebloyerAssetServiceProvider::class);

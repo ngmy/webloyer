@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
-use Webloyer\App\Service\User\GetAllRolesService;
+use Common\ServiceBus\QueryBus;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\CreateViewModel;
+use Webloyer\Query\AllRolesQuery;
 
 class CreateController extends BaseController
 {
-    private $roleService;
+    private $queryBus;
 
-    public function __construct(GetAllRolesService $roleService)
+    public function __construct(QueryBus $queryBus)
     {
         parent::__construct();
 
-        $this->roleService = $roleService;
+        $this->queryBus = $queryBus;
     }
 
     /**
@@ -25,7 +26,7 @@ class CreateController extends BaseController
      */
     public function __invoke()
     {
-        $roles = $this->roleService->execute();
+        $roles = $this->queryBus->handle(new AllRolesQuery());
 
         return (new CreateViewModel($roles))->view('webloyer::users.create');
     }
