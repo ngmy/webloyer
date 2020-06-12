@@ -24,10 +24,19 @@ use Webloyer\Domain\Model\User\User;
 
 class Api implements Evaluator
 {
+    /** @var CreateDeploymentService */
     private $createDeploymentService;
+    /** @var RollbackDeploymentService */
     private $rollbackDeploymentService;
+    /** @var GetUserByApiTokenService */
     private $getUserByApiTokenService;
 
+    /**
+     * @param CreateDeploymentService $createDeploymentService
+     * @param RollbackDeploymentService $rollbackDeploymentService
+     * @param GetUserByApiTokenService $getUserByApiTokenService
+     * @return void
+     */
     public function __construct(
         CreateDeploymentService $createDeploymentService,
         RollbackDeploymentService $rollbackDeploymentService,
@@ -38,6 +47,10 @@ class Api implements Evaluator
         $this->getUserByApiTokenService = $getUserByApiTokenService;
     }
 
+    /**
+     * @param string               $method
+     * @param array<string, mixed> $arguments
+     */
     public function evaluate($method, $arguments)
     {
         if ($method == 'deploy') {
@@ -50,9 +63,7 @@ class Api implements Evaluator
     }
 
     /**
-     * Deploy a project.
-     *
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @return object
      */
     public function deploy(array $arguments): object
@@ -65,9 +76,7 @@ class Api implements Evaluator
     }
 
     /**
-     * Roll back a deployment.
-     *
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @return object
      */
     public function rollback(array $arguments): object
@@ -75,10 +84,13 @@ class Api implements Evaluator
         $serviceRequest = (new RollbackDeploymentRequest())
             ->setProjectId($arguments['project_id'])
             ->setExecutor($this->nonNullUser()->id);
-        $deployment = $rollbackService->execute($serviceRequest);
+        $deployment = $this->rollbackDeploymentService->execute($serviceRequest);
         return $deployment;
     }
 
+    /**
+     * @return object
+     */
     private function nonNullUser(): object
     {
         $serviceRequest = (new GetUserByApiTokenRequest())
@@ -90,6 +102,9 @@ class Api implements Evaluator
         return $user;
     }
 
+    /**
+     * @return string
+     */
     private function nonNullApiToken(): string
     {
         $header = $_SERVER['HTTP_AUTHORIZATION'];

@@ -9,10 +9,19 @@ use Spatie\ViewModels\ViewModel;
 
 class ShowViewModel extends ViewModel
 {
+    /** @var object */
     private $deployment;
+    /** @var string */
     private $projectId;
+    /** @var AnsiToHtmlConverter */
     private $converter;
 
+    /**
+     * @param object              $deployment
+     * @param string              $projectId
+     * @param AnsiToHtmlConverter $converter
+     * @return void
+     */
     public function __construct(
         object $deployment,
         string $projectId,
@@ -23,16 +32,25 @@ class ShowViewModel extends ViewModel
         $this->converter = $converter;
     }
 
+    /**
+     * @return object
+     */
     public function deployment(): object
     {
         return $this->deployment;
     }
 
+    /**
+     * @return string
+     */
     public function projectId(): string
     {
         return $this->projectId;
     }
 
+    /**
+     * @return string
+     */
     public function deploymentLog(): string
     {
         return $this->converter->convert($this->deployment->log);

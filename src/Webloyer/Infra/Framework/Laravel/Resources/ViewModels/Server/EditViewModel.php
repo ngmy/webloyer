@@ -8,13 +8,21 @@ use Spatie\ViewModels\ViewModel;
 
 class EditViewModel extends ViewModel
 {
+    /** @var object */
     private $server;
 
+    /**
+     * @param object $server
+     * @return void
+     */
     public function __construct(object $server)
     {
         $this->server = $server;
     }
 
+    /**
+     * @return object
+     */
     public function server(): object
     {
         return $this->server;

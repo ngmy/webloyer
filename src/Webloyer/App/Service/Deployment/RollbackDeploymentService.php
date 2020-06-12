@@ -14,7 +14,7 @@ use Webloyer\Domain\Model\Project\ProjectId;
 class RollbackDeploymentService extends DeploymentService
 {
     /**
-     * @param RollbackRequest $request
+     * @param RollbackDeploymentRequest $request
      * @return mixed
      */
     public function execute($request = null)

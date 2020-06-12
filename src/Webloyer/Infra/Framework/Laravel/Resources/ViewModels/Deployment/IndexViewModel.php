@@ -9,25 +9,41 @@ use Spatie\ViewModels\ViewModel;
 
 class IndexViewModel extends ViewModel
 {
+    /** @var LengthAwarePaginator<object> */
     private $deployments;
+    /** @var string */
     private $projectId;
 
+    /**
+     * @param LengthAwarePaginator<object> $deployments
+     * @param string                       $projectId
+     * @return void
+     */
     public function __construct(LengthAwarePaginator $deployments, string $projectId)
     {
         $this->deployments = $deployments;
         $this->projectId = $projectId;
     }
 
+    /**
+     * @return LengthAwarePaginator<object>
+     */
     public function deployments(): LengthAwarePaginator
     {
         return $this->deployments;
     }
 
+    /**
+     * @return string
+     */
     public function projectId(): string
     {
         return $this->projectId;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function deploymentStatus(): array
     {
         return [
@@ -38,6 +54,9 @@ class IndexViewModel extends ViewModel
         ];
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function deploymentLinks(): array
     {
         return array_reduce($this->deployments->toArray()['data'], function (array $carry, object $deployment): array {
@@ -47,6 +66,9 @@ class IndexViewModel extends ViewModel
         }, []);
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function deploymentApiUrls(): array
     {
         return array_reduce($this->deployments->toArray()['data'], function (array $carry, object $deployment): array {

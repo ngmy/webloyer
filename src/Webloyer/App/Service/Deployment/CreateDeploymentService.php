@@ -14,7 +14,7 @@ use Webloyer\Domain\Model\Project\ProjectId;
 class CreateDeploymentService extends DeploymentService
 {
     /**
-     * @param DeployRequest $request
+     * @param CreateDeploymentRequest $request
      * @return mixed
      */
     public function execute($request = null)

@@ -12,8 +12,13 @@ use Webloyer\App\Service\Project\{
 
 class VerifyGitHubWebhookSecret
 {
+    /** @var GetProjectService */
     private $service;
 
+    /**
+     * @param GetProjectService $service
+     * @return void
+     */
     public function __construct(GetProjectService $service)
     {
         $this->service = $service;

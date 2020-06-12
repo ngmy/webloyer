@@ -9,13 +9,21 @@ use Webloyer\Domain\Model\Role\RoleView;
 
 class CreateViewModel extends ViewModel
 {
+    /** @var array<int, RoleView> */
     private $roles;
 
+    /**
+     * @param array<int, RoleView> $roles
+     * @return void
+     */
     public function __construct(array $roles)
     {
         $this->roles = $roles;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function roles(): array
     {
         return array_reduce($this->roles, function (array $carry, RoleView $role): array {

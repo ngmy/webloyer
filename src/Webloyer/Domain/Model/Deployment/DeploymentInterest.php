@@ -40,12 +40,12 @@ interface DeploymentInterest
      */
     public function informExecutor(string $executor): void;
     /**
-     * @param string $requestDate
+     * @param string|null $startDate
      * @return void
      */
     public function informStartDate(?string $startDate): void;
     /**
-     * @param string|null $startDate
+     * @param string $requestDate
      * @return void
      */
     public function informRequestDate(string $requestDate): void;

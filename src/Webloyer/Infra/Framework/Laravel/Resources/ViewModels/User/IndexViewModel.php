@@ -9,13 +9,21 @@ use Spatie\ViewModels\ViewModel;
 
 class IndexViewModel extends ViewModel
 {
-    public $users;
+    /** @var LengthAwarePaginator<object> */
+    private $users;
 
+    /**
+     * @param LengthAwarePaginator<object> $users
+     * @return void
+     */
     public function __construct(LengthAwarePaginator $users)
     {
         $this->users = $users;
     }
 
+    /**
+     * @return LengthAwarePaginator<object>
+     */
     public function users(): LengthAwarePaginator
     {
         return $this->users;

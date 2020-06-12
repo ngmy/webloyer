@@ -9,7 +9,7 @@ use Webloyer\Domain\Model\User\UserApiToken;
 class GetUserByApiTokenService extends UserService
 {
     /**
-     * @param GetUserRequest $request
+     * @param GetUserByApiTokenRequest $request
      * @return mixed
      */
     public function execute($request = null)

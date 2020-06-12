@@ -11,10 +11,19 @@ use Webloyer\Domain\Model\Deployment\DeploymentCompleted;
 
 class DeploymentCompletedViewModel extends ViewModel
 {
+    /** @var DeploymentCompleted */
     private $event;
+    /** @var Project */
     private $project;
+    /** @var AnsiToHtmlConverter */
     private $converter;
 
+    /**
+     * @param DeploymentCompleted $event
+     * @param Project             $project
+     * @param AnsiToHtmlConverter $converter
+     * @return void
+     */
     public function __construct(
         DeploymentCompleted $event,
         Project $project,
@@ -25,16 +34,25 @@ class DeploymentCompletedViewModel extends ViewModel
         $this->converter = $converter;
     }
 
+    /**
+     * @return DeploymentCompleted
+     */
     public function event(): DeploymentCompleted
     {
         return $this->event;
     }
 
+    /**
+     * @return Project
+     */
     public function project(): Project
     {
         return $this->project;
     }
 
+    /**
+     * @return string
+     */
     public function subject(): string
     {
         return sprintf('Deployment of %s #%s completed: %s',
@@ -44,6 +62,9 @@ class DeploymentCompletedViewModel extends ViewModel
         );
     }
 
+    /**
+     * @return string
+     */
     public function deploymentUrl(): string
     {
         return route('projects.deployments.show', [
@@ -52,6 +73,9 @@ class DeploymentCompletedViewModel extends ViewModel
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function deploymentLog(): string
     {
         $logWithHtmlTags = $this->converter->convert($this->event->log());

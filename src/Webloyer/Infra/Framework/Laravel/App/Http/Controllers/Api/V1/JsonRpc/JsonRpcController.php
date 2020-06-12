@@ -10,8 +10,13 @@ use Illuminate\Http\Request;
 
 class JsonRpcController extends Controller
 {
+    /** @var Server */
     private $server;
 
+    /**
+     * @param Server $server
+     * @return void
+     */
     public function __construct(Server $server)
     {
         $this->server = $server;

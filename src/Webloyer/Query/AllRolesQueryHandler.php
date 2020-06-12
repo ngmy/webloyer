@@ -9,7 +9,11 @@ use Webloyer\Domain\Model\Role\RoleView;
 
 class AllRolesQueryHandler
 {
-    public function handle(AllRolesQuery $query)
+    /**
+     * @param AllRolesQuery $query
+     * @return array<int, RoleView>
+     */
+    public function handle(AllRolesQuery $query): array
     {
         return Role::all()
             ->map(function (Role $role): RoleView {
