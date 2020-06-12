@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'name'     => ['required', 'string'],
             'email'    => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'min:8', 'confirmed'],
-            'role'     => ['required', 'array'],
+            'role'     => ['present', 'array'],
         ];
 
         if (!empty($this->role)) {
@@ -39,5 +39,15 @@ class StoreRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * @return void
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'role' => $this->role ?? [],
+        ]);
     }
 }

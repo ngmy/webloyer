@@ -26,7 +26,7 @@ class UpdateRoleRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'role' => ['required', 'array'],
+            'role' => ['present', 'array'],
         ];
 
         if (!empty($this->role)) {
@@ -36,5 +36,15 @@ class UpdateRoleRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * @return void
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'role' => $this->role ?? [],
+        ]);
     }
 }
