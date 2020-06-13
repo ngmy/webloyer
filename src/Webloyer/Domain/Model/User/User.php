@@ -116,8 +116,8 @@ abstract class User
         string $id,
         string $email,
         string $name,
-        ?string $password,
-        string $apiToken
+        string $password,
+        ?string $apiToken
     ): UserCore {
         return new UserCore(
             new UserId($id),

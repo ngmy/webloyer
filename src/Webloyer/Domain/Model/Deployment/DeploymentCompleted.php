@@ -8,10 +8,26 @@ use Common\Domain\Model\Event\DomainEvent;
 
 class DeploymentCompleted implements DomainEvent
 {
+    /** @var string */
+    private $projectId;
+    /** @var int */
+    private $number;
+    /** @var string */
+    private $task;
+    /** @var string */
+    private $status;
+    /** @var string */
+    private $log;
+    /** @var string */
+    private $userId;
+
     /**
-     * @param ProjectId $projectId
-     * @param DeploymentNumber $number
-     * @param DeploymentTask $task
+     * @param string $projectId
+     * @param int    $number
+     * @param string $task
+     * @param string $status
+     * @param string $log
+     * @param string $userId
      * @return void
      */
     public function __construct(
@@ -30,6 +46,9 @@ class DeploymentCompleted implements DomainEvent
         $this->userId = $userId;
     }
 
+    /**
+     * @return string
+     */
     public function projectId(): string
     {
         return $this->projectId;
@@ -67,6 +86,9 @@ class DeploymentCompleted implements DomainEvent
         return $this->log;
     }
 
+    /**
+     * @return string
+     */
     public function userId(): string
     {
         return $this->userId;

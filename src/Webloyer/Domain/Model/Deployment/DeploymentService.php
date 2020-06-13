@@ -12,13 +12,22 @@ use Webloyer\Domain\Model\User\{
 
 class DeploymentService
 {
+    /** @var UserRepository */
     private $userRepository;
 
+    /**
+     * @param UserRepository $userRepository
+     * @return void
+     */
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param UserId $userId
+     * @return User|null
+     */
     public function userFrom(UserId $userId): ?User
     {
         return $this->userRepository->findById($userId);

@@ -21,9 +21,16 @@ use Webloyer\Infra\Framework\Laravel\App\Notifications\DeploymentCompleted as De
 
 class DeploymentCompletedSubscriber implements DomainEventSubscriber
 {
+    /** @var ProjectRepository */
     private $projectRepository;
+    /** @var UserRepository */
     private $userRepository;
 
+    /**
+     * @param ProjectRepository $projectRepository
+     * @param UserRepository    $userRepository
+     * @return void
+     */
     public function __construct(
         ProjectRepository $projectRepository,
         UserRepository $userRepository

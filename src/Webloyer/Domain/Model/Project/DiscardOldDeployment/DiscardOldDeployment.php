@@ -54,7 +54,7 @@ class DiscardOldDeployment
      */
     public function keepDays(): ?int
     {
-        return $this->isKeepDays() ? $this->keepDays->value() : null;
+        return isset($this->keepDays) ? $this->keepDays->value() : null;
     }
 
     /**
@@ -70,7 +70,7 @@ class DiscardOldDeployment
      */
     public function keepMaxNumber(): ?int
     {
-        return $this->isKeepMaxNumber() ? $this->keepMaxNumber->value() : null;
+        return isset($this->keepMaxNumber) ? $this->keepMaxNumber->value() : null;
     }
 
     public function isKeepDays(): bool

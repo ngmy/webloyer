@@ -61,9 +61,9 @@ abstract class UserRole extends User
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function apiToken(): string
+    public function apiToken(): ?string
     {
         return $this->core->apiToken();
     }

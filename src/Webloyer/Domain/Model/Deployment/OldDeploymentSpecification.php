@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Deployment;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use Webloyer\Domain\Model\Project\{
     ProjectId,
     ProjectRepository,
@@ -13,10 +12,23 @@ use Webloyer\Domain\Model\Project\{
 
 class OldDeploymentSpecification implements DeploymentSpecification
 {
+    /** @var DeploymentRepository */
+    private $deploymentRepository;
+    /** @var ProjectRepository */
+    private $projectRepository;
+    /** @var DateTimeImmutable */
+    private $currentDate;
+
+    /**
+     * @param DeploymentRepository $deploymentRepository
+     * @param ProjectRepository    $projectRepository
+     * @param DateTimeImmutable    $currentDate
+     * @return void
+     */
     public function __construct(
         DeploymentRepository $deploymentRepository,
         ProjectRepository $projectRepository,
-        DateTimeInterface $currentDate
+        DateTimeImmutable $currentDate
     ) {
         $this->deploymentRepository = $deploymentRepository;
         $this->projectRepository = $projectRepository;
@@ -59,10 +71,8 @@ class OldDeploymentSpecification implements DeploymentSpecification
 
         if ($discardOldDeployment->isKeepDays()) {
             $baseDate = $this->currentDate->modify('-' . $discardOldDeployment->keepDays() . ' days');
-            \Log::debug($baseDate->format('Y-m-d H:i:s'));
-            \Log::debug($deployment->finishDate());
+            assert(!is_null($deployment->finishDate()));
             $isSatisfied = new DateTimeImmutable($deployment->finishDate()) < $baseDate;
-            \Log::debug($isSatisfied);
         }
 
         return $isSatisfied;

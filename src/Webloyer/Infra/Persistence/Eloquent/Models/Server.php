@@ -25,6 +25,8 @@ use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
  * @property \CarbonImmutable $created_at
  * @property \CarbonImmutable $updated_at
  * @property string $uuid
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Webloyer\Infra\Persistence\Eloquent\Models\Project[] $projects
+ * @property-read int|null $projects_count
  * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Server newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Server newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Server ofId($id)

@@ -32,7 +32,7 @@ class DeploymentStatus
 
     public function isRunning(): bool
     {
-        return $this->value() == self::Running;
+        return $this->value() == self::RUNNING;
     }
 
     public function isCompleted(): bool
