@@ -13,6 +13,31 @@ use Webloyer\Domain\Model\Recipe\{
 };
 use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
+/**
+ * Webloyer\Infra\Persistence\Eloquent\Models\Recipe
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property string $body
+ * @property \CarbonImmutable $created_at
+ * @property \CarbonImmutable $updated_at
+ * @property string $uuid
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Webloyer\Infra\Persistence\Eloquent\Models\Project[] $projects
+ * @property-read int|null $projects_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe ofId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe whereUuid($value)
+ * @mixin \Eloquent
+ */
 class Recipe extends Model implements RecipeInterest
 {
     use ImmutableTimestampable;

@@ -14,6 +14,42 @@ use Webloyer\Domain\Model\Deployment\{
 };
 use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
+/**
+ * Webloyer\Infra\Persistence\Eloquent\Models\Deployment
+ *
+ * @property int $id
+ * @property int $project_id
+ * @property int $number
+ * @property string $task
+ * @property string $status
+ * @property string|null $log
+ * @property int $user_id
+ * @property string $request_date
+ * @property string|null $start_date
+ * @property string|null $finish_date
+ * @property \CarbonImmutable $created_at
+ * @property \CarbonImmutable $updated_at
+ * @property-read \Webloyer\Infra\Persistence\Eloquent\Models\Project $project
+ * @property-read \Webloyer\Infra\Persistence\Eloquent\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment ofId($projectId, $number)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment ofProjectId($projectId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereFinishDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereLog($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereProjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereRequestDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereTask($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Deployment whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Deployment extends Model implements DeploymentInterest
 {
     use ImmutableTimestampable;
@@ -138,16 +174,28 @@ class Deployment extends Model implements DeploymentInterest
         $this->user_id = $userOrm->id;
     }
 
+    /**
+     * @param string $requestDate
+     * @return void
+     */
     public function informRequestDate(string $requestDate): void
     {
         $this->request_date = $requestDate;
     }
 
+    /**
+     * @param string|null $startDate
+     * @return void
+     */
     public function informStartDate(?string $startDate): void
     {
         $this->start_date = $startDate;
     }
 
+    /**
+     * @param string|null $finishDate
+     * @return void
+     */
     public function informFinishDate(?string $finishDate): void
     {
         $this->finish_date = $finishDate;

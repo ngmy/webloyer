@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Domain\Model\Deployment;
 
 use InvalidArgumentException;
+use RuntimeException;
 use Webloyer\Domain\Model\Deployment\{
     Deployment,
     DeploymentNumber,
@@ -149,6 +150,9 @@ class EloquentDeploymentRepository implements DeploymentRepository
     public function save(Deployment $deployment): void
     {
         $projectOrm = ProjectOrm::ofId($deployment->projectId())->first();
+        if (is_null($projectOrm)) {
+            throw new RuntimeException();
+        }
         $deploymentOrm = DeploymentOrm::firstOrNew([
             'project_id' => $projectOrm->id,
             'number' => $deployment->number(),

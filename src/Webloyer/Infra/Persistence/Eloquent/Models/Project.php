@@ -21,6 +21,50 @@ use Webloyer\Domain\Model\Project\{
 };
 use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
 
+/**
+ * Webloyer\Infra\Persistence\Eloquent\Models\Project
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $stage
+ * @property int $server_id
+ * @property string $repository
+ * @property string|null $email_notification_recipient
+ * @property string $attributes
+ * @property int|null $days_to_keep_deployments
+ * @property int|null $max_number_of_deployments_to_keep
+ * @property int $keep_last_deployment
+ * @property string|null $github_webhook_secret
+ * @property int|null $github_webhook_user_id
+ * @property \CarbonImmutable $created_at
+ * @property \CarbonImmutable $updated_at
+ * @property string $uuid
+ * @property-read \Webloyer\Infra\Persistence\Eloquent\Models\MaxDeployment|null $maxDeployment
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Webloyer\Infra\Persistence\Eloquent\Models\Recipe[] $recipes
+ * @property-read int|null $recipes_count
+ * @property-read \Webloyer\Infra\Persistence\Eloquent\Models\Server $server
+ * @property-read \Webloyer\Infra\Persistence\Eloquent\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project ofId($id)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereAttributes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereDaysToKeepDeployments($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereEmailNotificationRecipient($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereGithubWebhookSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereGithubWebhookUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereKeepLastDeployment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereMaxNumberOfDeploymentsToKeep($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereRepository($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereServerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereStage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\Project whereUuid($value)
+ * @mixin \Eloquent
+ */
 class Project extends Model implements ProjectInterest
 {
     use ImmutableTimestampable;
@@ -288,16 +332,25 @@ class Project extends Model implements ProjectInterest
         ->setUpdatedAt($this->updated_at);
     }
 
+    /**
+     * @return string
+     */
     protected function getSerializationColumn(): string
     {
         return 'attributes';
     }
 
+    /**
+     * @return string
+     */
     protected function getSerializationType(): string
     {
         return 'json';
     }
 
+    /**
+     * @return string
+     */
     protected function getDeserializationType(): string
     {
         return 'array';
