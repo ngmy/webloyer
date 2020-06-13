@@ -19,12 +19,16 @@ class RecipesLaravelLengthAwarePaginatorDataTransformer implements RecipesDataTr
     /** @var RecipesDtoDataTransformer */
     private $recipesDataTransformer;
     /** @var int */
-    private $perPage;
+    private $perPage = 10;
     /** @var int */
     private $currentPage;
-    /** @var array */
+    /** @var array<string, string> */
     private $options;
 
+    /**
+     * @param RecipesDtoDataTransformer $recipesDataTransformer
+     * @return void
+     */
     public function __construct(RecipesDtoDataTransformer $recipesDataTransformer)
     {
         $this->recipesDataTransformer = $recipesDataTransformer;
@@ -34,6 +38,10 @@ class RecipesLaravelLengthAwarePaginatorDataTransformer implements RecipesDataTr
         ];
     }
 
+    /**
+     * @param int $perPage
+     * @return self
+     */
     public function setPerPage(int $perPage): self
     {
         $this->perPage = $perPage;
@@ -51,7 +59,7 @@ class RecipesLaravelLengthAwarePaginatorDataTransformer implements RecipesDataTr
     }
 
     /**
-     * @return Paginator
+     * @return LengthAwarePaginator<object>
      */
     public function read()
     {

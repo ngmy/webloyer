@@ -19,12 +19,16 @@ class UsersLaravelLengthAwarePaginatorDataTransformer implements UsersDataTransf
     /** @var UsersDtoDataTransformer */
     private $usersDataTransformer;
     /** @var int */
-    private $perPage;
+    private $perPage = 10;
     /** @var int */
     private $currentPage;
-    /** @var array */
+    /** @var array<string, string> */
     private $options;
 
+    /**
+     * @param UsersDtoDataTransformer $usersDataTransformer
+     * @return void
+     */
     public function __construct(UsersDtoDataTransformer $usersDataTransformer)
     {
         $this->usersDataTransformer = $usersDataTransformer;
@@ -34,6 +38,10 @@ class UsersLaravelLengthAwarePaginatorDataTransformer implements UsersDataTransf
         ];
     }
 
+    /**
+     * @param int $perPage
+     * @return self
+     */
     public function setPerPage(int $perPage): self
     {
         $this->perPage = $perPage;
@@ -51,7 +59,7 @@ class UsersLaravelLengthAwarePaginatorDataTransformer implements UsersDataTransf
     }
 
     /**
-     * @return Paginator
+     * @return LengthAwarePaginator<object>
      */
     public function read()
     {

@@ -19,12 +19,16 @@ class ServersLaravelLengthAwarePaginatorDataTransformer implements ServersDataTr
     /** @var ServersDtoDataTransformer */
     private $serversDataTransformer;
     /** @var int */
-    private $perPage;
+    private $perPage = 10;
     /** @var int */
     private $currentPage;
-    /** @var array */
+    /** @var array<string, string> */
     private $options;
 
+    /**
+     * @param ServersDtoDataTransformer $serversDataTransformer
+     * @return void
+     */
     public function __construct(ServersDtoDataTransformer $serversDataTransformer)
     {
         $this->serversDataTransformer = $serversDataTransformer;
@@ -34,6 +38,10 @@ class ServersLaravelLengthAwarePaginatorDataTransformer implements ServersDataTr
         ];
     }
 
+    /**
+     * @param int $perPage
+     * @return self
+     */
     public function setPerPage(int $perPage): self
     {
         $this->perPage = $perPage;
@@ -51,7 +59,7 @@ class ServersLaravelLengthAwarePaginatorDataTransformer implements ServersDataTr
     }
 
     /**
-     * @return Paginator
+     * @return LengthAwarePaginator<object>
      */
     public function read()
     {

@@ -19,12 +19,16 @@ class DeploymentsLaravelLengthAwarePaginatorDataTransformer implements Deploymen
     /** @var DeploymentsDtoDataTransformer */
     private $deploymentsDataTransformer;
     /** @var int */
-    private $perPage;
+    private $perPage = 10;
     /** @var int */
     private $currentPage;
-    /** @var array */
+    /** @var array<string, string> */
     private $options;
 
+    /**
+     * @param DeploymentsDtoDataTransformer $deploymentsDataTransformer
+     * @return void
+     */
     public function __construct(DeploymentsDtoDataTransformer $deploymentsDataTransformer)
     {
         $this->deploymentsDataTransformer = $deploymentsDataTransformer;
@@ -34,6 +38,10 @@ class DeploymentsLaravelLengthAwarePaginatorDataTransformer implements Deploymen
         ];
     }
 
+    /**
+     * @param int $perPage
+     * @return self
+     */
     public function setPerPage(int $perPage): self
     {
         $this->perPage = $perPage;
@@ -51,7 +59,7 @@ class DeploymentsLaravelLengthAwarePaginatorDataTransformer implements Deploymen
     }
 
     /**
-     * @return Paginator
+     * @return LengthAwarePaginator<object>
      */
     public function read()
     {

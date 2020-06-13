@@ -19,12 +19,16 @@ class ProjectsLaravelLengthAwarePaginatorDataTransformer implements ProjectsData
     /** @var ProjectsDtoDataTransformer */
     private $projectsDataTransformer;
     /** @var int */
-    private $perPage;
+    private $perPage = 10;
     /** @var int */
     private $currentPage;
-    /** @var array */
+    /** @var array<string, string> */
     private $options;
 
+    /**
+     * @param ProjectsDtoDataTransformer $projectsDataTransformer
+     * @return void
+     */
     public function __construct(ProjectsDtoDataTransformer $projectsDataTransformer)
     {
         $this->projectsDataTransformer = $projectsDataTransformer;
@@ -34,6 +38,10 @@ class ProjectsLaravelLengthAwarePaginatorDataTransformer implements ProjectsData
         ];
     }
 
+    /**
+     * @param int $perPage
+     * @return self
+     */
     public function setPerPage(int $perPage): self
     {
         $this->perPage = $perPage;
@@ -51,7 +59,7 @@ class ProjectsLaravelLengthAwarePaginatorDataTransformer implements ProjectsData
     }
 
     /**
-     * @return Paginator
+     * @return LengthAwarePaginator<object>
      */
     public function read()
     {
