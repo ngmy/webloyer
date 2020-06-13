@@ -28,4 +28,15 @@ class IndexViewModel extends ViewModel
     {
         return $this->servers;
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function projectCountOf(): array
+    {
+        return array_reduce($this->servers->toArray()['data'], function (array $carry, object $server): array {
+            $carry[$server->id] = number_format(count($server->projects));
+            return $carry;
+        }, []);
+    }
 }

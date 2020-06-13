@@ -21,6 +21,10 @@ class RecipeDtoDataTransformer implements RecipeDataTransformer
     /** @var ProjectsDataTransformer */
     private $projectsDataTransformer;
 
+    /**
+     * @param RecipeService $recipeService
+     * @return void
+     */
     public function __construct(RecipeService $recipeService)
     {
         $this->recipeService = $recipeService;

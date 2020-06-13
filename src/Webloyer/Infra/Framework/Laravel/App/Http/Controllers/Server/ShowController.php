@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
+use App;
+use Webloyer\App\DataTransformer\Project\ProjectsDtoDataTransformer;
 use Webloyer\App\Service\Server\GetServerRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\ShowViewModel;
 
@@ -18,6 +20,9 @@ class ShowController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetServerRequest())->setId($id);
+        $this->service
+            ->serverDataTransformer()
+            ->setProjectsDataTransformer(App::make(ProjectsDtoDataTransformer::class));
         $server = $this->service->execute($serviceRequest);
 
         return (new ShowViewModel($server))->view('webloyer::servers.show');

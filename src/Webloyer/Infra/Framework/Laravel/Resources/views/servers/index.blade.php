@@ -16,6 +16,7 @@
                 <thead>
                     <tr>
                         <th><div align="center">Name</div></th>
+                        <th><div align="center">Used By</div></th>
                         <th><div align="center">Created At</div></th>
                         <th><div align="center">Updated At</div></th>
                         <th></th>
@@ -25,6 +26,7 @@
                     @foreach ($servers as $server)
                         <tr>
                             <td>{{ $server->name }}</td>
+                            <td><div align="right">{{ $projectCountOf[$server->id] }}</div></td>
                             <td>{{ $server->createdAt }}</td>
                             <td>{{ $server->updatedAt }}</td>
                             <td>

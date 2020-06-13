@@ -27,4 +27,20 @@ class ShowViewModel extends ViewModel
     {
         return $this->server;
     }
+
+    /**
+     * @return bool
+     */
+    public function isServerHasProjects(): bool
+    {
+        return !empty($this->server->projects);
+    }
+
+    /**
+     * @return int
+     */
+    public function serverProjectCount(): int
+    {
+        return count($this->server->projects);
+    }
 }

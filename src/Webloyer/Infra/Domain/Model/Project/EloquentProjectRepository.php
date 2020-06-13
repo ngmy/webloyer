@@ -12,9 +12,11 @@ use Webloyer\Domain\Model\Project\{
     Projects,
 };
 use Webloyer\Domain\Model\Recipe\RecipeId;
+use Webloyer\Domain\Model\Server\ServerId;
 use Webloyer\Infra\Persistence\Eloquent\Models\{
     Project as ProjectOrm,
     Recipe as RecipeOrm,
+    Server as ServerOrm,
 };
 
 class EloquentProjectRepository implements ProjectRepository
@@ -86,6 +88,26 @@ class EloquentProjectRepository implements ProjectRepository
         }
 
         $projectArray = $recipe->projects
+            ->map(function (ProjectOrm $projectOrm): Project {
+                return $projectOrm->toEntity();
+            })
+            ->toArray();
+        return new Projects(...$projectArray);
+    }
+
+    /**
+     * @param ServerId $serverId
+     * @return Projects
+     */
+    public function findAllByServerId(ServerId $serverId): Projects
+    {
+        $server = ServerOrm::ofId($serverId->value())->first();
+
+        if (is_null($server)) {
+            return Projects::empty();
+        }
+
+        $projectArray = $server->projects
             ->map(function (ProjectOrm $projectOrm): Project {
                 return $projectOrm->toEntity();
             })

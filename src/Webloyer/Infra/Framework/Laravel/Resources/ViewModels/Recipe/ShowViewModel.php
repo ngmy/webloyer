@@ -29,20 +29,18 @@ class ShowViewModel extends ViewModel
     }
 
     /**
-     * @param object $recipe
      * @return bool
      */
-    public function isRecipeHasProjects(object $recipe): bool
+    public function isRecipeHasProjects(): bool
     {
-        return !empty($recipe->projects);
+        return !empty($this->recipe->projects);
     }
 
     /**
-     * @param object $recipe
      * @return int
      */
-    public function recipeProjectCount(object $recipe): int
+    public function recipeProjectCount(): int
     {
-        return count($recipe->projects);
+        return count($this->recipe->projects);
     }
 }

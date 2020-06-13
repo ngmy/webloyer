@@ -18,6 +18,21 @@
                         <th>Body</th>
                         <td><pre><code>{{ $server->body }}</code></pre></td>
                     </tr>
+                    @if ($isServerHasProjects)
+                        @foreach ($server->projects as $project)
+                            <tr>
+                                @if ($loop->first)
+                                    <th rowspan="{{ $serverProjectCount }}">Used By</th>
+                                @endif
+                                <td>{!! link_to_route('projects.show', $project->name, $project->id) !!}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <th>Used By</th>
+                            <td></td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
             {!! link_to_route('servers.index', 'Back', [], ['class' => 'btn btn-danger']) !!}

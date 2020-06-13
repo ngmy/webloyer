@@ -26,7 +26,7 @@
                     @foreach ($recipes as $recipe)
                         <tr>
                             <td>{{ $recipe->name }}</td>
-                            <td><div align="right">{{ $projectCountFrom($recipe) }}</div></td>
+                            <td><div align="right">{{ $projectCountOf[$recipe->id] }}</div></td>
                             <td>{{ $recipe->createdAt }}</td>
                             <td>{{ $recipe->updatedAt }}</td>
                             <td>

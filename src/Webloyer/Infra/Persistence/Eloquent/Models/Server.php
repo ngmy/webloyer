@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\{
     Builder,
     Model,
 };
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Webloyer\Domain\Model\Server\{
     Server as ServerEntity,
     ServerInterest,
@@ -57,6 +58,14 @@ class Server extends Model implements ServerInterest
     public function scopeOfId(Builder $query, string $id): Builder
     {
         return $query->where('uuid', $id);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
     }
 
     /**

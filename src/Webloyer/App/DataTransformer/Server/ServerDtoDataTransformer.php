@@ -4,15 +4,31 @@ declare(strict_types=1);
 
 namespace Webloyer\App\DataTransformer\Server;
 
+use Webloyer\App\DataTransformer\Project\ProjectsDataTransformer;
 use Webloyer\Domain\Model\Server\{
     Server,
+    ServerId,
     ServerInterest,
+    ServerService,
 };
 
 class ServerDtoDataTransformer implements ServerDataTransformer
 {
     /** @var Server */
     private $server;
+    /** @var ServerService */
+    private $serverService;
+    /** @var ProjectsDataTransformer */
+    private $projectsDataTransformer;
+
+    /**
+     * @param ServerService $serverService
+     * @return void
+     */
+    public function __construct(ServerService $serverService)
+    {
+        $this->serverService = $serverService;
+    }
 
     /**
      * @param Server $server
@@ -38,6 +54,8 @@ class ServerDtoDataTransformer implements ServerDataTransformer
             public $description;
             /** @var string */
             public $body;
+            /** @var array<int, object>|null */
+            public $projects;
             /** @var int */
             public $surrogateId;
             /** @var string */
@@ -79,6 +97,11 @@ class ServerDtoDataTransformer implements ServerDataTransformer
         };
         $this->server->provide($dto);
 
+        if (isset($this->projectsDataTransformer)) {
+            $projects = $this->serverService->projectsFrom(new ServerId($this->server->id()));
+            $dto->projects = $this->projectsDataTransformer->write($projects)->read();
+        }
+
         $dto->surrogateId = $this->server->surrogateId();
         assert(!is_null($this->server->createdAt()));
         $dto->createdAt = $this->server->createdAt();
@@ -86,5 +109,15 @@ class ServerDtoDataTransformer implements ServerDataTransformer
         $dto->updatedAt = $this->server->updatedAt();
 
         return $dto;
+    }
+
+    /**
+     * @param ProjectsDataTransformer $projectsDataTransformer
+     * @return self
+     */
+    public function setProjectsDataTransformer(ProjectsDataTransformer $projectsDataTransformer): self
+    {
+        $this->projectsDataTransformer = $projectsDataTransformer;
+        return $this;
     }
 }
