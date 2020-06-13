@@ -78,6 +78,16 @@ class UserCore extends User
     }
 
     /**
+     * @param string $email
+     * @return self
+     */
+    public function changeEmail(string $email): self
+    {
+        $this->email = new UserEmail($email);
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @return self
      */
@@ -169,6 +179,9 @@ class UserCore extends User
         $this->roles->remove($roleSpec);
     }
 
+    /**
+     * @return void
+     */
     public function removeAllRoles(): void
     {
         $this->roles->removeAll();

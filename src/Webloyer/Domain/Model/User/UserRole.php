@@ -77,6 +77,15 @@ abstract class UserRole extends User
     }
 
     /**
+     * @param string $email
+     * @return UserCore
+     */
+    public function changeEmail(string $email): UserCore
+    {
+        return $this->core->changeEmail($email);
+    }
+
+    /**
      * @param string $name
      * @return UserCore
      */
@@ -146,6 +155,14 @@ abstract class UserRole extends User
     public function removeRole(UserRoleSpecification $roleSpec): void
     {
         $this->core->removeRole($roleSpec);
+    }
+
+    /**
+     * @return void
+     */
+    public function removeAllRoles(): void
+    {
+        $this->core->removeAllRoles();
     }
 
     /**

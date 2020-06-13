@@ -14,6 +14,7 @@ class GetRecipeService extends RecipeService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $id = new RecipeId($request->getId());
         $recipe = $this->getNonNullRecipe($id);
         return $this->recipeDataTransformer->write($recipe)->read();

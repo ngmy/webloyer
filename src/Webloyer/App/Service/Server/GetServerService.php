@@ -15,6 +15,7 @@ class GetServerService extends ServerService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $id = new ServerId($request->getId());
         $server = $this->getNonNullServer($id);
         return $this->serverDataTransformer->write($server)->read();

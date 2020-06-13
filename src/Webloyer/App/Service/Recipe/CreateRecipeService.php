@@ -14,6 +14,7 @@ class CreateRecipeService extends RecipeService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $recipe = Recipe::of(
             $this->recipeRepository->nextId()->value(),
             $request->getName(),

@@ -14,6 +14,7 @@ class CreateUserService extends UserService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $user = User::ofWithRole(
             $this->userRepository->nextId()->value(),
             $request->getEmail(),

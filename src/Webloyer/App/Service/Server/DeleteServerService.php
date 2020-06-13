@@ -14,6 +14,7 @@ class DeleteServerService extends ServerService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $id = new ServerId($request->getId());
         $server = $this->getNonNullServer($id);
         $this->serverRepository->remove($server);

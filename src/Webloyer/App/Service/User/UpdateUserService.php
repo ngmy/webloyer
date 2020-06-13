@@ -14,6 +14,7 @@ class UpdateUserService extends UserService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $id = new UserId($request->getId());
         $user = $this->getNonNullUser($id)
             ->changeEmail($request->getEmail())

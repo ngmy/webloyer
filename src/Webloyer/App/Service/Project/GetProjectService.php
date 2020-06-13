@@ -14,6 +14,7 @@ class GetProjectService extends ProjectService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $id = new ProjectId($request->getId());
         $project = $this->getNonNullProject($id);
         return $this->projectDataTransformer->write($project)->read();

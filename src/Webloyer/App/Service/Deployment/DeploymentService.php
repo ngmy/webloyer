@@ -46,9 +46,9 @@ abstract class DeploymentService implements ApplicationService
     protected $serverRepository;
     /** @var UserRepository */
     protected $userRepository;
-    /** @var $deploymentDataTransformer */
+    /** @var DeploymentDataTransformer */
     protected $deploymentDataTransformer;
-    /** @var $deploymentsDataTransformer */
+    /** @var DeploymentsDataTransformer */
     protected $deploymentsDataTransformer;
 
     /**
@@ -123,9 +123,14 @@ abstract class DeploymentService implements ApplicationService
     protected function requestDeployment(Deployment $deployment): void
     {
         $project = $this->projectRepository->findById(new ProjectId($deployment->projectId()));
-        $recipes = new Recipes(...array_map(function (string $recipeId): Recipe {
-            return $this->recipeRepository->findById(new RecipeId($recipeId));
-        }, $project->recipeIds()));
+        $recipes = new Recipes(...array_reduce($project->recipeIds(), function (array $carry, string $recipeId): array {
+            $recipe = $this->recipeRepository->findById(new RecipeId($recipeId));
+            if (is_null($recipe)) {
+                return $carry;
+            }
+            $carry[] = $recipe;
+            return $carry;
+        }, []));
         $server = $this->serverRepository->findById(new ServerId($project->serverId()));
         $executor = $this->userRepository->findById(new UserId($deployment->executor()));
 

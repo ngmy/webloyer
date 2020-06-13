@@ -50,6 +50,11 @@ abstract class User
      */
     abstract public function roles(): array;
     /**
+     * @param string $email
+     * @return self
+     */
+    abstract public function changeEmail(string $email): self;
+    /**
      * @param string $name
      * @return self
      */
@@ -89,6 +94,10 @@ abstract class User
      * @return void
      */
     abstract public function removeRole(UserRoleSpecification $roleSpec): void;
+    /**
+     * @return void
+     */
+    abstract public function removeAllRoles(): void;
     /**
      * @param UserRoleSpecification $roleSpec
      * @return UserRole|null

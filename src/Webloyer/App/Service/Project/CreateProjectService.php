@@ -14,6 +14,7 @@ class CreateProjectService extends ProjectService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $project = Project::of(
             $this->projectRepository->nextId()->value(),
             $request->getName(),

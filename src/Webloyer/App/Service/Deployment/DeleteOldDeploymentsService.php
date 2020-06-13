@@ -15,6 +15,7 @@ class DeleteOldDeploymentsService extends DeploymentService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $spec = new OldDeploymentSpecification(
             $this->deploymentRepository,
             $this->projectRepository,

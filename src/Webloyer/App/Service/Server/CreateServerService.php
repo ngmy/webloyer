@@ -14,6 +14,7 @@ class CreateServerService extends ServerService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $server = Server::of(
             $this->serverRepository->nextId()->value(),
             $request->getName(),

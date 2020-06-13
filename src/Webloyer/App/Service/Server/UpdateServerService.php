@@ -19,6 +19,7 @@ class UpdateServerService extends ServerService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $id = new ServerId($request->getId());
         $name = new ServerName($request->getName());
         $description = new ServerDescription($request->getDescription());

@@ -19,6 +19,7 @@ class UpdateRecipeService extends RecipeService
      */
     public function execute($request = null)
     {
+        assert(!is_null($request));
         $id = new RecipeId($request->getId());
         $name = new RecipeName($request->getName());
         $description = new RecipeDescription($request->getDescription());
