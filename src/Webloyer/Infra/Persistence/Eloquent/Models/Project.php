@@ -161,6 +161,12 @@ class Project extends Model implements ProjectInterest
         }
         foreach ($recipeIds as $i => $recipeId) {
             $recipeOrm = Recipe::ofId($recipeId)->first();
+            if (is_null($recipeOrm)) {
+                throw new InvalidArgumentException(
+                    'Recipe does not exists.' . PHP_EOL .
+                    'Recipe Id: ' . $recipeId
+                );
+            }
             $syncRecipeIds[$recipeOrm->id] = ['recipe_order' => $i + 1];
         }
 

@@ -136,10 +136,10 @@ class User extends Authenticatable implements UserInterest
     }
 
     /**
-     * @param string $apiToken
+     * @param string|null $apiToken
      * @return void
      */
-    public function informApiToken(string $apiToken): void
+    public function informApiToken(?string $apiToken): void
     {
         $this->api_token = $apiToken;
     }

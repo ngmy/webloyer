@@ -30,10 +30,10 @@ interface UserInterest
      */
     public function informPassword(string $password): void;
     /**
-     * @param string $apiToken
+     * @param string|null $apiToken
      * @return void
      */
-    public function informApiToken(string $apiToken): void;
+    public function informApiToken(?string $apiToken): void;
     /**
      * @param array<int, string> $roles
      * @return void

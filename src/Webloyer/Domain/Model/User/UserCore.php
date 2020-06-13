@@ -7,11 +7,11 @@ namespace Webloyer\Domain\Model\User;
 class UserCore extends User
 {
     /**
-     * @param UserId       $id
-     * @param UserEmail    $email
-     * @param UserName     $name
-     * @param UserPassword $password
-     * @param UserApiToken $apiToken
+     * @param UserId            $id
+     * @param UserEmail         $email
+     * @param UserName          $name
+     * @param UserPassword      $password
+     * @param UserApiToken|null $apiToken
      * @return void
      */
     public function __construct(
@@ -19,7 +19,7 @@ class UserCore extends User
         UserEmail $email,
         UserName $name,
         UserPassword $password,
-        UserApiToken $apiToken
+        ?UserApiToken $apiToken
     ) {
         $this->id = $id;
         $this->email = $email;
@@ -62,11 +62,11 @@ class UserCore extends User
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function apiToken(): string
+    public function apiToken(): ?string
     {
-        return $this->apiToken->value();
+        return isset($this->apiToken) ? $this->apiToken->value() : null;
     }
 
     /**

@@ -20,7 +20,7 @@ abstract class User
     protected $name;
     /** @var UserPassword */
     protected $password;
-    /** @var UserApiToken */
+    /** @var UserApiToken|null */
     protected $apiToken;
     /** @var UserRoles */
     protected $roles;
@@ -42,9 +42,9 @@ abstract class User
      */
     abstract public function password(): string;
     /**
-     * @return string
+     * @return string|null
      */
-    abstract public function apiToken(): string;
+    abstract public function apiToken(): ?string;
     /**
      * @return array<int, string>
      */
@@ -105,18 +105,18 @@ abstract class User
     abstract public function getRole(UserRoleSpecification $roleSpec): ?UserRole;
 
     /**
-     * @param string $id
-     * @param string $email
-     * @param string $name
-     * @param string $password
-     * @param string $apiToken
+     * @param string      $id
+     * @param string      $email
+     * @param string      $name
+     * @param string      $password
+     * @param string|null $apiToken
      * @return UserCore
      */
     public static function of(
         string $id,
         string $email,
         string $name,
-        string $password,
+        ?string $password,
         string $apiToken
     ): UserCore {
         return new UserCore(
@@ -124,7 +124,7 @@ abstract class User
             new UserEmail($email),
             new UserName($name),
             new UserPassword($password),
-            new UserApiToken($apiToken)
+            isset($apiToken) ? new UserApiToken($apiToken) : null
         );
     }
 
@@ -133,7 +133,7 @@ abstract class User
      * @param string             $email
      * @param string             $name
      * @param string             $password
-     * @param string             $apiToken
+     * @param string|null        $apiToken
      * @param array<int, string> $roles
      * @return UserCore
      */
@@ -142,7 +142,7 @@ abstract class User
         string $email,
         string $name,
         string $password,
-        string $apiToken,
+        ?string $apiToken,
         array $roles
     ): UserCore {
         $user = self::of(

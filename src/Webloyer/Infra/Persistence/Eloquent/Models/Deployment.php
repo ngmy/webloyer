@@ -22,7 +22,7 @@ use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
  * @property int $number
  * @property string $task
  * @property string $status
- * @property string|null $log
+ * @property string $log
  * @property int $user_id
  * @property string $request_date
  * @property string|null $start_date
@@ -75,6 +75,12 @@ class Deployment extends Model implements DeploymentInterest
     public function scopeOfProjectId(Builder $query, string $projectId): Builder
     {
         $projectOrm = Project::ofId($projectId)->first();
+        if (is_null($projectOrm)) {
+            throw new InvalidArgumentException(
+                'Project does not exists.' . PHP_EOL .
+                'Project Id: ' . $projectId
+            );
+        }
         return $query->where('project_id', $projectOrm->id);
     }
 

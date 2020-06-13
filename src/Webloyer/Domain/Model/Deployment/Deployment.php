@@ -38,7 +38,7 @@ class Deployment
     private $executor;
     /** @var DeploymentRequestDate */
     private $requestDate;
-    /** @var DeploymentStartDate */
+    /** @var DeploymentStartDate|null */
     private $startDate;
     /** @var DeploymentFinishDate|null */
     private $finishDate;
@@ -87,7 +87,7 @@ class Deployment
      * @param DeploymentLog             $log
      * @param UserId                    $executor
      * @param DeploymentRequestDate     $requestDate
-     * @param DeploymentStartDate       $startDate
+     * @param DeploymentStartDate|null  $startDate
      * @param DeploymentFinishDate|null $finishDate
      * @return void
      */
@@ -186,6 +186,10 @@ class Deployment
         return $this;
     }
 
+    /**
+     * @param string $log
+     * @return self
+     */
     public function appendLog(string $log): self
     {
         $this->log = $this->log->append($log);
@@ -202,18 +206,33 @@ class Deployment
         return $this;
     }
 
+    /**
+     * @param string $startDate
+     * @return self
+     */
     public function changeStartDate(string $startDate): self
     {
         $this->startDate = DeploymentStartDate::of($startDate);
         return $this;
     }
 
+    /**
+     * @param string $finishDate
+     * @return self
+     */
     public function changeFinishDate(string $finishDate): self
     {
         $this->finishDate = DeploymentFinishDate::of($finishDate);
         return $this;
     }
 
+    /**
+     * @param Project $project
+     * @param Recipes $recipes
+     * @param Server  $server
+     * @param User    $executor
+     * @return void
+     */
     public function request(
         Project $project,
         Recipes $recipes,
@@ -236,6 +255,9 @@ class Deployment
         );
     }
 
+    /**
+     * @return void
+     */
     public function complete(): void
     {
         if (!$this->status->isCompleted()) {
@@ -292,6 +314,9 @@ class Deployment
         return $equalObjects;
     }
 
+    /**
+     * @return bool
+     */
     public function isCompleted(): bool
     {
         return $this->status->isCompleted();
