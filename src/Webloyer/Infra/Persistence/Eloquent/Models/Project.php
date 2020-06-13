@@ -314,15 +314,13 @@ class Project extends Model implements ProjectInterest
      */
     public function toEntity(): ProjectEntity
     {
-        assert(!empty($this->recipes->isEmpty()));
-        assert(!is_null($this->server));
         return ProjectEntity::of(
             $this->uuid,
             $this->name,
             $this->recipes->map(function (Recipe $recipe) {
                 return $recipe->uuid;
             })->toArray(),
-            $this->server->uuid,
+            isset($this->server) ? $this->server->uuid : null,
             $this->repository,
             $this->stage,
             $this->getAttribute('attributes')['deploy_path'] ?? null,
@@ -331,7 +329,7 @@ class Project extends Model implements ProjectInterest
             (bool) $this->keep_last_deployment,
             $this->max_number_of_deployments_to_keep ? (int) $this->max_number_of_deployments_to_keep : null,
             $this->github_webhook_secret,
-            $this->user ? $this->user->uuid : null
+            isset($this->user) ? $this->user->uuid : null
         )
         ->setSurrogateId($this->id)
         ->setCreatedAt($this->created_at)

@@ -24,7 +24,7 @@ class Project
     private $name;
     /** @var RecipeIds */
     private $recipeIds;
-    /** @var ServerId */
+    /** @var ServerId|null */
     private $serverId;
     /** @var RepositoryUrl */
     private $repositoryUrl;
@@ -43,7 +43,7 @@ class Project
      * @param string             $id
      * @param string             $name
      * @param array<int, string> $recipeIds
-     * @param string             $serverId
+     * @param string|null        $serverId
      * @param string             $repositoryUrl
      * @param string             $stageName
      * @param string|null        $deployPath
@@ -59,7 +59,7 @@ class Project
         string $id,
         string $name,
         array $recipeIds,
-        string $serverId,
+        ?string $serverId,
         string $repositoryUrl,
         string $stageName,
         ?string $deployPath,
@@ -74,7 +74,7 @@ class Project
             new ProjectId($id),
             new ProjectName($name),
             RecipeIds::of(...$recipeIds),
-            new ServerId($serverId),
+            isset($serverId) ? new ServerId($serverId) : null,
             new RepositoryUrl($repositoryUrl),
             new StageName($stageName),
             ServerOverride::of($deployPath),
@@ -95,7 +95,7 @@ class Project
      * @param ProjectId            $id
      * @param ProjectName          $name
      * @param RecipeIds            $recipeIds
-     * @param ServerId             $serverId
+     * @param ServerId|null        $serverId
      * @param ServerOverride       $serverOverride
      * @param EmailNotification    $emailNotification
      * @param DiscardOldDeployment $discardOldDeployment
@@ -106,7 +106,7 @@ class Project
         ProjectId $id,
         ProjectName $name,
         RecipeIds $recipeIds,
-        ServerId $serverId,
+        ?ServerId $serverId,
         RepositoryUrl $repositoryUrl,
         StageName $stageName,
         ServerOverride $serverOverride,
@@ -155,7 +155,7 @@ class Project
      */
     public function serverId(): string
     {
-        return $this->serverId->value();
+        return isset($this->serverId) ? $this->serverId->value() : '';
     }
 
     /**

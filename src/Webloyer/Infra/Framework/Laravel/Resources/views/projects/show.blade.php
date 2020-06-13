@@ -10,17 +10,17 @@
                         <th>Project Name</th>
                         <td>{{ $project->name }}</td>
                     </tr>
-                    @foreach ($project->recipes as $recipe)
+                    @foreach ($projectRecipes as $recipe)
                         <tr>
                             @if ($loop->first)
-                                <th rowspan="{{ count($project->recipes) }}">Recipe</th>
+                                <th rowspan="{{ $projectRecipeCount }}">Recipe</th>
                             @endif
-                            <td>{{ $recipe->name }}</td>
+                            <td>{{ $hyphenIfBlank($recipe->name) }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <th>Server</th>
-                        <td>{{ $project->server->name }}</td>
+                        <td>{{ $hyphenIfBlank($project->server ? $project->server->name : '') }}</td>
                     </tr>
                     <tr>
                         <th>Repository URL</th>

@@ -30,6 +30,24 @@ class ShowViewModel extends ViewModel
     }
 
     /**
+     * @return array
+     */
+    public function projectRecipes(): array
+    {
+        return empty($this->project->recipes)
+            ? [new class {
+                /** @var string */
+                public $name = '';
+            }]
+            : $this->project->recipes;
+    }
+
+    public function projectRecipeCount(): int
+    {
+        return count($this->projectRecipes());
+    }
+
+    /**
      * @param object $project
      * @return string
      */
