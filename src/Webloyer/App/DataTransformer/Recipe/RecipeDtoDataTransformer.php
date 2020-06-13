@@ -14,8 +14,11 @@ use Webloyer\Domain\Model\Recipe\{
 
 class RecipeDtoDataTransformer implements RecipeDataTransformer
 {
+    /** @var Recipe */
     private $recipe;
+    /** @var RecipeService */
     private $recipeService;
+    /** @var ProjectsDataTransformer */
     private $projectsDataTransformer;
 
     public function __construct(RecipeService $recipeService)
@@ -39,18 +42,50 @@ class RecipeDtoDataTransformer implements RecipeDataTransformer
     public function read()
     {
         $dto = new class implements RecipeInterest {
+            /** @var string */
+            public $id;
+            /** @var string */
+            public $name;
+            /** @var string|null */
+            public $description;
+            /** @var string */
+            public $body;
+            /** @var array<int, object>|null */
+            public $projects;
+            /** @var int */
+            public $surrogateId;
+            /** @var string */
+            public $createdAt;
+            /** @var string */
+            public $updatedAt;
+            /**
+             * @param string $id
+             * @return void
+             */
             public function informId(string $id): void
             {
                 $this->id = $id;
             }
+            /**
+             * @param string $name
+             * @return void
+             */
             public function informName(string $name): void
             {
                 $this->name = $name;
             }
+            /**
+             * @param string|null $description
+             * @return void
+             */
             public function informDescription(?string $description): void
             {
                 $this->description = $description;
             }
+            /**
+             * @param string $body
+             * @return void
+             */
             public function informBody(string $body): void
             {
                 $this->body = $body;
@@ -64,7 +99,9 @@ class RecipeDtoDataTransformer implements RecipeDataTransformer
         }
 
         $dto->surrogateId = $this->recipe->surrogateId();
+        assert(!is_null($this->recipe->createdAt()));
         $dto->createdAt = $this->recipe->createdAt();
+        assert(!is_null($this->recipe->updatedAt()));
         $dto->updatedAt = $this->recipe->updatedAt();
 
         return $dto;
