@@ -10,9 +10,12 @@ use Kodeine\Acl\Models\Eloquent\Role;
 
 class RolesTableSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             if (Role::count() > 0) {
                 return;
             }

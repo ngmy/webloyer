@@ -14,9 +14,12 @@ use Webloyer\Infra\Persistence\Eloquent\Models\User;
 
 class UsersTableSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             if (User::count() > 0) {
                 return;
             }

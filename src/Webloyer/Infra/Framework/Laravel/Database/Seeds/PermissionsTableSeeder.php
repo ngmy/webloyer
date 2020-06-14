@@ -10,9 +10,12 @@ use Kodeine\Acl\Models\Eloquent\Permission;
 
 class PermissionsTableSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             if (Permission::count() > 0) {
                 return;
             }

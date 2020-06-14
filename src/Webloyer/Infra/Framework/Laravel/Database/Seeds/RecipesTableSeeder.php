@@ -11,9 +11,12 @@ use Webloyer\Infra\Persistence\Eloquent\Models\Recipe;
 
 class RecipesTableSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             if (Recipe::count() > 0) {
                 return;
             }
@@ -31,6 +34,9 @@ class RecipesTableSeeder extends Seeder
         });
     }
 
+    /**
+     * @return array<string, array{name: string, description: string, body: string}>
+     */
     private function getRecipes(): array
     {
         return [

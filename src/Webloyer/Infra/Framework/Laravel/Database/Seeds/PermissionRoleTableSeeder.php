@@ -10,9 +10,12 @@ use Kodeine\Acl\Models\Eloquent\Role;
 
 class PermissionRoleTableSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             if (DB::table('permission_role')->count() > 0) {
                 return;
             }
@@ -20,6 +23,7 @@ class PermissionRoleTableSeeder extends Seeder
             $adminRole = Role::where('name', 'Administrator')
                 ->where('slug', 'administrator')
                 ->first();
+            assert(!is_null($adminRole));
             $adminRole->assignPermission([
                 'deployment',
                 'project',
@@ -32,6 +36,7 @@ class PermissionRoleTableSeeder extends Seeder
             $developerRole = Role::where('name', 'Developer')
                 ->where('slug', 'developer')
                 ->first();
+            assert(!is_null($developerRole));
             $developerRole->assignPermission([
                 'deployment',
                 'project',
@@ -44,6 +49,7 @@ class PermissionRoleTableSeeder extends Seeder
             $operatorRole = Role::where('name', 'Operator')
                 ->where('slug', 'operator')
                 ->first();
+            assert(!is_null($operatorRole));
             $operatorRole->assignPermission([
                 'deployment',
                 'project.operator',

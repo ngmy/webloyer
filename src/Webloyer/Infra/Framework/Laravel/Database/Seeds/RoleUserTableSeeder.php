@@ -10,14 +10,18 @@ use Webloyer\Infra\Persistence\Eloquent\Models\User;
 
 class RoleUserTableSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             if (DB::table('role_user')->count() > 0){
                 return;
             }
 
             $user = User::where('email', 'admin@example.com')->first();
+            assert(!is_null($user));
             $user->assignRole('administrator');
         });
     }
