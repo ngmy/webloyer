@@ -23,8 +23,12 @@ use Webloyer\Domain\Model\Recipe\Recipe;
 
 class DeploymentRequestedListener implements ShouldQueue
 {
+    /** @var array<int, string> */
     private $createdFiles = [];
 
+    /**
+     * @return void
+     */
     public function __destruct()
     {
         if (empty($this->createdFiles)) {
@@ -114,6 +118,7 @@ class DeploymentRequestedListener implements ShouldQueue
         });
 
         $log = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
+        assert(!is_null($process->getExitCode()));
         $status = $process->getExitCode();
         $finishDate = (new DateTimeImmutable())->format('Y-m-d H:i:s');
         DomainEventPublisher::getInstance()->publish(
@@ -127,11 +132,19 @@ class DeploymentRequestedListener implements ShouldQueue
         );
     }
 
+    /**
+     * @param DeploymentRequested $event
+     * @return string
+     */
     public function getServerFileName(DeploymentRequested $event): string
     {
         return sprintf('server_%s_%s.yaml', $event->projectId()->value(), $event->number()->value());
     }
 
+    /**
+     * @param DeploymentRequested $event
+     * @return array<int, string>
+     */
     public function getRecipeFileNames(DeploymentRequested $event): array
     {
         $i = 1;
@@ -140,22 +153,40 @@ class DeploymentRequestedListener implements ShouldQueue
         }, $event->recipeBodies()->toArray());
     }
 
+    /**
+     * @param DeploymentRequested $event
+     * @param int                 $i
+     * @return string
+     */
     public function getRecipeFileName(DeploymentRequested $event, int $i): string
     {
         return sprintf('server_%s_%s_%s.php', $event->projectId()->value(), $event->number()->value(), $i);
     }
 
+    /**
+     * @param DeploymentRequested $event
+     * @return string
+     */
     public function getDeployerFileName(DeploymentRequested $event): string
     {
         return sprintf('deployer_%s_%s.php', $event->projectId()->value(), $event->number()->value());
     }
 
+    /**
+     * @param string $fileName
+     * @param string $contents
+     * @return void
+     */
     public function createFile(string $fileName, string $contents): void
     {
         Storage::disk('local')->put($fileName, $contents);
         $this->createdFiles[] = $fileName;
     }
 
+    /**
+     * @param string $fileName
+     * @return void
+     */
     public function deleteFile(string $fileName): void
     {
         Storage::disk('local')->delete($fileName);

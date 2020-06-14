@@ -27,14 +27,14 @@ class DeployerFinishedSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * @param DomainEvent $domainEvent
+     * @param DeployerFinished $domainEvent
      * @return void
      */
     public function handle(DomainEvent $domainEvent): void
     {
         $deployment = $this->deploymentRepository->findById($domainEvent->projectId(), $domainEvent->number());
         $deployment->changeLog($domainEvent->log())
-            ->changeStatus($domainEvent->status() === '0' ? 'succeeded' : 'failed')
+            ->changeStatus($domainEvent->status() == 0 ? 'succeeded' : 'failed')
             ->changeFinishDate($domainEvent->finishDate())
             ->complete();
         $this->deploymentRepository->save($deployment);

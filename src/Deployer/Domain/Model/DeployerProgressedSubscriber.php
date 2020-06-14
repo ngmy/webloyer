@@ -27,7 +27,7 @@ class DeployerProgressedSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * @param DomainEvent $domainEvent
+     * @param DeployerProgressed $domainEvent
      * @return void
      */
     public function handle(DomainEvent $domainEvent): void

@@ -27,7 +27,7 @@ class DeployerStartedSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * @param DomainEvent $domainEvent
+     * @param DeployerStarted $domainEvent
      * @return void
      */
     public function handle(DomainEvent $domainEvent): void
