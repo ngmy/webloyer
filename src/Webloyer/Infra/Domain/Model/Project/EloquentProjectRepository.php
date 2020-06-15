@@ -157,5 +157,9 @@ class EloquentProjectRepository implements ProjectRepository
         if ($projectOrm->wasRecentlyCreated) {
             $projectOrm->maxDeployment()->create(['project_id' => $projectOrm->id]);
         }
+
+        $project->setSurrogateId($projectOrm->id)
+            ->setCreatedAt($projectOrm->created_at)
+            ->setUpdatedAt($projectOrm->updated_at);
     }
 }

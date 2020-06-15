@@ -122,5 +122,9 @@ class EloquentUserRepository implements UserRepository
         $userOrm = UserOrm::firstOrNew(['uuid' => $user->id()]);
         $user->provide($userOrm);
         $userOrm->save();
+
+        $user->setSurrogateId($userOrm->id)
+            ->setCreatedAt($userOrm->created_at)
+            ->setUpdatedAt($userOrm->updated_at);
     }
 }

@@ -107,5 +107,9 @@ class EloquentRecipeRepository implements RecipeRepository
         $recipeOrm = RecipeOrm::firstOrNew(['uuid' => $recipe->id()]);
         $recipe->provide($recipeOrm);
         $recipeOrm->save();
+
+        $recipe->setSurrogateId($recipeOrm->id)
+            ->setCreatedAt($recipeOrm->created_at)
+            ->setUpdatedAt($recipeOrm->updated_at);
     }
 }

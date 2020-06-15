@@ -107,5 +107,9 @@ class EloquentServerRepository implements ServerRepository
         $serverOrm = ServerOrm::firstOrNew(['uuid' => $server->id()]);
         $server->provide($serverOrm);
         $serverOrm->save();
+
+        $server->setSurrogateId($serverOrm->id)
+            ->setCreatedAt($serverOrm->created_at)
+            ->setUpdatedAt($serverOrm->updated_at);
     }
 }

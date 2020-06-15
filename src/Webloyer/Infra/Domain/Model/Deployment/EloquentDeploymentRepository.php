@@ -159,6 +159,10 @@ class EloquentDeploymentRepository implements DeploymentRepository
         ]);
         $deployment->provide($deploymentOrm);
         $deploymentOrm->save();
+
+        $deployment->setSurrogateId($deploymentOrm->id)
+            ->setCreatedAt($deploymentOrm->created_at)
+            ->setUpdatedAt($deploymentOrm->updated_at);
     }
 
     /**
