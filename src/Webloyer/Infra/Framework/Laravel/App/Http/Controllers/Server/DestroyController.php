@@ -17,6 +17,7 @@ class DestroyController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new DeleteServerRequest())->setId($id);
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('servers.index');

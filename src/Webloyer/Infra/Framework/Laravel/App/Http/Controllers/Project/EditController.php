@@ -13,10 +13,20 @@ use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\EditViewModel;
 
 class EditController extends BaseController
 {
+    /** @var GetRecipesService */
     private $recipeService;
+    /** @var GetServersService */
     private $serverService;
+    /** @var GetUsersService */
     private $userService;
 
+    /**
+     * @param ApplicationService $service
+     * @param GetRecipesService  $recipeService
+     * @param GetServersService  $serverService
+     * @param GetUsersService    $userService
+     * @return void
+     */
     public function __construct(
         ApplicationService $service,
         GetRecipesService $recipeService,
@@ -39,6 +49,7 @@ class EditController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetProjectRequest())->setId($id);
+        assert(!is_null($this->service));
         $project = $this->service->execute($serviceRequest);
 
         $recipes = $this->recipeService->execute();

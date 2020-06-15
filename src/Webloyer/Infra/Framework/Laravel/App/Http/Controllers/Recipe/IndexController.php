@@ -6,6 +6,8 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe;
 
 use App;
 use Webloyer\App\DataTransformer\Project\ProjectsDtoDataTransformer;
+use Webloyer\App\Service\Recipe\GetRecipesService;
+use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Recipe\IndexRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Recipe\IndexViewModel;
 
@@ -19,6 +21,8 @@ class IndexController extends BaseController
      */
     public function __invoke(IndexRequest $request)
     {
+        assert($this->service instanceof GetRecipesService);
+        assert($this->service->recipesDataTransformer() instanceof RecipesLaravelLengthAwarePaginatorDataTransformer);
         $this->service
             ->recipesDataTransformer()
             ->setPerPage(10)

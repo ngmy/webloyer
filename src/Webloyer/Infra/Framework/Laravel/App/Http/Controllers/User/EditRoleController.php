@@ -12,8 +12,14 @@ use Webloyer\Query\AllRolesQuery;
 
 class EditRoleController extends BaseController
 {
+    /** @var QueryBus */
     private $queryBus;
 
+    /**
+     * @param ApplicationService $service
+     * @param QueryBus           $queryBus
+     * @return void
+     */
     public function __construct(
         ApplicationService $service,
         QueryBus $queryBus
@@ -32,6 +38,7 @@ class EditRoleController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetUserRequest())->setId($id);
+        assert(!is_null($this->service));
         $user = $this->service->execute($serviceRequest);
 
         $roles = $this->queryBus->handle(new AllRolesQuery());

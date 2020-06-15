@@ -18,6 +18,7 @@ class ChangePasswordController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetUserRequest())->setId($id);
+        assert(!is_null($this->service));
         $user = $this->service->execute($serviceRequest);
 
         return (new ChangePasswordViewModel($user))->view('webloyer::users.change_password');

@@ -18,6 +18,7 @@ class EditApiTokenController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetUserRequest())->setId($id);
+        assert(!is_null($this->service));
         $user = $this->service->execute($serviceRequest);
 
         return (new EditApiTokenViewModel($user))->view('webloyer::users.edit_api_token');

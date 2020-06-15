@@ -22,6 +22,7 @@ class UpdateController extends BaseController
             ->setId($id)
             ->setEmail($request->input('email'))
             ->setName($request->input('name'));
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('users.index');

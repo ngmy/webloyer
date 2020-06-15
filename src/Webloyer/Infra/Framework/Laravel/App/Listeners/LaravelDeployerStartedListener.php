@@ -12,6 +12,7 @@ use Webloyer\Domain\Model\Deployment;
 
 class LaravelDeployerStartedListener implements ShouldQueue
 {
+    /** @var string */
     public $queue = 'webloyer';
 
     /** @var Deployment\DeploymentRepository */

@@ -14,8 +14,14 @@ use Webloyer\App\Service\Project\{
 
 class DeployController extends BaseController
 {
+    /** @var GetProjectService */
     private $projectService;
 
+    /**
+     * @param ApplicationService $service
+     * @param GetProjectService  $projectService
+     * @return void
+     */
     public function __construct(
         ApplicationService $service,
         GetProjectService $projectService
@@ -40,6 +46,7 @@ class DeployController extends BaseController
         $serviceRequest = (new CreateDeploymentRequest())
             ->setProjectId($project->id)
             ->setExecutor($project->gitHubWebhookUserId);
+        assert(!is_null($this->service));
         $deployment = $this->service->execute($serviceRequest);
 
         return response()->json($deployment);

@@ -8,7 +8,10 @@ use App;
 use Webloyer\App\DataTransformer\Recipe\RecipesDtoDataTransformer;
 use Webloyer\App\DataTransformer\Server\ServerDtoDataTransformer;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
-use Webloyer\App\Service\Project\GetProjectRequest;
+use Webloyer\App\Service\Project\{
+    GetProjectRequest,
+    GetProjectService,
+};
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\ShowViewModel;
 
 class ShowController extends BaseController
@@ -22,6 +25,7 @@ class ShowController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetProjectRequest())->setId($id);
+        assert($this->service instanceof GetProjectService);
         $this->service
             ->projectDataTransformer()
             ->setRecipesDataTransformer(App::make(RecipesDtoDataTransformer::class))

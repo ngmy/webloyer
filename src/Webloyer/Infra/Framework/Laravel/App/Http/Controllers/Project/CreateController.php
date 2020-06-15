@@ -11,10 +11,19 @@ use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\CreateViewMode
 
 class CreateController extends BaseController
 {
+    /** @var GetRecipesService */
     private $recipeService;
+    /** @var GetServersService */
     private $serverService;
+    /** @var GetUsersService */
     private $userService;
 
+    /**
+     * @param GetRecipesService $recipeService
+     * @param GetServersService $serverService
+     * @param GetUsersService $userService
+     * @return void
+     */
     public function __construct(
         GetRecipesService $recipeService,
         GetServersService $serverService,

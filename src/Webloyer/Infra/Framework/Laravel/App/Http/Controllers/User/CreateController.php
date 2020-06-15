@@ -10,8 +10,13 @@ use Webloyer\Query\AllRolesQuery;
 
 class CreateController extends BaseController
 {
+    /** @var QueryBus */
     private $queryBus;
 
+    /**
+     * @param QueryBus $queryBus
+     * @return void
+     */
     public function __construct(QueryBus $queryBus)
     {
         parent::__construct();

@@ -22,6 +22,7 @@ class RegenerateApiTokenController extends BaseController
         $serviceRequest = (new ServiceRequest())
             ->setId($id)
             ->setApiToken(Str::random(60));
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('users.index');

@@ -18,6 +18,7 @@ class EditController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetUserRequest())->setId($id);
+        assert(!is_null($this->service));
         $user = $this->service->execute($serviceRequest);
 
         return (new EditViewModel($user))->view('webloyer::users.edit');

@@ -21,6 +21,7 @@ class UpdateRoleController extends BaseController
         $serviceRequest = (new ServiceRequest())
             ->setId($id)
             ->setRoles($request->input('role'));
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('users.index');

@@ -25,6 +25,7 @@ class StoreController extends BaseController
             ->setPassword(Hash::make($request->input('password')))
             ->setApiToken(Str::random(60))
             ->setRoles($request->input('role'));
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('users.index');

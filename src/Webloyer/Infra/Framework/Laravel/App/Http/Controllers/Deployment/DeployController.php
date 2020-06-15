@@ -21,6 +21,7 @@ class DeployController extends BaseController
         $serviceRequest = (new CreateDeploymentRequest())
             ->setProjectId($projectId)
             ->setExecutor($request->user()->toEntity()->id());
+        assert(!is_null($this->service));
         $deployment = $this->service->execute($serviceRequest);
 
         $link = link_to_route('projects.deployments.show', '#' . $deployment->number, [$projectId, $deployment->number]);

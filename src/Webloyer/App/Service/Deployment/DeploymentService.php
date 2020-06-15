@@ -52,12 +52,12 @@ abstract class DeploymentService implements ApplicationService
     protected $deploymentsDataTransformer;
 
     /**
-     * @param DeploymentRepository $deploymentRepository
-     * @param ProjectRepository $projectRepository
-     * @param RecipeRepository $recipeRepository
-     * @param ServerRepository $serverRepository
-     * @param UserRepository $userRepository
-     * @param DeploymentDataTransformer $deploymentDataTransformer
+     * @param DeploymentRepository       $deploymentRepository
+     * @param ProjectRepository          $projectRepository
+     * @param RecipeRepository           $recipeRepository
+     * @param ServerRepository           $serverRepository
+     * @param UserRepository             $userRepository
+     * @param DeploymentDataTransformer  $deploymentDataTransformer
      * @param DeploymentsDataTransformer $deploymentsDataTransformer
      * @return void
      */

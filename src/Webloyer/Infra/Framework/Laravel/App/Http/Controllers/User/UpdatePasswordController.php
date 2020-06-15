@@ -22,6 +22,7 @@ class UpdatePasswordController extends BaseController
         $serviceRequest = (new ServiceRequest())
             ->setId($id)
             ->setPassword(Hash::make($request->input('password')));
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('users.index');

@@ -32,6 +32,7 @@ class UpdateController extends BaseController
             ->setDeploymentKeepMaxNumber($request->input('max_number_of_deployments_to_keep'))
             ->setGitHubWebhookSecret($request->input('github_webhook_secret'))
             ->setGitHubWebhookExecutor($request->input('github_webhook_user_id'));
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('projects.index');

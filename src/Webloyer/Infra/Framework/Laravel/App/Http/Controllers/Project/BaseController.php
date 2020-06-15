@@ -6,6 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
 use Common\App\Service\ApplicationService;
+use Webloyer\App\Service\Project\ProjectService;
 
 class BaseController extends Controller
 {

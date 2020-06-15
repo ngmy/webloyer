@@ -21,6 +21,7 @@ class StoreController extends BaseController
             ->setName($request->input('name'))
             ->setDescription($request->input('description'))
             ->setBody($request->input('body'));
+        assert(!is_null($this->service));
         $this->service->execute($serviceRequest);
 
         return redirect()->route('servers.index');

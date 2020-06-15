@@ -6,6 +6,8 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
 use App;
 use Webloyer\App\DataTransformer\Deployment\DeploymentDtoDataTransformer;
+use Webloyer\App\Service\Project\GetProjectsService;
+use Webloyer\Infra\App\DataTransformer\Project\ProjectsLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Project\IndexRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\IndexViewModel;
 
@@ -19,6 +21,8 @@ class IndexController extends BaseController
      */
     public function __invoke(IndexRequest $request)
     {
+        assert($this->service instanceof GetProjectsService);
+        assert($this->service->projectsDataTransformer() instanceof ProjectsLaravelLengthAwarePaginatorDataTransformer);
         $this->service
             ->projectsDataTransformer()
             ->setPerPage(10)

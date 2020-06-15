@@ -6,7 +6,10 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
 use App;
 use Webloyer\App\DataTransformer\Project\ProjectsDtoDataTransformer;
-use Webloyer\App\Service\Server\GetServerRequest;
+use Webloyer\App\Service\Server\{
+    GetServerRequest,
+    GetServerService,
+};
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\ShowViewModel;
 
 class ShowController extends BaseController
@@ -20,6 +23,7 @@ class ShowController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetServerRequest())->setId($id);
+        assert($this->service instanceof GetServerService);
         $this->service
             ->serverDataTransformer()
             ->setProjectsDataTransformer(App::make(ProjectsDtoDataTransformer::class));

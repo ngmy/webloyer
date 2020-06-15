@@ -73,15 +73,11 @@ class Install extends Command
             $env['DB_HOST']     = $this->ask(trans('webloyer::install.enter_db_host'), 'localhost');
             $env['DB_DATABASE'] = $this->ask(trans('webloyer::install.enter_db_name'), 'webloyer');
             $env['DB_USERNAME'] = $this->ask(trans('webloyer::install.enter_db_username'), 'webloyer');
-            $env['DB_PASSWORD'] = $this->ask(trans('webloyer::install.enter_db_password'), false);
+            $env['DB_PASSWORD'] = $this->ask(trans('webloyer::install.enter_db_password'));
         }
 
-        $admin['name']     = $this->ask(trans('webloyer::install.enter_admin_name'));
-        $admin['email']    = $this->ask(trans('webloyer::install.enter_admin_email'));
-        $admin['password'] = $this->ask(trans('webloyer::install.enter_admin_password'));
-
         // Set the env buffer to the config in the current request
-        config(['database.default', $env['DB_CONNECTION']]);
+        config(['database.default' => $env['DB_CONNECTION']]);
         if ($env['DB_CONNECTION'] == 'sqlite') {
             config(['database.connections.' . $env['DB_CONNECTION'] . '.database' => $env['DB_DATABASE']]);
         } else {
@@ -91,11 +87,15 @@ class Install extends Command
             config(['database.connections.' . $env['DB_CONNECTION'] . '.password' => $env['DB_PASSWORD']]);
         }
 
-        DB::transaction(function () use ($env, $admin, $createUserService, $dotenvEditor) {
+        DB::transaction(function () use ($env, $createUserService, $dotenvEditor) {
             // Create the database if the database is empty or you want to re-create
             $migrationsTable = config('database.migrations');
             $isDbEmpty = !Schema::hasTable($migrationsTable) || DB::table($migrationsTable)->count() == 0;
             if ($isDbEmpty || $this->confirm(trans('webloyer::confirm_recreate_db'))) {
+                $admin['name']     = $this->ask(trans('webloyer::install.enter_admin_name'));
+                $admin['email']    = $this->ask(trans('webloyer::install.enter_admin_email'));
+                $admin['password'] = $this->ask(trans('webloyer::install.enter_admin_password'));
+
                 // Rollback and re-migrate
                 Artisan::call('migrate:refresh', [
                     '--force'          => true,
@@ -116,7 +116,7 @@ class Install extends Command
                     ->setPassword(Hash::make($admin['password']))
                     ->setApiToken(Str::random(60))
                     ->setRoles(['administrator']);
-                $user = $createUserService->execute($createUserRequest);
+                $createUserService->execute($createUserRequest);
             }
 
             // Save the env buffer to the .env file

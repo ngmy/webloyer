@@ -18,13 +18,19 @@ class DeploymentCompleted extends Notification
 {
     use Queueable;
 
+    /** @var DeploymentCompletedEvent */
     private $event;
+    /** @var Project */
     private $project;
+    /** @var User */
     private $user;
 
     /**
      * Create a new notification instance.
      *
+     * @param DeploymentCompletedEvent $event
+     * @param Project                  $project
+     * @param User                     $user
      * @return void
      */
     public function __construct(
@@ -41,7 +47,7 @@ class DeploymentCompleted extends Notification
      * Get the notification's delivery channels.
      *
      * @param  mixed  $notifiable
-     * @return array
+     * @return list<string>
      */
     public function via($notifiable)
     {
@@ -78,7 +84,7 @@ class DeploymentCompleted extends Notification
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return array
+     * @return list<string>
      */
     public function toArray($notifiable)
     {

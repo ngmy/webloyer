@@ -6,6 +6,8 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
 use App;
 use Webloyer\App\DataTransformer\Project\ProjectsDtoDataTransformer;
+use Webloyer\App\Service\Server\GetServersService;
+use Webloyer\Infra\App\DataTransformer\Server\ServersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Server\IndexRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\IndexViewModel;
 
@@ -19,6 +21,8 @@ class IndexController extends BaseController
      */
     public function __invoke(IndexRequest $request)
     {
+        assert($this->service instanceof GetServersService);
+        assert($this->service->serversDataTransformer() instanceof ServersLaravelLengthAwarePaginatorDataTransformer);
         $this->service
             ->serversDataTransformer()
             ->setPerPage(10)

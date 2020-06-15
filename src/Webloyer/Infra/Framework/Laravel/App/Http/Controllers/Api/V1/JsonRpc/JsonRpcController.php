@@ -30,6 +30,7 @@ class JsonRpcController extends Controller
      */
     public function __invoke(Request $request)
     {
+        assert(file_get_contents('php://input') !== false);
         $json = file_get_contents('php://input');
         return $this->server->reply($json);
     }

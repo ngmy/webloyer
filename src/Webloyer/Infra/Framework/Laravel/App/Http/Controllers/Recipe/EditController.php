@@ -18,6 +18,7 @@ class EditController extends BaseController
     public function __invoke(string $id)
     {
         $serviceRequest = (new GetRecipeRequest())->setId($id);
+        assert(!is_null($this->service));
         $recipe = $this->service->execute($serviceRequest);
 
         return (new EditViewModel($recipe))->view('webloyer::recipes.edit');

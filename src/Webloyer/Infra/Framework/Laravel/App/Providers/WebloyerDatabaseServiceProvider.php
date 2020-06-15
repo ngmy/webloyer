@@ -36,6 +36,7 @@ class WebloyerDatabaseServiceProvider extends ServiceProvider
 
     protected function loadSeedsFrom(string $path): void
     {
+        assert(glob($path . '/*.php') !== false);
         foreach (glob($path . '/*.php') as $filename) {
             include $filename;
             $classes = get_declared_classes();
