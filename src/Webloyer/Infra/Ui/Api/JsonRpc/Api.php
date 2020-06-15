@@ -69,7 +69,7 @@ class Api implements Evaluator
     public function deploy(array $arguments): object
     {
         $serviceRequest = (new CreateDeploymentRequest())
-            ->setProjectId($arguments['project_id'])
+            ->setProjectId($arguments['projectId'])
             ->setExecutor($this->nonNullUser()->id);
         $deployment = $this->createDeploymentService->execute($serviceRequest);
         return $deployment;
@@ -82,7 +82,7 @@ class Api implements Evaluator
     public function rollback(array $arguments): object
     {
         $serviceRequest = (new RollbackDeploymentRequest())
-            ->setProjectId($arguments['project_id'])
+            ->setProjectId($arguments['projectId'])
             ->setExecutor($this->nonNullUser()->id);
         $deployment = $this->rollbackDeploymentService->execute($serviceRequest);
         return $deployment;

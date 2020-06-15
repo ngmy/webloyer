@@ -30,18 +30,18 @@ Deploy a project.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| project_id | integer | Project id. |
+| projectId | string | Project id. |
 
 #### Example Request
 
 ```
-curl -X POST -d '{"jsonrpc":"2.0","id":1,"method":"deploy","params":{"project_id":1}}' -H "Authorization: Bearer aiSPTQE2nMnmHtyfjZenfI5dcb52zANE30n5t1gL5H2BwPpXz9GIVYKVFE8x" -H "Accept: application/json-rpc" http://webloyer.local/api/v1/jsonrpc
+curl -X POST -d '{"jsonrpc":"2.0","id":1,"method":"deploy","params":{"projectId":"90cc3821-1bf0-49ad-8424-2385335783ba"}}' -H "Authorization: Bearer aiSPTQE2nMnmHtyfjZenfI5dcb52zANE30n5t1gL5H2BwPpXz9GIVYKVFE8x" -H "Accept: application/json-rpc" http://webloyer.local/api/v1/jsonrpc
 ```
 
 #### Example Response
 
 ```json
-{"jsonrpc":"2.0","result":{"id":11,"project_id":1,"number":11,"task":"deploy","status":null,"message":null,"user_id":1,"created_at":"2016-10-15 18:25:31","updated_at":"2016-10-15 18:25:31"},"id":1}
+{"jsonrpc":"2.0","id":1,"result":{"projectId":"90cc3821-1bf0-49ad-8424-2385335783ba","number":8,"task":"deploy","status":"queued","log":"","executor":"90cc17bc-2f89-4303-a17c-119921febadc","requestDate":"2020-06-15 16:05:36","startDate":null,"finishDate":null,"user":null,"surrogateId":8,"createdAt":"2020-06-15 16:05:36","updatedAt":"2020-06-15 16:05:36"}}
 ```
 
 ### rollback
@@ -52,16 +52,16 @@ Roll back a project to a previous deployment.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| project_id | integer | Project id. |
+| projectId | string | Project id. |
 
 #### Example Request
 
 ```
-curl -X POST -d '{"jsonrpc":"2.0","id":1,"method":"rollback","params":{"project_id":1}}' -H "Authorization: Bearer aiSPTQE2nMnmHtyfjZenfI5dcb52zANE30n5t1gL5H2BwPpXz9GIVYKVFE8x" -H "Accept: application/json-rpc" http://webloyer.local/api/v1/jsonrpc
+curl -X POST -d '{"jsonrpc":"2.0","id":1,"method":"rollback","params":{"projectId":"90cc3821-1bf0-49ad-8424-2385335783ba"}}' -H "Authorization: Bearer aiSPTQE2nMnmHtyfjZenfI5dcb52zANE30n5t1gL5H2BwPpXz9GIVYKVFE8x" -H "Accept: application/json-rpc" http://webloyer.local/api/v1/jsonrpc
 ```
 
 #### Example Response
 
 ```json
-{"jsonrpc":"2.0","result":{"id":13,"project_id":1,"number":13,"task":"rollback","status":null,"message":null,"user_id":1,"created_at":"2016-10-15 18:36:22","updated_at":"2016-10-15 18:36:22"},"id":1}
+{"jsonrpc":"2.0","id":1,"result":{"projectId":"90cc3821-1bf0-49ad-8424-2385335783ba","number":9,"task":"rollback","status":"queued","log":"","executor":"90cc17bc-2f89-4303-a17c-119921febadc","requestDate":"2020-06-15 16:07:11","startDate":null,"finishDate":null,"user":null,"surrogateId":9,"createdAt":"2020-06-15 16:07:11","updatedAt":"2020-06-15 16:07:11"}}
 ```
