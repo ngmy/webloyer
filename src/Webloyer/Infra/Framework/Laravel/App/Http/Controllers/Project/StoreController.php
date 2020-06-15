@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
+use Illuminate\Http\RedirectResponse;
 use Webloyer\App\Service\Project\CreateProjectRequest;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Project\StoreRequest;
 
@@ -13,9 +14,9 @@ class StoreController extends BaseController
      * Handle the incoming request.
      *
      * @param StoreRequest $request
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function __invoke(StoreRequest $request)
+    public function __invoke(StoreRequest $request): RedirectResponse
     {
         $serviceRequest = (new CreateProjectRequest())
             ->setName($request->input('name'))

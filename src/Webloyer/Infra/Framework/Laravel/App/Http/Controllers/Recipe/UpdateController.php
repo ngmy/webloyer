@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe;
 
+use Illuminate\Http\RedirectResponse;
 use Webloyer\App\Service\Recipe\UpdateRecipeRequest;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Recipe\UpdateRequest;
 
@@ -14,9 +15,9 @@ class UpdateController extends BaseController
      *
      * @param UpdateRequest      $request
      * @param string             $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function __invoke(UpdateRequest $request, string $id)
+    public function __invoke(UpdateRequest $request, string $id): RedirectResponse
     {
         $serviceRequest = (new UpdateRecipeRequest())
             ->setId($id)

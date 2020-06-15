@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\Service\Server\GetServerRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\EditViewModel;
 
@@ -13,9 +14,9 @@ class EditController extends BaseController
      * Handle the incoming request.
      *
      * @param string $id
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(string $id)
+    public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetServerRequest())->setId($id);
         assert(!is_null($this->service));

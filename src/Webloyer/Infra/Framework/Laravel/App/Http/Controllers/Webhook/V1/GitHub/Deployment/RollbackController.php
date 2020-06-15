@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Webhook\V1\GitHub\Deployment;
 
 use Common\App\Service\ApplicationService;
-use Illuminate\Http\Request;
+use Illuminate\Http\{
+    JsonResponse,
+    Request,
+};
 use Webloyer\App\Service\Deployment\RollbackDeploymentRequest;
 use Webloyer\App\Service\Project\{
     GetProjectRequest,
@@ -36,9 +39,9 @@ class RollbackController extends BaseController
      *
      * @param Request $request
      * @param string  $projectId
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function __invoke(Request $request, string $projectId)
+    public function __invoke(Request $request, string $projectId): JsonResponse
     {
         $projectServiceRequest = (new GetProjectRequest())->setId($projectId);
         $project = $this->projectService->execute($projectServiceRequest);

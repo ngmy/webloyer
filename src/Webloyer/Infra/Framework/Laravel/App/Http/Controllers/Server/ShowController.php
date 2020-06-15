@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
 use App;
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\DataTransformer\Project\ProjectsDtoDataTransformer;
 use Webloyer\App\Service\Server\{
     GetServerRequest,
@@ -18,9 +19,9 @@ class ShowController extends BaseController
      * Handle the incoming request.
      *
      * @param string $id
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(string $id)
+    public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetServerRequest())->setId($id);
         assert($this->service instanceof GetServerService);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Webloyer\App\Service\User\CreateUserRequest;
@@ -15,9 +16,9 @@ class StoreController extends BaseController
      * Handle the incoming request.
      *
      * @param StoreRequest $request
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function __invoke(StoreRequest $request)
+    public function __invoke(StoreRequest $request): RedirectResponse
     {
         $serviceRequest = (new CreateUserRequest())
             ->setEmail($request->input('email'))

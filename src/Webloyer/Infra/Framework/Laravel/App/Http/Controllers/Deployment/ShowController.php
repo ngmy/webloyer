@@ -6,6 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment;
 
 use App;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
 use Webloyer\App\Service\Deployment\{
     GetDeploymentRequest,
@@ -22,9 +23,9 @@ class ShowController extends BaseController
      * @param ShowRequest $request
      * @param string      $projectId
      * @param int         $number
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(ShowRequest $request, string $projectId, int $number)
+    public function __invoke(ShowRequest $request, string $projectId, int $number): ViewModel
     {
         $serviceRequest = (new GetDeploymentRequest())
             ->setProjectId($projectId)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment;
 
 use App;
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
 use Webloyer\App\Service\Deployment\{
     GetDeploymentsRequest,
@@ -21,9 +22,9 @@ class IndexController extends BaseController
      *
      * @param IndexRequest $request
      * @param string       $projectId
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(IndexRequest $request, string $projectId)
+    public function __invoke(IndexRequest $request, string $projectId): ViewModel
     {
         $serviceRequest = (new GetDeploymentsRequest())->setProjectId($projectId);
         assert($this->service instanceof GetDeploymentsService);

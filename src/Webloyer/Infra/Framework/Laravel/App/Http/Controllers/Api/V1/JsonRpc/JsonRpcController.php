@@ -6,7 +6,10 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Api\V1\JsonRpc;
 
 use App\Http\Controllers\Controller;
 use Datto\JsonRpc\Server;
-use Illuminate\Http\Request;
+use Illuminate\Http\{
+    JsonResponse,
+    Request,
+};
 
 class JsonRpcController extends Controller
 {
@@ -26,12 +29,13 @@ class JsonRpcController extends Controller
      * Handle the incoming request.
      *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
         assert(file_get_contents('php://input') !== false);
-        $json = file_get_contents('php://input');
-        return $this->server->reply($json);
+        $requestJson = file_get_contents('php://input');
+        $responseJson = $this->server->reply($requestJson);
+        return response()->json($responseJson ? json_decode($responseJson, true) : []);
     }
 }

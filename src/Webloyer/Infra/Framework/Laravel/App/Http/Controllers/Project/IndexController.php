@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
 use App;
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\DataTransformer\Deployment\DeploymentDtoDataTransformer;
 use Webloyer\App\Service\Project\GetProjectsService;
 use Webloyer\Infra\App\DataTransformer\Project\ProjectsLaravelLengthAwarePaginatorDataTransformer;
@@ -17,9 +18,9 @@ class IndexController extends BaseController
      * Handle the incoming request.
      *
      * @param IndexRequest $request
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(IndexRequest $request)
+    public function __invoke(IndexRequest $request): ViewModel
     {
         assert($this->service instanceof GetProjectsService);
         assert($this->service->projectsDataTransformer() instanceof ProjectsLaravelLengthAwarePaginatorDataTransformer);

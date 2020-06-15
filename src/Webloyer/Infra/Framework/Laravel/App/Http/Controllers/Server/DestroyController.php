@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Server;
 
+use Illuminate\Http\RedirectResponse;
 use Webloyer\App\Service\Server\DeleteServerRequest;
 
 class DestroyController extends BaseController
@@ -12,9 +13,9 @@ class DestroyController extends BaseController
      * Handle the incoming request.
      *
      * @param string $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function __invoke(string $id)
+    public function __invoke(string $id): RedirectResponse
     {
         $serviceRequest = (new DeleteServerRequest())->setId($id);
         assert(!is_null($this->service));

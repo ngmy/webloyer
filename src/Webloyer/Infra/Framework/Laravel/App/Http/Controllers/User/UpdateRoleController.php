@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
+use Illuminate\Http\RedirectResponse;
 use Webloyer\App\Service\User\UpdateRoleRequest as ServiceRequest;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\UpdateRoleRequest;
 
@@ -14,9 +15,9 @@ class UpdateRoleController extends BaseController
      *
      * @param UpdateRoleRequest $request
      * @param string            $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function __invoke(UpdateRoleRequest $request, string $id)
+    public function __invoke(UpdateRoleRequest $request, string $id): RedirectResponse
     {
         $serviceRequest = (new ServiceRequest())
             ->setId($id)

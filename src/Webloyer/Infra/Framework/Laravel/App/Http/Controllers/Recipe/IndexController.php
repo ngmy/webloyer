@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Recipe;
 
 use App;
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\DataTransformer\Project\ProjectsDtoDataTransformer;
 use Webloyer\App\Service\Recipe\GetRecipesService;
 use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
@@ -17,9 +18,9 @@ class IndexController extends BaseController
      * Handle the incoming request.
      *
      * @param IndexRequest $request
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(IndexRequest $request)
+    public function __invoke(IndexRequest $request): ViewModel
     {
         assert($this->service instanceof GetRecipesService);
         assert($this->service->recipesDataTransformer() instanceof RecipesLaravelLengthAwarePaginatorDataTransformer);

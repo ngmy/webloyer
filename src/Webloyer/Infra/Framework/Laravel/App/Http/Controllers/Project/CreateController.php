@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\Service\Recipe\GetRecipesService;
 use Webloyer\App\Service\Server\GetServersService;
 use Webloyer\App\Service\User\GetUsersService;
@@ -39,9 +40,9 @@ class CreateController extends BaseController
     /**
      * Handle the incoming request.
      *
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke()
+    public function __invoke(): ViewModel
     {
         $recipes = $this->recipeService->execute();
         $servers = $this->serverService->execute();

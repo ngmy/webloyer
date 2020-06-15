@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
 use Common\App\Service\ApplicationService;
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\Service\Project\GetProjectRequest;
 use Webloyer\App\Service\Recipe\GetRecipesService;
 use Webloyer\App\Service\Server\GetServersService;
@@ -44,9 +45,9 @@ class EditController extends BaseController
      * Handle the incoming request.
      *
      * @param string $id
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(string $id)
+    public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetProjectRequest())->setId($id);
         assert(!is_null($this->service));

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
+use Illuminate\Http\RedirectResponse;
 use Webloyer\App\Service\User\UpdateUserRequest;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\UpdateRequest;
 
@@ -14,9 +15,9 @@ class UpdateController extends BaseController
      *
      * @param UpdateRequest $request
      * @param string        $id
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function __invoke(UpdateRequest $request, string $id)
+    public function __invoke(UpdateRequest $request, string $id): RedirectResponse
     {
         $serviceRequest = (new UpdateUserRequest())
             ->setId($id)

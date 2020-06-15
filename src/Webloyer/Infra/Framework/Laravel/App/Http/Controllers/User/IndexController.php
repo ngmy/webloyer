@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\Service\User\GetUsersService;
 use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\IndexRequest;
@@ -15,9 +16,9 @@ class IndexController extends BaseController
      * Handle the incoming request.
      *
      * @param IndexRequest $request
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(IndexRequest $request)
+    public function __invoke(IndexRequest $request): ViewModel
     {
         assert($this->service instanceof GetUsersService);
         assert($this->service->usersDataTransformer() instanceof UsersLaravelLengthAwarePaginatorDataTransformer);

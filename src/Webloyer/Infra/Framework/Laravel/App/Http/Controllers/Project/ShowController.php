@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Project;
 
 use App;
+use Spatie\ViewModels\ViewModel;
 use Webloyer\App\DataTransformer\Recipe\RecipesDtoDataTransformer;
 use Webloyer\App\DataTransformer\Server\ServerDtoDataTransformer;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
@@ -20,9 +21,9 @@ class ShowController extends BaseController
      * Handle the incoming request.
      *
      * @param string $id
-     * @return \Illuminate\Http\Response
+     * @return ViewModel
      */
-    public function __invoke(string $id)
+    public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetProjectRequest())->setId($id);
         assert($this->service instanceof GetProjectService);

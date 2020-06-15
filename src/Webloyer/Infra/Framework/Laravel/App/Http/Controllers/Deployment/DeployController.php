@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\{
+    RedirectResponse,
+    Request,
+};
 use Webloyer\App\Service\Deployment\CreateDeploymentRequest;
 
 class DeployController extends BaseController
@@ -14,9 +17,9 @@ class DeployController extends BaseController
      *
      * @param Request $request
      * @param string  $projectId
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
-    public function __invoke(Request $request, string $projectId)
+    public function __invoke(Request $request, string $projectId): RedirectResponse
     {
         $serviceRequest = (new CreateDeploymentRequest())
             ->setProjectId($projectId)
