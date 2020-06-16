@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\{
+    Blueprint,
+    ForeignKeyDefinition,
+};
 use Illuminate\Support\Facades\Schema;
 
 class CreateDeploymentsTable extends Migration
@@ -26,7 +29,9 @@ class CreateDeploymentsTable extends Migration
             $table->dateTime('finish_date')->nullable();
             $table->timestamps();
 
-            $table->foreign('project_id')
+            $foreignProjectId = $table->foreign('project_id');
+            assert($foreignProjectId instanceof ForeignKeyDefinition);
+            $foreignProjectId
                 ->references('id')
                 ->on('projects')
                 ->onDelete('cascade');

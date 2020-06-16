@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\{
+    Blueprint,
+    ForeignKeyDefinition,
+};
 use Illuminate\Support\Facades\Schema;
 
 class CreateProjectsTable extends Migration
@@ -28,10 +31,15 @@ class CreateProjectsTable extends Migration
             $table->bigInteger('github_webhook_user_id')->unsigned()->nullable();
             $table->timestamps();
 
-            $table->foreign('server_id')
+
+            $foreignServerId = $table->foreign('server_id');
+            assert($foreignServerId instanceof ForeignKeyDefinition);
+            $foreignServerId
                 ->references('id')
                 ->on('servers');
-            $table->foreign('github_webhook_user_id')
+            $foreignGitHubWebhookUserId = $table->foreign('github_webhook_user_id');
+            assert($foreignGitHubWebhookUserId instanceof ForeignKeyDefinition);
+            $foreignGitHubWebhookUserId
                 ->references('id')
                 ->on('users')
                 ->onDelete('set null');

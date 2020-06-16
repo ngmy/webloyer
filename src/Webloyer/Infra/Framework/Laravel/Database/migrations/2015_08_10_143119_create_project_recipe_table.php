@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\{
+    Blueprint,
+    ForeignKeyDefinition,
+};
 use Illuminate\Support\Facades\Schema;
 
 class CreateProjectRecipeTable extends Migration
@@ -19,11 +22,15 @@ class CreateProjectRecipeTable extends Migration
             $table->bigInteger('recipe_id')->unsigned();
             $table->tinyInteger('recipe_order')->unsigned();
 
-            $table->foreign('project_id')
+            $foreignProjectId = $table->foreign('project_id');
+            assert($foreignProjectId instanceof ForeignKeyDefinition);
+            $foreignProjectId
                 ->references('id')
                 ->on('projects')
                 ->onDelete('cascade');
-            $table->foreign('recipe_id')
+            $foreignRecipeId = $table->foreign('recipe_id');
+            assert($foreignRecipeId instanceof ForeignKeyDefinition);
+            $foreignRecipeId
                 ->references('id')
                 ->on('recipes')
                 ->onDelete('cascade');
