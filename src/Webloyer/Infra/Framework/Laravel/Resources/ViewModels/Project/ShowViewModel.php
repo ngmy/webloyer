@@ -30,7 +30,7 @@ class ShowViewModel extends ViewModel
     }
 
     /**
-     * @return array
+     * @return array<object>
      */
     public function projectRecipes(): array
     {
