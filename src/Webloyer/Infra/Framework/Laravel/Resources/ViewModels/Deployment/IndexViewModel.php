@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Deployment;
 
+use Collective\Html\HtmlFacade as Html;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\ViewModels\ViewModel;
 
@@ -60,7 +61,7 @@ class IndexViewModel extends ViewModel
     public function deploymentLinks(): array
     {
         return array_reduce($this->deployments->toArray()['data'], function (array $carry, object $deployment): array {
-            $link = link_to_route('projects.deployments.show', 'Show', [$this->projectId, $deployment->number], ['class' => 'btn btn-default']);
+            $link = Html::linkRoute('projects.deployments.show', 'Show', [$this->projectId, $deployment->number], ['class' => 'btn btn-default']);
             $carry[$deployment->number] = $link->toHtml();
             return $carry;
         }, []);
