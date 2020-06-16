@@ -3,7 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use Faker\Generator as Faker;
-use Kodeine\Acl\Models\Eloquent\Role;
+use Webloyer\Infra\Persistence\Eloquent\Models\Role;
 
 $factory->define(Role::class, function (Faker $faker) {
     return [

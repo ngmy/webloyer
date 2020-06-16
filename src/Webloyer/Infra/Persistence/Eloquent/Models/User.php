@@ -30,9 +30,9 @@ use Webloyer\Infra\Persistence\Eloquent\ImmutableTimestampable;
  * @property string $uuid
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Kodeine\Acl\Models\Eloquent\Permission[] $permissions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Webloyer\Infra\Persistence\Eloquent\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\Kodeine\Acl\Models\Eloquent\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Webloyer\Infra\Persistence\Eloquent\Models\Role[] $roles
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\Webloyer\Infra\Persistence\Eloquent\Models\User newQuery()

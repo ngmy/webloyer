@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Webloyer\Query;
 
-use Kodeine\Acl\Models\Eloquent\Role;
 use Webloyer\Domain\Model\Role\RoleView;
+use Webloyer\Infra\Persistence\Eloquent\Models\Role;
 
 class AllRolesQueryHandler
 {

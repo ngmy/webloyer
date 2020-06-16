@@ -6,7 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\Database\Seeds;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Kodeine\Acl\Models\Eloquent\Permission;
+use Webloyer\Infra\Persistence\Eloquent\Models\Permission;
 
 class PermissionsTableSeeder extends Seeder
 {

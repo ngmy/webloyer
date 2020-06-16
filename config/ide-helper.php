@@ -92,7 +92,7 @@ return array(
     */
 
     'model_locations' => array(
-        'app',
+        'src/Webloyer/Infra/Persistence/Eloquent/Models',
     ),
 
 

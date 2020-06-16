@@ -23,8 +23,8 @@ return [
     | can define your model here.
     */
 
-    'role'       => Kodeine\Acl\Models\Eloquent\Role::class,
-    'permission' => Kodeine\Acl\Models\Eloquent\Permission::class,
+    'role'       => Webloyer\Infra\Persistence\Eloquent\Models\Role::class,
+    'permission' => Webloyer\Infra\Persistence\Eloquent\Models\Permission::class,
 
     /*
     |--------------------------------------------------------------------------
