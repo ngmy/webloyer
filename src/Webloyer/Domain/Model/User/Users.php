@@ -6,7 +6,7 @@ namespace Webloyer\Domain\Model\User;
 
 class Users
 {
-    /** @var array<int, User> */
+    /** @var list<User> */
     private $users;
 
     /**
@@ -19,7 +19,7 @@ class Users
     }
 
     /**
-     * @return array<int, User>
+     * @return list<User>
      */
     public function toArray(): array
     {

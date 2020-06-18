@@ -6,7 +6,7 @@ namespace Webloyer\Domain\Model\Deployment;
 
 class Deployments
 {
-    /** @var array<int, Deployment> */
+    /** @var list<Deployment> */
     private $deployments;
 
     public static function empty(): self
@@ -24,7 +24,7 @@ class Deployments
     }
 
     /**
-     * @return array<int, Deployment>
+     * @return list<Deployment>
      */
     public function toArray(): array
     {

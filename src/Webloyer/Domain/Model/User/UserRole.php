@@ -69,7 +69,7 @@ abstract class UserRole extends User
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function roles(): array
     {

@@ -10,7 +10,7 @@ class DomainEventPublisher
 {
     /** @var null|self */
     private static $instance;
-    /** @var array<int, DomainEventSubscriber> */
+    /** @var list<DomainEventSubscriber> */
     private $subscribers = [];
     /** @var int */
     private $id = 0;

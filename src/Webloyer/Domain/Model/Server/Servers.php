@@ -6,7 +6,7 @@ namespace Webloyer\Domain\Model\Server;
 
 class Servers
 {
-    /** @var array<int, Server> */
+    /** @var list<Server> */
     private $servers;
 
     /**
@@ -19,7 +19,7 @@ class Servers
     }
 
     /**
-     * @return array<int, Server>
+     * @return list<Server>
      */
     public function toArray(): array
     {

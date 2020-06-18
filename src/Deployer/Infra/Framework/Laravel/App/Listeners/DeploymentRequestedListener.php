@@ -23,7 +23,7 @@ use Webloyer\Domain\Model\Recipe\Recipe;
 
 class DeploymentRequestedListener implements ShouldQueue
 {
-    /** @var array<int, string> */
+    /** @var list<string> */
     private $createdFiles = [];
 
     /**
@@ -143,7 +143,7 @@ class DeploymentRequestedListener implements ShouldQueue
 
     /**
      * @param DeploymentRequested $event
-     * @return array<int, string>
+     * @return list<string>
      */
     public function getRecipeFileNames(DeploymentRequested $event): array
     {

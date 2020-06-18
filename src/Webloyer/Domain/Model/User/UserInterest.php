@@ -35,7 +35,7 @@ interface UserInterest
      */
     public function informApiToken(?string $apiToken): void;
     /**
-     * @param array<int, string> $roles
+     * @param list<string> $roles
      * @return void
      */
     public function informRoles(array $roles): void;

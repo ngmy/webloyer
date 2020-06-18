@@ -54,7 +54,7 @@ class Deployment extends Model implements DeploymentInterest
 {
     use ImmutableTimestampable;
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'project_id',
         'number',

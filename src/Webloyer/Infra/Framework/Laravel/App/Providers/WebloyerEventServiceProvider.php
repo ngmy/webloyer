@@ -14,7 +14,7 @@ class WebloyerEventServiceProvider extends EventServiceProvider
     /**
      * The event listener mappings for the application.
      *
-     * @var array<string, array<int, string>>
+     * @var array<string, list<string>>
      */
     protected $listen = [];
 

@@ -40,7 +40,7 @@ class UserDtoDataTransformer implements UserDataTransformer
             public $password;
             /** @var string|null */
             public $apiToken;
-            /** @var array<int, string> */
+            /** @var list<string> */
             public $roles;
             /** @var int */
             public $surrogateId;
@@ -89,7 +89,7 @@ class UserDtoDataTransformer implements UserDataTransformer
                 $this->apiToken = $apiToken;
             }
             /**
-             * @param array<int, string> $roles
+             * @param list<string> $roles
              * @return void
              */
             public function informRoles(array $roles): void

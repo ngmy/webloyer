@@ -62,7 +62,7 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
             public $id;
             /** @var string */
             public $name;
-            /** @var array<int, string> */
+            /** @var list<string> */
             public $recipeIds;
             /** @var string */
             public $serverId;
@@ -86,7 +86,7 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
             public $gitHubWebhookUserId;
             /** @var object|null */
             public $lastDeployment;
-            /** @var array<int, object>|null */
+            /** @var list<object>|null */
             public $recipes;
             /** @var object|null */
             public $server;

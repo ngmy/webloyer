@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MaxDeployment extends Model
 {
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'project_id',
         'number',

@@ -70,7 +70,7 @@ class Project extends Model implements ProjectInterest
     use ImmutableTimestampable;
     use SerializedLobTrait;
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'name',
         'stage',

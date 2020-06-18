@@ -60,7 +60,7 @@ class User extends Authenticatable implements UserInterest
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -72,7 +72,7 @@ class User extends Authenticatable implements UserInterest
     /**
      * The attributes that should be hidden for arrays.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -145,7 +145,7 @@ class User extends Authenticatable implements UserInterest
     }
 
     /**
-     * @param array<int, string> $roles
+     * @param list<string> $roles
      * @return void
      */
     public function informRoles(array $roles): void

@@ -8,7 +8,7 @@ class CreateProjectRequest
 {
     /** @var string */
     private $name;
-    /** @var array<int, string> */
+    /** @var list<string> */
     private $recipeIds;
     /** @var string */
     private $serverId;
@@ -40,7 +40,7 @@ class CreateProjectRequest
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function getRecipeIds(): array
     {

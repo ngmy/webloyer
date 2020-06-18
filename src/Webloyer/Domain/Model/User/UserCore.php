@@ -70,7 +70,7 @@ class UserCore extends User
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function roles(): array
     {

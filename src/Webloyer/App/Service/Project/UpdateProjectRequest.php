@@ -10,7 +10,7 @@ class UpdateProjectRequest
     private $id;
     /** @var string */
     private $name;
-    /** @var array<int, string> */
+    /** @var list<string> */
     private $recipeIds;
     /** @var string */
     private $serverId;
@@ -50,7 +50,7 @@ class UpdateProjectRequest
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function getRecipeIds(): array
     {

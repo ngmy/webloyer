@@ -56,7 +56,7 @@ class IndexViewModel extends ViewModel
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function deploymentLinks(): array
     {
@@ -68,7 +68,7 @@ class IndexViewModel extends ViewModel
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function deploymentApiUrls(): array
     {

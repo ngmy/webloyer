@@ -42,7 +42,7 @@ class Recipe extends Model implements RecipeInterest
 {
     use ImmutableTimestampable;
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'uuid',
         'name',

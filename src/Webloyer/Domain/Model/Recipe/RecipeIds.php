@@ -6,7 +6,7 @@ namespace Webloyer\Domain\Model\Recipe;
 
 class RecipeIds
 {
-    /** @var array<int, RecipeId> */
+    /** @var list<RecipeId> */
     private $recipeIds;
 
     /**
@@ -31,7 +31,7 @@ class RecipeIds
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function toArray(): array
     {

@@ -11,12 +11,12 @@ class EditRoleViewModel extends ViewModel
 {
     /** @var object */
     private $user;
-    /** @var array<int, RoleView> */
+    /** @var list<RoleView> */
     private $roles;
 
     /**
-     * @param object               $user
-     * @param array<int, RoleView> $roles
+     * @param object         $user
+     * @param list<RoleView> $roles
      * @return void
      */
     public function __construct(object $user, array $roles)

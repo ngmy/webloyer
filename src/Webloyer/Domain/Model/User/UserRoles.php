@@ -27,7 +27,7 @@ class UserRoles
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function toArray(): array
     {

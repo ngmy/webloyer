@@ -14,7 +14,7 @@ class CreateUserRequest
     private $password;
     /** @var string */
     private $apiToken;
-    /** @var array<int, string> */
+    /** @var list<string> */
     private $roles = [];
 
     /**
@@ -50,7 +50,7 @@ class CreateUserRequest
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -98,7 +98,7 @@ class CreateUserRequest
     }
 
     /**
-     * @param array<int, string> $roles
+     * @param list<string> $roles
      * @return self
      */
     public function setRoles(array $roles): self

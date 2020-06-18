@@ -11,7 +11,7 @@ class AllRolesQueryHandler
 {
     /**
      * @param AllRolesQuery $query
-     * @return array<int, RoleView>
+     * @return list<RoleView>
      */
     public function handle(AllRolesQuery $query): array
     {

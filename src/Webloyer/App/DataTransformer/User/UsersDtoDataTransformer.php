@@ -32,7 +32,7 @@ class UsersDtoDataTransformer implements UsersDataTransformer
     }
 
     /**
-     * @return array<int, object>
+     * @return list<object>
      */
     public function read()
     {

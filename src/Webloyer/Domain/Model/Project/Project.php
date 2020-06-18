@@ -40,19 +40,19 @@ class Project
     private $gitHubWebhook;
 
     /**
-     * @param string             $id
-     * @param string             $name
-     * @param array<int, string> $recipeIds
-     * @param string|null        $serverId
-     * @param string             $repositoryUrl
-     * @param string             $stageName
-     * @param string|null        $deployPath
-     * @param string|null        $emailNotificationRecipient
-     * @param int|null           $deploymentKeepDays
-     * @param bool               $keepLastDeployment
-     * @param int|null           $deploymentKeepMaxNumber
-     * @param string|null        $gitHubWebhookSecret
-     * @param string|null        $gitHubWebhookExecutor
+     * @param string       $id
+     * @param string       $name
+     * @param list<string> $recipeIds
+     * @param string|null  $serverId
+     * @param string       $repositoryUrl
+     * @param string       $stageName
+     * @param string|null  $deployPath
+     * @param string|null  $emailNotificationRecipient
+     * @param int|null     $deploymentKeepDays
+     * @param bool         $keepLastDeployment
+     * @param int|null     $deploymentKeepMaxNumber
+     * @param string|null  $gitHubWebhookSecret
+     * @param string|null  $gitHubWebhookExecutor
      * @return self
      */
     public static function of(
@@ -143,7 +143,7 @@ class Project
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function recipeIds(): array
     {

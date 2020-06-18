@@ -14,8 +14,8 @@ trait Enumerable
     private $scalar;
 
     /**
-     * @param string            $name
-     * @param array<int, mixed> $arguments
+     * @param string      $name
+     * @param list<mixed> $arguments
      */
     public static function __callStatic(string $name, array $arguments): self
     {

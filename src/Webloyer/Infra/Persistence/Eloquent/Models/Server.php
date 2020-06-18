@@ -44,7 +44,7 @@ class Server extends Model implements ServerInterest
 {
     use ImmutableTimestampable;
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'uuid',
         'name',

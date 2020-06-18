@@ -8,17 +8,17 @@ use Spatie\ViewModels\ViewModel;
 
 class CreateViewModel extends ViewModel
 {
-    /** @var array<int, object> */
+    /** @var list<object> */
     private $recipes;
-    /** @var array<int, object> */
+    /** @var list<object> */
     private $servers;
-    /** @var array<int, object> */
+    /** @var list<object> */
     private $users;
 
     /**
-     * @param array<int, object> $recipes
-     * @param array<int, object> $servers
-     * @param array<int, object> $users
+     * @param list<object> $recipes
+     * @param list<object> $servers
+     * @param list<object> $users
      * @return void
      */
     public function __construct(

@@ -10,18 +10,18 @@ class EditViewModel extends ViewModel
 {
     /** @var object */
     private $project;
-    /** @var array<int, object> */
+    /** @var list<object> */
     private $recipes;
-    /** @var array<int, object> */
+    /** @var list<object> */
     private $servers;
-    /** @var array<int, object> */
+    /** @var list<object> */
     private $users;
 
     /**
-     * @param object             $project
-     * @param array<int, object> $recipes
-     * @param array<int, object> $servers
-     * @param array<int, object> $users
+     * @param object       $project
+     * @param list<object> $recipes
+     * @param list<object> $servers
+     * @param list<object> $users
      * @return void
      */
     public function __construct(

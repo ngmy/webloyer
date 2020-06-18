@@ -54,7 +54,7 @@ class ServerDtoDataTransformer implements ServerDataTransformer
             public $description;
             /** @var string */
             public $body;
-            /** @var array<int, object>|null */
+            /** @var list<object>|null */
             public $projects;
             /** @var int */
             public $surrogateId;

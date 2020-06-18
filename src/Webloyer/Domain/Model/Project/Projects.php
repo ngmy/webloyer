@@ -6,7 +6,7 @@ namespace Webloyer\Domain\Model\Project;
 
 class Projects
 {
-    /** @var array<int, Project> */
+    /** @var list<Project> */
     private $projects;
 
     public static function empty(): self
@@ -32,7 +32,7 @@ class Projects
     }
 
     /**
-     * @return array<int, Project>
+     * @return list<Project>
      */
     public function toArray(): array
     {

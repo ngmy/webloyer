@@ -8,7 +8,7 @@ class UpdateRoleRequest
 {
     /** @var string */
     private $id;
-    /** @var array<int, string> */
+    /** @var list<string> */
     private $roles = [];
 
     /**
@@ -20,7 +20,7 @@ class UpdateRoleRequest
     }
 
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -38,7 +38,7 @@ class UpdateRoleRequest
     }
 
     /**
-     * @param array<int, string> $roles
+     * @param list<string> $roles
      * @return self
      */
     public function setRoles(array $roles): self

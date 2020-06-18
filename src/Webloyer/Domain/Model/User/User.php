@@ -46,7 +46,7 @@ abstract class User
      */
     abstract public function apiToken(): ?string;
     /**
-     * @return array<int, string>
+     * @return list<string>
      */
     abstract public function roles(): array;
     /**
@@ -129,12 +129,12 @@ abstract class User
     }
 
     /**
-     * @param string             $id
-     * @param string             $email
-     * @param string             $name
-     * @param string             $password
-     * @param string|null        $apiToken
-     * @param array<int, string> $roles
+     * @param string       $id
+     * @param string       $email
+     * @param string       $name
+     * @param string       $password
+     * @param string|null  $apiToken
+     * @param list<string> $roles
      * @return UserCore
      */
     public static function ofWithRole(

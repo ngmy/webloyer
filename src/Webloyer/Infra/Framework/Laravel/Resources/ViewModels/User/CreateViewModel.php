@@ -9,11 +9,11 @@ use Webloyer\Domain\Model\Role\RoleView;
 
 class CreateViewModel extends ViewModel
 {
-    /** @var array<int, RoleView> */
+    /** @var list<RoleView> */
     private $roles;
 
     /**
-     * @param array<int, RoleView> $roles
+     * @param list<RoleView> $roles
      * @return void
      */
     public function __construct(array $roles)
