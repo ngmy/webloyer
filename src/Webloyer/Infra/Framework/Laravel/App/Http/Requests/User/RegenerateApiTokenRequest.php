@@ -21,7 +21,7 @@ class RegenerateApiTokenRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array>
+     * @return array<string, string|list<string>>
      */
     public function rules(): array
     {
