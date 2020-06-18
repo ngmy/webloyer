@@ -353,7 +353,7 @@ class WebloyerServiceProvider extends ServiceProvider
         // recipe app services
         $this->app->when([ProjectCreateController::class, ProjectEditController::class])
             ->needs(GetRecipesService::class)
-            ->give(function (Application $app): ApplicationService { 
+            ->give(function (Application $app): ApplicationService {
                 return new GetRecipesService(
                     $app->make(RecipeRepository::class),
                     $app->make(RecipeDataTransformer::class),
@@ -418,7 +418,7 @@ class WebloyerServiceProvider extends ServiceProvider
         // server app services
         $this->app->when([ProjectCreateController::class, ProjectEditController::class])
             ->needs(GetServersService::class)
-            ->give(function (Application $app): ApplicationService { 
+            ->give(function (Application $app): ApplicationService {
                 return new GetServersService(
                     $app->make(ServerRepository::class),
                     $app->make(ServerDataTransformer::class),

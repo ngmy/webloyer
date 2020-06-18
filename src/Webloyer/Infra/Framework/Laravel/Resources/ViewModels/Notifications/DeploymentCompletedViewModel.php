@@ -55,7 +55,8 @@ class DeploymentCompletedViewModel extends ViewModel
      */
     public function subject(): string
     {
-        return sprintf('Deployment of %s #%s completed: %s',
+        return sprintf(
+            'Deployment of %s #%s completed: %s',
             $this->project->name(),
             $this->event->number(),
             $this->event->status(),

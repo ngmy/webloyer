@@ -16,7 +16,7 @@ class RoleUserTableSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function (): void {
-            if (DB::table('role_user')->count() > 0){
+            if (DB::table('role_user')->count() > 0) {
                 return;
             }
 
