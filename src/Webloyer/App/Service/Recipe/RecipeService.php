@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\Recipe;
 
 use Common\App\Service\ApplicationService;
-use InvalidArgumentException;
 use Webloyer\App\DataTransformer\Recipe\{
     RecipeDataTransformer,
     RecipesDataTransformer,
 };
 use Webloyer\Domain\Model\Recipe\{
     Recipe,
+    RecipeDoesNotExistException,
     RecipeId,
     RecipeRepository,
 };
@@ -60,14 +60,14 @@ abstract class RecipeService implements ApplicationService
     /**
      * @param RecipeId $id
      * @return Recipe
-     * @throws InvalidArgumentException
+     * @throws RecipeDoesNotExistException
      */
     protected function getNonNullRecipe(RecipeId $id): Recipe
     {
         $recipe = $this->recipeRepository->findById($id);
         if (is_null($recipe)) {
-            throw new InvalidArgumentException(
-                'Recipe does not exists.' . PHP_EOL .
+            throw new RecipeDoesNotExistException(
+                'Recipe does not exist.' . PHP_EOL .
                 'Id: ' . $id->value()
             );
         }

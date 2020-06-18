@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\Project;
 
-use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Project\{
+    ProjectDoesNotExistException,
+    ProjectId,
+};
 
 class DeleteProjectService extends ProjectService
 {
     /**
      * @param DeleteProjectRequest $request
      * @return void
+     * @throws ProjectDoesNotExistException
      */
     public function execute($request = null)
     {

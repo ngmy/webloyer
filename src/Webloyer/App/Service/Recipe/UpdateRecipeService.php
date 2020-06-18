@@ -7,6 +7,7 @@ namespace Webloyer\App\Service\Recipe;
 use Webloyer\Domain\Model\Recipe\{
     RecipeBody,
     RecipeDescription,
+    RecipeDoesNotExistException,
     RecipeId,
     RecipeName,
 };
@@ -16,6 +17,7 @@ class UpdateRecipeService extends RecipeService
     /**
      * @param UpdateRecipeRequest $request
      * @return void
+     * @throws RecipeDoesNotExistException
      */
     public function execute($request = null)
     {

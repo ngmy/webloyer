@@ -7,6 +7,7 @@ namespace Webloyer\App\Service\Server;
 use Webloyer\Domain\Model\Server\{
     ServerBody,
     ServerDescription,
+    ServerDoesNotExistException,
     ServerId,
     ServerName,
 };
@@ -16,6 +17,7 @@ class UpdateServerService extends ServerService
     /**
      * @param UpdateServerRequest $request
      * @return void
+     * @throws ServerDoesNotExistException
      */
     public function execute($request = null)
     {

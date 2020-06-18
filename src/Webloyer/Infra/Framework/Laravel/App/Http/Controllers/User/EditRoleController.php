@@ -8,6 +8,7 @@ use Common\App\Service\ApplicationService;
 use Common\ServiceBus\QueryBus;
 use Spatie\ViewModels\ViewModel;
 use Webloyer\App\Service\User\GetUserRequest;
+use Webloyer\Domain\Model\User\UserDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\EditRoleViewModel;
 use Webloyer\Query\AllRolesQuery;
 
@@ -39,8 +40,14 @@ class EditRoleController extends BaseController
     public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetUserRequest())->setId($id);
+
         assert(!is_null($this->service));
-        $user = $this->service->execute($serviceRequest);
+
+        try {
+            $user = $this->service->execute($serviceRequest);
+        } catch (UserDoesNotExistException $exception) {
+            abort(404);
+        }
 
         $roles = $this->queryBus->handle(new AllRolesQuery());
 

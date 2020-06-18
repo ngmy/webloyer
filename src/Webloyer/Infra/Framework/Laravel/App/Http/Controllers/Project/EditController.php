@@ -10,6 +10,7 @@ use Webloyer\App\Service\Project\GetProjectRequest;
 use Webloyer\App\Service\Recipe\GetRecipesService;
 use Webloyer\App\Service\Server\GetServersService;
 use Webloyer\App\Service\User\GetUsersService;
+use Webloyer\Domain\Model\Project\ProjectDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\EditViewModel;
 
 class EditController extends BaseController
@@ -50,8 +51,14 @@ class EditController extends BaseController
     public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetProjectRequest())->setId($id);
+
         assert(!is_null($this->service));
-        $project = $this->service->execute($serviceRequest);
+
+        try {
+            $project = $this->service->execute($serviceRequest);
+        } catch (ProjectDoesNotExistException $exception) {
+            abort(404);
+        }
 
         $recipes = $this->recipeService->execute();
         $servers = $this->serverService->execute();

@@ -12,6 +12,7 @@ use Webloyer\App\DataTransformer\Project\{
 };
 use Webloyer\Domain\Model\Project\{
     Project,
+    ProjectDoesNotExistException,
     ProjectId,
     ProjectRepository,
 };
@@ -60,14 +61,14 @@ abstract class ProjectService implements ApplicationService
     /**
      * @param ProjectId $id
      * @return Project
-     * @throws InvalidArgumentException
+     * @throws ProjectDoesNotExistException
      */
     protected function getNonNullProject(ProjectId $id): Project
     {
         $project = $this->projectRepository->findById($id);
         if (is_null($project)) {
-            throw new InvalidArgumentException(
-                'Project does not exists.' . PHP_EOL .
+            throw new ProjectDoesNotExistException(
+                'Project does not exist.' . PHP_EOL .
                 'Id: ' . $id->value()
             );
         }

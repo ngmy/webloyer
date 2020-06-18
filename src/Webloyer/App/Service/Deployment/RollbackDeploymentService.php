@@ -9,17 +9,24 @@ use Webloyer\Domain\Model\Deployment\{
     DeploymentStatus,
     DeploymentTask,
 };
-use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Project\{
+    ProjectDoesNotExistException,
+    ProjectId,
+};
 
 class RollbackDeploymentService extends DeploymentService
 {
     /**
      * @param RollbackDeploymentRequest $request
      * @return mixed
+     * @throws ProjectDoesNotExistException
      */
     public function execute($request = null)
     {
         assert(!is_null($request));
+
+        $project = $this->getNonNullProject(new ProjectId($request->getProjectId()));
+
         $deployment = Deployment::of(
             $request->getProjectId(),
             $this->deploymentRepository->nextId(new ProjectId($request->getProjectId()))->value(),
@@ -34,6 +41,6 @@ class RollbackDeploymentService extends DeploymentService
         $this->requestDeployment($deployment);
         $this->deploymentRepository->save($deployment);
 
-        return $this->deploymentDataTransformer->write($deployment)->read(); // TODO surrogateIdがない
+        return $this->deploymentDataTransformer->write($deployment)->read();
     }
 }

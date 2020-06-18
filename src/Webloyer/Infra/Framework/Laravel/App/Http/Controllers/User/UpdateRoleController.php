@@ -6,6 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Illuminate\Http\RedirectResponse;
 use Webloyer\App\Service\User\UpdateRoleRequest as ServiceRequest;
+use Webloyer\Domain\Model\User\UserDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\UpdateRoleRequest;
 
 class UpdateRoleController extends BaseController
@@ -22,8 +23,14 @@ class UpdateRoleController extends BaseController
         $serviceRequest = (new ServiceRequest())
             ->setId($id)
             ->setRoles($request->input('role'));
+
         assert(!is_null($this->service));
-        $this->service->execute($serviceRequest);
+
+        try {
+            $this->service->execute($serviceRequest);
+        } catch (UserDoesNotExistException $exception) {
+            abort(404);
+        }
 
         return redirect()->route('users.index');
     }

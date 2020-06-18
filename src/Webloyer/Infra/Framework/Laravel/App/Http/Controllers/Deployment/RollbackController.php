@@ -9,6 +9,7 @@ use Illuminate\Http\{
     Request,
 };
 use Webloyer\App\Service\Deployment\RollbackDeploymentRequest;
+use Webloyer\Domain\Model\Project\ProjectDoesNotExistException;
 
 class RollbackController extends BaseController
 {
@@ -24,8 +25,14 @@ class RollbackController extends BaseController
         $serviceRequest = (new RollbackDeploymentRequest())
             ->setProjectId($projectId)
             ->setExecutor($request->user()->toEntity()->id());
+
         assert(!is_null($this->service));
-        $deployment = $this->service->execute($serviceRequest);
+
+        try {
+            $deployment = $this->service->execute($serviceRequest);
+        } catch (ProjectDoesNotExistException $exception) {
+            abort(404);
+        }
 
         $link = link_to_route('projects.deployments.show', '#' . $deployment->number, [$projectId, $deployment->number]);
         $request->session()->flash('status', "The deployment $link was successfully started.");

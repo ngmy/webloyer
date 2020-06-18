@@ -11,6 +11,7 @@ use Webloyer\App\Service\Server\{
     GetServerRequest,
     GetServerService,
 };
+use Webloyer\Domain\Model\Server\ServerDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Server\ShowViewModel;
 
 class ShowController extends BaseController
@@ -24,11 +25,17 @@ class ShowController extends BaseController
     public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetServerRequest())->setId($id);
+
         assert($this->service instanceof GetServerService);
         $this->service
             ->serverDataTransformer()
             ->setProjectsDataTransformer(App::make(ProjectsDtoDataTransformer::class));
-        $server = $this->service->execute($serviceRequest);
+
+        try {
+            $server = $this->service->execute($serviceRequest);
+        } catch (ServerDoesNotExistException $exception) {
+            abort(404);
+        }
 
         return (new ShowViewModel($server))->view('webloyer::servers.show');
     }

@@ -6,6 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Illuminate\Http\RedirectResponse;
 use Webloyer\App\Service\User\UpdateUserRequest;
+use Webloyer\Domain\Model\User\UserDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\UpdateRequest;
 
 class UpdateController extends BaseController
@@ -23,8 +24,14 @@ class UpdateController extends BaseController
             ->setId($id)
             ->setEmail($request->input('email'))
             ->setName($request->input('name'));
+
         assert(!is_null($this->service));
-        $this->service->execute($serviceRequest);
+
+        try {
+            $this->service->execute($serviceRequest);
+        } catch (UserDoesNotExistException $exception) {
+            abort(404);
+        }
 
         return redirect()->route('users.index');
     }

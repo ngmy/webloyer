@@ -13,6 +13,7 @@ use Webloyer\App\Service\Project\{
     GetProjectRequest,
     GetProjectService,
 };
+use Webloyer\Domain\Model\Project\ProjectDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project\ShowViewModel;
 
 class ShowController extends BaseController
@@ -26,13 +27,19 @@ class ShowController extends BaseController
     public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetProjectRequest())->setId($id);
+
         assert($this->service instanceof GetProjectService);
         $this->service
             ->projectDataTransformer()
             ->setRecipesDataTransformer(App::make(RecipesDtoDataTransformer::class))
             ->setServerDataTransformer(App::make(ServerDtoDataTransformer::class))
             ->setUserDataTransformer(App::make(UserDtoDataTransformer::class));
-        $project = $this->service->execute($serviceRequest);
+
+        try {
+            $project = $this->service->execute($serviceRequest);
+        } catch (ProjectDoesNotExistException $exception) {
+            abort(404);
+        }
 
         return (new ShowViewModel($project))->view('webloyer::projects.show');
     }

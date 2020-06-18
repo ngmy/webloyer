@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\Deployment;
 
 use Common\App\Service\ApplicationService;
-use InvalidArgumentException;
 use Webloyer\App\DataTransformer\Deployment\{
     DeploymentDataTransformer,
     DeploymentsDataTransformer,
 };
 use Webloyer\Domain\Model\Deployment\{
     Deployment,
+    DeploymentDoesNotExistException,
     DeploymentNumber,
     DeploymentRepository,
 };
 use Webloyer\Domain\Model\Project\{
+    Project,
+    ProjectDoesNotExistException,
     ProjectId,
     ProjectRepository,
 };
@@ -97,9 +99,26 @@ abstract class DeploymentService implements ApplicationService
 
     /**
      * @param ProjectId $projectId
+     * @return Project
+     * @throws ProjectDoesNotExistException
+     */
+    protected function getNonNullProject(ProjectId $projectId): Project
+    {
+        $project = $this->projectRepository->findById($projectId);
+        if (is_null($project)) {
+            throw new ProjectDoesNotExistException(
+                'Project does not exist.' . PHP_EOL .
+                'Id: ' . $projectId->value()
+            );
+        }
+        return $project;
+    }
+
+    /**
+     * @param ProjectId $projectId
      * @param DeploymentNumber $number
      * @return Deployment
-     * @throws InvalidArgumentException
+     * @throws DeploymentDoesNotExistException
      */
     protected function getNonNullDeployment(
         ProjectId $projectId,
@@ -107,8 +126,8 @@ abstract class DeploymentService implements ApplicationService
     ): Deployment {
         $deployment = $this->deploymentRepository->findById($projectId, $number);
         if (is_null($deployment)) {
-            throw new InvalidArgumentException(
-                'Deployment does not exists.' . PHP_EOL .
+            throw new DeploymentDoesNotExistException(
+                'Deployment does not exist.' . PHP_EOL .
                 'Project Id: ' . $projectId->value() . PHP_EOL .
                 'Number: ' . $number->value()
             );

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\Server;
 
-use Webloyer\Domain\Model\Server\ServerId;
+use Webloyer\Domain\Model\Server\{
+    ServerDoesNotExistException,
+    ServerId,
+};
 
 class DeleteServerService extends ServerService
 {
     /**
      * @param DeleteServerRequest $request
      * @return void
+     * @throws ServerDoesNotExistException
      */
     public function execute($request = null)
     {

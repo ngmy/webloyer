@@ -6,6 +6,7 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Spatie\ViewModels\ViewModel;
 use Webloyer\App\Service\User\GetUserRequest;
+use Webloyer\Domain\Model\User\UserDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\EditApiTokenViewModel;
 
 class EditApiTokenController extends BaseController
@@ -19,8 +20,14 @@ class EditApiTokenController extends BaseController
     public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetUserRequest())->setId($id);
+
         assert(!is_null($this->service));
-        $user = $this->service->execute($serviceRequest);
+
+        try {
+            $user = $this->service->execute($serviceRequest);
+        } catch (UserDoesNotExistException $exception) {
+            abort(404);
+        }
 
         return (new EditApiTokenViewModel($user))->view('webloyer::users.edit_api_token');
     }

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\User;
 
 use Common\App\Service\ApplicationService;
-use InvalidArgumentException;
 use Webloyer\App\DataTransformer\User\{
     UserDataTransformer,
     UsersDataTransformer,
 };
 use Webloyer\Domain\Model\User\{
     User,
+    UserDoesNotExistException,
     UserId,
     UserRepository,
 };
@@ -60,14 +60,14 @@ abstract class UserService implements ApplicationService
     /**
      * @param UserId $id
      * @return User
-     * @throws InvalidArgumentException
+     * @throws UserDoesNotExistException
      */
     protected function getNonNullUser(UserId $id): User
     {
         $user = $this->userRepository->findById($id);
         if (is_null($user)) {
-            throw new InvalidArgumentException(
-                'User does not exists.' . PHP_EOL .
+            throw new UserDoesNotExistException(
+                'User does not exist.' . PHP_EOL .
                 'Id: ' . $id->value()
             );
         }

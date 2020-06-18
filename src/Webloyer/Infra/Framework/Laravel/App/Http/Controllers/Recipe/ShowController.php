@@ -11,6 +11,7 @@ use Webloyer\App\Service\Recipe\{
     GetRecipeRequest,
     GetRecipeService,
 };
+use Webloyer\Domain\Model\Recipe\RecipeDoesNotExistException;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Recipe\ShowViewModel;
 
 class ShowController extends BaseController
@@ -24,11 +25,17 @@ class ShowController extends BaseController
     public function __invoke(string $id): ViewModel
     {
         $serviceRequest = (new GetRecipeRequest())->setId($id);
+
         assert($this->service instanceof GetRecipeService);
         $this->service
             ->recipeDataTransformer()
             ->setProjectsDataTransformer(App::make(ProjectsDtoDataTransformer::class));
-        $recipe = $this->service->execute($serviceRequest);
+
+        try {
+            $recipe = $this->service->execute($serviceRequest);
+        } catch (RecipeDoesNotExistException $exception) {
+            abort(404);
+        }
 
         return (new ShowViewModel($recipe))->view('webloyer::recipes.show');
     }

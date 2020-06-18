@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\Server;
 
 use Common\App\Service\ApplicationService;
-use InvalidArgumentException;
 use Webloyer\App\DataTransformer\Server\{
     ServerDataTransformer,
     ServersDataTransformer,
 };
 use Webloyer\Domain\Model\Server\{
     Server,
+    ServerDoesNotExistException,
     ServerId,
     ServerRepository,
 };
@@ -60,14 +60,14 @@ abstract class ServerService implements ApplicationService
     /**
      * @param ServerId $id
      * @return Server
-     * @throws InvalidArgumentException
+     * @throws ServerDoesNotExistException
      */
     protected function getNonNullServer(ServerId $id): Server
     {
         $server = $this->serverRepository->findById($id);
         if (is_null($server)) {
-            throw new InvalidArgumentException(
-                'Server does not exists.' . PHP_EOL .
+            throw new ServerDoesNotExistException(
+                'Server does not exist.' . PHP_EOL .
                 'Id: ' . $id->value()
             );
         }
