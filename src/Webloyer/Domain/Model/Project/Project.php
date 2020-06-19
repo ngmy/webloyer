@@ -11,7 +11,10 @@ use Webloyer\Domain\Model\Project\Notification\Email\EmailNotification;
 use Webloyer\Domain\Model\Project\ServerOverride\ServerOverride;
 use Webloyer\Domain\Model\Project\Webhook\GitHub\GitHubWebhook;
 use Webloyer\Domain\Model\Recipe\RecipeIds;
-use Webloyer\Domain\Model\Server\ServerId;
+use Webloyer\Domain\Model\Server\{
+    NullServerId,
+    ServerId,
+};
 
 class Project
 {
@@ -24,7 +27,7 @@ class Project
     private $name;
     /** @var RecipeIds */
     private $recipeIds;
-    /** @var ServerId|null */
+    /** @var ServerId */
     private $serverId;
     /** @var RepositoryUrl */
     private $repositoryUrl;
@@ -74,7 +77,7 @@ class Project
             new ProjectId($id),
             new ProjectName($name),
             RecipeIds::of(...$recipeIds),
-            isset($serverId) ? new ServerId($serverId) : null,
+            isset($serverId) ? new ServerId($serverId) : NullServerId::getInstance(),
             new RepositoryUrl($repositoryUrl),
             new StageName($stageName),
             ServerOverride::of($deployPath),
@@ -95,7 +98,7 @@ class Project
      * @param ProjectId            $id
      * @param ProjectName          $name
      * @param RecipeIds            $recipeIds
-     * @param ServerId|null        $serverId
+     * @param ServerId             $serverId
      * @param ServerOverride       $serverOverride
      * @param EmailNotification    $emailNotification
      * @param DiscardOldDeployment $discardOldDeployment
@@ -106,7 +109,7 @@ class Project
         ProjectId $id,
         ProjectName $name,
         RecipeIds $recipeIds,
-        ?ServerId $serverId,
+        ServerId $serverId,
         RepositoryUrl $repositoryUrl,
         StageName $stageName,
         ServerOverride $serverOverride,
@@ -155,7 +158,7 @@ class Project
      */
     public function serverId(): string
     {
-        return isset($this->serverId) ? $this->serverId->value() : '';
+        return $this->serverId->value();
     }
 
     /**

@@ -15,6 +15,7 @@ use Webloyer\Domain\Model\Project\StageName;
 use Webloyer\Domain\Model\Recipe\Recipes;
 use Webloyer\Domain\Model\Server\Server;
 use Webloyer\Domain\Model\Server\ServerBody;
+use Webloyer\Domain\Model\User\NullUserId;
 use Webloyer\Domain\Model\User\User;
 use Webloyer\Domain\Model\User\UserId;
 use Webloyer\Domain\Model\User\UserEmail;
@@ -49,7 +50,7 @@ class Deployment
      * @param string      $task
      * @param string      $status
      * @param string      $log
-     * @param string      $executor
+     * @param string|null $executor
      * @param string      $requestDate
      * @param string|null $startDate
      * @param string|null $finishDate
@@ -61,7 +62,7 @@ class Deployment
         string $task,
         string $status,
         string $log,
-        string $executor,
+        ?string $executor,
         string $requestDate,
         ?string $startDate,
         ?string $finishDate
@@ -72,7 +73,7 @@ class Deployment
             DeploymentTask::$task(),
             DeploymentStatus::$status(),
             new DeploymentLog($log),
-            new UserId($executor),
+            isset($executor) ? new UserId($executor) : NullUserId::getInstance(),
             DeploymentRequestDate::of($requestDate),
             isset($startDate) ? DeploymentStartDate::of($startDate) : null,
             isset($finishDate) ? DeploymentFinishDate::of($finishDate) : null

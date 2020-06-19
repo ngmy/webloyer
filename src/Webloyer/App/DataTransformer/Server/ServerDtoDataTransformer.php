@@ -6,6 +6,7 @@ namespace Webloyer\App\DataTransformer\Server;
 
 use Webloyer\App\DataTransformer\Project\ProjectsDataTransformer;
 use Webloyer\Domain\Model\Server\{
+    NullServer,
     Server,
     ServerId,
     ServerInterest,
@@ -58,9 +59,9 @@ class ServerDtoDataTransformer implements ServerDataTransformer
             public $projects;
             /** @var int */
             public $surrogateId;
-            /** @var string */
+            /** @var string|null */
             public $createdAt;
-            /** @var string */
+            /** @var string|null */
             public $updatedAt;
             /**
              * @param string $id
@@ -103,9 +104,11 @@ class ServerDtoDataTransformer implements ServerDataTransformer
         }
 
         $dto->surrogateId = $this->server->surrogateId();
-        assert(!is_null($this->server->createdAt()));
+        assert(!$this->server instanceof NullServer || is_null($this->server->createdAt())); // If NullServer then createdAt is null
+        assert($this->server instanceof NullServer || !is_null($this->server->createdAt())); // If not NullServer then createdAt is not null
         $dto->createdAt = $this->server->createdAt();
-        assert(!is_null($this->server->updatedAt()));
+        assert(!$this->server instanceof NullServer || is_null($this->server->updatedAt())); // If NullServer then updatedAt is null
+        assert($this->server instanceof NullServer || !is_null($this->server->updatedAt())); // If not NullServer then updatedAt is not null
         $dto->updatedAt = $this->server->updatedAt();
 
         return $dto;

@@ -30,7 +30,7 @@ class UserCore extends User
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function id(): string
     {
@@ -38,7 +38,7 @@ class UserCore extends User
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function email(): string
     {
@@ -46,7 +46,7 @@ class UserCore extends User
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function name(): string
     {
@@ -54,7 +54,7 @@ class UserCore extends User
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function password(): string
     {
@@ -62,7 +62,7 @@ class UserCore extends User
     }
 
     /**
-     * @return string|null
+     * {@inheritdoc}
      */
     public function apiToken(): ?string
     {
@@ -70,7 +70,7 @@ class UserCore extends User
     }
 
     /**
-     * @return list<string>
+     * {@inheritdoc}
      */
     public function roles(): array
     {
@@ -78,8 +78,7 @@ class UserCore extends User
     }
 
     /**
-     * @param string $email
-     * @return self
+     * {@inheritdoc}
      */
     public function changeEmail(string $email): self
     {
@@ -88,8 +87,7 @@ class UserCore extends User
     }
 
     /**
-     * @param string $name
-     * @return self
+     * {@inheritdoc}
      */
     public function changeName(string $name): self
     {
@@ -98,8 +96,7 @@ class UserCore extends User
     }
 
     /**
-     * @param string $password
-     * @return self
+     * {@inheritdoc}
      */
     public function changePassword(string $password): self
     {
@@ -108,8 +105,7 @@ class UserCore extends User
     }
 
     /**
-     * @param string $apiToken
-     * @return self
+     * {@inheritdoc}
      */
     public function changeApiToken(string $apiToken): self
     {
@@ -118,8 +114,7 @@ class UserCore extends User
     }
 
     /**
-     * @param UserInterest $interest
-     * @return void
+     * {@inheritdoc}
      */
     public function provide(UserInterest $interest): void
     {
@@ -132,8 +127,7 @@ class UserCore extends User
     }
 
     /**
-     * @param mixed $object
-     * @return bool
+     * {@inheritdoc}
      */
     public function equals($object): bool
     {
@@ -147,8 +141,7 @@ class UserCore extends User
     }
 
     /**
-     * @param UserRoleSpecification $roleSpec
-     * @return void
+     * {@inheritdoc}
      */
     public function addRole(UserRoleSpecification $roleSpec): void
     {
@@ -162,8 +155,7 @@ class UserCore extends User
     }
 
     /**
-     * @param UserRoleSpecification $roleSpec
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasRole(UserRoleSpecification $roleSpec): bool
     {
@@ -171,8 +163,7 @@ class UserCore extends User
     }
 
     /**
-     * @param UserRoleSpecification $roleSpec
-     * @return void
+     * {@inheritdoc}
      */
     public function removeRole(UserRoleSpecification $roleSpec): void
     {
@@ -180,7 +171,7 @@ class UserCore extends User
     }
 
     /**
-     * @return void
+     * {@inheritdoc}
      */
     public function removeAllRoles(): void
     {
@@ -188,8 +179,7 @@ class UserCore extends User
     }
 
     /**
-     * @param UserRoleSpecification $roleSpec
-     * @return UserRole|null
+     * {@inheritdoc}
      */
     public function getRole(UserRoleSpecification $roleSpec): ?UserRole
     {

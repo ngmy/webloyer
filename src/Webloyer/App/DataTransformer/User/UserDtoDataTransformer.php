@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\App\DataTransformer\User;
 
 use Webloyer\Domain\Model\User\{
+    NullUser,
     User,
     UserInterest,
 };
@@ -44,9 +45,9 @@ class UserDtoDataTransformer implements UserDataTransformer
             public $roles;
             /** @var int */
             public $surrogateId;
-            /** @var string */
+            /** @var string|null */
             public $createdAt;
-            /** @var string */
+            /** @var string|null */
             public $updatedAt;
             /**
              * @param string $id
@@ -100,9 +101,11 @@ class UserDtoDataTransformer implements UserDataTransformer
         $this->user->provide($dto);
 
         $dto->surrogateId = $this->user->surrogateId();
-        assert(!is_null($this->user->createdAt()));
+        assert(!$this->user instanceof NullUser || is_null($this->user->createdAt())); // If NullUser then createdAt is null
+        assert($this->user instanceof NullUser || !is_null($this->user->createdAt())); // If not NullUser then createdAt is not null
         $dto->createdAt = $this->user->createdAt();
-        assert(!is_null($this->user->updatedAt()));
+        assert(!$this->user instanceof NullUser || is_null($this->user->updatedAt())); // If NullUser then updatedAt is null
+        assert($this->user instanceof NullUser || !is_null($this->user->updatedAt())); // If not NullUser then updatedAt is not null
         $dto->updatedAt = $this->user->updatedAt();
 
         return $dto;

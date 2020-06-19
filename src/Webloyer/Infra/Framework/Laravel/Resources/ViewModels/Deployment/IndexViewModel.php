@@ -7,9 +7,12 @@ namespace Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Deployment;
 use Collective\Html\HtmlFacade as Html;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\ViewModels\ViewModel;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\ViewModelHelpers;
 
 class IndexViewModel extends ViewModel
 {
+    use ViewModelHelpers;
+
     /** @var LengthAwarePaginator<object> */
     private $deployments;
     /** @var string */
@@ -53,6 +56,17 @@ class IndexViewModel extends ViewModel
             'running' => '<i class="fa fa-refresh fa-spin fa-lg fa-fw" aria-hidden="true" style="color: blue;"></i> running',
             'queued' => '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i> queued',
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function deploymentUserEmailOf(): array
+    {
+        return array_reduce($this->deployments->toArray()['data'], function (array $carry, object $deployment): array {
+            $carry[$deployment->number] = $this->hyphenIfBlank($deployment->user->email);
+            return $carry;
+        }, []);
     }
 
     /**

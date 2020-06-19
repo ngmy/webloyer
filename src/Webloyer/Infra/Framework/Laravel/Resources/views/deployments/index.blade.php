@@ -11,6 +11,17 @@
                 </div>
             @endif
 
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <h1 class="page-header">Deployments</h1>
 
             <div class="pull-right margin-bottom-lg">
@@ -26,6 +37,7 @@
                 <deployment-items
                     :deployments='@json($deployments->toArray()["data"])'
                     :deployment-status='@json($deploymentStatus)'
+                    :deployment-user-email-of='@json($deploymentUserEmailOf)'
                     :deployment-links='@json($deploymentLinks)'
                     :deployment-api-urls='@json($deploymentApiUrls)'
                 ></deployment-items>

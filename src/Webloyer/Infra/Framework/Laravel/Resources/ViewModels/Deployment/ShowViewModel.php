@@ -6,9 +6,12 @@ namespace Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Deployment;
 
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Spatie\ViewModels\ViewModel;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\ViewModelHelpers;
 
 class ShowViewModel extends ViewModel
 {
+    use ViewModelHelpers;
+
     /** @var object */
     private $deployment;
     /** @var string */
@@ -46,6 +49,11 @@ class ShowViewModel extends ViewModel
     public function projectId(): string
     {
         return $this->projectId;
+    }
+
+    public function deploymentUserEmail(): string
+    {
+        return $this->hyphenIfBlank($this->deployment->user->email);
     }
 
     /**

@@ -220,7 +220,7 @@ class Deployment extends Model implements DeploymentInterest
             $this->task,
             $this->status,
             $this->log,
-            $this->user->uuid,
+            isset($this->user) ? $this->user->uuid : null,
             $this->request_date,
             $this->start_date,
             $this->finish_date

@@ -20,7 +20,7 @@
                     @endforeach
                     <tr>
                         <th>Server</th>
-                        <td>{{ $hyphenIfBlank($project->server ? $project->server->name : '') }}</td>
+                        <td>{{ $hyphenIfBlank($project->server->name) }}</td>
                     </tr>
                     <tr>
                         <th>Repository URL</th>

@@ -6,9 +6,12 @@ namespace Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Project;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\ViewModels\ViewModel;
+use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\ViewModelHelpers;
 
 class ShowViewModel extends ViewModel
 {
+    use ViewModelHelpers;
+
     /** @var object */
     private $project;
 
@@ -54,23 +57,5 @@ class ShowViewModel extends ViewModel
     public function projectGitHubWebhookUserEmail(object $project): string
     {
         return $project->gitHubWebhookUser ? $project->gitHubWebhookUser->email : '';
-    }
-
-    /**
-     * @param bool $value
-     * @return string
-     */
-    public function yesOrNo(bool $value): string
-    {
-        return $value ? 'yes' : 'no';
-    }
-
-    /**
-     * @param string|null $value
-     * @return string
-     */
-    public function hyphenIfBlank(?string $value): string
-    {
-        return empty($value) ? '-' : $value;
     }
 }

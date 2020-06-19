@@ -4,28 +4,20 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\User;
 
-abstract class UserRole extends User
+class NullUser extends User
 {
-    /** @var UserCore */
-    private $core;
+    /** @var self|null */
+    private static $instance;
 
     /**
-     * @param UserRoleSpecification $roleSpec
-     * @param UserCore              $core
-     * @return UserRole
+     * @return self
      */
-    public static function createFor(UserRoleSpecification $roleSpec, UserCore $core): UserRole
+    public static function getInstance(): self
     {
-        $role = $roleSpec->create();
-        $role->core = $core;
-        return $role;
-    }
-
-    /**
-     * @return void
-     */
-    public function __construct()
-    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 
     /**
@@ -33,7 +25,7 @@ abstract class UserRole extends User
      */
     public function id(): string
     {
-        return $this->core->id();
+        return '';
     }
 
     /**
@@ -41,7 +33,7 @@ abstract class UserRole extends User
      */
     public function email(): string
     {
-        return $this->core->email();
+        return '';
     }
 
     /**
@@ -49,7 +41,7 @@ abstract class UserRole extends User
      */
     public function name(): string
     {
-        return $this->core->name();
+        return '';
     }
 
     /**
@@ -57,7 +49,7 @@ abstract class UserRole extends User
      */
     public function password(): string
     {
-        return $this->core->password();
+        return '';
     }
 
     /**
@@ -65,7 +57,7 @@ abstract class UserRole extends User
      */
     public function apiToken(): ?string
     {
-        return $this->core->apiToken();
+        return null;
     }
 
     /**
@@ -73,39 +65,39 @@ abstract class UserRole extends User
      */
     public function roles(): array
     {
-        return $this->roles->toArray();
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function changeEmail(string $email): UserCore
+    public function changeEmail(string $email): self
     {
-        return $this->core->changeEmail($email);
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function changeName(string $name): UserCore
+    public function changeName(string $name): self
     {
-        return $this->core->changeName($name);
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function changePassword(string $password): UserCore
+    public function changePassword(string $password): self
     {
-        return $this->core->changePassword($password);
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function changeApiToken(string $apiToken): UserCore
+    public function changeApiToken(string $apiToken): self
     {
-        return $this->core->changeApiToken($apiToken);
+        return $this;
     }
 
     /**
@@ -113,7 +105,6 @@ abstract class UserRole extends User
      */
     public function provide(UserInterest $interest): void
     {
-        $this->core->provide($interest);
     }
 
     /**
@@ -121,7 +112,7 @@ abstract class UserRole extends User
      */
     public function equals($object): bool
     {
-        return $this->core->equals($object);
+        return false;
     }
 
     /**
@@ -129,7 +120,6 @@ abstract class UserRole extends User
      */
     public function addRole(UserRoleSpecification $roleSpec): void
     {
-        $this->core->addRole($roleSpec);
     }
 
     /**
@@ -137,7 +127,7 @@ abstract class UserRole extends User
      */
     public function hasRole(UserRoleSpecification $roleSpec): bool
     {
-        return $this->core->hasRole($roleSpec);
+        return false;
     }
 
     /**
@@ -145,7 +135,6 @@ abstract class UserRole extends User
      */
     public function removeRole(UserRoleSpecification $roleSpec): void
     {
-        $this->core->removeRole($roleSpec);
     }
 
     /**
@@ -153,7 +142,6 @@ abstract class UserRole extends User
      */
     public function removeAllRoles(): void
     {
-        $this->core->removeAllRoles();
     }
 
     /**
@@ -161,6 +149,12 @@ abstract class UserRole extends User
      */
     public function getRole(UserRoleSpecification $roleSpec): ?UserRole
     {
-        return $this->core->getRole($roleSpec);
+        return null;
+    }
+
+    /**
+     * @return void
+     */
+    private function __construct() {
     }
 }

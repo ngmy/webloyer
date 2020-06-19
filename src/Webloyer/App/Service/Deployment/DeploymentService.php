@@ -28,11 +28,15 @@ use Webloyer\Domain\Model\Recipe\{
     Recipes,
 };
 use Webloyer\Domain\Model\Server\{
+    Server,
     ServerId,
+    ServerDoesNotExistException,
     ServerRepository,
 };
 use Webloyer\Domain\Model\User\{
+    User,
     UserId,
+    UserDoesNotExistException,
     UserRepository,
 };
 
@@ -136,6 +140,40 @@ abstract class DeploymentService implements ApplicationService
     }
 
     /**
+     * @param ServerId $serverId
+     * @return Server
+     * @throws ServerDoesNotExistException
+     */
+    protected function getNonNullServer(ServerId $serverId): Server
+    {
+        $server = $this->serverRepository->findById($serverId);
+        if (is_null($server)) {
+            throw new ServerDoesNotExistException(
+                'Server does not exist.' . PHP_EOL .
+                'Id: ' . $serverId->value()
+            );
+        }
+        return $server;
+    }
+
+    /**
+     * @param UserId $userId
+     * @return User
+     * @throws UserDoesNotExistException
+     */
+    protected function getNonNullUser(UserId $userId): User
+    {
+        $user = $this->userRepository->findById($userId);
+        if (is_null($user)) {
+            throw new UserDoesNotExistException(
+                'User does not exist.' . PHP_EOL .
+                'Id: ' . $userId->value()
+            );
+        }
+        return $user;
+    }
+
+    /**
      * @param Deployment $deployment
      * @return void
      */
@@ -150,8 +188,8 @@ abstract class DeploymentService implements ApplicationService
             $carry[] = $recipe;
             return $carry;
         }, []));
-        $server = $this->serverRepository->findById(new ServerId($project->serverId()));
-        $executor = $this->userRepository->findById(new UserId($deployment->executor()));
+        $server = $this->getNonNullServer(new ServerId($project->serverId()));
+        $executor = $this->getNonNullUser(new UserId($deployment->executor()));
 
         $deployment->request(
             $project,

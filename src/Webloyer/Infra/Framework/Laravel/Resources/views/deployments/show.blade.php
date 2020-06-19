@@ -9,7 +9,7 @@
         log="{{ $deploymentLog }}"
         started-at="{{ $deployment->startDate }}"
         finished-at="{{ $deployment->finishDate }}"
-        executed-by="{{ $deployment->user->email }}"
+        executed-by="{{ $deploymentUserEmail }}"
         project-id="{{ $projectId }}"
         deployment-api-url="{{ route('projects.deployments.show', [$projectId, $deployment->number]) }}"
         link-to-route="{{ route('projects.deployments.index', [$projectId]) }}"

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\Domain\Model\Deployment;
 
 use Webloyer\Domain\Model\User\{
+    NullUser,
     UserRepository,
     UserId,
     User,
@@ -26,10 +27,10 @@ class DeploymentService
 
     /**
      * @param UserId $userId
-     * @return User|null
+     * @return User
      */
-    public function userFrom(UserId $userId): ?User
+    public function userFrom(UserId $userId): User
     {
-        return $this->userRepository->findById($userId);
+        return $this->userRepository->findById($userId) ?? NullUser::getInstance();
     }
 }

@@ -15,6 +15,7 @@ use Webloyer\Domain\Model\Recipe\{
     Recipes,
 };
 use Webloyer\Domain\Model\Server\{
+    NullServer,
     ServerRepository,
     ServerId,
     Server,
@@ -82,11 +83,11 @@ class ProjectService
 
     /**
      * @param ServerId $serverId
-     * @return Server|null
+     * @return Server
      */
-    public function serverFrom(ServerId $serverId): ?Server
+    public function serverFrom(ServerId $serverId): Server
     {
-        return $this->serverRepository->findById($serverId);
+        return $this->serverRepository->findById($serverId) ?? NullServer::getInstance();
     }
 
     /**

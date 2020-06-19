@@ -18,7 +18,7 @@
             <td>{{ deployment.task }}</td>
             <td>{{ deployment.startDate }}</td>
             <td>{{ deployment.finishDate }}</td>
-            <td>{{ deployment.user.email }}</td>
+            <td>{{ deploymentUserEmailOf[deployment.number] }}</td>
             <td v-html="deploymentLinks[deployment.number]"></td>
         </tr>
     </tbody>
@@ -33,6 +33,7 @@
         props: {
             deployments: Array,
             deploymentStatus: Object,
+            deploymentUserEmailOf: Object,
             deploymentLinks: Object,
             deploymentApiUrls: Object,
         },

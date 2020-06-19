@@ -10,6 +10,8 @@ use Illuminate\Http\{
 };
 use Webloyer\App\Service\Deployment\RollbackDeploymentRequest;
 use Webloyer\Domain\Model\Project\ProjectDoesNotExistException;
+use Webloyer\Domain\Model\Server\ServerDoesNotExistException;
+use Webloyer\Domain\Model\User\UserDoesNotExistException;
 
 class RollbackController extends BaseController
 {
@@ -32,6 +34,12 @@ class RollbackController extends BaseController
             $deployment = $this->service->execute($serviceRequest);
         } catch (ProjectDoesNotExistException $exception) {
             abort(404);
+        } catch (ServerDoesNotExistException $exception) {
+            return redirect()
+                ->route('projects.deployments.index', [$projectId])
+                ->withErrors(['The server does not exist. Check your project settings.']);
+        } catch (UserDoesNotExistException $exception) {
+            abort(500);
         }
 
         $link = link_to_route('projects.deployments.show', '#' . $deployment->number, [$projectId, $deployment->number]);

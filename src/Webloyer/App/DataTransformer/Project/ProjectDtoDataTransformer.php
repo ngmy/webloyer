@@ -217,7 +217,7 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
 
         if (isset($this->serverDataTransformer)) {
             $server = $this->projectService->serverFrom(new ServerId($this->project->serverId()));
-            $dto->server = $server ? $this->serverDataTransformer->write($server)->read() : null;
+            $dto->server = $this->serverDataTransformer->write($server)->read();
         }
 
         if (isset($this->userDataTransformer)) {
