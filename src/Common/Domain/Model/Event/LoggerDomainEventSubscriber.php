@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Common\Infra\Domain\Model\Event;
+namespace Common\Domain\Model\Event;
 
-use Common\Domain\Model\Event\{
-    DomainEvent,
-    DomainEventSubscriber,
-};
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 

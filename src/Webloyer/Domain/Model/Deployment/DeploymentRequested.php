@@ -6,7 +6,7 @@ namespace Webloyer\Domain\Model\Deployment;
 
 use Common\Domain\Model\Event\{
     DomainEvent,
-    PublishableDomainEvent,
+    PublishNowDomainEvent,
 };
 use Webloyer\Domain\Model\Project\Notification\Email\EmailNotification;
 use Webloyer\Domain\Model\Project\ProjectId;
@@ -17,7 +17,7 @@ use Webloyer\Domain\Model\Recipe\RecipeBodies;
 use Webloyer\Domain\Model\Server\ServerBody;
 use Webloyer\Domain\Model\User\UserEmail;
 
-class DeploymentRequested implements DomainEvent, PublishableDomainEvent
+class DeploymentRequested implements DomainEvent, PublishNowDomainEvent
 {
     /** @var ProjectId */
     private $projectId;

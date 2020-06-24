@@ -4,28 +4,29 @@ declare(strict_types=1);
 
 namespace Deployer\Domain\Model;
 
-use Common\Domain\Model\Event\DomainEvent;
-use Webloyer\Domain\Model\Deployment\DeploymentNumber;
-use Webloyer\Domain\Model\Project\ProjectId;
+use Common\Domain\Model\Event\{
+    DomainEvent,
+    PublishNowDomainEvent,
+};
 
-class DeployerProgressed implements DomainEvent
+class DeployerProgressed implements DomainEvent, PublishNowDomainEvent
 {
-    /** @var ProjectId */
+    /** @var string */
     private $projectId;
-    /** @var DeploymentNumber */
+    /** @var int */
     private $number;
     /** @var string */
     private $log;
 
     /**
-     * @param  ProjectId        $projectId
-     * @param  DeploymentNumber $number
-     * @param  string           $log
+     * @param string $projectId
+     * @param int    $number
+     * @param string $log
      * @return void
      */
     public function __construct(
-        ProjectId $projectId,
-        DeploymentNumber $number,
+        string $projectId,
+        int $number,
         string $log
     ) {
         $this->projectId = $projectId;
@@ -34,17 +35,17 @@ class DeployerProgressed implements DomainEvent
     }
 
     /**
-     * @return ProjectId
+     * @return string
      */
-    public function projectId(): ProjectId
+    public function projectId(): string
     {
         return $this->projectId;
     }
 
     /**
-     * @return DeploymentNumber
+     * @return int
      */
-    public function number(): DeploymentNumber
+    public function number(): int
     {
         return $this->number;
     }

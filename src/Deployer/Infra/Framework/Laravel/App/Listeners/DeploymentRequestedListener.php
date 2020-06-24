@@ -11,17 +11,15 @@ use Deployer\Domain\Model\{
     DeployerProgressed,
     DeployerStarted,
 };
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\{
     DB,
     Storage,
 };
+use stdClass;
 use Symfony\Component\Process\Process;
 use Webloyer\Domain\Model\Deployment\DeploymentRequested;
-use Webloyer\Domain\Model\Recipe\Recipe;
 
-class DeploymentRequestedListener implements ShouldQueue
+class DeploymentRequestedListener extends DeployerEventListener
 {
     /** @var list<string> */
     private $createdFiles = [];
@@ -40,31 +38,36 @@ class DeploymentRequestedListener implements ShouldQueue
     }
 
     /**
-     * Handle the event.
-     *
-     * @param DeploymentRequested $event
-     * @return void
+     * {@inheritdoc}
      */
-    public function handle(DeploymentRequested $event): void
+    protected function listensTo(string $typeName): bool
+    {
+        return $typeName == DeploymentRequested::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function perform(stdClass $event): void
     {
         $this->createDeployerFile($event);
         $this->runDeployer($event);
     }
 
     /**
-     * @param DeploymentRequested $event
+     * @param stdClass $event
      * @return void
      */
-    public function createDeployerFile(DeploymentRequested $event): void
+    public function createDeployerFile(stdClass $event): void
     {
         // Create recipe files
         $i = 1;
-        foreach ($event->recipeBodies()->toArray() as $recipeBody) {
-            $this->createFile($this->getRecipeFileName($event, $i++), $recipeBody);
+        foreach ($event->recipe_bodies->recipe_bodies as $recipeBody) {
+            $this->createFile($this->getRecipeFileName($event, $i++), $recipeBody->value);
         }
 
         // Create the server file
-        $this->createFile($this->getServerFileName($event), $event->serverBody()->value());
+        $this->createFile($this->getServerFileName($event), $event->server_body->value);
 
         // Create the deployer file
         $contents[] = '<?php';
@@ -72,16 +75,16 @@ class DeploymentRequestedListener implements ShouldQueue
         foreach ($this->getRecipeFileNames($event) as $recipeFileName) {
             $contents[] = "require '" . $recipeFileName . "';";
         }
-        $contents[] = "set('repository', '" . $event->repositoryUrl()->value() . "');";
+        $contents[] = "set('repository', '" . $event->repository_url->value . "');";
         $contents[] = "serverList('" . $this->getServerFileName($event) . "');";
         $this->createFile($this->getDeployerFileName($event), implode(PHP_EOL, $contents));
     }
 
     /**
-     * @param DeploymentRequested $event
+     * @param stdClass $event
      * @return void
      */
-    public function runDeployer(DeploymentRequested $event): void
+    public function runDeployer(stdClass $event): void
     {
         $process = new Process([
             base_path('vendor/bin/dep'),
@@ -89,15 +92,15 @@ class DeploymentRequestedListener implements ShouldQueue
             '--ansi',
             '-n',
             '-vvv',
-            $event->task()->value(),
-            $event->stageName()->value(),
+            $event->task->scalar,
+            $event->stage_name->value,
         ]);
         $process->setTimeout(600);
         DB::transaction(function () use ($event) {
             DomainEventPublisher::getInstance()->publish(
                 new DeployerStarted(
-                    $event->projectId(),
-                    $event->number(),
+                    $event->project_id->value,
+                    $event->number->value,
                     (new DateTimeImmutable())->format('Y-m-d H:i:s')
                 )
             );
@@ -109,8 +112,8 @@ class DeploymentRequestedListener implements ShouldQueue
             DB::transaction(function () use ($event, $log) {
                 DomainEventPublisher::getInstance()->publish(
                     new DeployerProgressed(
-                        $event->projectId(),
-                        $event->number(),
+                        $event->project_id->value,
+                        $event->number->value,
                         $log
                     )
                 );
@@ -123,8 +126,8 @@ class DeploymentRequestedListener implements ShouldQueue
         $finishDate = (new DateTimeImmutable())->format('Y-m-d H:i:s');
         DomainEventPublisher::getInstance()->publish(
             new DeployerFinished(
-                $event->projectId(),
-                $event->number(),
+                $event->project_id->value,
+                $event->number->value,
                 $log,
                 $status,
                 'now'
@@ -133,43 +136,43 @@ class DeploymentRequestedListener implements ShouldQueue
     }
 
     /**
-     * @param DeploymentRequested $event
+     * @param stdClass $event
      * @return string
      */
-    public function getServerFileName(DeploymentRequested $event): string
+    public function getServerFileName(stdClass $event): string
     {
-        return sprintf('server_%s_%s.yaml', $event->projectId()->value(), $event->number()->value());
+        return sprintf('server_%s_%s.yaml', $event->project_id->value, $event->number->value);
     }
 
     /**
-     * @param DeploymentRequested $event
+     * @param stdClass $event
      * @return list<string>
      */
-    public function getRecipeFileNames(DeploymentRequested $event): array
+    public function getRecipeFileNames(stdClass $event): array
     {
         $i = 1;
-        return array_map(function (string $recipeBody) use ($event, $i): string {
+        return array_map(function (stdClass $recipeBody) use ($event, $i): string {
             return $this->getRecipeFileName($event, $i++);
-        }, $event->recipeBodies()->toArray());
+        }, $event->recipe_bodies->recipe_bodies);
     }
 
     /**
-     * @param DeploymentRequested $event
-     * @param int                 $i
+     * @param stdClass $event
+     * @param int      $i
      * @return string
      */
-    public function getRecipeFileName(DeploymentRequested $event, int $i): string
+    public function getRecipeFileName(stdClass $event, int $i): string
     {
-        return sprintf('server_%s_%s_%s.php', $event->projectId()->value(), $event->number()->value(), $i);
+        return sprintf('server_%s_%s_%s.php', $event->project_id->value, $event->number->value, $i);
     }
 
     /**
-     * @param DeploymentRequested $event
+     * @param stdClass $event
      * @return string
      */
-    public function getDeployerFileName(DeploymentRequested $event): string
+    public function getDeployerFileName(stdClass $event): string
     {
-        return sprintf('deployer_%s_%s.php', $event->projectId()->value(), $event->number()->value());
+        return sprintf('deployer_%s_%s.php', $event->project_id->value, $event->number->value);
     }
 
     /**

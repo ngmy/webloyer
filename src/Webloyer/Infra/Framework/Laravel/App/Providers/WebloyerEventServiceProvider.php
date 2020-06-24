@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Providers;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
+use Common\Infra\App\Notification\LaravelEvent;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 use Illuminate\Support\Facades\Event;
 use Webloyer\Domain\Model\Deployment\DeploymentCompletedSubscriber;
+use Webloyer\Infra\Framework\Laravel\App\Listeners\{
+    DeployerFinishedListener,
+    DeployerProgressedListener,
+    DeployerStartedListener,
+};
 
 class WebloyerEventServiceProvider extends EventServiceProvider
 {
@@ -16,7 +22,13 @@ class WebloyerEventServiceProvider extends EventServiceProvider
      *
      * @var array<string, list<string>>
      */
-    protected $listen = [];
+    protected $listen = [
+        LaravelEvent::class => [
+            DeployerFinishedListener::class,
+            DeployerProgressedListener::class,
+            DeployerStartedListener::class,
+        ],
+    ];
 
     /**
      * Register any events for your application.

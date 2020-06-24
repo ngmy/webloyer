@@ -67,9 +67,10 @@ Webloyer has the following requirements:
    php artisan webloyer:install
    ```
    **Note:** You must be running this command as your web server user.
-4. Start the queue listener as a background process by using the Artisan `queue:listen` command:
+4. Start queue listeners as a background process by using the Artisan `queue:work` command:
    ```
-   nohup php artisan queue:work --timeout=0 &
+   nohup php artisan queue:work --queue=webloyer_listeners &
+   nohup php artisan queue:work --queue=deployer_listeners &
    ```
    **Note:** You must be running this command as your web server user.
 5. Add the following Cron entry to your server:

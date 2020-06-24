@@ -50,6 +50,7 @@
         "fideloper/proxy": "^4.0",
         "kodeine/laravel-acl": "^2.0",
         "jackiedo/dotenv-editor": "^1.0",
+        "jms/serializer": "^3.0",
         "laravel/framework": "^6.2",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
