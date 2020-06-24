@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\Project;
 
 use Common\App\Service\ApplicationService;
-use InvalidArgumentException;
 use Webloyer\App\DataTransformer\Project\{
     ProjectDataTransformer,
     ProjectsDataTransformer,
