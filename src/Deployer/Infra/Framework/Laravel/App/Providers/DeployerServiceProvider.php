@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Deployer;
+namespace Deployer\Infra\Framework\Laravel\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +15,7 @@ class DeployerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // other service providers
         $this->app->register(DeployerEventServiceProvider::class);
     }
 

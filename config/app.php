@@ -175,8 +175,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        Common\CommonServiceProvider::class,
-        Deployer\DeployerServiceProvider::class,
+        Common\Infra\Framework\Laravel\App\Providers\CommonServiceProvider::class,
+        Deployer\Infra\Framework\Laravel\App\Providers\DeployerServiceProvider::class,
         Webloyer\Infra\Framework\Laravel\App\Providers\WebloyerServiceProvider::class,
 
     ],

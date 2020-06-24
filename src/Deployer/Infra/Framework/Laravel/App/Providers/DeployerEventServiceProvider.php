@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Deployer;
+namespace Deployer\Infra\Framework\Laravel\App\Providers;
 
 use Common\Domain\Model\Event\DomainEventPublisher;
 use Deployer\Domain\Model\{

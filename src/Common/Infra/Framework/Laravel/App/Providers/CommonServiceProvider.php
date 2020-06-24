@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Common;
+namespace Common\Infra\Framework\Laravel\App\Providers;
 
 use Common\App\Service\TransactionalSession;
 use Common\Domain\Model\Event\DomainEventPublisher;
