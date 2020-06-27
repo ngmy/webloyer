@@ -32,13 +32,50 @@ class IndexViewModel extends ViewModel
     /**
      * @return array<string, string>
      */
-    public function deploymentStatus(): array
+    public function projectLastDeploymentStatusIconOf(): array
     {
-        return [
-            'succeeded' => '<i class="fa fa-check-circle fa-lg fa-fw" aria-hidden="true" style="color: green;"></i>',
-            'failed' => '<i class="fa fa-exclamation-circle fa-lg fa-fw" aria-hidden="true" style="color: red;"></i>',
-            'running' => '<i class="fa fa-refresh fa-spin fa-lg fa-fw" aria-hidden="true" style="color: blue;"></i>',
-            'queued' => '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i>',
-        ];
+        return array_reduce($this->projects->toArray()['data'], function (array $carry, object $project): array {
+            $carry[$project->id] = isset($project->lastDeployment)
+                ? $this->convertProjectLastDeploymentStatusToIcon($project->lastDeployment->status)
+                : '';
+            return $carry;
+        }, []);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function projectLastDeploymentOf(): array
+    {
+        return array_reduce($this->projects->toArray()['data'], function (array $carry, object $project): array {
+            $carry[$project->id] = isset($project->lastDeployment)
+                ? $project->lastDeployment->finishDate .
+                ' ' .
+                '(' .
+                link_to_route('projects.deployments.show', "#{$project->lastDeployment->number}", [$project->id,  $project->lastDeployment->number]) .
+                ')'
+                : '';
+            return $carry;
+        }, []);
+    }
+
+    /**
+     * @param string $projectLastDeploymentStatus
+     * @return string
+     */
+    private function convertProjectLastDeploymentStatusToIcon(string $projectLastDeploymentStatus): string
+    {
+        switch ($projectLastDeploymentStatus) {
+            case 'succeeded':
+                return '<i class="fa fa-check-circle fa-lg fa-fw" aria-hidden="true" style="color: green;"></i>';
+            case 'failed':
+                return '<i class="fa fa-exclamation-circle fa-lg fa-fw" aria-hidden="true" style="color: red;"></i>';
+            case 'running':
+                return '<i class="fa fa-refresh fa-spin fa-lg fa-fw" aria-hidden="true" style="color: blue;"></i>';
+            case 'queued':
+                return '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i>';
+            default:
+                return '';
+        }
     }
 }

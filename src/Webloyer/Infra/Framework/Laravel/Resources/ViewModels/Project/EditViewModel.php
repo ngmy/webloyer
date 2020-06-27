@@ -47,7 +47,7 @@ class EditViewModel extends ViewModel
     /**
      * @return array<string, string>
      */
-    public function recipes(): array
+    public function recipeSelectBoxOptions(): array
     {
         return array_column($this->recipes, 'name', 'id');
     }
@@ -55,7 +55,7 @@ class EditViewModel extends ViewModel
     /**
      * @return array<string, string>
      */
-    public function servers(): array
+    public function serverSelectBoxOptions(): array
     {
         return array_column($this->servers, 'name', 'id');
     }
@@ -63,7 +63,7 @@ class EditViewModel extends ViewModel
     /**
      * @return array<string, string>
      */
-    public function users(): array
+    public function userSelectBoxOptions(): array
     {
         return ['' => ''] + array_column($this->users, 'email', 'id');
     }

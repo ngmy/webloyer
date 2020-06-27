@@ -18,7 +18,7 @@
                         <th>Body</th>
                         <td><pre><code>{{ $server->body }}</code></pre></td>
                     </tr>
-                    @if ($isServerHasProjects)
+                    @if ($isServerHasProject)
                         @foreach ($server->projects as $project)
                             <tr>
                                 @if ($loop->first)

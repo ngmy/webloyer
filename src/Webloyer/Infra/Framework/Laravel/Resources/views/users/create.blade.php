@@ -46,11 +46,11 @@
                         <div class="form-group">
                             <label for="role" class="col-md-4 control-label">Role</label>
                             <div class="col-md-6">
-                                @foreach ($roles as $name => $slug)
+                                @foreach ($roleCheckBoxLabelToValue as $label => $value)
                                     <div class="checkbox">
                                         <label>
-                                            {!! Form::checkbox('role[]', $slug) !!}
-                                            {{ $name }}
+                                            {!! Form::checkbox('role[]', $value) !!}
+                                            {{ $label }}
                                         </label>
                                     </div>
                                 @endforeach

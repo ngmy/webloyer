@@ -35,15 +35,13 @@
 
             <div id="app">
                 <deployment-items
-                    :deployments='@json($deployments->toArray()["data"])'
-                    :deployment-status='@json($deploymentStatus)'
+                    :deployments='@json($deployments)'
+                    :deployment-status-icon-of='@json($deploymentStatusIconOf)'
                     :deployment-user-email-of='@json($deploymentUserEmailOf)'
-                    :deployment-links='@json($deploymentLinks)'
-                    :deployment-api-urls='@json($deploymentApiUrls)'
+                    :deployment-show-link-of='@json($deploymentShowLinkOf)'
+                    deployment-index-api-url="{{ $deploymentIndexApiUrl }}"
+                    deployment-pagination-link="{{ $deploymentPaginationLink }}"
                 ></deployment-items>
-            </div>
-            <div class="text-center">
-                {!! $deployments->render() !!}
             </div>
         </div>
     </div>

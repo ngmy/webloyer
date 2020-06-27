@@ -28,13 +28,13 @@
                         <div class="form-group required">
                             <label for="recipe_id" class="col-md-4 control-label">Recipe</label>
                             <div class="col-md-6">
-                                {!! Form::select('recipe_id[]', $recipes, $project->recipeIds, ['class' => 'form-control multi-select', 'id' => 'recipe_id', 'multiple' => 'multiple']) !!}
+                                {!! Form::select('recipe_id[]', $recipeSelectBoxOptions, $project->recipeIds, ['class' => 'form-control multi-select', 'id' => 'recipe_id', 'multiple' => 'multiple']) !!}
                             </div>
                         </div>
                         <div class="form-group required">
                             <label for="server_id" class="col-md-4 control-label">Server</label>
                             <div class="col-md-6">
-                                {!! Form::select('server_id', $servers, $project->serverId, ['class' => 'form-control', 'id' => 'server_id']) !!}
+                                {!! Form::select('server_id', $serverSelectBoxOptions, $project->serverId, ['class' => 'form-control', 'id' => 'server_id']) !!}
                             </div>
                         </div>
                         <div class="form-group required">
@@ -98,7 +98,7 @@
                         <div class="form-group">
                             <label for="github_webhook_user_id" class="col-md-4 control-label">Execute By</label>
                             <div class="col-md-6">
-                                {!! Form::select('github_webhook_user_id', $users, $project->gitHubWebhookUserId, ['class' => 'form-control', 'id' => 'github_webhook_user_id']) !!}
+                                {!! Form::select('github_webhook_user_id', $userSelectBoxOptions, $project->gitHubWebhookUserId, ['class' => 'form-control', 'id' => 'github_webhook_user_id']) !!}
                             </div>
                         </div>
                         <div class="form-group">

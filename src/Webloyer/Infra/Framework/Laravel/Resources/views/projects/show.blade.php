@@ -56,7 +56,7 @@
                     </tr>
                     <tr>
                         <th>GitHub Webhook Execute By</th>
-                        <td>{{ $hyphenIfBlank($projectGitHubWebhookUserEmail($project)) }}</td>
+                        <td>{{ $hyphenIfBlank($projectGitHubWebhookUserEmail) }}</td>
                     </tr>
                 </tbody>
             </table>

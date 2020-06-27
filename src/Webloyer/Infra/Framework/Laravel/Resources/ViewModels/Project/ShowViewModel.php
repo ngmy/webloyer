@@ -45,17 +45,19 @@ class ShowViewModel extends ViewModel
             : $this->project->recipes;
     }
 
+    /**
+     * @return int
+     */
     public function projectRecipeCount(): int
     {
         return count($this->projectRecipes());
     }
 
     /**
-     * @param object $project
      * @return string
      */
-    public function projectGitHubWebhookUserEmail(object $project): string
+    public function projectGitHubWebhookUserEmail(): string
     {
-        return $project->gitHubWebhookUser ? $project->gitHubWebhookUser->email : '';
+        return $this->project->gitHubWebhookUser ? $this->project->gitHubWebhookUser->email : '';
     }
 }

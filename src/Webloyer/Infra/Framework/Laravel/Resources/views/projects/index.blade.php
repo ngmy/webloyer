@@ -26,18 +26,9 @@
                 <tbody>
                     @foreach ($projects as $project)
                         <tr>
-                            <td>
-                                @if (!empty($project->lastDeployment))
-                                    {!! $deploymentStatus[$project->lastDeployment->status] !!}
-                                @endif
-                            </td>
+                            <td>{!! $projectLastDeploymentStatusIconOf[$project->id] !!}</td>
                             <td>{{ $project->name }}</td>
-                            <td>
-                                @if (!empty($project->lastDeployment))
-                                    {{ $project->lastDeployment->updatedAt }}
-                                    ({!! link_to_route('projects.deployments.show', "#{$project->lastDeployment->number}", [$project->id,  $project->lastDeployment->number]) !!})
-                                @endif
-                            </td>
+                            <td>{!! $projectLastDeploymentOf[$project->id] !!}</td>
                             <td>{{ $project->createdAt }}</td>
                             <td>{{ $project->updatedAt }}</td>
                             <td>

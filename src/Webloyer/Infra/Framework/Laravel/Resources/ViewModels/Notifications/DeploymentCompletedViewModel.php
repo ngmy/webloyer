@@ -66,7 +66,7 @@ class DeploymentCompletedViewModel extends ViewModel
     /**
      * @return string
      */
-    public function deploymentUrl(): string
+    public function deploymentShowUrl(): string
     {
         return route('projects.deployments.show', [
             'project' => $this->event->projectId(),

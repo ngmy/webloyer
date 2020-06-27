@@ -31,16 +31,16 @@ class ShowViewModel extends ViewModel
     /**
      * @return bool
      */
-    public function isServerHasProjects(): bool
+    public function isServerHasProject(): bool
     {
         return !empty($this->server->projects);
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function serverProjectCount(): int
+    public function serverProjectCount(): string
     {
-        return count($this->server->projects);
+        return number_format(count($this->server->projects));
     }
 }

@@ -32,7 +32,7 @@ class IndexViewModel extends ViewModel
     /**
      * @return array<string, string>
      */
-    public function projectCountOf(): array
+    public function recipeProjectCountOf(): array
     {
         return array_reduce($this->recipes->toArray()['data'], function (array $carry, object $recipe): array {
             $carry[$recipe->id] = number_format(count($recipe->projects));

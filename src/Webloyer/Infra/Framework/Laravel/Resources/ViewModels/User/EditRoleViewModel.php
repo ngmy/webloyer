@@ -36,7 +36,7 @@ class EditRoleViewModel extends ViewModel
     /**
      * @return array<string, string>
      */
-    public function roles(): array
+    public function roleCheckBoxLabelToValue(): array
     {
         return array_reduce($this->roles, function (array $carry, RoleView $role): array {
             $carry[$role->name()] = $role->slug();

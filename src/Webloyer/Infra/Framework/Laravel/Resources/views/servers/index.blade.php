@@ -26,7 +26,7 @@
                     @foreach ($servers as $server)
                         <tr>
                             <td>{{ $server->name }}</td>
-                            <td><div align="right">{{ $projectCountOf[$server->id] }}</div></td>
+                            <td><div align="right">{{ $serverProjectCountOf[$server->id] }}</div></td>
                             <td>{{ $server->createdAt }}</td>
                             <td>{{ $server->updatedAt }}</td>
                             <td>

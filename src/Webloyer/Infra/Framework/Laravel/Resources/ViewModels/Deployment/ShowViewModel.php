@@ -51,6 +51,9 @@ class ShowViewModel extends ViewModel
         return $this->projectId;
     }
 
+    /**
+     * @return string
+     */
     public function deploymentUserEmail(): string
     {
         return $this->hyphenIfBlank($this->deployment->user->email);

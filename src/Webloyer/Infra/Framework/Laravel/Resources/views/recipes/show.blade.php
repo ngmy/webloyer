@@ -18,7 +18,7 @@
                         <th>Body</th>
                         <td><pre><code>{{ $recipe->body }}</code></pre></td>
                     </tr>
-                    @if ($isRecipeHasProjects)
+                    @if ($isRecipeHasProject)
                         @foreach ($recipe->projects as $project)
                             <tr>
                                 @if ($loop->first)

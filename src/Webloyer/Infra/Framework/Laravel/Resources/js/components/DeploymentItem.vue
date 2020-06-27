@@ -34,7 +34,7 @@
                     </tr>
                 </tbody>
             </table>
-            <a class="btn btn-danger" v-bind:href="linkToRoute">Back</a>
+            <a class="btn btn-danger" v-bind:href="deploymentIndexLink">Back</a>
         </div>
     </div>
 </div>
@@ -53,8 +53,8 @@
             startedAt: String,
             finishedAt: String,
             executedBy: String,
-            deploymentApiUrl: String,
-            linkToRoute: String,
+            deploymentShowApiUrl: String,
+            deploymentIndexLink: String,
         },
         data: function () {
             return {
@@ -72,17 +72,17 @@
                 ) {
                     return;
                 }
-                axios.get(this.deploymentApiUrl)
+                axios.get(this.deploymentShowApiUrl)
                     .then(res => {
                         this.status1 = res.data.deployment.status;
                         this.log1 = res.data.deploymentLog;
                         this.startedAt1 = res.data.deployment.startDate;
                         this.finishedAt1 = res.data.deployment.finishDate;
-                }).catch(error => console.log(error));
+                    }).catch(error => console.log(error));
             }
         },
         created () {
-            setInterval(this.getDeployment, 3000)
+            setInterval(this.getDeployment, 5000)
         }
     }
 </script>
