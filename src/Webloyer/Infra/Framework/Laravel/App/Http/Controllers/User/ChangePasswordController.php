@@ -29,6 +29,6 @@ class ChangePasswordController extends BaseController
             abort(404);
         }
 
-        return (new ChangePasswordViewModel($user))->view('webloyer::users.change_password');
+        return (new ChangePasswordViewModel($user))->view('webloyer::users.change-password');
     }
 }
