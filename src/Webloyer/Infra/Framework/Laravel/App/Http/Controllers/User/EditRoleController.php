@@ -51,6 +51,6 @@ class EditRoleController extends BaseController
 
         $roles = $this->queryBus->handle(new AllRolesQuery());
 
-        return (new EditRoleViewModel($user, $roles))->view('webloyer::users.edit-role');
+        return (new EditRoleViewModel($user, $roles))->view('webloyer::users.edit_role');
     }
 }
