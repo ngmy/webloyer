@@ -29,6 +29,6 @@ class EditApiTokenController extends BaseController
             abort(404);
         }
 
-        return (new EditApiTokenViewModel($user))->view('webloyer::users.edit_api_token');
+        return (new EditApiTokenViewModel($user))->view('webloyer::users.edit-api-token');
     }
 }
