@@ -16,6 +16,6 @@ class CreateController extends BaseController
      */
     public function __invoke(): ViewModel
     {
-        return (new CreateViewModel())->view('webloyer::servers.create');
+        return (new CreateViewModel())->view('webloyer::server.create');
     }
 }

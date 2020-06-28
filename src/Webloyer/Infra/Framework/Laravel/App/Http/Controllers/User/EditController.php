@@ -29,6 +29,6 @@ class EditController extends BaseController
             abort(404);
         }
 
-        return (new EditViewModel($user))->view('webloyer::users.edit');
+        return (new EditViewModel($user))->view('webloyer::user.edit');
     }
 }

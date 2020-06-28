@@ -52,6 +52,6 @@ class CreateController extends BaseController
             $recipes,
             $servers,
             $users
-        ))->view('webloyer::projects.create');
+        ))->view('webloyer::project.create');
     }
 }

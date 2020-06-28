@@ -31,6 +31,6 @@ class IndexController extends BaseController
             ->setDeploymentDataTransformer(App::make(DeploymentDtoDataTransformer::class));
         $projects = $this->service->execute();
 
-        return (new IndexViewModel($projects))->view('webloyer::projects.index');
+        return (new IndexViewModel($projects))->view('webloyer::project.index');
     }
 }

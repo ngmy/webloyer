@@ -69,6 +69,6 @@ class EditController extends BaseController
             $recipes,
             $servers,
             $users
-        ))->view('webloyer::projects.edit');
+        ))->view('webloyer::project.edit');
     }
 }

@@ -43,6 +43,6 @@ class IndexController extends BaseController
             abort(404);
         }
 
-        return (new IndexViewModel($deployments, $projectId))->view('webloyer::deployments.index');
+        return (new IndexViewModel($deployments, $projectId))->view('webloyer::deployment.index');
     }
 }

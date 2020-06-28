@@ -41,6 +41,6 @@ class ShowController extends BaseController
             abort(404);
         }
 
-        return (new ShowViewModel($project))->view('webloyer::projects.show');
+        return (new ShowViewModel($project))->view('webloyer::project.show');
     }
 }

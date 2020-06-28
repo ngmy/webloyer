@@ -16,6 +16,6 @@ class CreateController extends BaseController
      */
     public function __invoke(): ViewModel
     {
-        return (new CreateViewModel())->view('webloyer::recipes.create');
+        return (new CreateViewModel())->view('webloyer::recipe.create');
     }
 }

@@ -34,6 +34,6 @@ class CreateController extends BaseController
     {
         $roles = $this->queryBus->handle(new AllRolesQuery());
 
-        return (new CreateViewModel($roles))->view('webloyer::users.create');
+        return (new CreateViewModel($roles))->view('webloyer::user.create');
     }
 }

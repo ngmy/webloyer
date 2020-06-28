@@ -29,6 +29,6 @@ class ShowController extends BaseController
             abort(404);
         }
 
-        return (new ShowViewModel($user))->view('webloyer::users.show');
+        return (new ShowViewModel($user))->view('webloyer::user.show');
     }
 }

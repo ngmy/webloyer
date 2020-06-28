@@ -31,6 +31,6 @@ class IndexController extends BaseController
             ->setProjectsDataTransformer(App::make(ProjectsDtoDataTransformer::class));
         $recipes = $this->service->execute();
 
-        return (new IndexViewModel($recipes))->view('webloyer::recipes.index');
+        return (new IndexViewModel($recipes))->view('webloyer::recipe.index');
     }
 }

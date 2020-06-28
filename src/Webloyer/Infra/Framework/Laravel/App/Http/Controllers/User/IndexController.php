@@ -25,6 +25,6 @@ class IndexController extends BaseController
         $this->service->usersDataTransformer()->setPerPage(10);
         $users = $this->service->execute();
 
-        return (new IndexViewModel($users))->view('webloyer::users.index');
+        return (new IndexViewModel($users))->view('webloyer::user.index');
     }
 }

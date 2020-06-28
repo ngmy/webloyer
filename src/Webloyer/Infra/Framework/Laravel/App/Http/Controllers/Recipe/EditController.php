@@ -29,6 +29,6 @@ class EditController extends BaseController
             abort(404);
         }
 
-        return (new EditViewModel($recipe))->view('webloyer::recipes.edit');
+        return (new EditViewModel($recipe))->view('webloyer::recipe.edit');
     }
 }

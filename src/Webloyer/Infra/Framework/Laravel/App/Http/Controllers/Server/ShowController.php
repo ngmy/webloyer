@@ -37,6 +37,6 @@ class ShowController extends BaseController
             abort(404);
         }
 
-        return (new ShowViewModel($server))->view('webloyer::servers.show');
+        return (new ShowViewModel($server))->view('webloyer::server.show');
     }
 }

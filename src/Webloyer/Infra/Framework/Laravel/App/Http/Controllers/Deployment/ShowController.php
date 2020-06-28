@@ -50,6 +50,6 @@ class ShowController extends BaseController
             $deployment,
             $projectId,
             new AnsiToHtmlConverter()
-        ))->view('webloyer::deployments.show');
+        ))->view('webloyer::deployment.show');
     }
 }

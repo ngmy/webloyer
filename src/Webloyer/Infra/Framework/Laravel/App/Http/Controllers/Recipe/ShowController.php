@@ -37,6 +37,6 @@ class ShowController extends BaseController
             abort(404);
         }
 
-        return (new ShowViewModel($recipe))->view('webloyer::recipes.show');
+        return (new ShowViewModel($recipe))->view('webloyer::recipe.show');
     }
 }
