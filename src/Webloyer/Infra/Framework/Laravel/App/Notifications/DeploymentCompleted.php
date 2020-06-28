@@ -73,7 +73,7 @@ class DeploymentCompleted extends Notification
             ->subject($viewModel->subject())
             ->greeting('Hello!')
             ->line('Deployment completed!')
-            ->action('Show Deployment', $viewModel->deploymentUrl())
+            ->action('Show Deployment', $viewModel->deploymentShowUrl())
             ->line('Task: ' . $viewModel->event()->task())
             ->line('Log: ' . $viewModel->deploymentLog())
             ->line('Status: ' . $viewModel->event()->status())

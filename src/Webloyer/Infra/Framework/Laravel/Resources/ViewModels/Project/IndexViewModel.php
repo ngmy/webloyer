@@ -48,11 +48,12 @@ class IndexViewModel extends ViewModel
     public function projectLastDeploymentOf(): array
     {
         return array_reduce($this->projects->toArray()['data'], function (array $carry, object $project): array {
+            assert(isset($project->id));
             $carry[$project->id] = isset($project->lastDeployment)
                 ? $project->lastDeployment->finishDate .
                 ' ' .
                 '(' .
-                link_to_route('projects.deployments.show', "#{$project->lastDeployment->number}", [$project->id,  $project->lastDeployment->number]) .
+                link_to_route('projects.deployments.show', $project->lastDeployment->number, [$project->id,  $project->lastDeployment->number]) .
                 ')'
                 : '';
             return $carry;

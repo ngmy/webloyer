@@ -91,7 +91,7 @@ class IndexViewModel extends ViewModel
      */
     public function deploymentPaginationLink(): string
     {
-        return $this->deployments->links()->render();
+        return $this->deployments->links()->toHtml();
     }
 
     /**
@@ -110,7 +110,9 @@ class IndexViewModel extends ViewModel
             case 'queued':
                 return '<i class="fa fa-clock-o fa-lg fa-fw" aria-hidden="true" style="color: gray;"></i> queued';
             default:
+                /** @phpstan-ignore-next-line */
                 assert(false);
+                return '';
         }
     }
 }
