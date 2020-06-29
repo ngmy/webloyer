@@ -58,6 +58,7 @@ class OldDeploymentSpecification implements DeploymentSpecification
             return false;
         }
 
+        assert(!is_null($deployments->latest()));
         if ($discardOldDeployment->keepLastDeployment() && $deployments->latest()->equals($deployment)) {
             return false;
         }
