@@ -10,6 +10,7 @@ use Illuminate\Http\{
 };
 use Webloyer\App\Service\Deployment\CreateDeploymentRequest;
 use Webloyer\Domain\Model\Project\ProjectDoesNotExistException;
+use Webloyer\Domain\Model\Recipe\RecipeDoesNotExistException;
 use Webloyer\Domain\Model\Server\ServerDoesNotExistException;
 use Webloyer\Domain\Model\User\UserDoesNotExistException;
 
@@ -34,6 +35,10 @@ class DeployController extends BaseController
             $deployment = $this->service->execute($serviceRequest);
         } catch (ProjectDoesNotExistException $exception) {
             abort(404);
+        } catch (RecipeDoesNotExistException $exception) {
+            return redirect()
+                ->route('projects.deployments.index', [$projectId])
+                ->withErrors(['The recipe does not exist. Check your project settings.']);
         } catch (ServerDoesNotExistException $exception) {
             return redirect()
                 ->route('projects.deployments.index', [$projectId])

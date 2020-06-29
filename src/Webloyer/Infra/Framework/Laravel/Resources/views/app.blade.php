@@ -106,7 +106,7 @@
     <footer>
         <div class="container text-center">
             <p class="text-muted credit">
-                <p><a href="https://github.com/ngmy/webloyer"><i class="fa fa-github fa-2x" aria-hidden="true" style="color: white;"></i></a></p>
+                <p><a href="https://github.com/ngmy/webloyer" target="_blank"><i class="fa fa-github fa-2x" aria-hidden="true" style="color: white;"></i></a></p>
                 <p>&copy; 2015 Yuta Nagamiya.</p>
                 <p>Powered by <a href="https://deployer.org/" target="_blank">Deployer</a>.</p>
             </p>

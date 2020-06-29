@@ -11,6 +11,7 @@ use Webloyer\App\DataTransformer\User\{
 };
 use Webloyer\Domain\Model\User\{
     User,
+    UserApiToken,
     UserDoesNotExistException,
     UserId,
     UserRepository,
@@ -69,6 +70,23 @@ abstract class UserService implements ApplicationService
             throw new UserDoesNotExistException(
                 'User does not exist.' . PHP_EOL .
                 'Id: ' . $id->value()
+            );
+        }
+        return $user;
+    }
+
+    /**
+     * @param UserApiToken $apiToken
+     * @return User
+     * @throws UserDoesNotExistException
+     */
+    protected function getNonNullUserByApiToken(UserApiToken $apiToken): User
+    {
+        $user = $this->userRepository->findByApiToken($apiToken);
+        if (is_null($user)) {
+            throw new UserDoesNotExistException(
+                'User does not exist.' . PHP_EOL .
+                'API Token: ' . $apiToken->value()
             );
         }
         return $user;

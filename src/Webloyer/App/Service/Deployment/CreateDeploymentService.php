@@ -13,6 +13,9 @@ use Webloyer\Domain\Model\Project\{
     ProjectDoesNotExistException,
     ProjectId,
 };
+use Webloyer\Domain\Model\Recipe\RecipeDoesNotExistException;
+use Webloyer\Domain\Model\Server\ServerDoesNotExistException;
+use Webloyer\Domain\Model\User\UserDoesNotExistException;
 
 class CreateDeploymentService extends DeploymentService
 {
@@ -20,12 +23,13 @@ class CreateDeploymentService extends DeploymentService
      * @param CreateDeploymentRequest $request
      * @return mixed
      * @throws ProjectDoesNotExistException
+     * @throws RecipeDoesNotExistException
+     * @throws ServerDoesNotExistException
+     * @throws UserDoesNotExistException
      */
     public function execute($request = null)
     {
         assert(!is_null($request));
-
-        $project = $this->getNonNullProject(new ProjectId($request->getProjectId()));
 
         $deployment = Deployment::of(
             $request->getProjectId(),

@@ -23,6 +23,7 @@ use Webloyer\Domain\Model\Project\{
 };
 use Webloyer\Domain\Model\Recipe\{
     Recipe,
+    RecipeDoesNotExistException,
     RecipeId,
     RecipeRepository,
     Recipes,
@@ -140,6 +141,23 @@ abstract class DeploymentService implements ApplicationService
     }
 
     /**
+     * @param RecipeId $recipeId
+     * @return Recipe
+     * @throws RecipeDoesNotExistException
+     */
+    protected function getNonNullRecipe(RecipeId $recipeId): Recipe
+    {
+        $recipe = $this->recipeRepository->findById($recipeId);
+        if (is_null($recipe)) {
+            throw new RecipeDoesNotExistException(
+                'Recipe does not exist.' . PHP_EOL .
+                'Id: ' . $recipeId->value()
+            );
+        }
+        return $recipe;
+    }
+
+    /**
      * @param ServerId $serverId
      * @return Server
      * @throws ServerDoesNotExistException
@@ -176,15 +194,16 @@ abstract class DeploymentService implements ApplicationService
     /**
      * @param Deployment $deployment
      * @return void
+     * @throws ProjectDoesNotExistException
+     * @throws RecipeDoesNotExistException
+     * @throws ServerDoesNotExistException
+     * @throws UserDoesNotExistException
      */
     protected function requestDeployment(Deployment $deployment): void
     {
-        $project = $this->projectRepository->findById(new ProjectId($deployment->projectId()));
+        $project = $this->getNonNullProject(new ProjectId($deployment->projectId()));
         $recipes = new Recipes(...array_reduce($project->recipeIds(), function (array $carry, string $recipeId): array {
-            $recipe = $this->recipeRepository->findById(new RecipeId($recipeId));
-            if (is_null($recipe)) {
-                return $carry;
-            }
+            $recipe = $this->getNonNullRecipe(new RecipeId($recipeId));
             $carry[] = $recipe;
             return $carry;
         }, []));

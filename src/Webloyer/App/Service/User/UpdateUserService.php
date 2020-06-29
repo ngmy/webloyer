@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Webloyer\App\Service\User;
 
-use Webloyer\Domain\Model\User\UserId;
+use Webloyer\Domain\Model\User\{
+    UserDoesNotExistException,
+    UserId,
+};
 
 class UpdateUserService extends UserService
 {
     /**
      * @param UpdateUserRequest $request
      * @return void
+     * @throws UserDoesNotExistException
      */
     public function execute($request = null)
     {

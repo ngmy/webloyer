@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Webloyer\App\Service\User;
 
 use Webloyer\Domain\Model\User\{
+    UserDoesNotExistException,
     UserId,
     UserRoleSpecification,
 };
@@ -14,6 +15,7 @@ class UpdateRoleService extends UserService
     /**
      * @param UpdateRoleRequest $request
      * @return void
+     * @throws UserDoesNotExistException
      */
     public function execute($request = null)
     {
