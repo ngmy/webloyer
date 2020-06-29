@@ -155,6 +155,7 @@ class NullUser extends User
     /**
      * @return void
      */
-    private function __construct() {
+    private function __construct()
+    {
     }
 }
