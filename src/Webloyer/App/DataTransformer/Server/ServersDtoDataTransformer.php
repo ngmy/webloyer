@@ -16,6 +16,10 @@ class ServersDtoDataTransformer implements ServersDataTransformer
     /** @var ServerDtoDataTransformer */
     private $serverDataTransformer;
 
+    /**
+     * @param ServerDtoDataTransformer $serverDataTransformer
+     * @return void
+     */
     public function __construct(ServerDtoDataTransformer $serverDataTransformer)
     {
         $this->serverDataTransformer = $serverDataTransformer;

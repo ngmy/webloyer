@@ -11,6 +11,11 @@ class TransactionalApplicationService implements ApplicationService
     /** @var TransactionalSession */
     private $session;
 
+    /**
+     * @param ApplicationService   $service
+     * @param TransactionalSession $session
+     * @return void
+     */
     public function __construct(
         ApplicationService $service,
         TransactionalSession $session

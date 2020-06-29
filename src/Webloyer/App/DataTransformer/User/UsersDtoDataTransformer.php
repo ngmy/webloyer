@@ -16,6 +16,10 @@ class UsersDtoDataTransformer implements UsersDataTransformer
     /** @var UserDtoDataTransformer */
     private $userDataTransformer;
 
+    /**
+     * @param UserDtoDataTransformer $userDataTransformer
+     * @return void
+     */
     public function __construct(UserDtoDataTransformer $userDataTransformer)
     {
         $this->userDataTransformer = $userDataTransformer;

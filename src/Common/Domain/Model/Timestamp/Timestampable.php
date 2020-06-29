@@ -40,7 +40,6 @@ trait Timestampable
     }
 
     /**
-     *
      * @param DateTimeImmutable $updatedAt
      * @return self
      */

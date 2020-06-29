@@ -9,6 +9,9 @@ use Illuminate\Support\Str;
 
 class UuidIdGenerator implements IdGenerator
 {
+    /**
+     * @return string
+     */
     public function generate(): string
     {
         return Str::orderedUuid()->toString();

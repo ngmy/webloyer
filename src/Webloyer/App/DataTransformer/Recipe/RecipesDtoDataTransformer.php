@@ -16,6 +16,10 @@ class RecipesDtoDataTransformer implements RecipesDataTransformer
     /** @var RecipeDtoDataTransformer */
     private $recipeDataTransformer;
 
+    /**
+     * @param RecipeDtoDataTransformer $recipeDataTransformer
+     * @return void
+     */
     public function __construct(RecipeDtoDataTransformer $recipeDataTransformer)
     {
         $this->recipeDataTransformer = $recipeDataTransformer;

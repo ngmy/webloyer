@@ -16,6 +16,10 @@ class ProjectsDtoDataTransformer implements ProjectsDataTransformer
     /** @var ProjectDtoDataTransformer */
     private $projectDataTransformer;
 
+    /**
+     * @param ProjectDtoDataTransformer $projectDataTransformer
+     * @return void
+     */
     public function __construct(ProjectDtoDataTransformer $projectDataTransformer)
     {
         $this->projectDataTransformer = $projectDataTransformer;

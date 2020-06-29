@@ -16,6 +16,10 @@ class DeploymentsDtoDataTransformer implements DeploymentsDataTransformer
     /** @var DeploymentDtoDataTransformer */
     private $deploymentDataTransformer;
 
+    /**
+     * @param DeploymentDtoDataTransformer $deploymentDataTransformer
+     * @return void
+     */
     public function __construct(DeploymentDtoDataTransformer $deploymentDataTransformer)
     {
         $this->deploymentDataTransformer = $deploymentDataTransformer;
