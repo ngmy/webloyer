@@ -4,37 +4,25 @@ declare(strict_types=1);
 
 namespace Webloyer\Infra\Framework\Laravel\App\Listeners;
 
+use Common\App\Service\ApplicationService;
 use Deployer\Domain\Model\DeployerFinished;
 use stdClass;
-use Webloyer\Domain\Model\Deployment\{
-    DeploymentNumber,
-    DeploymentRepository,
-};
-use Webloyer\Domain\Model\Project\{
-    ProjectId,
-    ProjectRepository,
-};
+use Webloyer\App\Service\Deployment\FinishDeploymentRequest;
 
 class DeployerFinishedListener extends WebloyerEventListener
 {
-    /** @var DeploymentRepository */
-    private $deploymentRepository;
-    /** @var ProjectRepository */
-    private $projectRepository;
+    /** @var ApplicationService */
+    private $service;
 
     /**
      * Create the event listener.
      *
-     * @param DeploymentRepository $deploymentRepository
-     * @param ProjectRepository    $projectRepository
+     * @param ApplicationService $service
      * @return void
      */
-    public function __construct(
-        DeploymentRepository $deploymentRepository,
-        ProjectRepository $projectRepository
-    ) {
-        $this->deploymentRepository = $deploymentRepository;
-        $this->projectRepository = $projectRepository;
+    public function __construct(ApplicationService $service)
+    {
+        $this->service = $service;
     }
 
     /**
@@ -50,15 +38,12 @@ class DeployerFinishedListener extends WebloyerEventListener
      */
     protected function perform(stdClass $event): void
     {
-        $project = $this->projectRepository->findById(new ProjectId($event->project_id));
-        $deployment = $this->deploymentRepository->findById(
-            $project,
-            new DeploymentNumber($event->number)
-        );
-        $deployment->changeLog($event->log)
-            ->changeStatus($event->status == 0 ? 'succeeded' : 'failed')
-            ->changeFinishDate($event->finish_date)
-            ->complete();
-        $this->deploymentRepository->save($deployment);
+        $request = (new FinishDeploymentRequest())
+            ->setProjectId($event->project_id)
+            ->setNumber($event->number)
+            ->setLog($event->log)
+            ->setStatus($event->status)
+            ->setFinishDate($event->finish_date);
+        $this->service->execute($request);
     }
 }

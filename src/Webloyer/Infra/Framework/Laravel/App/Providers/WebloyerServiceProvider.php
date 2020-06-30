@@ -46,9 +46,12 @@ use Webloyer\App\DataTransformer\User\{
 use Webloyer\App\Service\Deployment\{
     CreateDeploymentService,
     DeleteDeploymentService,
+    FinishDeploymentService,
     GetDeploymentService,
     GetDeploymentsService,
+    ProgressDeploymentService,
     RollbackDeploymentService,
+    StartDeploymentService,
 };
 use Webloyer\App\Service\Project\{
     CreateProjectService,
@@ -149,6 +152,11 @@ use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User\{
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Webhook\V1\GitHub\Deployment\{
     DeployController as WebhookV1GitHubDeploymentDeployController,
     RollbackController as WebhookV1GitHubDeploymentRollbackController,
+};
+use Webloyer\Infra\Framework\Laravel\App\Listeners\{
+    DeployerFinishedListener,
+    DeployerProgressedListener,
+    DeployerStartedListener,
 };
 use Webloyer\Infra\Ui\Api\JsonRpc\Api as JsonRpcApi;
 use Webloyer\Query\AllRolesQueryHandler;
@@ -282,6 +290,54 @@ class WebloyerServiceProvider extends ServiceProvider
             ->give(function (Application $app): ApplicationService {
                 return new TransactionalApplicationService(
                     new RollbackDeploymentService(
+                        $app->make(DeploymentRepository::class),
+                        $app->make(ProjectRepository::class),
+                        $app->make(RecipeRepository::class),
+                        $app->make(ServerRepository::class),
+                        $app->make(UserRepository::class),
+                        $app->make(DeploymentDataTransformer::class),
+                        $app->make(DeploymentsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(DeployerFinishedListener::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new FinishDeploymentService(
+                        $app->make(DeploymentRepository::class),
+                        $app->make(ProjectRepository::class),
+                        $app->make(RecipeRepository::class),
+                        $app->make(ServerRepository::class),
+                        $app->make(UserRepository::class),
+                        $app->make(DeploymentDataTransformer::class),
+                        $app->make(DeploymentsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(DeployerProgressedListener::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new ProgressDeploymentService(
+                        $app->make(DeploymentRepository::class),
+                        $app->make(ProjectRepository::class),
+                        $app->make(RecipeRepository::class),
+                        $app->make(ServerRepository::class),
+                        $app->make(UserRepository::class),
+                        $app->make(DeploymentDataTransformer::class),
+                        $app->make(DeploymentsDataTransformer::class)
+                    ),
+                    $app->make(TransactionalSession::class)
+                );
+            });
+        $this->app->when(DeployerStartedListener::class)
+            ->needs(ApplicationService::class)
+            ->give(function (Application $app): ApplicationService {
+                return new TransactionalApplicationService(
+                    new StartDeploymentService(
                         $app->make(DeploymentRepository::class),
                         $app->make(ProjectRepository::class),
                         $app->make(RecipeRepository::class),

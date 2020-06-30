@@ -40,7 +40,7 @@ class DeploymentCompletedSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * @param DomainEvent $domainEvent
+     * @param DeploymentCompleted $domainEvent
      * @return void
      */
     public function handle(DomainEvent $domainEvent): void
