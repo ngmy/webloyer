@@ -26,10 +26,10 @@ class DeleteDeploymentService extends DeploymentService
         assert(!is_null($request));
 
         $project = $this->getNonNullProject(new ProjectId($request->getProjectId()));
-
-        $projectId = new ProjectId($request->getProjectId());
         $number = new DeploymentNumber($request->getNumber());
-        $deployment = $this->getNonNullDeployment($projectId, $number);
+
+        $deployment = $this->getNonNullDeployment($project, $number);
+
         $this->deploymentRepository->remove($deployment);
     }
 }

@@ -27,11 +27,8 @@ class GetDeploymentService extends DeploymentService
         assert(!is_null($request));
 
         $project = $this->getNonNullProject(new ProjectId($request->getProjectId()));
-
-        $projectId = new ProjectId($request->getProjectId());
         $number = new DeploymentNumber($request->getNumber());
-        // TODO projectIdじゃなくてprojectで取るようにする。リポジトリも同様
-        $deployment = $this->getNonNullDeployment($projectId, $number);
+        $deployment = $this->getNonNullDeployment($project, $number);
         return $this->deploymentDataTransformer->write($deployment)->read();
     }
 }

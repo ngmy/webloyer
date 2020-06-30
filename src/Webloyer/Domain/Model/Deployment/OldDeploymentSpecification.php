@@ -52,7 +52,7 @@ class OldDeploymentSpecification implements DeploymentSpecification
             return false;
         }
 
-        $deployments = $this->deploymentRepository->findAllByProjectId(new ProjectId($deployment->projectId()));
+        $deployments = $this->deploymentRepository->findAllByProject($project);
 
         if ($deployments->isEmpty()) {
             return false;
@@ -80,6 +80,8 @@ class OldDeploymentSpecification implements DeploymentSpecification
     }
 
     /**
+     * TODO add project to param?
+     *
      * @param DeploymentRepository $deploymentRepository
      * @return Deployments
      */
@@ -90,7 +92,7 @@ class OldDeploymentSpecification implements DeploymentSpecification
         $oldDeploymentArray = [];
 
         foreach ($projects->toArray() as $project) {
-            $deployments = $deploymentRepository->findAllByProjectId(new ProjectId($project->id()));
+            $deployments = $deploymentRepository->findAllByProject($project);
 
             if ($deployments->isEmpty()) {
                 continue;

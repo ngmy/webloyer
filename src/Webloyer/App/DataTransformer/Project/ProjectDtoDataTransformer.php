@@ -206,7 +206,7 @@ class ProjectDtoDataTransformer implements ProjectDataTransformer
         $this->project->provide($dto);
 
         if (isset($this->deploymentDataTransformer)) {
-            $deployment = $this->projectService->lastDeploymentFrom(new ProjectId($this->project->id()));
+            $deployment = $this->projectService->lastDeploymentFrom($this->project);
             $dto->lastDeployment = $deployment ? $this->deploymentDataTransformer->write($deployment)->read() : null;
         }
 

@@ -31,9 +31,10 @@ class RollbackDeploymentService extends DeploymentService
     {
         assert(!is_null($request));
 
+        $project = $this->getNonNullProject(new ProjectId($request->getProjectId()));
         $deployment = Deployment::of(
             $request->getProjectId(),
-            $this->deploymentRepository->nextId(new ProjectId($request->getProjectId()))->value(),
+            $this->deploymentRepository->nextId($project)->value(),
             DeploymentTask::rollback()->value(),
             DeploymentStatus::queued()->value(),
             '',

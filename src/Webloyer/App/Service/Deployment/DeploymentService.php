@@ -120,20 +120,20 @@ abstract class DeploymentService implements ApplicationService
     }
 
     /**
-     * @param ProjectId $projectId
+     * @param Project          $project
      * @param DeploymentNumber $number
      * @return Deployment
      * @throws DeploymentDoesNotExistException
      */
     protected function getNonNullDeployment(
-        ProjectId $projectId,
+        Project $project,
         DeploymentNumber $number
     ): Deployment {
-        $deployment = $this->deploymentRepository->findById($projectId, $number);
+        $deployment = $this->deploymentRepository->findById($project, $number);
         if (is_null($deployment)) {
             throw new DeploymentDoesNotExistException(
                 'Deployment does not exist.' . PHP_EOL .
-                'Project Id: ' . $projectId->value() . PHP_EOL .
+                'Project Id: ' . $project->id() . PHP_EOL .
                 'Number: ' . $number->value()
             );
         }

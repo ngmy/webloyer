@@ -21,7 +21,7 @@ class GetDeploymentsService extends DeploymentService
     {
         assert(!is_null($request));
         $project = $this->getNonNullProject(new ProjectId($request->getProjectId()));
-        $deployments = $this->deploymentRepository->findAllByProjectId(new ProjectId($request->getProjectId()));
+        $deployments = $this->deploymentRepository->findAllByProject($project);
         return $this->deploymentsDataTransformer->write($deployments)->read();
     }
 }

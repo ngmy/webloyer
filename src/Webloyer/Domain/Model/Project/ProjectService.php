@@ -73,12 +73,12 @@ class ProjectService
     }
 
     /**
-     * @param ProjectId $projectId
+     * @param Project $project
      * @return Deployment|null
      */
-    public function lastDeploymentFrom(ProjectId $projectId): ?Deployment
+    public function lastDeploymentFrom(Project $project): ?Deployment
     {
-        return $this->deploymentRepository->findLastByProjectId($projectId);
+        return $this->deploymentRepository->findLastByProject($project);
     }
 
     /**

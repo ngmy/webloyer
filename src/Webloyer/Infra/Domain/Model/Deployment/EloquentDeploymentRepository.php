@@ -13,7 +13,7 @@ use Webloyer\Domain\Model\Deployment\{
     DeploymentSpecification,
     Deployments,
 };
-use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Project\Project;
 use Webloyer\Infra\Persistence\Eloquent\Models\{
     Deployment as DeploymentOrm,
     MaxDeployment as MaxDeploymentOrm,
@@ -23,21 +23,21 @@ use Webloyer\Infra\Persistence\Eloquent\Models\{
 class EloquentDeploymentRepository implements DeploymentRepository
 {
     /**
-     * @param ProjectId $projectId
+     * @param Project $project
      * @return DeploymentNumber
      * @see DeploymentRepository::nextId()
      */
-    public function nextId(ProjectId $projectId): DeploymentNumber
+    public function nextId(Project $project): DeploymentNumber
     {
         // Lock the row until transaction is committed
-        $projectOrm = ProjectOrm::ofId($projectId->value())->first();
+        $projectOrm = ProjectOrm::ofId($project->id())->first();
         $maxDeploymentOrm = MaxDeploymentOrm::where('project_id', $projectOrm->id)
             ->lockForUpdate()
             ->first();
         if (is_null($maxDeploymentOrm)) {
             throw new InvalidArgumentException(
                 'Max deployment does not exists.' . PHP_EOL .
-                'Project Id: ' . $projectId->value()
+                'Project Id: ' . $project->id()
             );
         }
         $maxDeploymentOrm->number++;
@@ -46,13 +46,13 @@ class EloquentDeploymentRepository implements DeploymentRepository
     }
 
     /**
-     * @param ProjectId $projectId
+     * @param Project $project
      * @return Deployments
-     * @see DeploymentRepository::findAllByProjectId()
+     * @see DeploymentRepository::findAllByProject()
      */
-    public function findAllByProjectId(ProjectId $projectId): Deployments
+    public function findAllByProject(Project $project): Deployments
     {
-        $deploymentArray = DeploymentOrm::ofProjectId($projectId->value())
+        $deploymentArray = DeploymentOrm::ofProjectId($project->id())
             ->orderBy('number', 'desc')
             ->get()
             ->map(function (DeploymentOrm $deploymentOrm): Deployment {
@@ -63,18 +63,18 @@ class EloquentDeploymentRepository implements DeploymentRepository
     }
 
     /**
-     * @param ProjectId $projectId
+     * @param Project   $project
      * @param int|null  $page
      * @param int|null  $perPage
      * @return Deployments
-     * @see DeploymentRepository::findAllByProjectIdAndPage()
+     * @see DeploymentRepository::findAllByProjectAndPage()
      */
-    public function findAllByProjectIdAndPage(ProjectId $projectId, ?int $page, ?int $perPage): Deployments
+    public function findAllByProjectAndPage(Project $project, ?int $page, ?int $perPage): Deployments
     {
         $page = $page ?? 1;
         $perPage = $perPage ?? 10;
 
-        $deploymentArray = DeploymentOrm::ofProjectId($projectId->value())
+        $deploymentArray = DeploymentOrm::ofProjectId($project->id())
             ->orderBy('number', 'desc')
             ->skip($perPage * ($page - 1))
             ->take($perPage)
@@ -87,14 +87,14 @@ class EloquentDeploymentRepository implements DeploymentRepository
     }
 
     /**
-     * @param ProjectId                   $projectId
+     * @param Project          $project
      * @param DeploymentNumber $number
      * @return Deployment|null
      * @see DeploymentRepository::findById()
      */
-    public function findById(ProjectId $projectId, DeploymentNumber $number): ?Deployment
+    public function findById(Project $project, DeploymentNumber $number): ?Deployment
     {
-        $deploymentOrm = DeploymentOrm::ofId($projectId->value(), $number->value())->first();
+        $deploymentOrm = DeploymentOrm::ofId($project->id(), $number->value())->first();
         if (is_null($deploymentOrm)) {
             return null;
         }
@@ -102,12 +102,12 @@ class EloquentDeploymentRepository implements DeploymentRepository
     }
 
     /**
-     * @param ProjectId $projectId
+     * @param Project $project
      * @return Deployment|null
      */
-    public function findLastByProjectId(ProjectId $projectId): ?Deployment
+    public function findLastByProject(Project $project): ?Deployment
     {
-        $deploymentOrm = DeploymentOrm::ofProjectId($projectId->value())
+        $deploymentOrm = DeploymentOrm::ofProjectId($project->id())
             ->orderBy('number', 'desc')
             ->first();
         if (is_null($deploymentOrm)) {

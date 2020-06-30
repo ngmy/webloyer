@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Webloyer\Domain\Model\Deployment;
 
-use Webloyer\Domain\Model\Project\ProjectId;
+use Webloyer\Domain\Model\Project\Project;
 
 /**
  * @codeCoverageIgnore
@@ -12,33 +12,33 @@ use Webloyer\Domain\Model\Project\ProjectId;
 interface DeploymentRepository
 {
     /**
-     * @param ProjectId $projectId
+     * @param Project $project
      * @return DeploymentNumber
      */
-    public function nextId(ProjectId $projectId): DeploymentNumber;
+    public function nextId(Project $project): DeploymentNumber;
     /**
-     * @param ProjectId $projectId
+     * @param Project $project
      * @return Deployments
      */
-    public function findAllByProjectId(ProjectId $projectId): Deployments;
+    public function findAllByProject(Project $project): Deployments;
     /**
-     * @param ProjectId $projectId
+     * @param Project  $project
      * @param int|null $page
      * @param int|null $perPage
      * @return Deployments
      */
-    public function findAllByProjectIdAndPage(ProjectId $projectId, ?int $page, ?int $perPage): Deployments;
+    public function findAllByProjectAndPage(Project $project, ?int $page, ?int $perPage): Deployments;
     /**
-     * @param ProjectId        $projectId
+     * @param Project          $project
      * @param DeploymentNumber $number
      * @return Deployment|null
      */
-    public function findById(ProjectId $projectId, DeploymentNumber $number): ?Deployment;
+    public function findById(Project $project, DeploymentNumber $number): ?Deployment;
     /**
-     * @param ProjectId $projectId
+     * @param Project $project
      * @return Deployment|null
      */
-    public function findLastByProjectId(ProjectId $projectId): ?Deployment;
+    public function findLastByProject(Project $project): ?Deployment;
     /**
      * @param Deployment $deployment
      * @return void
