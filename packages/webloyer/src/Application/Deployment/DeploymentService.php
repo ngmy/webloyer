@@ -4,6 +4,7 @@ namespace Ngmy\Webloyer\Webloyer\Application\Deployment;
 
 use DateTimeImmutable;
 use DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Ngmy\Webloyer\Common\QueryObject\Direction;
 use Ngmy\Webloyer\Common\QueryObject\Order;
 use Ngmy\Webloyer\Common\QueryObject\Pagination;
@@ -44,7 +45,7 @@ class DeploymentService
      * @param int $projectId
      * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\DeploymentId
      */
-    public function getNextIdentity($projectId)
+    public function getNextIdentity(int $projectId): DeploymentId
     {
         return $this->deploymentRepository->nextIdentity(
             $this->projectService->getProjectById($projectId)
@@ -59,7 +60,7 @@ class DeploymentService
      * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getDeploymentsByPage($projectId, $page = 1, $perPage = 10)
+    public function getDeploymentsByPage(int $projectId, int $page = 1, int $perPage = 10): LengthAwarePaginator
     {
         $criteria = new DeploymentCriteria(new ProjectId($projectId));
         $order = new Order('deployments.created_at', Direction::desc());
@@ -76,9 +77,9 @@ class DeploymentService
      *
      * @param int $projectId
      * @param int $deploymentId
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment|null
      */
-    public function getDeploymentById($projectId, $deploymentId)
+    public function getDeploymentById(int $projectId, int $deploymentId): ?Deployment
     {
         return $this->deploymentRepository->deploymentOfId(
             $this->projectService->getProjectById($projectId),
@@ -90,9 +91,9 @@ class DeploymentService
      * Get a last deployment.
      *
      * @param int $projectId
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Deployment\Deployment|null
      */
-    public function getLastDeployment($projectId)
+    public function getLastDeployment(int $projectId): ?Deployment
     {
         $criteria = new DeploymentCriteria(new ProjectId($projectId));
         $order = new Order('deployments.created_at', Direction::desc());
@@ -119,7 +120,7 @@ class DeploymentService
      * @param int         $deployedUserId
      * @return void
      */
-    public function saveDeployment($projectId, $deploymentId, $task, $processExitCode, $message, $deployedUserId)
+    public function saveDeployment(int $projectId, int $deploymentId, string $task, ?int $processExitCode, ?string $message, int $deployedUserId): void
     {
         DB::transaction(function () use ($projectId, $deploymentId, $task, $processExitCode, $message, $deployedUserId) {
             $deployment = new Deployment(
@@ -143,7 +144,7 @@ class DeploymentService
      * @param \DateTimeImmutable $currentDate
      * @return void
      */
-    public function removeOldDeployments($projectId, DateTimeImmutable $currentDate)
+    public function removeOldDeployments(int $projectId, DateTimeImmutable $currentDate): void
     {
         DB::transaction(function () use ($projectId, $currentDate) {
             $spec = new OldDeploymentSpecification(

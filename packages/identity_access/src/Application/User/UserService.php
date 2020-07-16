@@ -3,6 +3,7 @@
 namespace Ngmy\Webloyer\IdentityAccess\Application\User;
 
 use DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\UserId;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\UserRepositoryInterface;
@@ -28,7 +29,7 @@ class UserService
      *
      * @return array
      */
-    public function getAllUsers()
+    public function getAllUsers(): array
     {
         return $this->userRepository->allUsers();
     }
@@ -40,7 +41,7 @@ class UserService
      * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getUsersByPage($page = 1, $perPage = 10)
+    public function getUsersByPage(int $page = 1, int $perPage = 10): LengthAwarePaginator
     {
         return $this->userRepository->usersOfPage($page, $perPage);
     }
@@ -49,9 +50,9 @@ class UserService
      * Get a user by id.
      *
      * @param int $userId
-     * @return \Ngmy\Webloyer\IdentityAccess\Model\User\User
+     * @return \Ngmy\Webloyer\IdentityAccess\Model\User\User|null
      */
-    public function getUserById($userId)
+    public function getUserById(int $userId): ?User
     {
         return $this->userRepository->userOfId(new UserId($userId));
     }
@@ -59,16 +60,16 @@ class UserService
     /**
      * Create or Update a user.
      *
-     * @param int|null $userId
-     * @param string   $name
-     * @param string   $email
-     * @param string   $password
-     * @param string   $apiToken
-     * @param int[]    $roleIds
-     * @param string   $concurrencyVersion
+     * @param int|null    $userId
+     * @param string      $name
+     * @param string      $email
+     * @param string      $password
+     * @param string      $apiToken
+     * @param int[]       $roleIds
+     * @param string|null $concurrencyVersion
      * @return void
      */
-    public function saveUser($userId, $name, $email, $password, $apiToken, array $roleIds, $concurrencyVersion)
+    public function saveUser(?int $userId, string $name, string $email, string $password, string $apiToken, array $roleIds, ?string $concurrencyVersion): void
     {
         DB::transaction(function () use ($userId, $name, $email, $password, $apiToken, $roleIds, $concurrencyVersion) {
             if (!is_null($userId)) {
@@ -102,7 +103,7 @@ class UserService
      * @param int $userId
      * @return void
      */
-    public function removeUser($userId)
+    public function removeUser(int $userId): void
     {
         $this->userRepository->remove($this->getUserById($userId));
     }

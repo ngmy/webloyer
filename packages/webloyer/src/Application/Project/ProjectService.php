@@ -11,6 +11,7 @@ use Ngmy\Webloyer\Webloyer\Domain\Model\Project\ProjectRepositoryInterface;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Recipe\RecipeId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\User\UserId;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProjectService
 {
@@ -32,7 +33,7 @@ class ProjectService
      *
      * @return array
      */
-    public function getAllProjects()
+    public function getAllProjects(): array
     {
         return $this->projectRepository->allProjects();
     }
@@ -44,7 +45,7 @@ class ProjectService
      * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getProjectsByPage($page = 1, $perPage = 10)
+    public function getProjectsByPage(int $page = 1, int $perPage = 10): LengthAwarePaginator
     {
         return $this->projectRepository->projectsOfPage($page, $perPage);
     }
@@ -53,9 +54,9 @@ class ProjectService
      * Get a project by id.
      *
      * @param int $projectId
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Project\Project|null
      */
-    public function getProjectById($projectId)
+    public function getProjectById(int $projectId): ?Project
     {
         return $this->projectRepository->projectOfId(new ProjectId($projectId));
     }
@@ -63,23 +64,23 @@ class ProjectService
     /**
      * Create or Update a project.
      *
-     * @param int|null $projectId
-     * @param string   $name
-     * @param int[]    $recipeIds
-     * @param int      $serverId
-     * @param string   $repositoryUrl
-     * @param string   $stage
-     * @param string   $deployPath
-     * @param string   $emailNotificationRecipient
-     * @param int      $daysToKeepDeployments
-     * @param int      $maxNumberOfDeploymentsToKeep
-     * @param int      $keepLastDeployment
-     * @param string   $githubWebhookSecret
-     * @param int      $githubWebhookExecuteUserId
-     * @param string   $concurrencyVersion
+     * @param int|null    $projectId
+     * @param string      $name
+     * @param int[]       $recipeIds
+     * @param int         $serverId
+     * @param string      $repositoryUrl
+     * @param string      $stage
+     * @param string      $deployPath
+     * @param string      $emailNotificationRecipient
+     * @param int         $daysToKeepDeployments
+     * @param int         $maxNumberOfDeploymentsToKeep
+     * @param int         $keepLastDeployment
+     * @param string      $githubWebhookSecret
+     * @param int         $githubWebhookExecuteUserId
+     * @param string|null $concurrencyVersion
      * @return void
      */
-    public function saveProject($projectId, $name, array $recipeIds, $serverId, $repositoryUrl, $stage, $deployPath, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, $keepLastDeployment, $githubWebhookSecret, $githubWebhookExecuteUserId, $concurrencyVersion)
+    public function saveProject(?int $projectId, string $name, array $recipeIds, int $serverId, string $repositoryUrl, string $stage, string $deployPath, string $emailNotificationRecipient, int $daysToKeepDeployments, int $maxNumberOfDeploymentsToKeep, int $keepLastDeployment, string $githubWebhookSecret, int $githubWebhookExecuteUserId, ?string $concurrencyVersion): void
     {
         DB::transaction(function () use ($projectId, $name, $recipeIds, $serverId, $repositoryUrl, $stage, $deployPath, $emailNotificationRecipient, $daysToKeepDeployments, $maxNumberOfDeploymentsToKeep, $keepLastDeployment, $githubWebhookSecret, $githubWebhookExecuteUserId, $concurrencyVersion) {
             if (!is_null($projectId)) {
@@ -117,7 +118,7 @@ class ProjectService
      * @param int $projectId
      * @return void
      */
-    public function removeProject($projectId)
+    public function removeProject(int $projectId): void
     {
         $this->projectRepository->remove($this->getProjectById($projectId));
     }

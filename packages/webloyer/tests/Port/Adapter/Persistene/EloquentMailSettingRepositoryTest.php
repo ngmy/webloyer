@@ -2,9 +2,6 @@
 
 namespace Ngmy\Webloyer\Webloyer\Port\Adapter\Persistence;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSetting;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingDriver;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingSmtpEncryption;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Webloyer;
+namespace App\Console\Commands;
 
 use Artisan;
 use Hash;
@@ -143,7 +143,8 @@ class Install extends Command
             $adminEmail,
             $adminHashedPassword,
             $adminApiToken,
-            $adminRoleIds
+            $adminRoleIds,
+            null
         );
     }
 }

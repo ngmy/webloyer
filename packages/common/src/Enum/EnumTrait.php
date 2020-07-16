@@ -23,18 +23,18 @@ trait EnumTrait
         return in_array($value, self::ENUM, true);
     }
 
-    final public static function isValidKey($key)
+    final public static function isValidName($name)
     {
-        return array_key_exists($key, self::ENUM);
+        return array_key_exists($name, self::ENUM);
     }
 
-    final public static function __callStatic($method, array $args)
+    final public static function __callStatic($name, array $args)
     {
-        if (!self::isValidKey($method)) {
-            throw new BadMethodCallException("Undefined static method (method='{$method}')");
+        if (!self::isValidName($name)) {
+            throw new BadMethodCallException("Invalid enum name (name='{$name}')");
         }
 
-        return new self(self::ENUM[$method]);
+        return new self(self::ENUM[$name]);
     }
 
     final public function __toString()
@@ -47,8 +47,8 @@ trait EnumTrait
         return $this->scalar;
     }
 
-    final public function __set($key, $value)
+    final public function __set($name, $value)
     {
-        throw new BadMethodCallException('All setter is forbbiden');
+        throw new BadMethodCallException('All setter is forbidden');
     }
 }

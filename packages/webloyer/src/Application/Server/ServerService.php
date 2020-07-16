@@ -3,6 +3,7 @@
 namespace Ngmy\Webloyer\Webloyer\Application\Server;
 
 use DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerId;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Server\ServerRepositoryInterface;
@@ -27,7 +28,7 @@ class ServerService
      *
      * @return array
      */
-    public function getAllServers()
+    public function getAllServers(): array
     {
         return $this->serverRepository->allServers();
     }
@@ -39,7 +40,7 @@ class ServerService
      * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getServersByPage($page = 1, $perPage = 10)
+    public function getServersByPage(int $page = 1, int $perPage = 10): LengthAwarePaginator
     {
         return $this->serverRepository->serversOfPage($page, $perPage);
     }
@@ -48,9 +49,9 @@ class ServerService
      * Get a server by id.
      *
      * @param int $serverId
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Server\Server|null
      */
-    public function getServerById($serverId)
+    public function getServerById(int $serverId): ?Server
     {
         return $this->serverRepository->serverOfId(new ServerId($serverId));
     }
@@ -58,14 +59,14 @@ class ServerService
     /**
      * Create or Update a server.
      *
-     * @param int|null $serverId
-     * @param string   $name
-     * @param string   $description
-     * @param string   $body
-     * @param string   $concurrencyVersion
+     * @param int|null    $serverId
+     * @param string      $name
+     * @param string      $description
+     * @param string      $body
+     * @param string|null $concurrencyVersion
      * @return void
      */
-    public function saveServer($serverId, $name, $description, $body, $concurrencyVersion)
+    public function saveServer(?int $serverId, string $name, string $description, string $body, ?string $concurrencyVersion): void
     {
         DB::transaction(function () use ($serverId, $name, $description, $body, $concurrencyVersion) {
             if (!is_null($serverId)) {
@@ -93,7 +94,7 @@ class ServerService
      * @param int $serverId
      * @return void
      */
-    public function removeServer($serverId)
+    public function removeServer(int $serverId): void
     {
         $this->serverRepository->remove($this->getServerById($serverId));
     }

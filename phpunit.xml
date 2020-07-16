@@ -63,10 +63,10 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="DB_HOST" value="localhost"/>
+        <env name="DB_HOST" value="mysql"/>
         <env name="DB_DATABASE" value="webloyer_test"/>
         <env name="DB_USERNAME" value="root"/>
-        <env name="DB_PASSWORD" value=""/>
+        <env name="DB_PASSWORD" value="root"/>
     </php>
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>

@@ -3,18 +3,18 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Routing\Router;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
+use Illuminate\Support\Facades\Route;
 use Ngmy\Webloyer\Webloyer\Application\Deployment\DeploymentService;
+use Ngmy\Webloyer\Webloyer\Application\Project\ProjectService;
 use Ngmy\Webloyer\Webloyer\Application\Recipe\RecipeService;
 use Ngmy\Webloyer\Webloyer\Application\Server\ServerService;
 use Ngmy\Webloyer\IdentityAccess\Application\User\UserService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to the controller routes in your routes file.
+     * This namespace is applied to your controller routes.
      *
      * In addition, it is set as the URL generator's root namespace.
      *
@@ -25,15 +25,12 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
-        parent::boot($router);
-
         //
-        $router->bind('project', function ($id) {
+        Route::bind('project', function ($id) {
             $projectService = $this->app->make(ProjectService::class);
 
             $project = $projectService->getProjectById($id);
@@ -45,7 +42,7 @@ class RouteServiceProvider extends ServiceProvider
             return $project;
         });
 
-        $router->bind('deployment', function ($id, $route) {
+        Route::bind('deployment', function ($id, $route) {
             $deploymentService = $this->app->make(DeploymentService::class);
 
             $project = $route->parameter('project');
@@ -58,7 +55,7 @@ class RouteServiceProvider extends ServiceProvider
             return $deployment;
         });
 
-        $router->bind('recipe', function ($id) {
+        Route::bind('recipe', function ($id) {
             $recipeService = $this->app->make(RecipeService::class);
 
             $recipe = $recipeService->getRecipeById($id);
@@ -70,7 +67,7 @@ class RouteServiceProvider extends ServiceProvider
             return $recipe;
         });
 
-        $router->bind('server', function ($id) {
+        Route::bind('server', function ($id) {
             $serverService = $this->app->make(ServerService::class);
 
             $server = $serverService->getServerById($id);
@@ -82,7 +79,7 @@ class RouteServiceProvider extends ServiceProvider
             return $server;
         });
 
-        $router->bind('user', function ($id) {
+        Route::bind('user', function ($id) {
             $userService = $this->app->make(UserService::class);
 
             $useId = $id;
@@ -94,18 +91,59 @@ class RouteServiceProvider extends ServiceProvider
 
             return $user;
         });
+
+        parent::boot();
     }
 
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function map(Router $router)
+    public function map()
     {
-        $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
-        });
+        $this->mapApiRoutes();
+
+        $this->mapWebRoutes();
+
+        //
+        $this->mapWebhookRoutes();
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/web.php'));
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapApiRoutes()
+    {
+        Route::prefix('api')
+             ->middleware('api')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/api.php'));
+    }
+
+    protected function mapWebhookRoutes()
+    {
+        Route::prefix('webhook')
+             ->middleware('api')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/webhook.php'));
     }
 }

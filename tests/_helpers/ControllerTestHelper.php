@@ -10,27 +10,27 @@ trait ControllerTestHelper
     {
         $data = array_merge($data, ['_token' => Session::token()]);
 
-        parent::post($uri, $data, $headers);
+        $response = parent::post($uri, $data, $headers);
 
-        return $this;
+        return $response;
     }
 
     public function put($uri, array $data = [], array $headers = [])
     {
         $data = array_merge($data, ['_token' => Session::token()]);
 
-        parent::put($uri, $data, $headers);
+        $response = parent::put($uri, $data, $headers);
 
-        return $this;
+        return $response;
     }
 
     public function delete($uri, array $data = [], array $headers = [])
     {
         $data = array_merge($data, ['_token' => Session::token()]);
 
-        parent::delete($uri, $data, $headers);
+        $response = parent::delete($uri, $data, $headers);
 
-        return $this;
+        return $response;
     }
 
     protected function auth($obj = null, $data = [])

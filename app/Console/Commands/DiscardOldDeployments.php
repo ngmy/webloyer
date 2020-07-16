@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Webloyer;
+namespace App\Console\Commands;
 
 use DateTimeImmutable;
 use Illuminate\Console\Command;

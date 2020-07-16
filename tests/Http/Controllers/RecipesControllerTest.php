@@ -88,17 +88,17 @@ class RecipesControllerTest extends TestCase
             )
             ->once();
 
-        $this->get('recipes');
+        $response = $this->get('recipes');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('recipes');
+        $response->assertStatus(200);
+        $response->assertViewHas('recipes');
     }
 
     public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
     {
-        $this->get('recipes/create');
+        $response = $this->get('recipes/create');
 
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
@@ -108,9 +108,9 @@ class RecipesControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->post('recipes');
+        $response = $this->post('recipes');
 
-        $this->assertRedirectedToRoute('recipes.index');
+        $response->assertRedirect('recipes');
     }
 
     public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
@@ -126,10 +126,10 @@ class RecipesControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->post('recipes');
+        $response = $this->post('recipes');
 
-        $this->assertRedirectedToRoute('recipes.create');
-        $this->assertSessionHasErrors();
+        $response->assertRedirect('recipes/create');
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
@@ -155,11 +155,11 @@ class RecipesControllerTest extends TestCase
             ->andReturn($recipe)
             ->once();
 
-        $this->get("recipes/{$recipe->recipeId()->id()}");
+        $response = $this->get("recipes/{$recipe->recipeId()->id()}");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('recipe');
-        $this->assertViewHas('afferentProjects');
+        $response->assertStatus(200);
+        $response->assertViewHas('recipe');
+        $response->assertViewHas('afferentProjects');
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
@@ -172,9 +172,9 @@ class RecipesControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("recipes/$recipeId");
+        $response = $this->get("recipes/$recipeId");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
@@ -187,10 +187,10 @@ class RecipesControllerTest extends TestCase
             ->andReturn($recipe)
             ->once();
 
-        $this->get("recipes/{$recipe->recipeId()->id()}/edit");
+        $response = $this->get("recipes/{$recipe->recipeId()->id()}/edit");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('recipe');
+        $response->assertStatus(200);
+        $response->assertViewHas('recipe');
     }
 
     public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
@@ -203,9 +203,9 @@ class RecipesControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("recipes/$recipeId/edit");
+        $response = $this->get("recipes/$recipeId/edit");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
@@ -223,9 +223,9 @@ class RecipesControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->put("recipes/{$recipe->recipeId()->id()}");
+        $response = $this->put("recipes/{$recipe->recipeId()->id()}");
 
-        $this->assertRedirectedToRoute('recipes.index');
+        $response->assertRedirect('recipes');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
@@ -249,10 +249,10 @@ class RecipesControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->put("recipes/{$recipe->recipeId()->id()}");
+        $response = $this->put("recipes/{$recipe->recipeId()->id()}");
 
-        $this->assertRedirectedToRoute('recipes.edit', [$recipe->recipeId()->id()]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect("recipes/{$recipe->recipeId()->id()}/edit");
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
@@ -265,9 +265,9 @@ class RecipesControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->put("recipes/$recipeId");
+        $response = $this->put("recipes/$recipeId");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
@@ -284,9 +284,9 @@ class RecipesControllerTest extends TestCase
             ->shouldReceive('removeRecipe')
             ->once();
 
-        $this->delete("recipes/{$recipe->recipeId()->id()}");
+        $response = $this->delete("recipes/{$recipe->recipeId()->id()}");
 
-        $this->assertRedirectedToRoute('recipes.index');
+        $response->assertRedirect('recipes');
     }
 
     public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
@@ -299,9 +299,9 @@ class RecipesControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->delete("recipes/$recipeId");
+        $response = $this->delete("recipes/$recipeId");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     private function createRecipe(array $params = [])

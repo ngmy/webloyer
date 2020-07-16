@@ -39,9 +39,9 @@ class SettingService
     /**
      * Get a app setting.
      *
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\AppSetting
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\AppSetting|null
      */
-    public function getAppSetting()
+    public function getAppSetting(): ?AppSetting
     {
         return $this->appSettingRepository->appSetting();
     }
@@ -52,7 +52,7 @@ class SettingService
      * @param string $appSettingUrl
      * @return void
      */
-    public function saveAppSetting($appSettingUrl)
+    public function saveAppSetting(string $appSettingUrl): void
     {
         $appSetting = new AppSetting(
             $appSettingUrl
@@ -63,9 +63,9 @@ class SettingService
     /**
      * Get a db setting.
      *
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\DbSetting
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\DbSetting|null
      */
-    public function getDbSetting()
+    public function getDbSetting(): ?DbSetting
     {
         return $this->dbSettingRepository->dbSetting();
     }
@@ -80,7 +80,7 @@ class SettingService
      * @param string $dbSettingPassword
      * @return void
      */
-    public function saveDbSetting($dbSettingDriver, $dbSettingHost, $dbSettingDatabase, $dbSettingUserName, $dbSettingPassword)
+    public function saveDbSetting(string $dbSettingDriver, string $dbSettingHost, string $dbSettingDatabase, string $dbSettingUserName, string $dbSettingPassword): void
     {
         $dbSetting = new DbSetting(
             new DbSettingDriver($dbSettingDriver),
@@ -95,9 +95,9 @@ class SettingService
     /**
      * Get a mail setting.
      *
-     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSetting
+     * @return \Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSetting|null
      */
-    public function getMailSetting()
+    public function getMailSetting(): ?MailSetting
     {
         return $this->mailSettingRepository->mailSetting();
     }
@@ -115,7 +115,7 @@ class SettingService
      * @param string      $mailSettingSendmailPath
      * @return void
      */
-    public function saveMailSetting($mailSettingDriver, $mailSettingFrom, $mailSettingSmtpHost, $mailSettingSmtpPort, $mailSettingSmtpEncryption, $mailSettingSmtpUserName, $mailSettingSmtpPassword, $mailSettingSendmailPath)
+    public function saveMailSetting(string $mailSettingDriver, array $mailSettingFrom, string $mailSettingSmtpHost, int $mailSettingSmtpPort, ?string $mailSettingSmtpEncryption, string $mailSettingSmtpUserName, string $mailSettingSmtpPassword, string $mailSettingSendmailPath): void
     {
         DB::transaction(function () use ($mailSettingDriver, $mailSettingFrom, $mailSettingSmtpHost, $mailSettingSmtpPort, $mailSettingSmtpEncryption, $mailSettingSmtpUserName, $mailSettingSmtpPassword, $mailSettingSendmailPath) {
             if (is_null($mailSettingSmtpEncryption)) {

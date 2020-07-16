@@ -12,17 +12,17 @@ trait RestExceptionHandlerTrait
      * Create a new JSON response based on exception type.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Exception               $e
+     * @param \Exception               $exception
      * @return \Illuminate\Http\JsonResponse
      */
-    private function getJsonResponseForException(Request $request, Exception $e)
+    private function getJsonResponseForException(Request $request, Exception $exception)
     {
-        if ($e instanceof HttpException) {
-            if ($e->getStatusCode() == 401) {
+        if ($exception instanceof HttpException) {
+            if ($exception->getStatusCode() == 401) {
                 return $this->unauthorized();
-            } elseif ($e->getStatusCode() == 404) {
+            } elseif ($exception->getStatusCode() == 404) {
                 return $this->notFound();
-            } elseif ($e->getStatusCode() < 500) {
+            } elseif ($exception->getStatusCode() < 500) {
                 return $this->badRequest();
             } else {
                 return $this->internalError();
@@ -89,7 +89,7 @@ trait RestExceptionHandlerTrait
      */
     private function jsonResponse(array $payload = null, $statusCode = 404)
     {
-        $payload = $payload ?: [];
+        $payload = $payload ?? [];
 
         return response()->json($payload, $statusCode);
     }

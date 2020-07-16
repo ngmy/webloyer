@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Webloyer</title>
 
-    <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -18,7 +18,7 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link href="{{ asset('/vendor/lou/multi-select/css/multi-select.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/lou/multi-select/css/multi-select.css') }}" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -54,12 +54,16 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     @if (Auth::guest())
-                        <li><a href="{{ url('/auth/login') }}">Login</a></li>
+                        <li><a href="{{ url('/login') }}">Login</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name() }} <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
+                                <li>
+                                    <a href="javascript:document.getElementById('form-logout').submit()">Logout</a>
+                                    {!! Form::open(['url' => url('/logout'), 'id' => 'form-logout']) !!}
+                                    {!! Form::close() !!}
+                                </li>
                             </ul>
                         </li>
                     @endif
@@ -71,7 +75,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                {!! Breadcrumbs::renderIfExists() !!}
+                {!! Breadcrumbs::exists() ? Breadcrumbs::render() : '' !!}
             </div>
         </div>
     </div>
@@ -93,7 +97,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
     <script src="{{ asset('vendor/lou/multi-select/js/jquery.multi-select.js') }}"></script>
-    <script src="{{ asset('/js/vendor/ajaxorg/ace/ace.js') }}"></script>
+    <script src="{{ asset('vendor/ajaxorg/ace/ace.js') }}"></script>
     <script>
         // Hook up ACE editor to all textareas with data-editor attribute
         $(function () {

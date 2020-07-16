@@ -6,6 +6,7 @@ use App\Http\Middleware\ApplySettings;
 use Illuminate\Support\MessageBag;
 use Ngmy\Webloyer\IdentityAccess\Domain\Model\User\User;
 use Ngmy\Webloyer\Webloyer\Application\Setting\SettingService;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSetting;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingDriver;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\NullMailSettingSmtpEncryption;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Setting\MailSettingSmtpEncryption;
@@ -63,10 +64,10 @@ class SettingsControllerTest extends TestCase
             ->andReturn($mailSetting)
             ->once();
 
-        $this->get('settings/email');
+        $response = $this->get('settings/email');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('mailSetting');
+        $response->assertStatus(200);
+        $response->assertViewHas('mailSetting');
     }
 
     public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessSucceeds()
@@ -76,9 +77,9 @@ class SettingsControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->post('settings/email');
+        $response = $this->post('settings/email');
 
-        $this->assertRedirectedToRoute('settings.email');
+        $response->assertRedirect('settings/email');
     }
 
     public function test_Should_RedirectToEmailSettingPage_When_EmailSettingProcessIsRequestedAndEmailSettingProcessFails()
@@ -94,9 +95,9 @@ class SettingsControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->post('settings/email');
+        $response = $this->post('settings/email');
 
-        $this->assertRedirectedToRoute('settings.email');
+        $response->assertRedirect('settings/email');
     }
 
     private function createMailSetting(array $params = [])

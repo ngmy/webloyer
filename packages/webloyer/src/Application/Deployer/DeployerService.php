@@ -15,6 +15,7 @@ use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerDeploymentFileBuilder;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFileDirector;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerRecipeFileBuilder;
 use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerServerListFileBuilder;
+use Ngmy\Webloyer\Webloyer\Domain\Model\Deployer\DeployerFileBuilderInterface;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Symfony\Component\Process\ProcessBuilder;
 use View;
@@ -76,14 +77,14 @@ class DeployerService
      * @param int $deploymentId
      * @return void
      */
-    public function dispatchDeployer($projectId, $deploymentId)
+    public function dispatchDeployer(int $projectId, int $deploymentId): void
     {
         $this->deployerDispatcherService->dispatch(
             $this->deploymentService->getDeploymentById($projectId, $deploymentId)
         );
     }
 
-    public function runDeployer($projectId, $deploymentId)
+    public function runDeployer(int $projectId, int $deploymentId): void
     {
         $deployment = $this->deploymentService->getDeploymentById($projectId, $deploymentId);
         $project    = $this->projectService->getProjectById($projectId);
@@ -95,14 +96,16 @@ class DeployerService
         $serverListFileBuilder = $app->make(DeployerServerListFileBuilder::class)
             ->setServer($server)
             ->setProject($project);
-        $serverListFile = $app->make(DeployerFileDirector::class, [$serverListFileBuilder])->construct();
+        $app->bind(DeployerFileBuilderInterface::class, $serverListFileBuilder);
+        $serverListFile = $app->make(DeployerFileDirector::class)->construct();
 
         // Create recipe files
         foreach ($project->recipeIds() as $i => $recipeId) {
             $recipe = $this->recipeService->getRecipeById($recipeId->id());
             // HACK: If an instance of DeployerRecipeFileBuilder class is not stored in an array, a destructor is called and a recipe file is deleted immediately.
             $recipeFileBuilders[] = $app->make(DeployerRecipeFileBuilder::class)->setRecipe($recipe);
-            $recipeFiles[] = $app->make(DeployerFileDirector::class, [$recipeFileBuilders[$i]])->construct();
+            $app->bind(DeployerFileBuilderInterface::class, $recipeFileBuilders[$i]);
+            $recipeFiles[] = $app->make(DeployerFileDirector::class)->construct();
         }
 
         // Create a deployment file
@@ -110,7 +113,8 @@ class DeployerService
             ->setProject($project)
             ->setServerListFile($serverListFile)
             ->setRecipeFile($recipeFiles);
-        $deploymentFile = $app->make(DeployerFileDirector::class, [$deploymentFileBuilder])->construct();
+        $app->bind(DeployerFileBuilderInterface::class, $deploymentFileBuilder);
+        $deploymentFile = $app->make(DeployerFileDirector::class)->construct();
 
         // Create a command
         $this->processBuilder

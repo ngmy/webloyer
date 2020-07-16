@@ -118,12 +118,12 @@ class DeploymentsControllerTest extends TestCase
                 ->once();
         }
 
-        $this->get("projects/{$project->projectId()->id()}/deployments");
+        $response = $this->get("projects/{$project->projectId()->id()}/deployments");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('deployments');
-        $this->assertViewHas('project');
-        $this->assertViewHas('deployedUsers');
+        $response->assertStatus(200);
+        $response->assertViewHas('deployments');
+        $response->assertViewHas('project');
+        $response->assertViewHas('deployedUsers');
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
@@ -147,9 +147,9 @@ class DeploymentsControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->post("projects/{$project->projectId()->id()}/deployments");
+        $response = $this->post("projects/{$project->projectId()->id()}/deployments");
 
-        $this->assertRedirectedToRoute('projects.deployments.index', [$project->projectId()->id()]);
+        $response->assertRedirect("projects/{$project->projectId()->id()}/deployments");
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessFails()
@@ -173,10 +173,10 @@ class DeploymentsControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->post("projects/{$project->projectId()->id()}/deployments");
+        $response = $this->post("projects/{$project->projectId()->id()}/deployments");
 
-        $this->assertRedirectedToRoute('projects.deployments.index', [$project->projectId()->id()]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect("projects/{$project->projectId()->id()}/deployments");
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayShowPage_When_ShowPageIsRequestedAndResourceIsFound()
@@ -206,10 +206,10 @@ class DeploymentsControllerTest extends TestCase
             ]))
             ->once();
 
-        $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
+        $response = $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('deployment');
+        $response->assertStatus(200);
+        $response->assertViewHas('deployment');
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndProjectIsNotFound()
@@ -223,9 +223,9 @@ class DeploymentsControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
+        $response = $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndDeploymentIsNotFound()
@@ -245,9 +245,9 @@ class DeploymentsControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
+        $response = $this->get("projects/{$project->projectId()->id()}/deployments/{$deployment->deploymentId()->id()}");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     private function createDeployment(array $params = [])

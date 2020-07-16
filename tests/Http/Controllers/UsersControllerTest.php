@@ -88,18 +88,18 @@ class UsersControllerTest extends TestCase
             )
             ->once();
 
-        $this->get('users');
+        $response = $this->get('users');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('users');
+        $response->assertStatus(200);
+        $response->assertViewHas('users');
     }
 
     public function test_Should_DisplayCreatePage_When_CreatePageIsRequested()
     {
         $role = $this->createRole();
-        $roles = new Collection([
+        $roles = [
             $role,
-        ]);
+        ];
 
         $this->roleService
             ->shouldReceive('getAllRoles')
@@ -107,10 +107,10 @@ class UsersControllerTest extends TestCase
             ->andReturn($roles)
             ->once();
 
-        $this->get('users/create');
+        $response = $this->get('users/create');
 
-        $this->assertResponseOk();
-        $this->assertViewHas('roles');
+        $response->assertStatus(200);
+        $response->assertViewHas('roles');
     }
 
     public function test_Should_RedirectToIndexPage_When_StoreProcessSucceeds()
@@ -120,9 +120,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->post('users');
+        $response = $this->post('users');
 
-        $this->assertRedirectedToRoute('users.index');
+        $response->assertRedirect('users');
     }
 
     public function test_Should_RedirectToCreatePage_When_StoreProcessFails()
@@ -138,10 +138,10 @@ class UsersControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->post('users');
+        $response = $this->post('users');
 
-        $this->assertRedirectedToRoute('users.create');
-        $this->assertSessionHasErrors();
+        $response->assertRedirect('users/create');
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_RedirectToEditPage_When_ShowPageIsRequestedAndResourceIsFound()
@@ -154,9 +154,9 @@ class UsersControllerTest extends TestCase
             ->andReturn($user)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}");
+        $response = $this->get("users/{$user->userId()->id()}");
 
-        $this->assertRedirectedToRoute('users.edit', [$user->userId()->id()]);
+        $response->assertRedirect("users/{$user->userId()->id()}/edit");
     }
 
     public function test_Should_DisplayNotFoundPage_When_ShowPageIsRequestedAndResourceIsNotFound()
@@ -169,9 +169,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}");
+        $response = $this->get("users/{$user->userId()->id()}");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayEditPage_When_EditPageIsRequestedAndResourceIsFound()
@@ -184,10 +184,10 @@ class UsersControllerTest extends TestCase
             ->andReturn($user)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/edit");
+        $response = $this->get("users/{$user->userId()->id()}/edit");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('user');
+        $response->assertStatus(200);
+        $response->assertViewHas('user');
     }
 
     public function test_Should_DisplayNotFoundPage_When_EditPageIsRequestedAndResourceIsNotFound()
@@ -200,9 +200,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/edit");
+        $response = $this->get("users/{$user->userId()->id()}/edit");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_UpdateProcessSucceeds()
@@ -220,9 +220,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}");
+        $response = $this->put("users/{$user->userId()->id()}");
 
-        $this->assertRedirectedToRoute('users.index');
+        $response->assertRedirect('users');
     }
 
     public function test_Should_RedirectToEditPage_When_UpdateProcessFails()
@@ -246,10 +246,10 @@ class UsersControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->put("users/{$user->userId()->id()}");
+        $response = $this->put("users/{$user->userId()->id()}");
 
-        $this->assertRedirectedToRoute('users.edit', [$user->userId()->id()]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect("users/{$user->userId()->id()}/edit");
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_UpdateProcessIsRequestedAndResourceIsNotFound()
@@ -262,9 +262,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}");
+        $response = $this->put("users/{$user->userId()->id()}");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayPasswordChangePage_When_PasswordChangePageIsRequestedAndResourceIsFound()
@@ -277,10 +277,10 @@ class UsersControllerTest extends TestCase
             ->andReturn($user)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/password/change");
+        $response = $this->get("users/{$user->userId()->id()}/password/change");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('user');
+        $response->assertStatus(200);
+        $response->assertViewHas('user');
     }
 
     public function test_Should_DisplayNotFoundPage_When_PasswordChangePageIsRequestedAndResourceIsNotFound()
@@ -293,9 +293,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/password/change");
+        $response = $this->get("users/{$user->userId()->id()}/password/change");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_PasswordUpdateProcessSucceeds()
@@ -313,9 +313,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/password");
+        $response = $this->put("users/{$user->userId()->id()}/password");
 
-        $this->assertRedirectedToRoute('users.index');
+        $response->assertRedirect('users');
     }
 
     public function test_Should_RedirectToPasswordChangePage_When_PasswordUpdateProcessFails()
@@ -339,10 +339,10 @@ class UsersControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/password");
+        $response = $this->put("users/{$user->userId()->id()}/password");
 
-        $this->assertRedirectedToRoute('users.password.change', [$user->userId()->id()]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect("users/{$user->userId()->id()}/password/change");
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_PasswordUpdateProcessIsRequestedAndResourceIsNotFound()
@@ -355,18 +355,18 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/password");
+        $response = $this->put("users/{$user->userId()->id()}/password");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayEditRolePage_When_EditRolePageIsRequestedAndResourceIsFound()
     {
         $user = $this->createUser();
         $role = $this->createRole();
-        $roles = new Collection([
+        $roles = [
             $role,
-        ]);
+        ];
 
         $this->userService
             ->shouldReceive('getUserById')
@@ -379,11 +379,11 @@ class UsersControllerTest extends TestCase
             ->andReturn($roles)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/role/edit");
+        $response = $this->get("users/{$user->userId()->id()}/role/edit");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('user');
-        $this->assertViewHas('roles');
+        $response->assertStatus(200);
+        $response->assertViewHas('user');
+        $response->assertViewHas('roles');
     }
 
     public function test_Should_DisplayNotFoundPage_When_EditRolePageIsRequestedAndResourceIsNotFound()
@@ -396,9 +396,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/role/edit");
+        $response = $this->get("users/{$user->userId()->id()}/role/edit");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_RoleUpdateProcessSucceeds()
@@ -416,9 +416,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/role");
+        $response = $this->put("users/{$user->userId()->id()}/role");
 
-        $this->assertRedirectedToRoute('users.index');
+        $response->assertRedirect('users');
     }
 
     public function test_Should_RedirectToEditRolePage_When_EditUpdateProcessFails()
@@ -442,10 +442,10 @@ class UsersControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/role");
+        $response = $this->put("users/{$user->userId()->id()}/role");
 
-        $this->assertRedirectedToRoute('users.role.edit', [$user->userId()->id()]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect("users/{$user->userId()->id()}/role/edit");
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_RoleUpdateProcessIsRequestedAndResourceIsNotFound()
@@ -458,9 +458,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/role");
+        $response = $this->put("users/{$user->userId()->id()}/role");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_DisplayEditApiTokenPage_When_EditApiTokenPageIsRequestedAndResourceIsFound()
@@ -473,10 +473,10 @@ class UsersControllerTest extends TestCase
             ->andReturn($user)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/api_token/edit");
+        $response = $this->get("users/{$user->userId()->id()}/api_token/edit");
 
-        $this->assertResponseOk();
-        $this->assertViewHas('user');
+        $response->assertStatus(200);
+        $response->assertViewHas('user');
     }
 
     public function test_Should_DisplayNotFoundPage_When_EditApiTokenPageIsRequestedAndResourceIsNotFound()
@@ -489,9 +489,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->get("users/{$user->userId()->id()}/api_token/edit");
+        $response = $this->get("users/{$user->userId()->id()}/api_token/edit");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_ApiTokenRegenerateProcessSucceeds()
@@ -509,9 +509,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/api_token");
+        $response = $this->put("users/{$user->userId()->id()}/api_token");
 
-        $this->assertRedirectedToRoute('users.index');
+        $response->assertRedirect('users');
     }
 
     public function test_Should_RedirectToRegenerateApiTokenPage_When_ApiTokenRegenerateProcessFails()
@@ -535,10 +535,10 @@ class UsersControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/api_token");
+        $response = $this->put("users/{$user->userId()->id()}/api_token");
 
-        $this->assertRedirectedToRoute('users.api_token.edit', [$user->userId()->id()]);
-        $this->assertSessionHasErrors();
+        $response->assertRedirect("users/{$user->userId()->id()}/api_token/edit");
+        $response->assertSessionHasErrors();
     }
 
     public function test_Should_DisplayNotFoundPage_When_ApiTokenRegenerateProcessIsRequestedAndResourceIsNotFound()
@@ -551,9 +551,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->put("users/{$user->userId()->id()}/api_token");
+        $response = $this->put("users/{$user->userId()->id()}/api_token");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     public function test_Should_RedirectToIndexPage_When_DestroyProcessIsRequestedAndDestroyProcessSucceeds()
@@ -571,9 +571,9 @@ class UsersControllerTest extends TestCase
             ->with($user->userId()->id())
             ->once();
 
-        $this->delete("users/{$user->userId()->id()}");
+        $response = $this->delete("users/{$user->userId()->id()}");
 
-        $this->assertRedirectedToRoute('users.index');
+        $response->assertRedirect('users');
     }
 
     public function test_Should_DisplayNotFoundPage_When_DestroyProcessIsRequestedAndResourceIsNotFound()
@@ -586,9 +586,9 @@ class UsersControllerTest extends TestCase
             ->andReturn(null)
             ->once();
 
-        $this->delete("users/{$user->userId()->id()}");
+        $response = $this->delete("users/{$user->userId()->id()}");
 
-        $this->assertResponseStatus(404);
+        $response->assertStatus(404);
     }
 
     private function createUser(array $params = [])

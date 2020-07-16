@@ -43,6 +43,7 @@ class DeploymentsControllerTest extends TestCase
         Session::start();
 
         $user = $this->mock(User::class);
+        $user->shouldReceive('getAuthIdentifier');
         $user->shouldReceive('can')->andReturn(true);
         $user->shouldReceive('name');
         $this->auth($user);
@@ -77,9 +78,9 @@ class DeploymentsControllerTest extends TestCase
             ->andReturn(true)
             ->once();
 
-        $this->post("webhook/github/v1/projects/{$project->projectId()->id()}/deployments");
+        $response = $this->post("webhook/github/v1/projects/{$project->projectId()->id()}/deployments");
 
-        $this->assertResponseOK();
+        $response->assertStatus(200);
     }
 
     public function test_Should_ReturnStatusCode400_When_StoreProcessFails()
@@ -103,9 +104,9 @@ class DeploymentsControllerTest extends TestCase
             ->andReturn(new MessageBag())
             ->once();
 
-        $this->post("webhook/github/v1/projects/{$project->projectId()->id()}/deployments");
+        $response = $this->post("webhook/github/v1/projects/{$project->projectId()->id()}/deployments");
 
-        $this->assertResponseStatus(400);
+        $response->assertStatus(400);
     }
 
     private function createDeployment(array $params = [])
