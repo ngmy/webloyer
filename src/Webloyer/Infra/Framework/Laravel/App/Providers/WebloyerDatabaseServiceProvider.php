@@ -29,9 +29,9 @@ class WebloyerDatabaseServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
-        $this->loadFactoriesFrom(__DIR__ . '/../../database/factories');
-        $this->loadSeedsFrom(__DIR__ . '/../../database/seeds');
+        $this->loadMigrationsFrom(__DIR__ . '/../../Database/migrations');
+        $this->loadFactoriesFrom(__DIR__ . '/../../Database/factories');
+        $this->loadSeedsFrom(__DIR__ . '/../../Database/Seeds');
     }
 
     protected function loadSeedsFrom(string $path): void
