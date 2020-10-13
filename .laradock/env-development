@@ -319,8 +319,8 @@ APACHE_INSTALL_HTTP2=false
 
 MYSQL_VERSION=latest
 MYSQL_DATABASE=webloyer
-MYSQL_USER=default
-MYSQL_PASSWORD=secret
+MYSQL_USER=webloyer
+MYSQL_PASSWORD=webloyer
 MYSQL_PORT=3306
 MYSQL_ROOT_PASSWORD=root
 MYSQL_ENTRYPOINT_INITDB=../.laradock/mysql/docker-entrypoint-initdb.d
