@@ -14,7 +14,7 @@ APP_CODE_PATH_CONTAINER=/var/www
 APP_CODE_CONTAINER_FLAG=:cached
 
 # Choose storage path on your machine. For all storage systems
-DATA_PATH_HOST=~/.laradock/data
+DATA_PATH_HOST=../.laradock/data
 
 ### Drivers ################################################
 
@@ -33,13 +33,13 @@ COMPOSE_FILE=docker-compose.yml
 COMPOSE_PATH_SEPARATOR=:
 
 # Define the prefix of container names. This is useful if you have multiple projects that use laradock to have separate containers per project.
-COMPOSE_PROJECT_NAME=laradock
+COMPOSE_PROJECT_NAME=laradock-webloyer
 
 ### PHP Version ###########################################
 
 # Select a PHP version of the Workspace and PHP-FPM containers (Does not apply to HHVM).
 # Accepted values: 7.4 - 7.3 - 7.2 - 7.1 - 7.0 - 5.6
-PHP_VERSION=7.3
+PHP_VERSION=7.4
 
 ### Phalcon Version ###########################################
 
@@ -140,7 +140,7 @@ WORKSPACE_INSTALL_V8JS=false
 WORKSPACE_INSTALL_LARAVEL_ENVOY=false
 WORKSPACE_INSTALL_LARAVEL_INSTALLER=false
 WORKSPACE_INSTALL_DEPLOYER=false
-WORKSPACE_INSTALL_PRESTISSIMO=false
+WORKSPACE_INSTALL_PRESTISSIMO=true
 WORKSPACE_INSTALL_LINUXBREW=false
 WORKSPACE_INSTALL_MC=false
 WORKSPACE_INSTALL_SYMFONY=false
@@ -318,12 +318,12 @@ APACHE_INSTALL_HTTP2=false
 ### MYSQL #################################################
 
 MYSQL_VERSION=latest
-MYSQL_DATABASE=default
+MYSQL_DATABASE=webloyer
 MYSQL_USER=default
 MYSQL_PASSWORD=secret
 MYSQL_PORT=3306
 MYSQL_ROOT_PASSWORD=root
-MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d
+MYSQL_ENTRYPOINT_INITDB=../.laradock/mysql/docker-entrypoint-initdb.d
 
 ### REDIS #################################################
 
