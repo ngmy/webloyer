@@ -4,4 +4,3 @@
 [submodule "laradockctl"]
 	path = laradockctl
 	url = https://github.com/ngmy/laradockctl.git
-	branch = feature/make-first-version
