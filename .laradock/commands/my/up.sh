@@ -2,11 +2,12 @@
 set -Ceuo pipefail
 
 local NAME='my:up'
-local DESCRIPTION='Launch my development environment'
+local DESCRIPTION='Startup my development environment'
 
 handle() {
   cp -f ../.laradock/env-development .env
-  docker-compose up -d nginx mysql mailhog workspace
+  cp -f ../.laradock/php-worker/supervisord.d/*.conf php-worker/supervisord.d/
+  docker-compose up -d nginx mysql mailhog workspace php-worker
   cp ../.env.development ../.env
   docker-compose exec workspace composer install
   docker-compose exec workspace php artisan key:generate
