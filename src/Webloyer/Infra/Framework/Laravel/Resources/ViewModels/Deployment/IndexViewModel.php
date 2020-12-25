@@ -12,20 +12,30 @@ class IndexViewModel extends ViewModel
 {
     use ViewModelHelpers;
 
-    /** @var LengthAwarePaginator<object> */
+    /** @var list<object> */
     private $deployments;
     /** @var string */
     private $projectId;
+    /** @var int */
+    private $perPage = 10;
+    /** @var int */
+    private $currentPage;
+    /** @var array<string, string> */
+    private $options;
 
     /**
-     * @param LengthAwarePaginator<object> $deployments
-     * @param string                       $projectId
+     * @param list<object> $deployments
+     * @param string       $projectId
      * @return void
      */
-    public function __construct(LengthAwarePaginator $deployments, string $projectId)
+    public function __construct(array $deployments, string $projectId)
     {
         $this->deployments = $deployments;
         $this->projectId = $projectId;
+        $this->currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $this->options = [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ];
     }
 
     /**
@@ -33,7 +43,7 @@ class IndexViewModel extends ViewModel
      */
     public function deployments(): array
     {
-        return $this->deployments->items();
+        return $this->deployments;
     }
 
     /**
@@ -49,7 +59,7 @@ class IndexViewModel extends ViewModel
      */
     public function deploymentStatusIconOf(): array
     {
-        return array_reduce($this->deployments(), function (array $carry, object $deployment): array {
+        return array_reduce($this->deployments, function (array $carry, object $deployment): array {
             $carry[$deployment->number] = $this->convertDeploymentStatusToIcon($deployment->status);
             return $carry;
         }, []);
@@ -60,7 +70,7 @@ class IndexViewModel extends ViewModel
      */
     public function deploymentUserEmailOf(): array
     {
-        return array_reduce($this->deployments(), function (array $carry, object $deployment): array {
+        return array_reduce($this->deployments, function (array $carry, object $deployment): array {
             $carry[$deployment->number] = $this->hyphenIfBlank($deployment->user->email);
             return $carry;
         }, []);
@@ -71,7 +81,7 @@ class IndexViewModel extends ViewModel
      */
     public function deploymentShowLinkOf(): array
     {
-        return array_reduce($this->deployments(), function (array $carry, object $deployment): array {
+        return array_reduce($this->deployments, function (array $carry, object $deployment): array {
             $link = link_to_route('projects.deployments.show', 'Show', [$this->projectId, $deployment->number], ['class' => 'btn btn-default']);
             $carry[$deployment->number] = $link->toHtml();
             return $carry;
@@ -83,7 +93,7 @@ class IndexViewModel extends ViewModel
      */
     public function deploymentIndexApiUrl(): string
     {
-        return route('projects.deployments.index', [$this->projectId]) . '?' . http_build_query(['page' => $this->deployments->currentPage()]);
+        return route('projects.deployments.index', [$this->projectId]) . '?' . http_build_query(['page' => $this->currentPage]);
     }
 
     /**
@@ -91,7 +101,19 @@ class IndexViewModel extends ViewModel
      */
     public function deploymentPaginationLink(): string
     {
-        return $this->deployments->links()->toHtml();
+        return (new LengthAwarePaginator(
+            array_slice(
+                $this->deployments,
+                $this->perPage * ($this->currentPage - 1),
+                $this->perPage
+            ),
+            count($this->deployments),
+            $this->perPage,
+            $this->currentPage,
+            $this->options
+        ))
+            ->links()
+            ->toHtml();
     }
 
     /**
@@ -114,5 +136,15 @@ class IndexViewModel extends ViewModel
                 assert(false);
                 return '';
         }
+    }
+
+    /**
+     * @param int $perPage
+     * @return self
+     */
+    public function setPerPage(int $perPage): self
+    {
+        $this->perPage = $perPage;
+        return $this;
     }
 }

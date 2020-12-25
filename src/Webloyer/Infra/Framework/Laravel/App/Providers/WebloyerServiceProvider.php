@@ -98,11 +98,6 @@ use Webloyer\Infra\Domain\Model\Project\EloquentProjectRepository;
 use Webloyer\Infra\Domain\Model\Recipe\EloquentRecipeRepository;
 use Webloyer\Infra\Domain\Model\Server\EloquentServerRepository;
 use Webloyer\Infra\Domain\Model\User\EloquentUserRepository;
-use Webloyer\Infra\App\DataTransformer\Deployment\DeploymentsLaravelLengthAwarePaginatorDataTransformer;
-use Webloyer\Infra\App\DataTransformer\Project\ProjectsLaravelLengthAwarePaginatorDataTransformer;
-use Webloyer\Infra\App\DataTransformer\Recipe\RecipesLaravelLengthAwarePaginatorDataTransformer;
-use Webloyer\Infra\App\DataTransformer\Server\ServersLaravelLengthAwarePaginatorDataTransformer;
-use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Api\V1\JsonRpc\JsonRpcController;
 use Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment\{
     DeployController as DeploymentDeployController,
@@ -172,23 +167,23 @@ class WebloyerServiceProvider extends ServiceProvider
     {
         // deployment data transformers
         $this->app->bind(DeploymentDataTransformer::class, DeploymentDtoDataTransformer::class);
-        $this->app->bind(DeploymentsDataTransformer::class, DeploymentsLaravelLengthAwarePaginatorDataTransformer::class);
+        $this->app->bind(DeploymentsDataTransformer::class, DeploymentsDtoDataTransformer::class);
 
         // project data transformers
         $this->app->bind(ProjectDataTransformer::class, ProjectDtoDataTransformer::class);
-        $this->app->bind(ProjectsDataTransformer::class, ProjectsLaravelLengthAwarePaginatorDataTransformer::class);
+        $this->app->bind(ProjectsDataTransformer::class, ProjectsDtoDataTransformer::class);
 
         // server data transformers
         $this->app->bind(ServerDataTransformer::class, ServerDtoDataTransformer::class);
-        $this->app->bind(ServersDataTransformer::class, ServersLaravelLengthAwarePaginatorDataTransformer::class);
+        $this->app->bind(ServersDataTransformer::class, ServersDtoDataTransformer::class);
 
         // recipe data transformers
         $this->app->bind(RecipeDataTransformer::class, RecipeDtoDataTransformer::class);
-        $this->app->bind(RecipesDataTransformer::class, RecipesLaravelLengthAwarePaginatorDataTransformer::class);
+        $this->app->bind(RecipesDataTransformer::class, RecipesDtoDataTransformer::class);
 
         // user data transformers
         $this->app->bind(UserDataTransformer::class, UserDtoDataTransformer::class);
-        $this->app->bind(UsersDataTransformer::class, UsersLaravelLengthAwarePaginatorDataTransformer::class);
+        $this->app->bind(UsersDataTransformer::class, UsersDtoDataTransformer::class);
 
         $this->app->when(JsonRpcController::class)
             ->needs(JsonRpcServer::class)

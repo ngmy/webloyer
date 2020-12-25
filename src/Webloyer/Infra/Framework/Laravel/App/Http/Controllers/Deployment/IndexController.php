@@ -6,13 +6,13 @@ namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\Deployment;
 
 use App;
 use Spatie\ViewModels\ViewModel;
+use Webloyer\App\DataTransformer\Deployment\DeploymentsDtoDataTransformer;
 use Webloyer\App\DataTransformer\User\UserDtoDataTransformer;
 use Webloyer\App\Service\Deployment\{
     GetDeploymentsRequest,
     GetDeploymentsService,
 };
 use Webloyer\Domain\Model\Project\ProjectDoesNotExistException;
-use Webloyer\Infra\App\DataTransformer\Deployment\DeploymentsLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\Deployment\IndexRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\Deployment\IndexViewModel;
 
@@ -30,10 +30,9 @@ class IndexController extends BaseController
         $serviceRequest = (new GetDeploymentsRequest())->setProjectId($projectId);
 
         assert($this->service instanceof GetDeploymentsService);
-        assert($this->service->deploymentsDataTransformer() instanceof DeploymentsLaravelLengthAwarePaginatorDataTransformer);
+        assert($this->service->deploymentsDataTransformer() instanceof DeploymentsDtoDataTransformer);
         $this->service
             ->deploymentsDataTransformer()
-            ->setPerPage(10)
             ->deploymentDataTransformer()
             ->setUserDataTransformer(App::make(UserDtoDataTransformer::class));
 
@@ -43,6 +42,8 @@ class IndexController extends BaseController
             abort(404);
         }
 
-        return (new IndexViewModel($deployments, $projectId))->view('webloyer::deployment.index');
+        return (new IndexViewModel($deployments, $projectId))
+            ->setPerPage(10)
+            ->view('webloyer::deployment.index');
     }
 }

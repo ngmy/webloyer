@@ -9,16 +9,26 @@ use Spatie\ViewModels\ViewModel;
 
 class IndexViewModel extends ViewModel
 {
-    /** @var LengthAwarePaginator<object> */
+    /** @var list<object> */
     private $users;
+    /** @var int */
+    private $perPage = 10;
+    /** @var int */
+    private $currentPage;
+    /** @var array<string, string> */
+    private $options;
 
     /**
-     * @param LengthAwarePaginator<object> $users
+     * @param list<object> $users
      * @return void
      */
-    public function __construct(LengthAwarePaginator $users)
+    public function __construct(array $users)
     {
         $this->users = $users;
+        $this->currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $this->options = [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ];
     }
 
     /**
@@ -26,6 +36,26 @@ class IndexViewModel extends ViewModel
      */
     public function users(): LengthAwarePaginator
     {
-        return $this->users;
+        return new LengthAwarePaginator(
+            array_slice(
+                $this->users,
+                $this->perPage * ($this->currentPage - 1),
+                $this->perPage
+            ),
+            count($this->users),
+            $this->perPage,
+            $this->currentPage,
+            $this->options
+        );
+    }
+
+    /**
+     * @param int $perPage
+     * @return self
+     */
+    public function setPerPage(int $perPage): self
+    {
+        $this->perPage = $perPage;
+        return $this;
     }
 }

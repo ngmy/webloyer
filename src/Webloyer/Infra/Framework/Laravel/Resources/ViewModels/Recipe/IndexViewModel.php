@@ -9,16 +9,26 @@ use Spatie\ViewModels\ViewModel;
 
 class IndexViewModel extends ViewModel
 {
-    /** @var LengthAwarePaginator<object> */
+    /** @var list<object> */
     private $recipes;
+    /** @var int */
+    private $perPage = 10;
+    /** @var int */
+    private $currentPage;
+    /** @var array<string, string> */
+    private $options;
 
     /**
-     * @param LengthAwarePaginator<object> $recipes
+     * @param list<object> $recipes
      * @return void
      */
-    public function __construct(LengthAwarePaginator $recipes)
+    public function __construct(array $recipes)
     {
         $this->recipes = $recipes;
+        $this->currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $this->options = [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ];
     }
 
     /**
@@ -26,7 +36,17 @@ class IndexViewModel extends ViewModel
      */
     public function recipes(): LengthAwarePaginator
     {
-        return $this->recipes;
+        return new LengthAwarePaginator(
+            array_slice(
+                $this->recipes,
+                $this->perPage * ($this->currentPage - 1),
+                $this->perPage
+            ),
+            count($this->recipes),
+            $this->perPage,
+            $this->currentPage,
+            $this->options
+        );
     }
 
     /**
@@ -34,9 +54,19 @@ class IndexViewModel extends ViewModel
      */
     public function recipeProjectCountOf(): array
     {
-        return array_reduce($this->recipes->toArray()['data'], function (array $carry, object $recipe): array {
+        return array_reduce($this->recipes, function (array $carry, object $recipe): array {
             $carry[$recipe->id] = number_format(count($recipe->projects));
             return $carry;
         }, []);
+    }
+
+    /**
+     * @param int $perPage
+     * @return self
+     */
+    public function setPerPage(int $perPage): self
+    {
+        $this->perPage = $perPage;
+        return $this;
     }
 }

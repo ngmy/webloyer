@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Webloyer\Infra\Framework\Laravel\App\Http\Controllers\User;
 
 use Spatie\ViewModels\ViewModel;
+use Webloyer\App\DataTransformer\User\UsersDtoDataTransformer;
 use Webloyer\App\Service\User\GetUsersService;
-use Webloyer\Infra\App\DataTransformer\User\UsersLaravelLengthAwarePaginatorDataTransformer;
 use Webloyer\Infra\Framework\Laravel\App\Http\Requests\User\IndexRequest;
 use Webloyer\Infra\Framework\Laravel\Resources\ViewModels\User\IndexViewModel;
 
@@ -21,10 +21,11 @@ class IndexController extends BaseController
     public function __invoke(IndexRequest $request): ViewModel
     {
         assert($this->service instanceof GetUsersService);
-        assert($this->service->usersDataTransformer() instanceof UsersLaravelLengthAwarePaginatorDataTransformer);
-        $this->service->usersDataTransformer()->setPerPage(10);
+        assert($this->service->usersDataTransformer() instanceof UsersDtoDataTransformer);
         $users = $this->service->execute();
 
-        return (new IndexViewModel($users))->view('webloyer::user.index');
+        return (new IndexViewModel($users))
+            ->setPerPage(10)
+            ->view('webloyer::user.index');
     }
 }

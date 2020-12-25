@@ -9,16 +9,26 @@ use Spatie\ViewModels\ViewModel;
 
 class IndexViewModel extends ViewModel
 {
-    /** @var LengthAwarePaginator<object> */
+    /** @var list<object> */
     private $servers;
+    /** @var int */
+    private $perPage = 10;
+    /** @var int */
+    private $currentPage;
+    /** @var array<string, string> */
+    private $options;
 
     /**
-     * @param LengthAwarePaginator<object> $servers
+     * @param list<object> $servers
      * @return void
      */
-    public function __construct(LengthAwarePaginator $servers)
+    public function __construct(array $servers)
     {
         $this->servers = $servers;
+        $this->currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $this->options = [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ];
     }
 
     /**
@@ -26,7 +36,17 @@ class IndexViewModel extends ViewModel
      */
     public function servers(): LengthAwarePaginator
     {
-        return $this->servers;
+        return new LengthAwarePaginator(
+            array_slice(
+                $this->servers,
+                $this->perPage * ($this->currentPage - 1),
+                $this->perPage
+            ),
+            count($this->servers),
+            $this->perPage,
+            $this->currentPage,
+            $this->options
+        );
     }
 
     /**
@@ -34,9 +54,19 @@ class IndexViewModel extends ViewModel
      */
     public function serverProjectCountOf(): array
     {
-        return array_reduce($this->servers->toArray()['data'], function (array $carry, object $server): array {
+        return array_reduce($this->servers, function (array $carry, object $server): array {
             $carry[$server->id] = number_format(count($server->projects));
             return $carry;
         }, []);
+    }
+
+    /**
+     * @param int $perPage
+     * @return self
+     */
+    public function setPerPage(int $perPage): self
+    {
+        $this->perPage = $perPage;
+        return $this;
     }
 }

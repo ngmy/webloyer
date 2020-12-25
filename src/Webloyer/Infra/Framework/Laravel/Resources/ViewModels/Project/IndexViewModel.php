@@ -9,16 +9,26 @@ use Spatie\ViewModels\ViewModel;
 
 class IndexViewModel extends ViewModel
 {
-    /** @var LengthAwarePaginator<object> */
+    /** @var list<object> */
     private $projects;
+    /** @var int */
+    private $perPage = 10;
+    /** @var int */
+    private $currentPage;
+    /** @var array<string, string> */
+    private $options;
 
     /**
-     * @param LengthAwarePaginator<object> $projects
+     * @param list<object> $projects
      * @return void
      */
-    public function __construct(LengthAwarePaginator $projects)
+    public function __construct(array $projects)
     {
         $this->projects = $projects;
+        $this->currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $this->options = [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ];
     }
 
     /**
@@ -26,7 +36,17 @@ class IndexViewModel extends ViewModel
      */
     public function projects(): LengthAwarePaginator
     {
-        return $this->projects;
+        return new LengthAwarePaginator(
+            array_slice(
+                $this->projects,
+                $this->perPage * ($this->currentPage - 1),
+                $this->perPage
+            ),
+            count($this->projects),
+            $this->perPage,
+            $this->currentPage,
+            $this->options
+        );
     }
 
     /**
@@ -34,7 +54,7 @@ class IndexViewModel extends ViewModel
      */
     public function projectLastDeploymentStatusIconOf(): array
     {
-        return array_reduce($this->projects->toArray()['data'], function (array $carry, object $project): array {
+        return array_reduce($this->projects, function (array $carry, object $project): array {
             $carry[$project->id] = isset($project->lastDeployment)
                 ? $this->convertProjectLastDeploymentStatusToIcon($project->lastDeployment->status)
                 : '';
@@ -47,7 +67,7 @@ class IndexViewModel extends ViewModel
      */
     public function projectLastDeploymentOf(): array
     {
-        return array_reduce($this->projects->toArray()['data'], function (array $carry, object $project): array {
+        return array_reduce($this->projects, function (array $carry, object $project): array {
             assert(isset($project->id));
             $carry[$project->id] = isset($project->lastDeployment)
                 ? $project->lastDeployment->finishDate .
@@ -78,5 +98,15 @@ class IndexViewModel extends ViewModel
             default:
                 return '';
         }
+    }
+
+    /**
+     * @param int $perPage
+     * @return self
+     */
+    public function setPerPage(int $perPage): self
+    {
+        $this->perPage = $perPage;
+        return $this;
     }
 }
