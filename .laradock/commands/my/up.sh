@@ -2,7 +2,7 @@
 set -Ceuo pipefail
 
 local NAME='my:up'
-local DESCRIPTION='Startup my development environment'
+local DESCRIPTION='Start up my development environment'
 
 handle() {
   cp -f ../.laradock/env-development .env
