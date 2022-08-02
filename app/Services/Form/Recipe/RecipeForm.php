@@ -1,21 +1,32 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Form\Recipe;
 
 use App\Services\Validation\ValidableInterface;
 use App\Repositories\Recipe\RecipeInterface;
 
+/**
+ * Class RecipeForm
+ * @package App\Services\Form\Recipe
+ */
 class RecipeForm
 {
-    protected $validator;
+    /**
+     * @var ValidableInterface
+     */
+    protected ValidableInterface $validator;
 
-    protected $recipe;
+    /**
+     * @var RecipeInterface
+     */
+    protected RecipeInterface $recipe;
 
     /**
      * Create a new form service instance.
      *
-     * @param \App\Services\Validation\ValidableInterface $validator
-     * @param \App\Repositories\Recipe\RecipeInterface    $recipe
+     * @param ValidableInterface $validator
+     * @param RecipeInterface $recipe
      * @return void
      */
     public function __construct(ValidableInterface $validator, RecipeInterface $recipe)
@@ -35,7 +46,6 @@ class RecipeForm
         if (!$this->valid($input)) {
             return false;
         }
-
         return $this->recipe->create($input);
     }
 
@@ -50,7 +60,6 @@ class RecipeForm
         if (!$this->valid($input)) {
             return false;
         }
-
         return $this->recipe->update($input);
     }
 

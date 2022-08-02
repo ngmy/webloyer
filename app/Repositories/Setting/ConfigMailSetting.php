@@ -1,15 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Setting;
 
-use App\Services\Config\ConfigReaderInterface;
-use App\Services\Config\ConfigWriterInterface;
 use App\Entities\Setting\MailSettingEntity;
 use App\Repositories\AbstractConfigRepository;
-use App\Repositories\Setting\MailSettingInterface;
 
+/**
+ * Class ConfigMailSetting
+ * @package App\Repositories\Setting
+ */
 class ConfigMailSetting extends AbstractConfigRepository implements MailSettingInterface
 {
+    /**
+     * @return MailSettingEntity|mixed|void
+     */
     public function all()
     {
         $driver          = $this->reader->getConfig('MAIL_DRIVER');
@@ -40,6 +45,10 @@ class ConfigMailSetting extends AbstractConfigRepository implements MailSettingI
         return $mailSetting;
     }
 
+    /**
+     * @param array $data
+     * @return bool|mixed|void
+     */
     public function update(array $data)
     {
         $this->writer->setConfig('MAIL_DRIVER',       $data['driver']);

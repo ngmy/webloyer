@@ -1,27 +1,38 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Form\Server;
 
 use App\Services\Validation\ValidableInterface;
 use App\Repositories\Server\ServerInterface;
 
+/**
+ * Class ServerForm
+ * @package App\Services\Form\Server
+ */
 class ServerForm
 {
-    protected $validator;
+    /**
+     * @var ValidableInterface
+     */
+    protected ValidableInterface $validator;
 
-    protected $server;
+    /**
+     * @var ServerInterface
+     */
+    protected ServerInterface $server;
 
     /**
      * Create a new form service instance.
      *
-     * @param \App\Services\Validation\ValidableInterface $validator
-     * @param \App\Repositories\Server\ServerInterface    $server
+     * @param ValidableInterface $validator
+     * @param ServerInterface $server
      * @return void
      */
     public function __construct(ValidableInterface $validator, ServerInterface $server)
     {
         $this->validator = $validator;
-        $this->server    = $server;
+        $this->server = $server;
     }
 
     /**
@@ -35,7 +46,6 @@ class ServerForm
         if (!$this->valid($input)) {
             return false;
         }
-
         return $this->server->create($input);
     }
 
@@ -50,7 +60,6 @@ class ServerForm
         if (!$this->valid($input)) {
             return false;
         }
-
         return $this->server->update($input);
     }
 

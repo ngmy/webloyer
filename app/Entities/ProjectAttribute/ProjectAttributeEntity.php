@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entities\ProjectAttribute;
 
@@ -6,6 +7,10 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\SerializedName;
 
+/**
+ * Class ProjectAttributeEntity
+ * @package App\Entities\ProjectAttribute
+ */
 class ProjectAttributeEntity
 {
     /**
@@ -15,11 +20,17 @@ class ProjectAttributeEntity
      */
     protected $deployPath;
 
+    /**
+     * @return string
+     */
     public function getDeployPath()
     {
         return $this->deployPath;
     }
 
+    /**
+     * @param string $deployPath
+     */
     public function setDeployPath($deployPath)
     {
         $this->deployPath = $deployPath;

@@ -1,61 +1,48 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Services\Deployment\QueueDeployCommander;
-use App\Services\Deployment\DeployerFile;
+use App\Services\Api\JsonRpc;
+use App\Services\Config\DotenvReader;
+use App\Services\Config\DotenvWriter;
 use App\Services\Deployment\DeployerDeploymentFileBuilder;
+use App\Services\Deployment\DeployerFile;
 use App\Services\Deployment\DeployerRecipeFileBuilder;
 use App\Services\Deployment\DeployerServerListFileBuilder;
-use App\Services\Form\Project\ProjectForm;
-use App\Services\Form\Project\ProjectFormLaravelValidator;
+use App\Services\Deployment\QueueDeployCommander;
+use App\Services\Filesystem\LaravelFilesystem;
 use App\Services\Form\Deployment\DeploymentForm;
 use App\Services\Form\Deployment\DeploymentFormLaravelValidator;
+use App\Services\Form\Project\ProjectForm;
+use App\Services\Form\Project\ProjectFormLaravelValidator;
 use App\Services\Form\Recipe\RecipeForm;
 use App\Services\Form\Recipe\RecipeFormLaravelValidator;
 use App\Services\Form\Server\ServerForm;
 use App\Services\Form\Server\ServerFormLaravelValidator;
-use App\Services\Form\User\UserForm;
-use App\Services\Form\User\UserFormLaravelValidator;
 use App\Services\Form\Setting\MailSettingForm;
 use App\Services\Form\Setting\MailSettingFormLaravelValidator;
+use App\Services\Form\User\UserForm;
+use App\Services\Form\User\UserFormLaravelValidator;
 use App\Services\Notification\MailNotifier;
-use App\Services\Config\DotenvReader;
-use App\Services\Config\DotenvWriter;
-use App\Services\Filesystem\LaravelFilesystem;
-use App\Services\Api\JsonRpc;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\Process\ProcessBuilder;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
+/**
+ * Class AppServiceProvider
+ * @package App\Providers
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        // HACK `artisan optimize` and `phpunit` doesn't work with PHP 7.4 due to ErrorException.
-        $isArtisanOptimize = php_sapi_name() == 'cli' && $_SERVER['argv'][0] == 'artisan' && in_array('optimize', $_SERVER['argv']);
-        if (version_compare(phpversion(), '7.4.0', '>=') && ($isArtisanOptimize || $this->app->runningUnitTests())) {
-            error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
-        }
-    }
-
-    /**
      * Register any application services.
-     *
-     * This service provider is a great spot to register your various container
-     * bindings with the application. As you can see, we are registering our
-     * "Registrar" implementation here. You can add your own bindings too!
      *
      * @return void
      */
     public function register()
     {
+
         $this->app->bind(
             'Illuminate\Contracts\Auth\Registrar',
             'App\Services\Registrar'
@@ -159,5 +146,15 @@ class AppServiceProvider extends ServiceProvider
                 $app->make('App\Services\Form\Deployment\DeploymentForm')
             );
         });
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        //
     }
 }

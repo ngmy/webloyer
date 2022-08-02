@@ -1,10 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
 
+/**
+ * Class PasswordController
+ * @package App\Http\Controllers\Auth
+ */
 class PasswordController extends Controller
 {
     /*
@@ -17,8 +21,6 @@ class PasswordController extends Controller
     | explore this trait and override any methods you wish to tweak.
     |
     */
-
-    use ResetsPasswords;
 
     protected $redirectTo = '/projects';
 

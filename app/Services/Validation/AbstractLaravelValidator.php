@@ -1,23 +1,41 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Validation;
 
+use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Factory;
 
+/**
+ * Class AbstractLaravelValidator
+ * @package App\Services\Validation
+ */
 abstract class AbstractLaravelValidator implements ValidableInterface
 {
-    protected $validator;
+    /**
+     * @var Factory
+     */
+    protected Factory $validator;
 
-    protected $data = [];
+    /**
+     * @var array
+     */
+    protected array $data = [];
 
-    protected $errors = [];
+    /**
+     * @var MessageBag
+     */
+    protected ?MessageBag $errors;
 
-    protected $rules = [];
+    /**
+     * @var array
+     */
+    protected array $rules = [];
 
     /**
      * Create a new validator instance.
      *
-     * @param \Illuminate\Validation\Factory $validator
+     * @param Factory $validator
      * @return void
      */
     public function __construct(Factory $validator)
@@ -29,7 +47,7 @@ abstract class AbstractLaravelValidator implements ValidableInterface
      * Add data to validation.
      *
      * @param array Data to validation
-     * @return \App\Services\Validation\ValidableInterface $this
+     * @return ValidableInterface $this
      */
     public function with(array $data)
     {
@@ -46,22 +64,16 @@ abstract class AbstractLaravelValidator implements ValidableInterface
     public function passes()
     {
         $rules = array_merge($this->rules, $this->rules());
-
         $validator = $this->validator->make($this->data, $rules);
-
         if ($validator->fails()) {
             $this->errors = $validator->messages();
-
             return false;
         }
-
         return true;
     }
 
     /**
-     * Return validation errors.
-     *
-     * @return array
+     * @return MessageBag|null
      */
     public function errors()
     {

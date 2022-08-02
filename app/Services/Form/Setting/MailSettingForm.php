@@ -1,21 +1,32 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Form\Setting;
 
 use App\Services\Validation\ValidableInterface;
 use App\Repositories\Setting\SettingInterface;
 
+/**
+ * Class MailSettingForm
+ * @package App\Services\Form\Setting
+ */
 class MailSettingForm
 {
-    protected $validator;
+    /**
+     * @var ValidableInterface
+     */
+    protected ValidableInterface $validator;
 
-    protected $setting;
+    /**
+     * @var SettingInterface
+     */
+    protected SettingInterface $setting;
 
     /**
      * Create a new form service instance.
      *
-     * @param \App\Services\Validation\ValidableInterface $validator
-     * @param \App\Repositories\Setting\SettingInterface  $setting
+     * @param ValidableInterface $validator
+     * @param SettingInterface $setting
      * @return void
      */
     public function __construct(ValidableInterface $validator, SettingInterface $setting)
@@ -76,6 +87,7 @@ class MailSettingForm
     /**
      * Test whether form validator passes.
      *
+     * @param array $input
      * @return boolean
      */
     protected function valid(array $input)

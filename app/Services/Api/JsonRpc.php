@@ -1,23 +1,42 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Api;
 
 use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Deployment\DeploymentForm;
-use Auth;
+use App\Models\Deployment;
+use Sajya\Server\Procedure;
+use Illuminate\Support\Facades\Auth;
 use InvalidArgumentException;
 
-class JsonRpc
+/**
+ * Class JsonRpc
+ * @package App\Services\Api
+ */
+class JsonRpc extends Procedure
 {
-    protected $project;
 
-    protected $deploymentForm;
+    /**
+     * @var string
+     */
+    public static string $name = 'jsonrpc';
+
+    /**
+     * @var ProjectInterface
+     */
+    protected ProjectInterface $project;
+
+    /**
+     * @var DeploymentForm
+     */
+    protected DeploymentForm $deploymentForm;
 
     /**
      * Create a new controller instance.
      *
-     * @param \App\Repositories\Project\ProjectInterface   $project
-     * @param \App\Services\Form\Deployment\DeploymentForm $deploymentForm
+     * @param ProjectInterface   $project
+     * @param DeploymentForm $deploymentForm
      * @return void
      */
     public function __construct(ProjectInterface $project, DeploymentForm $deploymentForm)
@@ -30,7 +49,7 @@ class JsonRpc
      * Deploy a project.
      *
      * @param int $project_id
-     * @return \App\Models\Deployment
+     * @return Deployment
      */
     public function deploy($project_id)
     {
@@ -44,8 +63,7 @@ class JsonRpc
 
         if ($this->deploymentForm->save($input)) {
             $project = $this->project->byId($project_id);
-            $deployment = $project->getLastDeployment();
-            return $deployment;
+            return $project->getLastDeployment();
         } else {
             throw new InvalidArgumentException($this->deploymentForm->errors());
         }
@@ -55,7 +73,7 @@ class JsonRpc
      * Roll back a deployment.
      *
      * @param int $project_id
-     * @return \App\Models\Deployment
+     * @return Deployment
      */
     public function rollback($project_id)
     {
@@ -69,8 +87,31 @@ class JsonRpc
 
         if ($this->deploymentForm->save($input)) {
             $project = $this->project->byId($project_id);
-            $deployment = $project->getLastDeployment();
-            return $deployment;
+            return $project->getLastDeployment();
+        } else {
+            throw new InvalidArgumentException($this->deploymentForm->errors());
+        }
+    }
+
+    /**
+     * Unlock a deployment.
+     *
+     * @param int $project_id
+     * @return Deployment
+     */
+    public function unlock($project_id)
+    {
+        $input = [
+            'status'     => null,
+            'message'    => null,
+            'project_id' => $project_id,
+            'user_id'    => Auth::guard('api')->user()->id,
+            'task'       => 'unlock',
+        ];
+
+        if ($this->deploymentForm->save($input)) {
+            $project = $this->project->byId($project_id);
+            return $project->getLastDeployment();
         } else {
             throw new InvalidArgumentException($this->deploymentForm->errors());
         }

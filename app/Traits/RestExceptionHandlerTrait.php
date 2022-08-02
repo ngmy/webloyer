@@ -1,19 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Traits;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+/**
+ * Trait RestExceptionHandlerTrait
+ * @package App\Traits
+ */
 trait RestExceptionHandlerTrait
 {
     /**
      * Create a new JSON response based on exception type.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Exception               $e
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @param \Exception $e
+     * @return JsonResponse
      */
     protected function getJsonResponseForException(Request $request, Exception $e)
     {
@@ -37,7 +43,7 @@ trait RestExceptionHandlerTrait
      *
      * @param string $message
      * @param int    $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function badRequest($message = 'Bad request', $statusCode = 400)
     {
@@ -49,7 +55,7 @@ trait RestExceptionHandlerTrait
      *
      * @param string $message
      * @param int    $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function unauthorized($message = 'Unauthorized', $statusCode = 401)
     {
@@ -61,7 +67,7 @@ trait RestExceptionHandlerTrait
      *
      * @param string $message
      * @param int    $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function notFound($message = 'Not found', $statusCode = 404)
     {
@@ -73,7 +79,7 @@ trait RestExceptionHandlerTrait
      *
      * @param string $message
      * @param int    $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function internalError($message = 'Internal error', $statusCode = 500)
     {
@@ -85,12 +91,11 @@ trait RestExceptionHandlerTrait
      *
      * @param array|null $payload
      * @param int        $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     protected function jsonResponse(array $payload = null, $statusCode = 404)
     {
         $payload = $payload ?: [];
-
         return response()->json($payload, $statusCode);
     }
 }

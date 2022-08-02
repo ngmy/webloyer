@@ -18,7 +18,7 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link href="{{ asset('/vendor/lou/multi-select/css/multi-select.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/multi-select.css') }}" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -37,16 +37,16 @@
                 @if (!Auth::guest())
                     <ul class="nav navbar-nav">
                         <li><a href="{{ url('/projects') }}">Projects</a></li>
-                        @if (Auth::user()->can('view.recipe'))
+                        @if (Auth::user()->hasPermission('view.recipe'))
                             <li><a href="{{ url('/recipes') }}">Recipes</a></li>
                         @endif
-                        @if (Auth::user()->can('view.server'))
+                        @if (Auth::user()->hasPermission('view.server'))
                             <li><a href="{{ url('/servers') }}">Servers</a></li>
                         @endif
-                        @if (Auth::user()->can('view.user'))
+                        @if (Auth::user()->hasPermission('view.user'))
                             <li><a href="{{ url('/users') }}">Users</a></li>
                         @endif
-                        @if (Auth::user()->can('view.setting'))
+                        @if (Auth::user()->hasPermission('view.setting'))
                             <li><a href="{{ url('/settings/email') }}">Settings</a></li>
                         @endif
                     </ul>
@@ -54,13 +54,16 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     @if (Auth::guest())
-                        <li><a href="{{ url('/auth/login') }}">Login</a></li>
+                        <li><a href="{{ url('/login') }}">Login</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
+                                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
                             </ul>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         </li>
                     @endif
                 </ul>
@@ -68,20 +71,18 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                {!! Breadcrumbs::renderIfExists() !!}
-            </div>
-        </div>
+    {{ Breadcrumbs::render() }}
+
+    <div class="margin-bottom-md">
+        @yield('content')
     </div>
 
-    @yield('content')
-
     <footer class="footer">
+        <hr class="margin-bottom-md"/>
         <div class="container text-center">
             <p class="text-muted credit">
                 <p>Webloyer is Copyright &copy; 2015 by Yuta Nagamiya hosted on <a href="https://github.com/ngmy/webloyer">GitHub</a>.</p>
+                <p>Webloyer's Laravel 8 and Deployer 7 update by <a href="https://github.com/dadolun95">Davide Lunardon</a> and <a href="http://www.tidycode.it/">Tidycode</a> (August 2022).</p>
                 <p>Webloyer is a Web UI for <a href="http://deployer.org/">Deployer</a>.</p>
             </p>
         </div>
@@ -92,8 +93,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
-    <script src="{{ asset('vendor/lou/multi-select/js/jquery.multi-select.js') }}"></script>
-    <script src="{{ asset('/js/vendor/ajaxorg/ace/ace.js') }}"></script>
+    <script src="{{ asset('/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ asset('/js/ace.js') }}"></script>
     <script>
         // Hook up ACE editor to all textareas with data-editor attribute
         $(function () {

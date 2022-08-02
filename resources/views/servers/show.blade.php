@@ -21,7 +21,7 @@
                 </tbody>
             </table>
             {!! link_to_route('servers.index', 'Back', [], ['class' => 'btn btn-danger']) !!}
-            @if (Auth::user()->can('update.server'))
+            @if (Auth::user()->hasPermission('update.server'))
                 {!! link_to_route('servers.edit', 'Edit', [$server->id], ['class' => 'btn btn-primary']) !!}
             @endif
         </div>

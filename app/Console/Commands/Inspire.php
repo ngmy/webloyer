@@ -5,6 +5,10 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
 
+/**
+ * Class Inspire
+ * @package App\Console\Commands
+ */
 class Inspire extends Command
 {
     /**

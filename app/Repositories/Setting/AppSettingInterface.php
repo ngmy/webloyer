@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Setting;
 
-use App\Repositories\Setting\SettingInterface;
-
+/**
+ * Interface AppSettingInterface
+ * @package App\Repositories\Setting
+ */
 interface AppSettingInterface extends SettingInterface
 {
 }

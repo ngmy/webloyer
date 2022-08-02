@@ -1,19 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Project;
 
 use App\Repositories\AbstractEloquentRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Project;
+use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * Class EloquentProject
+ * @package App\Repositories\Project
+ */
 class EloquentProject extends AbstractEloquentRepository implements ProjectInterface
 {
     /**
-     * Create a new repository instance.
-     *
-     * @param \Illuminate\Database\Eloquent\Model $project
-     * @return void
+     * EloquentProject constructor.
+     * @param Project $project
      */
-    public function __construct(Model $project)
+    public function __construct(Project $project)
     {
         $this->model = $project;
     }
@@ -21,9 +25,9 @@ class EloquentProject extends AbstractEloquentRepository implements ProjectInter
     /**
      * Get paginated projects.
      *
-     * @param int $page  Page number
+     * @param int $page Page number
      * @param int $limit Number of projects per page
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function byPage($page = 1, $limit = 10)
     {

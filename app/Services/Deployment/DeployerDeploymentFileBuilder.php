@@ -1,26 +1,55 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Deployment;
 
-use App\Services\Deployment\DeployerFile;
 use App\Services\Filesystem\FilesystemInterface;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class DeployerDeploymentFileBuilder
+ * @package App\Services\Deployment
+ */
 class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
 {
-    protected $fs;
+    /**
+     * @var FilesystemInterface
+     */
+    protected FilesystemInterface $fs;
 
-    protected $deployerFile;
+    /**
+     * @var DeployerFile
+     */
+    protected DeployerFile $deployerFile;
 
-    protected $project;
+    /**
+     * @var null|Model
+     */
+    protected ?Model $project;
 
-    protected $serverListFile;
+    /**
+     * @var null|DeployerFile
+     */
+    protected ?DeployerFile $serverListFile;
 
-    protected $recipeFile;
+    /**
+     * @var null|array
+     */
+    protected ?array $recipeFile;
 
+    /**
+     * @var bool
+     */
+    protected bool $deployerFileInitialized = false;
+
+    /**
+     * DeployerDeploymentFileBuilder constructor.
+     * @param FilesystemInterface $fs
+     * @param DeployerFile $deployerFile
+     */
     public function __construct(FilesystemInterface $fs, DeployerFile $deployerFile)
     {
-        $this->fs           = $fs;
+        $this->fs = $fs;
         $this->deployerFile = $deployerFile;
     }
 
@@ -32,11 +61,11 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
     /**
      * Set a deployment file path info.
      *
-     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     * @return DeployerDeploymentFileBuilder $this
      */
     public function pathInfo()
     {
-        $id = md5(uniqid(rand(), true));
+        $id = md5(uniqid((string)rand(), true));
 
         $baseName = "deploy_$id.php";
         $fullPath = storage_path("app/$baseName");
@@ -50,7 +79,7 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
     /**
      * Put a deployment file.
      *
-     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     * @return DeployerDeploymentFileBuilder $this
      */
     public function put()
     {
@@ -68,18 +97,22 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
         // Set a repository
         $contents[] = "set('repository', '{$this->project->repository}');";
 
+        $sshPassword = getenv('SSH_PASSWORD');
+        $sshPath = getenv('SSH_PATH');
+        $contents[] = "putenv('SSH_PASSWORD={$sshPassword}');";
+        $contents[] = "putenv('SSH_PATH={$sshPath}');";
+
         // Load a server list file
-        $contents[] = "serverList('{$this->serverListFile->getFullPath()}');";
-
+        $contents[] = "import('{$this->serverListFile->getFullPath()}');";
         $this->fs->put($fullPath, implode(PHP_EOL, $contents));
-
+        $this->deployerFileInitialized = true;
         return $this;
     }
 
     /**
      * Get a deployment file instance.
      *
-     * @return \App\Services\Deployment\DeployerFile
+     * @return DeployerFile
      */
     public function getResult()
     {
@@ -89,26 +122,24 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
     /**
      * Set a project model instance.
      *
-     * @param \Illuminate\Database\Eloquent\Model $project
-     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     * @param Model $project
+     * @return DeployerDeploymentFileBuilder $this
      */
     public function setProject(Model $project)
     {
         $this->project = $project;
-
         return $this;
     }
 
     /**
      * Set a server list file instance.
      *
-     * @param \App\Services\Deployment\DeployerFile $serverListFile
-     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     * @param DeployerFile $serverListFile
+     * @return DeployerDeploymentFileBuilder $this
      */
     public function setServerListFile(DeployerFile $serverListFile)
     {
         $this->serverListFile = $serverListFile;
-
         return $this;
     }
 
@@ -116,12 +147,11 @@ class DeployerDeploymentFileBuilder implements DeployerFileBuilderInterface
      * Set recipe file instances.
      *
      * @param array $recipeFile
-     * @return \App\Services\Deployment\DeployerDeploymentFileBuilder $this
+     * @return DeployerDeploymentFileBuilder $this
      */
     public function setRecipeFile(array $recipeFile)
     {
         $this->recipeFile = $recipeFile;
-
         return $this;
     }
 }

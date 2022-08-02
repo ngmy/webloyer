@@ -1,16 +1,28 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+/**
+ * Class AbstractEloquentRepository
+ * @package App\Repositories
+ */
 abstract class AbstractEloquentRepository implements RepositoryInterface
 {
-    protected $model;
+    /**
+     * @var Model
+     */
+    protected Model $model;
 
     /**
      * Get a model by id.
      *
      * @param int $id Model id
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function byId($id)
     {
@@ -20,24 +32,22 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
     /**
      * Get paginated models.
      *
-     * @param int $page  Page number
+     * @param int $page Page number
      * @param int $limit Number of models per page
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function byPage($page = 1, $limit = 10)
     {
-        $models = $this->model
+        return $this->model
             ->skip($limit * ($page - 1))
             ->take($limit)
             ->paginate($limit);
-
-        return $models;
     }
 
     /**
      * Get all models.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public function all()
     {
@@ -48,13 +58,11 @@ abstract class AbstractEloquentRepository implements RepositoryInterface
      * Create a new model.
      *
      * @param array $data Data to create a model
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function create(array $data)
     {
-        $model = $this->model->create($data);
-
-        return $model;
+        return $this->model->create($data);
     }
 
     /**

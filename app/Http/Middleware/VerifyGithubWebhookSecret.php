@@ -1,14 +1,27 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
 use Closure;
 use App\Repositories\Project\ProjectInterface;
+use Illuminate\Http\Request;
 
+/**
+ * Class VerifyGithubWebhookSecret
+ * @package App\Http\Middleware
+ */
 class VerifyGithubWebhookSecret
 {
-    protected $projectRepository;
+    /**
+     * @var ProjectInterface
+     */
+    protected ProjectInterface $projectRepository;
 
+    /**
+     * VerifyGithubWebhookSecret constructor.
+     * @param ProjectInterface $projectRepository
+     */
     public function __construct(ProjectInterface $projectRepository)
     {
         $this->projectRepository = $projectRepository;
@@ -17,7 +30,7 @@ class VerifyGithubWebhookSecret
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  \Closure  $next
      * @return mixed
      */

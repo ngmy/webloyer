@@ -58,10 +58,19 @@
                         <th>GitHub Webhook Execute By</th>
                         <td>{{ is_null($project->getGithubWebhookUser()) ? '' : $project->getGithubWebhookUser()->email }}</td>
                     </tr>
+                    <tr>
+                        <th>Bitbucket Webhook Secret</th>
+                        <td>{{ $project->bitbucket_webhook_secret }}</td>
+                    </tr>
+                    <tr>
+                        <th>Bitbucket Webhook Execute By</th>
+                        <td>{{ is_null($project->getBitbucketWebhookUser()) ? '' : $project->getBitbucketWebhookUser()->email }}</td>
+                    </tr>
+                </tbody>
                 </tbody>
             </table>
             {!! link_to_route('projects.index', 'Back', [], ['class' => 'btn btn-danger']) !!}
-            @if (Auth::user()->can('update.project'))
+            @if (Auth::user()->hasPermission('update.project'))
                 {!! link_to_route('projects.edit', 'Edit', [$project->id], ['class' => 'btn btn-primary']) !!}
             @endif
         </div>

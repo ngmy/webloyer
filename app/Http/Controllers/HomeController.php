@@ -1,7 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+
+/**
+ * Class HomeController
+ * @package App\Http\Controllers
+ */
 class HomeController extends Controller
 {
     /*
@@ -28,7 +36,7 @@ class HomeController extends Controller
     /**
      * Show the application dashboard to the user.
      *
-     * @return Response
+     * @return Factory|View
      */
     public function index()
     {

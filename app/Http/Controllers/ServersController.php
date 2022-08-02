@@ -1,33 +1,42 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\Repositories\Server\ServerInterface;
 use App\Services\Form\Server\ServerForm;
 use App\Models\Server;
 
+/**
+ * Class ServersController
+ * @package App\Http\Controllers
+ */
 class ServersController extends Controller
 {
-    protected $server;
-
-    protected $serverForm;
+    /**
+     * @var ServerInterface
+     */
+    protected ServerInterface $server;
 
     /**
-     * Create a new controller instance.
-     *
-     * @param \App\Repositories\Server\ServerInterface $server
-     * @param \App\Services\Form\Server\ServerForm     $serverForm
-     * @return void
+     * @var ServerForm
+     */
+    protected ServerForm $serverForm;
+
+    /**
+     * ServersController constructor.
+     * @param ServerInterface $server
+     * @param ServerForm $serverForm
      */
     public function __construct(ServerInterface $server, ServerForm $serverForm)
     {
         $this->middleware('auth');
         $this->middleware('acl');
-
         $this->server     = $server;
         $this->serverForm = $serverForm;
     }
@@ -35,24 +44,21 @@ class ServersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return Response
+     * @param Request $request
+     * @return Factory|View
      */
     public function index(Request $request)
     {
         $page = $request->input('page', 1);
-
         $perPage = 10;
-
         $servers = $this->server->byPage($page, $perPage);
-
         return view('servers.index')->with('servers', $servers);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return Factory|View
      */
     public function create()
     {
@@ -62,13 +68,12 @@ class ServersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return Response
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
         $input = $request->all();
-
         if ($this->serverForm->save($input)) {
             return redirect()->route('servers.index');
         } else {
@@ -81,8 +86,8 @@ class ServersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Server $server
-     * @return Response
+     * @param Server $server
+     * @return Factory|View
      */
     public function show(Server $server)
     {
@@ -92,8 +97,8 @@ class ServersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Server $server
-     * @return Response
+     * @param Server $server
+     * @return Factory|View
      */
     public function edit(Server $server)
     {
@@ -103,14 +108,13 @@ class ServersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Server       $server
-     * @return Response
+     * @param Request $request
+     * @param Server $server
+     * @return RedirectResponse
      */
     public function update(Request $request, Server $server)
     {
         $input = array_merge($request->all(), ['id' => $server->id]);
-
         if ($this->serverForm->update($input)) {
             return redirect()->route('servers.index');
         } else {
@@ -123,13 +127,12 @@ class ServersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Server $server
-     * @return Response
+     * @param Server $server
+     * @return RedirectResponse
      */
     public function destroy(Server $server)
     {
         $this->server->delete($server->id);
-
         return redirect()->route('servers.index');
     }
 }

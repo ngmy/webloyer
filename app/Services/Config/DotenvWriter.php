@@ -1,16 +1,31 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Config;
 
-use App\Services\Config\ConfigWriterInterface;
 use App\Services\Filesystem\FilesystemInterface;
 
+/**
+ * Class DotenvWriter
+ * @package App\Services\Config
+ */
 class DotenvWriter implements ConfigWriterInterface
 {
-    protected $fs;
+    /**
+     * @var FilesystemInterface
+     */
+    protected FilesystemInterface $fs;
 
-    protected $path;
+    /**
+     * @var string
+     */
+    protected string $path;
 
+    /**
+     * DotenvWriter constructor.
+     * @param FilesystemInterface $fs
+     * @param $path
+     */
     public function __construct(FilesystemInterface $fs, $path)
     {
         $this->fs   = $fs;

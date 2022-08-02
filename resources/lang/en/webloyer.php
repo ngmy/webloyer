@@ -2,7 +2,7 @@
 
 return [
 
-    'enter_webloyer_url' => 'Please enter your Webloyer URL ("http://webloyer.local" for example)',
+    'enter_webloyer_url' => 'Please enter your Webloyer URL ("https://app.webloyer.test" for example)',
 
     'enter_admin_name'     => 'Please enter admin name',
     'enter_admin_email'    => 'Please enter admin email',

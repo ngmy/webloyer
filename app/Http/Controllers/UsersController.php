@@ -1,31 +1,45 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\Repositories\User\UserInterface;
 use App\Repositories\Role\RoleInterface;
 use App\Services\Form\User\UserForm;
 use App\Models\User;
 
+/**
+ * Class UsersController
+ * @package App\Http\Controllers
+ */
 class UsersController extends Controller
 {
-    protected $user;
-
-    protected $userForm;
-
-    protected $role;
 
     /**
-     * Create a new controller instance.
-     *
-     * @param \App\Repositories\User\UserInterface $user
-     * @param \App\Services\Form\User\UserForm     $userForm
-     * @param \App\Repositories\Role\RoleInterface $role
-     * @return void
+     * @var UserInterface
+     */
+    protected UserInterface $user;
+
+    /**
+     * @var UserForm
+     */
+    protected UserForm $userForm;
+
+    /**
+     * @var RoleInterface
+     */
+    protected RoleInterface $role;
+
+    /**
+     * UsersController constructor.
+     * @param UserInterface $user
+     * @param UserForm $userForm
+     * @param RoleInterface $role
      */
     public function __construct(UserInterface $user, UserForm $userForm, RoleInterface $role)
     {
@@ -40,29 +54,25 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return Response
+     * @param Request $request
+     * @return Factory|View
      */
     public function index(Request $request)
     {
         $page = $request->input('page', 1);
-
         $perPage = 10;
-
         $users = $this->user->byPage($page, $perPage);
-
         return view('users.index')->with('users', $users);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return Factory|View
      */
     public function create()
     {
         $roles = $this->role->all();
-
         return view('users.create')
             ->with('roles', $roles);
     }
@@ -70,13 +80,12 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return Response
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
         $input = $request->all();
-
         if ($this->userForm->save($input)) {
             return redirect()->route('users.index');
         } else {
@@ -89,8 +98,8 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\User $user
-     * @return Response
+     * @param User $user
+     * @return RedirectResponse
      */
     public function show(User $user)
     {
@@ -100,8 +109,8 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\User $user
-     * @return Response
+     * @param User $user
+     * @return Factory|View
      */
     public function edit(User $user)
     {
@@ -111,14 +120,13 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
-     * @return Response
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
      */
     public function update(Request $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
-
         if ($this->userForm->update($input)) {
             return redirect()->route('users.index');
         } else {
@@ -131,8 +139,8 @@ class UsersController extends Controller
     /**
      * Show the form for changing the password of the specified resource.
      *
-     * @param \App\Models\User $user
-     * @return Response
+     * @param User $user
+     * @return Factory|View
      */
     public function changePassword(User $user)
     {
@@ -142,14 +150,13 @@ class UsersController extends Controller
     /**
      * Update the password of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
-     * @return Response
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
      */
     public function updatePassword(Request $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
-
         if ($this->userForm->updatePassword($input)) {
             return redirect()->route('users.index');
         } else {
@@ -162,13 +169,12 @@ class UsersController extends Controller
     /**
      * Show the form for editing the role of the specified resource.
      *
-     * @param \App\Models\User $user
-     * @return Response
+     * @param User $user
+     * @return Factory|View
      */
     public function editRole(User $user)
     {
         $roles = $this->role->all();
-
         return view('users.edit_role')
             ->with('user', $user)
             ->with('roles', $roles);
@@ -177,14 +183,13 @@ class UsersController extends Controller
     /**
      * Update the role of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
-     * @return Response
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
      */
     public function updateRole(Request $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
-
         if ($this->userForm->updateRole($input)) {
             return redirect()->route('users.index');
         } else {
@@ -197,8 +202,8 @@ class UsersController extends Controller
     /**
      * Show the form for editing the API token of the specified resource.
      *
-     * @param \App\Models\User $user
-     * @return Response
+     * @param User $user
+     * @return Factory|View
      */
     public function editApiToken(User $user)
     {
@@ -209,14 +214,13 @@ class UsersController extends Controller
     /**
      * Regenerate the API token of the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User         $user
-     * @return Response
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
      */
     public function regenerateApiToken(Request $request, User $user)
     {
         $input = array_merge($request->all(), ['id' => $user->id]);
-
         if ($this->userForm->regenerateApiToken($input)) {
             return redirect()->route('users.index');
         } else {
@@ -229,13 +233,12 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\User $user
-     * @return Response
+     * @param User $user
+     * @return RedirectResponse
      */
     public function destroy(User $user)
     {
         $this->user->delete($user->id);
-
         return redirect()->route('users.index');
     }
 }

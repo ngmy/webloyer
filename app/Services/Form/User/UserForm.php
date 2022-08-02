@@ -1,29 +1,41 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Form\User;
 
-use DB;
-use Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Services\Validation\ValidableInterface;
 use App\Repositories\User\UserInterface;
+use Illuminate\Support\Str;
 
+/**
+ * Class UserForm
+ * @package App\Services\Form\User
+ */
 class UserForm
 {
-    protected $validator;
+    /**
+     * @var ValidableInterface
+     */
+    protected ValidableInterface $validator;
 
-    protected $user;
+    /**
+     * @var UserInterface
+     */
+    protected UserInterface $user;
 
     /**
      * Create a new form service instance.
      *
-     * @param \App\Services\Validation\ValidableInterface $validator
-     * @param \App\Repositories\User\UserInterface        $user
+     * @param ValidableInterface $validator
+     * @param UserInterface $user
      * @return void
      */
     public function __construct(ValidableInterface $validator, UserInterface $user)
     {
         $this->validator = $validator;
-        $this->user      = $user;
+        $this->user = $user;
     }
 
     /**
@@ -37,13 +49,10 @@ class UserForm
         if (!$this->valid($input)) {
             return false;
         }
-
         if (isset($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         }
-
-        $input['api_token'] = str_random(60);
-
+        $input['api_token'] = Str::random(60);
         DB::transaction(function () use ($input) {
             $user = $this->user->create($input);
 
@@ -51,7 +60,6 @@ class UserForm
                 $user->assignRole($input['role']);
             }
         });
-
         return true;
     }
 
@@ -66,11 +74,9 @@ class UserForm
         if (!$this->valid($input)) {
             return false;
         }
-
         DB::transaction(function () use ($input) {
             $this->user->update($input);
         });
-
         return true;
     }
 
@@ -85,9 +91,9 @@ class UserForm
         if (!$this->valid($input)) {
             return false;
         }
-
-        $input['password'] = Hash::make($input['password']);
-
+        if (isset($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        }
         return $this->user->update($input);
     }
 
@@ -102,11 +108,9 @@ class UserForm
         if (!$this->valid($input)) {
             return false;
         }
-
         if (!isset($input['role'])) {
             $input['role'] = [];
         }
-
         DB::transaction(function () use ($input) {
             $user = $this->user->byId($input['id']);
 
@@ -116,17 +120,17 @@ class UserForm
                 $user->assignRole($input['role']);
             }
         });
-
         return true;
     }
 
+    /**
+     * @param array $input
+     * @return bool|mixed
+     */
     public function regenerateApiToken(array $input)
     {
-        $input['api_token'] = str_random(60);
-
+        $input['api_token'] = Str::random(60);
         return $this->user->update($input);
-
-        return true;
     }
 
     /**
@@ -142,6 +146,7 @@ class UserForm
     /**
      * Test whether form validator passes.
      *
+     * @param array $input
      * @return boolean
      */
     protected function valid(array $input)

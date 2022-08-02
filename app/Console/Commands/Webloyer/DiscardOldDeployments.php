@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Console\Commands\Webloyer;
 
@@ -8,6 +9,10 @@ use Illuminate\Console\Command;
 use DB;
 use DateTime;
 
+/**
+ * Class DiscardOldDeployments
+ * @package App\Console\Commands\Webloyer
+ */
 class DiscardOldDeployments extends Command
 {
     /**
@@ -24,15 +29,20 @@ class DiscardOldDeployments extends Command
      */
     protected $description = 'Discard old deployments';
 
-    protected $projectRepository;
-
-    protected $spec;
+    /**
+     * @var ProjectInterface
+     */
+    protected ProjectInterface $projectRepository;
 
     /**
-     * Create a new command instance.
-     *
-     * @param \App\Repositories\Project\ProjectInterface $projectRepository
-     * @return void
+     * @var OldDeploymentSpecification
+     */
+    protected OldDeploymentSpecification $spec;
+
+    /**
+     * DiscardOldDeployments constructor.
+     * @param ProjectInterface $projectRepository
+     * @throws \Exception
      */
     public function __construct(ProjectInterface $projectRepository)
     {

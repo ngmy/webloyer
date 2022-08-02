@@ -1,15 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Setting;
 
-use App\Services\Config\ConfigReaderInterface;
-use App\Services\Config\ConfigWriterInterface;
 use App\Entities\Setting\DbSettingEntity;
 use App\Repositories\AbstractConfigRepository;
-use App\Repositories\Setting\DbSettingInterface;
 
+/**
+ * Class ConfigDbSetting
+ * @package App\Repositories\Setting
+ */
 class ConfigDbSetting extends AbstractConfigRepository implements DbSettingInterface
 {
+    /**
+     * @return DbSettingEntity|mixed|void
+     */
     public function all()
     {
         $driver   = $this->reader->getConfig('DB_DRIVER');
@@ -28,6 +33,10 @@ class ConfigDbSetting extends AbstractConfigRepository implements DbSettingInter
         return $dbSetting;
     }
 
+    /**
+     * @param array $data
+     * @return bool|mixed|void
+     */
     public function update(array $data)
     {
         $this->writer->setConfig('DB_DRIVER',   $data['driver']);

@@ -6,7 +6,7 @@
         <div class="col-md-8 col-md-offset-2">
             <h1 class="page-header">Servers</h1>
 
-            @if (Auth::user()->can('create.server'))
+            @if (Auth::user()->hasPermission('create.server'))
                 <div class="pull-right margin-bottom-lg">
                     {!! link_to_route('servers.create', 'Create', [], ['class' => 'btn btn-primary btn-lg']) !!}
                 </div>
@@ -29,10 +29,10 @@
                             <td>{{ $server->updated_at }}</td>
                             <td>
                                 {!! link_to_route('servers.show', 'Show', [$server->id], ['class' => 'btn btn-default']) !!}
-                                @if (Auth::user()->can('update.server'))
+                                @if (Auth::user()->hasPermission('update.server'))
                                     {!! link_to_route('servers.edit', 'Edit', [$server->id], ['class' => 'btn btn-default']) !!}
                                 @endif
-                                @if (Auth::user()->can('delete.server'))
+                                @if (Auth::user()->hasPermission('delete.server'))
                                     {!! Form::open(['route' => ['servers.destroy', $server->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
                                     {!! Form::submit('Destroy', ['class' => 'btn btn-danger']) !!}
                                     {!! Form::close() !!}
