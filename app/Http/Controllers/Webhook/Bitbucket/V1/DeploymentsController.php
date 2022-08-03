@@ -9,8 +9,12 @@ use App\Repositories\Project\ProjectInterface;
 use App\Services\Form\Deployment\DeploymentForm;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Throwable;
 
 /**
  * Class DeploymentsController
@@ -59,17 +63,20 @@ class DeploymentsController extends Controller
      *
      * @param Request $request
      * @param Project $project
-     * @return string
-     * @throws \Throwable
+     * @return false|Application|ResponseFactory|Response|void
+     * @throws Throwable
      */
     public function store(Request $request, Project $project)
     {
         $this->verify($request, $project);
         $requestContent = json_decode($request->getContent());
-        if (!empty($requestContent->push->changes[0])) {
+
+        if (empty($requestContent->push->changes[0])) {
             $error = new \Exception("Wrong bitbucket webhook request format!");
             $this->loggerHandler->report($error);
+            return false;
         }
+
         if ($requestContent->push->changes[0]->new->name === $project->stage) {
             try {
                 $user = $this->getBitbucketUserId($requestContent->actor->nickname);
