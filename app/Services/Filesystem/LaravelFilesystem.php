@@ -1,15 +1,26 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Filesystem;
 
-use App\Services\Filesystem\FilesystemInterface;
-
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * Class LaravelFilesystem
+ * @package App\Services\Filesystem
+ */
 class LaravelFilesystem implements FilesystemInterface
 {
-    protected $fs;
+    /**
+     * @var Filesystem
+     */
+    protected Filesystem $fs;
 
+    /**
+     * LaravelFilesystem constructor.
+     * @param Filesystem $fs
+     */
     public function __construct(Filesystem $fs)
     {
         $this->fs = $fs;
@@ -30,8 +41,9 @@ class LaravelFilesystem implements FilesystemInterface
     /**
      * Read a file.
      *
-     * @param string $path File path
-     * @return string Contents
+     * @param string $path
+     * @return string
+     * @throws FileNotFoundException
      */
     public function get($path)
     {

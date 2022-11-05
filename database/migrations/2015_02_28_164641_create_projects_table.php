@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateProjectsTable
+ */
 class CreateProjectsTable extends Migration
 {
     /**
@@ -13,10 +18,10 @@ class CreateProjectsTable extends Migration
     public function up()
     {
         Schema::create('projects', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name');
             $table->string('stage')->nullable();
-            $table->integer('server_id')->unsigned();
+            $table->bigInteger('server_id')->unsigned();
             $table->string('repository');
             $table->string('email_notification_recipient')->nullable();
             $table->text('attributes');
@@ -24,7 +29,7 @@ class CreateProjectsTable extends Migration
             $table->integer('max_number_of_deployments_to_keep')->unsigned()->nullable();
             $table->tinyInteger('keep_last_deployment')->unsigned();
             $table->string('github_webhook_secret')->nullable();
-            $table->integer('github_webhook_user_id')->unsigned()->nullable();
+            $table->bigInteger('github_webhook_user_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('server_id')

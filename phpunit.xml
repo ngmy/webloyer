@@ -1,56 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         bootstrap="bootstrap/autoload.php"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false">
+>
     <testsuites>
-        <testsuite name="Application Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <coverage processUncoveredFiles="true">
+        <include>
             <directory suffix=".php">./app</directory>
-            <exclude>
-                <directory>./app/Providers</directory>
-                <directory suffix="Interface.php">./app</directory>
-                <file>./app/Console/Commands/Inspire.php</file>
-                <file>./app/Console/Kernel.php</file>
-                <file>./app/Events/Event.php</file>
-                <file>./app/Exceptions/Handler.php</file>
-                <file>./app/Http/Controllers/Auth/AuthController.php</file>
-                <file>./app/Http/Controllers/Auth/PasswordController.php</file>
-                <file>./app/Http/Controllers/Controller.php</file>
-                <file>./app/Http/Controllers/HomeController.php</file>
-                <file>./app/Http/Controllers/WelcomeController.php</file>
-                <file>./app/Http/Kernel.php</file>
-                <file>./app/Http/Middleware/Authenticate.php</file>
-                <file>./app/Http/Middleware/RedirectIfAuthenticated.php</file>
-                <file>./app/Http/Middleware/VerifyCsrfToken.php</file>
-                <file>./app/Http/Requests/Request.php</file>
-                <file>./app/Http/breadcrumbs.php</file>
-                <file>./app/Http/routes.php</file>
-                <file>./app/Jobs/Job.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+    </coverage>
     <php>
-        <env name="APP_ENV" value="testing"/>
-        <env name="APP_KEY" value="base64:pMhsdiMZNN3ummMKgvJ/0efi7GheB8ybVGcMiDrqEhA="/>
-        <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
-        <env name="DB_HOST" value="localhost"/>
-        <env name="DB_DATABASE" value="webloyer_test"/>
-        <env name="DB_USERNAME" value="root"/>
-        <env name="DB_PASSWORD" value=""/>
+        <server name="APP_ENV" value="testing"/>
+        <server name="BCRYPT_ROUNDS" value="4"/>
+        <server name="CACHE_DRIVER" value="array"/>
+        <!-- <server name="DB_CONNECTION" value="sqlite"/> -->
+        <!-- <server name="DB_DATABASE" value=":memory:"/> -->
+        <server name="MAIL_MAILER" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="array"/>
+        <server name="TELESCOPE_ENABLED" value="false"/>
     </php>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
 </phpunit>

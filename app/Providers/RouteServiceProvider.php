@@ -1,105 +1,93 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Providers;
 
-use Illuminate\Routing\Router;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class RouteServiceProvider
+ * @package App\Providers
+ */
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * This namespace is applied to the controller routes in your routes file.
+     * The path to the "home" route for your application.
      *
-     * In addition, it is set as the URL generator's root namespace.
+     * This is used by Laravel authentication to redirect users after login.
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    public const HOME = '/';
 
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
-        parent::boot($router);
+        $this->configureRateLimiting();
 
-        //
-        $router->bind('projects', function ($id) {
+        Route::bind('projects', function ($id) {
             $projectRepository = $this->app->make('App\Repositories\Project\ProjectInterface');
-
             $project = $projectRepository->byId($id);
-
             if (is_null($project)) {
                 throw new NotFoundHttpException;
             }
-
             return $project;
         });
 
-        $router->bind('deployments', function ($num, $route) {
-            $project = $route->parameter('projects');
-
-            $deployment = $project->getDeploymentByNumber($num);
-
-            if (is_null($deployment)) {
-                throw new NotFoundHttpException;
-            }
-
-            return $deployment;
-        });
-
-        $router->bind('recipes', function ($id) {
+        Route::bind('recipes', function ($id) {
             $recipeRepository = $this->app->make('App\Repositories\Recipe\RecipeInterface');
-
             $recipe = $recipeRepository->byId($id);
-
             if (is_null($recipe)) {
                 throw new NotFoundHttpException;
             }
-
             return $recipe;
         });
 
-        $router->bind('servers', function ($id) {
+        Route::bind('servers', function ($id) {
             $serverRepository = $this->app->make('App\Repositories\Server\ServerInterface');
-
             $server = $serverRepository->byId($id);
-
             if (is_null($server)) {
                 throw new NotFoundHttpException;
             }
-
             return $server;
         });
 
-        $router->bind('users', function ($id) {
+        Route::bind('users', function ($id) {
             $userRepository = $this->app->make('App\Repositories\User\UserInterface');
-
             $user = $userRepository->byId($id);
-
             if (is_null($user)) {
                 throw new NotFoundHttpException;
             }
-
             return $user;
         });
+
+        Route::prefix('api')
+            ->middleware('api')
+            ->group(base_path('routes/api.php'));
+
+        Route::middleware('web')
+            ->group(base_path('routes/web.php'));
+
     }
 
     /**
-     * Define the routes for the application.
+     * Configure the rate limiters for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function map(Router $router)
+    protected function configureRateLimiting()
     {
-        $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
     }
 }

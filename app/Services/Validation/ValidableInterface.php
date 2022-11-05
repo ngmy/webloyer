@@ -1,14 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Validation;
 
+/**
+ * Interface ValidableInterface
+ * @package App\Services\Validation
+ */
 interface ValidableInterface
 {
     /**
      * Add data to validation.
      *
      * @param array Data to validation
-     * @return \App\Services\Validation\ValidableInterface $this
+     * @return ValidableInterface $this
      */
     public function with(array $input);
 

@@ -37,7 +37,12 @@
                 </tbody>
             </table>
             {!! link_to_route('projects.deployments.index', 'Back', [$deployment->project_id], ['class' => 'btn btn-danger']) !!}
-        </div>
-    </div>
+            @if (is_null($deployment->status))
+                {!! link_to_route('projects.deployments.delete', 'Cancel', [$deployment->project_id, $deployment->id], ['class' => 'btn btn-danger']) !!}
+            @elseif($deployment->status == 3)
+                {!! link_to_route('projects.deployments.delete', 'Abort', [$deployment->id], ['class' => 'btn btn-danger']) !!}
+            @endif
+</div>
+</div>
 </div>
 @stop

@@ -1,25 +1,37 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Form\Project;
 
 use App\Services\Validation\AbstractLaravelValidator;
 
+/**
+ * Class ProjectFormLaravelValidator
+ * @package App\Services\Form\Project
+ */
 class ProjectFormLaravelValidator extends AbstractLaravelValidator
 {
-    protected $rules = [
-        'name'                              => 'required',
-        'stage'                             => 'required',
-        'recipe_id'                         => 'required',
-        'server_id'                         => 'required|exists:servers,id',
-        'repository'                        => 'required|url',
-        'deploy_path'                       => 'string',
-        'email_notification_recipient'      => 'email',
-        'days_to_keep_deployments'          => 'integer|min:1',
+    /**
+     * @var array
+     */
+    protected array $rules = [
+        'name' => 'required',
+        'stage' => 'required',
+        'recipe_id' => 'required',
+        'server_id' => 'required|exists:servers,id',
+        'repository' => 'required|url',
+        'deploy_path' => 'string',
+        'email_notification_recipient' => 'email',
+        'days_to_keep_deployments' => 'integer|min:1',
         'max_number_of_deployments_to_keep' => 'integer|min:1',
-        'keep_last_deployment'              => 'boolean',
-        'github_webhook_secret'             => 'string',
+        'keep_last_deployment' => 'boolean',
+        'github_webhook_secret' => 'string',
+        'bitbucket_webhook_secret' => 'string'
     ];
 
+    /**
+     * @return array
+     */
     protected function rules()
     {
         $rules = [];

@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreatePermissionsTable
+ */
 class CreatePermissionsTable extends Migration
 {
     /**
@@ -13,8 +18,8 @@ class CreatePermissionsTable extends Migration
     public function up()
     {
         Schema::create('permissions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('inherit_id')->unsigned()->nullable()->index();
+            $table->id();
+            $table->bigInteger('inherit_id')->unsigned()->nullable()->index();
             $table->foreign('inherit_id')->references('id')->on('permissions');
             $table->string('name')->index();
             $table->string('slug')->index();

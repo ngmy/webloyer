@@ -1,0 +1,56 @@
+--- src/Component/Ssh/Client.php    2022-05-18 10:16:18.196303961 +0000
++++ src/Component/Ssh/Client.php    2022-05-18 10:16:25.196303961 +0000
+@@ -72,7 +72,16 @@
+         $command = str_replace('%secret%', $config['secret'] ?? '', $command);
+         $command = str_replace('%sudo_pass%', $config['sudo_pass'] ?? '', $command);
+
+-        $process = new Process($ssh);
++        if (getenv('SSH_PASSWORD') && getenv('SSH_PATH')) {
++            $process = new Process($ssh, null,
++                [
++                    'SSH_PASSWORD' => getenv('SSH_PASSWORD'),
++                    'PATH' => getenv('SSH_PATH')
++                ]
++            );
++        } else {
++            $process = new Process($ssh);
++        }
+         $process
+             ->setInput("( $command ); printf '[exit_code:%s]' $?;")
+             ->setTimeout($config['timeout'])
+@@ -137,7 +146,16 @@
+                 $this->pop->writeln(Process::OUT, $host, join(' ', $command));
+             }
+
+-            $process = new Process($command);
++            if (getenv('SSH_PASSWORD') && getenv('SSH_PATH')) {
++                $process = new Process($command, null,
++                    [
++                        'SSH_PASSWORD' => getenv('SSH_PASSWORD'),
++                        'PATH' => getenv('SSH_PATH')
++                    ]
++                );
++            } else {
++                $process = new Process($command);
++            }
+             $process->setTimeout(30); // Connection timeout (time needed to establish ssh multiplexing)
+
+             try {
+@@ -164,7 +182,16 @@
+             $this->pop->printBuffer(Process::OUT, $host, join(' ', $command));
+         }
+
+-        $process = new Process($command);
++        if (getenv('SSH_PASSWORD') && getenv('SSH_PATH')) {
++            $process = new Process($command, null,
++                [
++                    'SSH_PASSWORD' => getenv('SSH_PASSWORD'),
++                    'PATH' => getenv('SSH_PATH')
++                ]
++            );
++        } else {
++            $process = new Process($command);
++        }
+         $process->run();
+         $output = $process->getErrorOutput();
+

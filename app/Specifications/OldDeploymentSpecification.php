@@ -1,14 +1,27 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Specifications;
 
 use Illuminate\Database\Eloquent\Model;
 use DateTime;
+use Illuminate\Support\Collection;
 
+/**
+ * Class OldDeploymentSpecification
+ * @package App\Specifications
+ */
 class OldDeploymentSpecification extends DeploymentSpecification
 {
-    protected $currentDate;
+    /**
+     * @var DateTime
+     */
+    protected DateTime $currentDate;
 
+    /**
+     * OldDeploymentSpecification constructor.
+     * @param DateTime $currentDate
+     */
     public function __construct(DateTime $currentDate)
     {
         $this->currentDate = $currentDate;
@@ -17,8 +30,8 @@ class OldDeploymentSpecification extends DeploymentSpecification
     /**
      * Get elements that satisfy the specification.
      *
-     * @param \Illuminate\Database\Eloquent\Model $project
-     * @return \Illuminate\Support\Collection
+     * @param Model $project
+     * @return Collection
      */
     public function satisfyingElementsFrom(Model $project)
     {

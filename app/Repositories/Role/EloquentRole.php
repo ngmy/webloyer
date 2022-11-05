@@ -1,17 +1,21 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Role;
 
 use App\Repositories\AbstractEloquentRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * Class EloquentRole
+ * @package App\Repositories\Role
+ */
 class EloquentRole extends AbstractEloquentRepository implements RoleInterface
 {
     /**
-     * Create a new repository instance.
-     *
-     * @param \Illuminate\Database\Eloquent\Model $role
-     * @return void
+     * EloquentRole constructor.
+     * @param Model $role
      */
     public function __construct(Model $role)
     {
@@ -21,17 +25,15 @@ class EloquentRole extends AbstractEloquentRepository implements RoleInterface
     /**
      * Get paginated roles.
      *
-     * @param int $page  Page number
-     * @param int $limit Number of roles per page
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @param int $page
+     * @param int $limit
+     * @return LengthAwarePaginator|mixed
      */
     public function byPage($page = 1, $limit = 10)
     {
-        $roles = $this->model->orderBy('name')
+        return $this->model->orderBy('name')
             ->skip($limit * ($page - 1))
             ->take($limit)
             ->paginate($limit);
-
-        return $roles;
     }
 }

@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Notification;
 
 use Mail;
 
+/**
+ * Class MailNotifier
+ * @package App\Services\Notification
+ */
 class MailNotifier implements NotifierInterface
 {
     /**
@@ -11,25 +16,24 @@ class MailNotifier implements NotifierInterface
      *
      * @var string
      */
-    protected $to;
+    protected string $to;
 
     /**
      * Sender of notification.
      *
      * @var string
      */
-    protected $from;
+    protected string $from;
 
     /**
      * Recipient of notification.
      *
      * @param string $to The recipient
-     * @return App\Services\Notification\NotifierInterface Return self for chainability
+     * @return NotifierInterface Return self for chainability
      */
     public function to($to)
     {
         $this->to = $to;
-
         return $this;
     }
 
@@ -37,12 +41,11 @@ class MailNotifier implements NotifierInterface
      * Sender of notification.
      *
      * @param string $from The sender
-     * @return App\Services\Notification\NotifierInterface Return self for chainability
+     * @return NotifierInterface Return self for chainability
      */
     public function from($from)
     {
         $this->from = $from;
-
         return $this;
     }
 

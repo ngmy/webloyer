@@ -22,6 +22,10 @@
                 {!! Form::hidden('task', 'rollback') !!}
                 {!! Form::submit('Rollback', ['class' => 'btn btn-danger btn-lg']) !!}
                 {!! Form::close() !!}
+                {!! Form::open(['route' => ['projects.deployments.store', $project], 'method' => 'post', 'style' => 'display:inline']) !!}
+                {!! Form::hidden('task', 'unlock') !!}
+                {!! Form::submit('Unlock', ['class' => 'btn btn-warning btn-lg']) !!}
+                {!! Form::close() !!}
             </div>
 
             <table class="table table-striped">
@@ -44,9 +48,9 @@
                             <td>{{ $deployment->task }}</td>
                             <td>{{ $deployment->created_at }}</td>
                             <td>{{ $deployment->updated_at }}</td>
-                            <td>{{ is_null($deployment->user) ? '' : $deployment->user->email }}</td>
+                            <td>{{ is_null($deployment->user) ? $deployment->user_email : $deployment->user->email }}</td>
                             <td>
-                                {!! link_to_route('projects.deployments.show', 'Show', [$project, $deployment->number], ['class' => 'btn btn-default']) !!}
+                                {!! link_to_route('projects.deployments.show', 'Show', [$project, $deployment->id], ['class' => 'btn btn-default']) !!}
                             </td>
                         </tr>
                     @endforeach

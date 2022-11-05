@@ -31,6 +31,12 @@
                                 {!! Form::email('email', null, ['class' => 'form-control', 'id' => 'email']) !!}
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="bitbucket_nickname" class="col-md-4 control-label">Bitbucket nickname</label>
+                            <div class="col-md-6">
+                                {!! Form::text('bitbucket_nickname', '-', ['class' => 'form-control', 'id' => 'bitbucket_nickname']) !!}
+                            </div>
+                        </div>
                         <div class="form-group required">
                             <label for="password" class="col-md-4 control-label">Password</label>
                             <div class="col-md-6">

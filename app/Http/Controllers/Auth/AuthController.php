@@ -1,14 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers\Auth
+ */
 class AuthController extends Controller
 {
+
     /*
     |--------------------------------------------------------------------------
     | Registration & Login Controller
@@ -19,8 +25,6 @@ class AuthController extends Controller
     | a simple trait to add these behaviors. Why don't you explore it?
     |
     */
-
-    use AuthenticatesAndRegistersUsers;
 
     protected $redirectTo = '/projects';
 
@@ -37,7 +41,7 @@ class AuthController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public function validator(array $data)
@@ -52,7 +56,7 @@ class AuthController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return User
      */
     public function create(array $data)
@@ -67,8 +71,8 @@ class AuthController extends Controller
     /**
      * Show the application registration form.
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return void
+     * @throws NotFoundHttpException
      */
     public function getRegister()
     {
@@ -78,8 +82,8 @@ class AuthController extends Controller
     /**
      * Handle a registration request for the application.
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return void
+     * @throws NotFoundHttpException
      */
     public function postRegister()
     {

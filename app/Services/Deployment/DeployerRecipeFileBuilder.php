@@ -1,22 +1,46 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Deployment;
 
-use App\Services\Deployment\DeployerFile;
 use App\Services\Filesystem\FilesystemInterface;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class DeployerRecipeFileBuilder
+ * @package App\Services\Deployment
+ */
 class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
 {
-    protected $fs;
 
-    protected $deployerFile;
+    /**
+     * @var FilesystemInterface
+     */
+    protected FilesystemInterface $fs;
 
-    protected $recipe;
+    /**
+     * @var DeployerFile
+     */
+    protected DeployerFile $deployerFile;
 
+    /**
+     * @var null|Model
+     */
+    protected ?Model $recipe;
+
+    /**
+     * @var bool
+     */
+    protected bool $deployerFileInitialized = false;
+
+    /**
+     * DeployerRecipeFileBuilder constructor.
+     * @param FilesystemInterface $fs
+     * @param DeployerFile $deployerFile
+     */
     public function __construct(FilesystemInterface $fs, DeployerFile $deployerFile)
     {
-        $this->fs           = $fs;
+        $this->fs = $fs;
         $this->deployerFile = $deployerFile;
     }
 
@@ -28,11 +52,11 @@ class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
     /**
      * Set a recipe file path info.
      *
-     * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
+     * @return DeployerRecipeFileBuilder $this
      */
     public function pathInfo()
     {
-        $id = md5(uniqid(rand(), true));
+        $id = md5(uniqid((string)rand(), true));
 
         $baseName = "recipe_$id.php";
         $fullPath = storage_path("app/$baseName");
@@ -46,22 +70,21 @@ class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
     /**
      * Put a recipe file.
      *
-     * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
+     * @return DeployerRecipeFileBuilder $this
      */
     public function put()
     {
         $fullPath = $this->deployerFile->getFullPath();
         $contents = $this->recipe->body;
-
         $this->fs->put($fullPath, $contents);
-
+        $this->deployerFileInitialized = true;
         return $this;
     }
 
     /**
      * Get a recipe file instance.
      *
-     * @return \App\Services\Deployment\DeployerFile
+     * @return DeployerFile
      */
     public function getResult()
     {
@@ -71,8 +94,8 @@ class DeployerRecipeFileBuilder implements DeployerFileBuilderInterface
     /**
      * Set a recipe model instance.
      *
-     * @param \Illuminate\Database\Eloquent\Model $recipe
-     * @return \App\Services\Deployment\DeployerRecipeFileBuilder $this
+     * @param Model $recipe
+     * @return DeployerRecipeFileBuilder $this
      */
     public function setRecipe(Model $recipe)
     {

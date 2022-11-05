@@ -1,16 +1,22 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Recipe;
 
 use App\Repositories\AbstractEloquentRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * Class EloquentRecipe
+ * @package App\Repositories\Recipe
+ */
 class EloquentRecipe extends AbstractEloquentRepository implements RecipeInterface
 {
     /**
      * Create a new repository instance.
      *
-     * @param \Illuminate\Database\Eloquent\Model $recipe
+     * @param Model $recipe
      * @return void
      */
     public function __construct(Model $recipe)
@@ -21,9 +27,9 @@ class EloquentRecipe extends AbstractEloquentRepository implements RecipeInterfa
     /**
      * Get paginated recipes.
      *
-     * @param int $page  Page number
+     * @param int $page Page number
      * @param int $limit Number of recipes per page
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function byPage($page = 1, $limit = 10)
     {

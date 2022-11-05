@@ -1,25 +1,50 @@
 {
-    "name": "ngmy/webloyer",
-    "description": "Webloyer is a Web UI for managing Deployer deployments",
-    "keywords": ["deployer", "deploy", "deployment"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Yuta Nagamiya",
-            "email": "y.nagamiya@gmail.com"
-        }
-    ],
+    "name": "laravel/laravel",
     "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "require": {
+        "php": "^7.4|^8.0",
+        "ajaxorg/ace-builds": "^1.4",
+        "cweagans/composer-patches": "1.7",
+        "deployer/deployer": "v7.0.0-rc.4",
+        "diglactic/laravel-breadcrumbs": "^7.1",
+        "doctrine/dbal": "^3.2",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "kodeine/laravel-acl": "^2.0",
+        "laravel/framework": "^8.75",
+        "laravel/sanctum": "^2.11",
+        "laravel/tinker": "^2.5",
+        "laravelcollective/html": "^6.3",
+        "lou/multi-select": "^0.9.12",
+        "ngmy/eloquent-serialized-lob": "^0.3.0",
+        "robclancy/presenter": "^2.0",
+        "sajya/server": "^4.0",
+        "sensiolabs/ansi-to-html": "^1.2",
+        "symfony/process": "^5.4",
+        "symfony/yaml": "^5.4"
+    },
+    "require-dev": {
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
+        "laravel/breeze": "^1.8",
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^5.10",
+        "phpunit/phpunit": "^9.5.10"
+    },
     "repositories": [
         {
             "type": "package",
             "package": {
                 "name": "ajaxorg/ace-builds",
-                "version": "1.2.0",
+                "version": "1.4.14",
                 "source": {
                     "url": "https://github.com/ajaxorg/ace-builds.git",
                     "type": "git",
-                    "reference": "v1.2.0"
+                    "reference": "v1.4.14"
                 }
             }
         },
@@ -34,76 +59,54 @@
                     "reference": "0.9.12"
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/matasarei/JsonRPC.git"
         }
     ],
-    "require": {
-        "php": ">=5.6.0",
-        "laravel/framework": "5.2.*",
-        "laravelcollective/html": "5.2.*",
-        "davejamesmiller/laravel-breadcrumbs": "3.0.*",
-        "robclancy/presenter": "1.3.*",
-        "ajaxorg/ace-builds": "~1.2.0",
-        "lou/multi-select": "0.9.12",
-        "kodeine/laravel-acl": "~1.0@dev",
-        "sensiolabs/ansi-to-html": "~1.0",
-        "symfony/yaml": "~3.0",
-        "ngmy/eloquent-serialized-lob": "^0.1.0",
-        "fguillot/json-rpc": "~v1.2.1",
-        "deployer/deployer": "^4.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~5.0",
-        "symfony/dom-crawler": "~3.0",
-        "symfony/css-selector": "~3.0",
-        "mockery/mockery": "dev-master",
-        "mikey179/vfsstream": "~1",
-        "php-coveralls/php-coveralls": "^2.2"
-    },
     "autoload": {
-        "classmap": [
-            "database"
-        ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/TestCase.php",
-            "tests/_helpers"
-        ]
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts": {
-        "post-install-cmd": [
-            "mkdir -p public/js/vendor/ajaxorg",
-            "ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
-            "mkdir -p public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select",
-            "php artisan clear-compiled",
-            "php artisan optimize"
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "mkdir -p public/js/vendor/ajaxorg",
-            "ln -nfs $(pwd)/vendor/ajaxorg/ace-builds/src-min-noconflict public/js/vendor/ajaxorg/ace",
-            "mkdir -p public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/js public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/css public/vendor/lou/multi-select",
-            "cp -r $(pwd)/vendor/lou/multi-select/img public/vendor/lou/multi-select",
-            "php artisan clear-compiled",
-            "php artisan optimize"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "php -r \"copy('.env.example', '.env');\"",
-            "php artisan key:generate"
+            "@php artisan key:generate --ansi"
         ]
     },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        },
+        "patches": {
+            "deployer/deployer": {
+                "Add ssh password connection management": "patches/deployer.patch"
+            }
+        }
+    },
     "config": {
-        "preferred-install": "dist"
-    }
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "cweagans/composer-patches": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

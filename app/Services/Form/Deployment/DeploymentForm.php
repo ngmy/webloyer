@@ -1,32 +1,47 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Form\Deployment;
 
+use App\Models\Project;
 use App\Services\Validation\ValidableInterface;
 use App\Services\Deployment\DeployCommanderInterface;
 use App\Repositories\Project\ProjectInterface;
-use DB;
+use Illuminate\Support\Facades\DB;
 
+/**
+ * Class DeploymentForm
+ * @package App\Services\Form\Deployment
+ */
 class DeploymentForm
 {
-    protected $validator;
+    /**
+     * @var ValidableInterface
+     */
+    protected ValidableInterface $validator;
 
-    protected $project;
+    /**
+     * @var ProjectInterface
+     */
+    protected ProjectInterface $project;
 
-    protected $deployCommander;
+    /**
+     * @var DeployCommanderInterface
+     */
+    protected DeployCommanderInterface $deployCommander;
 
     /**
      * Create a new form service instance.
      *
-     * @param \App\Services\Validation\ValidableInterface       $validator
-     * @param \App\Repositories\Project\ProjectInterface        $project
-     * @param \App\Services\Deployment\DeployCommanderInterface $deployCommander
+     * @param ValidableInterface $validator
+     * @param ProjectInterface $project
+     * @param DeployCommanderInterface $deployCommander
      * @return void
      */
     public function __construct(ValidableInterface $validator, ProjectInterface $project, DeployCommanderInterface $deployCommander)
     {
-        $this->validator       = $validator;
-        $this->project         = $project;
+        $this->validator = $validator;
+        $this->project = $project;
         $this->deployCommander = $deployCommander;
     }
 
@@ -43,36 +58,42 @@ class DeploymentForm
         }
 
         $deployment = DB::transaction(function () use ($input) {
+            /** @var $project Project */
             $project = $this->project->byId($input['project_id']);
-
             $maxDeployment = $project->getMaxDeployment();
             $input['number'] = $maxDeployment->number + 1;
 
+            if (isset($input['actor']) && $input['actor'] === 'bitbucket') {
+                $lastDeployment = $project->getLastDeployment();
+                $lastDeploymentTime = strtotime($lastDeployment->getAttributes()['created_at']);
+                $now = strtotime('now');
+
+                if ($now - $lastDeploymentTime < 60) {
+                    return 'double-call';
+                }
+
+                unset($input['actor']);
+            }
+
             $project->addDeployment($input);
             $project->updateMaxDeployment(['number' => $input['number']]);
-
             $deployment = $project->getDeploymentByNumber($input['number']);
-
             return $deployment;
         });
+
+        if ($deployment === 'double-call') {
+            return true;
+        }
 
         if (!$deployment) {
             return false;
         }
 
-        $this->deployCommander->{$input['task']}($deployment);
+        if ($input["task"] !== "deployment") {
+            $this->deployCommander->{$input['task']}($deployment);
+        }
 
         return true;
-    }
-
-    /**
-     * Return validation errors.
-     *
-     * @return array
-     */
-    public function errors()
-    {
-        return $this->validator->errors();
     }
 
     /**
@@ -83,5 +104,15 @@ class DeploymentForm
     protected function valid(array $input)
     {
         return $this->validator->with($input)->passes();
+    }
+
+    /**
+     * Return validation errors.
+     *
+     * @return array
+     */
+    public function errors()
+    {
+        return $this->validator->errors();
     }
 }

@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Specifications;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class DeploymentSpecification
+ * @package App\Specifications
+ */
 class DeploymentSpecification
 {
     /**

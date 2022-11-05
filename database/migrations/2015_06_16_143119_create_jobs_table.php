@@ -1,8 +1,13 @@
 <?php
+declare(strict_types=1);
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateJobsTable
+ */
 class CreateJobsTable extends Migration
 {
     /**
@@ -13,7 +18,7 @@ class CreateJobsTable extends Migration
     public function up()
     {
         Schema::create('jobs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('queue');
             $table->text('payload');
             $table->tinyInteger('attempts')->unsigned();

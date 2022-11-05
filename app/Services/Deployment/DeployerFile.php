@@ -1,12 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Deployment;
 
+/**
+ * Class DeployerFile
+ * @package App\Services\Deployment
+ */
 class DeployerFile
 {
-    protected $baseName;
+    /**
+     * @var string
+     */
+    protected string $baseName;
 
-    protected $fullPath;
+    /**
+     * @var string
+     */
+    protected string $fullPath;
 
     /**
      * Get a base name.
@@ -32,12 +43,11 @@ class DeployerFile
      * Set a base name.
      *
      * @param string Base name
-     * @return \App\Services\Deployment\DeployerFile $this
+     * @return DeployerFile $this
      */
     public function setBaseName($baseName)
     {
         $this->baseName = $baseName;
-
         return $this;
     }
 
@@ -45,12 +55,11 @@ class DeployerFile
      * Set a full path.
      *
      * @param string Full path
-     * @return \App\Services\Deployment\DeployerFile $this
+     * @return DeployerFile $this
      */
     public function setFullPath($fullPath)
     {
         $this->fullPath = $fullPath;
-
         return $this;
     }
 }

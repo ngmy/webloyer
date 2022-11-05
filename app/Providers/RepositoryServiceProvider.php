@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Providers;
 
@@ -20,6 +21,10 @@ use Kodeine\Acl\Models\Eloquent\Role;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class RepositoryServiceProvider
+ * @package App\Providers
+ */
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**

@@ -1,21 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Setting;
 
 use App\Repositories\AbstractEloquentRepository;
-use App\Repositories\Setting\SettingInterface;
 use App\Entities\Setting\MailSettingEntity;
+use App\Models\Setting;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class EloquentSetting
+ * @package App\Repositories\Setting
+ */
 class EloquentSetting extends AbstractEloquentRepository implements SettingInterface
 {
+
     /**
-     * Create a new repository instance.
-     *
-     * @param \Illuminate\Database\Eloquent\Model $setting
-     * @return void
+     * EloquentSetting constructor.
+     * @param Setting $setting
      */
-    public function __construct(Model $setting)
+    public function __construct(Setting $setting)
     {
         $this->model = $setting;
     }
@@ -24,7 +28,7 @@ class EloquentSetting extends AbstractEloquentRepository implements SettingInter
      * Get a model by setting type. If a model does not exist, create a new model.
      *
      * @param string $id Setting type
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function byType($type)
     {
@@ -34,17 +38,21 @@ class EloquentSetting extends AbstractEloquentRepository implements SettingInter
             return $setting;
         }
 
+        $attributes = '';
+
         if ($type === 'mail') {
             $attributes = new MailSettingEntity;
             $attributes->setDriver('smtp');
             $attributes->setFrom([
-                'address' => 'webloyer@example.com',
+                'address' => 'email@example.com',
                 'name'    => 'Webloyer',
             ]);
-            $attributes->setSmtpHost('smtp.mailgun.org');
-            $attributes->setSmtpPort(587);
+            $attributes->setSmtpHost('smtp.mailtrap.io');
+            $attributes->setSmtpPort(2525);
             $attributes->setSmtpEncryption('tls');
-            $attributes->setSendmailPath('/usr/sbin/sendmail -bs');
+            $attributes->setSmtpUsername('username');
+            $attributes->setSmtpPassword('password');
+            $attributes->setSendmailPath('');
         }
 
         return $this->model->create([

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e -u -o pipefail
+# shellcheck disable=SC2230
+if [ -z ${SSH_PASSWORD:-} ]; then
+    ssh="$(which -a ssh | grep -Fxv -m 1 -- "$(dirname -- "$0")/ssh")"
+    "$ssh" "$@"
+else
+    ssh="$(which -a ssh | grep -Fxv -m 1 -- "$(dirname -- "$0")/ssh")"
+    sshpass -p "$SSH_PASSWORD" "$ssh" -o PubkeyAuthentication=no "$@"
+fi

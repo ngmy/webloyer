@@ -1,7 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Notification;
 
+/**
+ * Interface NotifierInterface
+ * @package App\Services\Notification
+ */
 interface NotifierInterface
 {
     /**
@@ -15,7 +20,7 @@ interface NotifierInterface
      * Sender of notification.
      *
      * @param string $from The sender
-     * @return App\Services\Notification\NotifierInterface Return self for chainability
+     * @return NotifierInterface Return self for chainability
      */
     public function from($from);
 

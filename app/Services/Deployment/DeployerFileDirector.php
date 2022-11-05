@@ -1,11 +1,24 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services\Deployment;
 
+/**
+ * Class DeployerFileDirector
+ * @package App\Services\Deployment
+ */
 class DeployerFileDirector
 {
-    protected $fileBuilder;
 
+    /**
+     * @var DeployerFileBuilderInterface
+     */
+    protected DeployerFileBuilderInterface $fileBuilder;
+
+    /**
+     * DeployerFileDirector constructor.
+     * @param DeployerFileBuilderInterface $fileBuilder
+     */
     public function __construct(DeployerFileBuilderInterface $fileBuilder)
     {
         $this->fileBuilder = $fileBuilder;
@@ -14,13 +27,12 @@ class DeployerFileDirector
     /**
      * Construct a deployer file instance.
      *
-     * @return \App\Services\Deployment\DeployerFile
+     * @return DeployerFile
      */
     public function construct()
     {
         $this->fileBuilder->pathInfo();
         $this->fileBuilder->put();
-
         return $this->fileBuilder->getResult();
     }
 }

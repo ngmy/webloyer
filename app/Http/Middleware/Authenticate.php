@@ -1,27 +1,35 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Closure;
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
-class Authenticate
+/**
+ * Class Authenticate
+ * @package App\Http\Middleware
+ */
+class Authenticate extends Middleware
 {
+
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $guard
-     * @return mixed
+     * @param Request $request
+     * @param \Closure $next
+     * @param null $guard
+     * @return ResponseFactory|RedirectResponse|Response|mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, \Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized.', 401);
             } else {
-                return redirect()->guest('auth/login');
+                return redirect()->guest('login');
             }
         }
 

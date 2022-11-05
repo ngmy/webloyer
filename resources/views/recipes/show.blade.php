@@ -36,7 +36,7 @@
                 </tbody>
             </table>
             {!! link_to_route('recipes.index', 'Back', [], ['class' => 'btn btn-danger']) !!}
-            @if (Auth::user()->can('update.recipe'))
+            @if (Auth::user()->hasPermission('update.recipe'))
                 {!! link_to_route('recipes.edit', 'Edit', [$recipe->id], ['class' => 'btn btn-primary']) !!}
             @endif
         </div>

@@ -1,17 +1,21 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repositories\Server;
 
 use App\Repositories\AbstractEloquentRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * Class EloquentServer
+ * @package App\Repositories\Server
+ */
 class EloquentServer extends AbstractEloquentRepository implements ServerInterface
 {
     /**
-     * Create a new repository instance.
-     *
-     * @param \Illuminate\Database\Eloquent\Model $server
-     * @return void
+     * EloquentServer constructor.
+     * @param Model $server
      */
     public function __construct(Model $server)
     {
@@ -19,19 +23,15 @@ class EloquentServer extends AbstractEloquentRepository implements ServerInterfa
     }
 
     /**
-     * Get paginated servers.
-     *
-     * @param int $page  Page number
-     * @param int $limit Number of servers per page
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     * @param int $page
+     * @param int $limit
+     * @return LengthAwarePaginator|mixed
      */
     public function byPage($page = 1, $limit = 10)
     {
-        $servers = $this->model->orderBy('name')
+        return $this->model->orderBy('name')
             ->skip($limit * ($page - 1))
             ->take($limit)
             ->paginate($limit);
-
-        return $servers;
     }
 }

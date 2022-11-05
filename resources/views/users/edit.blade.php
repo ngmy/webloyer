@@ -41,6 +41,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="bitbucket_nickname" class="col-md-4 control-label">Bitbucket Nickname</label>
+                            <div class="col-md-6">
+                                {!! Form::text('bitbucket_nickname', $user->bitbucket_nickname?$user->bitbucket_nickname:'', ['class' => 'form-control', 'id' => 'bitbucket_nickname']) !!}
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 {!! link_to_route('users.index', 'Cancel', [], ['class' => 'btn btn-danger']) !!}
                                 {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}

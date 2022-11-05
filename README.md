@@ -1,12 +1,5 @@
 # Webloyer
 
-[![Latest Stable Version](https://poser.pugx.org/ngmy/webloyer/v/stable)](https://packagist.org/packages/ngmy/webloyer)
-[![Total Downloads](https://poser.pugx.org/ngmy/webloyer/downloads)](https://packagist.org/packages/ngmy/webloyer)
-[![Latest Unstable Version](https://poser.pugx.org/ngmy/webloyer/v/unstable)](https://packagist.org/packages/ngmy/webloyer)
-[![License](https://poser.pugx.org/ngmy/webloyer/license)](https://packagist.org/packages/ngmy/webloyer)<br>
-[![Build Status](https://travis-ci.org/ngmy/webloyer.svg?branch=master)](https://travis-ci.org/ngmy/webloyer)
-[![Coverage Status](https://coveralls.io/repos/ngmy/webloyer/badge.svg?branch=master)](https://coveralls.io/r/ngmy/webloyer?branch=master)
-
 Webloyer is a Web UI for managing [Deployer](https://github.com/deployphp/deployer) deployments.
 
 ## Features
@@ -29,6 +22,7 @@ Webloyer has the following features:
 * Web APIs
 * Webhooks
   * GitHub
+  * Bitbucket
 
 ## Screenshots
 
@@ -38,13 +32,19 @@ See [screenshots](/SCREENSHOTS.md).
 
 Webloyer has the following requirements:
 
-* PHP >= 5.6.0
+* PHP >= 7.4.0
 * OpenSSL PHP Extension
 * PDO PHP Extension
 * Mbstring PHP Extension
 * Tokenizer PHP Extension
 
 ## Installation
+
+### Local install with warden
+clone project and rename .env.local file into .env file, then execute the following command:
+```
+warden env up -d --build
+```
 
 ### Option 1: Download Source Code
 
@@ -72,10 +72,7 @@ Webloyer has the following requirements:
    * * * * * php /path/to/webloyer/artisan schedule:run >> /dev/null 2>&1
    ```
    **Note:** You must be running this Cron entry as your web server user.
-
-### Option 2: Using Docker
-
-You can also install using [Webloyer Docker](https://github.com/ngmy/webloyer-docker).
+6. Generate webloyer ssh key (used for server authentication fallback) at ~/.ssh/id_rsa and add to each server's authorized_keys 
 
 ## Basic Usage
 
@@ -111,9 +108,3 @@ Webloyer uses [Laravel](http://laravel.com/) as a foundation PHP framework.
 ## License
 
 Webloyer is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-
-## Donation
-
-Do you want to buy me a coffee?
-
-[![Flattr this](https://button.flattr.com/flattr-badge-large.png "Flattr this")](https://flattr.com/submit/auto?fid=513grl&url=https%3A%2F%2Fgithub.com%2Fngmy%2Fwebloyer)
